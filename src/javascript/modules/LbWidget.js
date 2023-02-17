@@ -572,10 +572,8 @@ export const LbWidget = function (options) {
     if (!this.settings.apiWs.contestsApiWsClient) {
       this.settings.apiWs.contestsApiWsClient = new ContestsApiWs(this.apiClientStomp);
     }
-    // console.warn('contestRequest:', contestRequest);
     return new Promise((resolve, reject) => {
       this.settings.apiWs.contestsApiWsClient.getContests(contestRequest, (json) => {
-        // console.warn('contestResponse:', json);
         resolve(json.data);
       });
     });
@@ -787,9 +785,7 @@ export const LbWidget = function (options) {
           limit: 1
         }
       };
-      console.warn('messageRequest:', messageRequest);
       await this.settings.apiWs.messagesApiWsClient.getMessages(messageRequest, (json) => {
-        console.warn('messageResponse json:', json);
         if (json.data && json.data.length) {
           if (json.data[0].messageType === 'Notification') {
             if (_this.settings.enableNotifications) {
@@ -1125,7 +1121,6 @@ export const LbWidget = function (options) {
     }, null);
 
     await this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-      // console.warn('optInMemberToActiveCompetition response: json');
       if (typeof callback === 'function') {
         callback();
       }
@@ -1591,10 +1586,9 @@ export const LbWidget = function (options) {
         }
 
         const preLoader = _this.settings.mainWidget.preloader();
-        // console.warn('optInRequest:', optInRequest);
+
         preLoader.show(async function () {
           await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-            // console.warn('optInResponse json:', json);
             setTimeout(function () {
               preLoader.hide();
               _this.settings.mainWidget.hideAchievementDetails(
@@ -1622,7 +1616,6 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
         await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-          // console.warn('manageOptin response:', json);
           setTimeout(function () {
             _this.settings.mainWidget.loadAchievements(1, function () {
               preLoader.hide();
@@ -1647,7 +1640,6 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
         await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-          // console.warn('manageOptin leave:', json);
           setTimeout(function () {
             _this.settings.mainWidget.loadAchievements(1, function () {
               preLoader.hide();
@@ -2024,15 +2016,11 @@ export const LbWidget = function (options) {
             this.settings.miniScoreBoard.loadScoreBoard();
             this.settings.mainWidget.loadLeaderboard();
           }
-        } else {
-          console.warn('sendSys json:', json);
-          console.warn('sendSys headers:', headers);
         }
         if (json && json.entityType === 'Message') {
           this.getMessage(json.entityId, function () { _this.animateIcon('Message'); }, true);
         }
         if (json && json.entityType === 'Award') {
-          // console.warn('AwardSysCallback json:', json);
           _this.settings.mainWidget.loadAwards(1, function () {
             _this.animateIcon('Award');
           });
