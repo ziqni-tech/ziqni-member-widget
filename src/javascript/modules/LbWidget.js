@@ -65,7 +65,7 @@ export const LbWidget = function (options) {
    * @type { Object }
    */
   this.settings = {
-    debug: true,
+    debug: false,
     bindContainer: document.body,
     autoStart: true,
     sseMessaging: null,
@@ -849,7 +849,6 @@ export const LbWidget = function (options) {
 
   // var checkForMemberAchievementsAjax = new cLabs.Ajax();
   this.checkForMemberAchievementsIssued = function (callback) {
-    console.log('checkForMemberAchievementsIssued currently unavailable');
     // var _this = this;
     // var url = _this.settings.uri.achievementsIssued.replace(':space', _this.settings.spaceName).replace(':id', _this.settings.memberId);
     //
@@ -2004,6 +2003,9 @@ export const LbWidget = function (options) {
 
     if (this.settings.authToken) {
       this.apiClientStomp = ApiClientStomp.instance;
+      if (!this.settings.debug) {
+        this.apiClientStomp.client.debug = () => {};
+      }
       await this.apiClientStomp.connect({ token: this.settings.authToken });
       this.apiClientStomp.sendSys('', {}, (json, headers) => {
         if (headers && headers.objectType === 'Leaderboard') {
