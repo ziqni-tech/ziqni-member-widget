@@ -2,6 +2,11 @@
 
 HTML/CSS and Vanilla JavaScript Ziqni Leaderboard / Achievements / Inbox-Messaging widget
 
+The widget is designed to work with the new ZIQNI platform APIs
+- https://github.com/ziqni-tech/ziqni-member-sdks
+- https://documentation.ziqni.com/member-api
+- https://www.npmjs.com/package/@ziqni-tech/member-api-client
+
 <p align="center">
     <img width="300" src="https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/_widgets/mini-scoreboard-animation.gif"><br/>
 </p>
