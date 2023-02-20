@@ -11,9 +11,9 @@ Our widget "out of the box" is a product that you can use immediately by placing
 [Read more here](https://ziqni.atlassian.net/wiki/spaces/CLRAV/pages/4761681923/The+Widget)
 
 The widget is designed to work with the new ZIQNI platform APIs
-- Github: https://github.com/ziqni-tech/ziqni-member-sdks
-- Docs: https://documentation.ziqni.com/member-api
-- NPM SDK: https://www.npmjs.com/package/@ziqni-tech/member-api-client
+- [Github](https://github.com/ziqni-tech/ziqni-member-sdks)
+- [Docs](https://documentation.ziqni.com/member-api)
+- [NPM SDK](https://www.npmjs.com/package/@ziqni-tech/member-api-client)
 
 ## Installation
 
