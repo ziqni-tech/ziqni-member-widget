@@ -22,13 +22,13 @@ const scssLoader = INLINE_CSS
 
 module.exports = {
   entry: {
-    'gamification-ux-package.v3.js': INLINE_CSS ? [
-      './src/javascript/gamification-ux-package.v3.js',
+    'ziqni-member-widget.js': INLINE_CSS ? [
+      './src/javascript/ziqni-member-widget.js',
     ] : [
-      './src/javascript/gamification-ux-package.v3.js',
+      './src/javascript/ziqni-member-widget.js',
       './src/scss/' + _THEME + '/style.scss'
     ],
-    'gamification-ux-package.v3-selfinit.js': './src/javascript/gamification-ux-package.v3-selfinit.js',
+    'ziqni-member-widget-selfinit.js': './src/javascript/ziqni-member-widget-selfinit.js',
     'loader.js': './src/javascript/loader.js'
   },
   output: {

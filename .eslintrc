@@ -8,8 +8,8 @@
   "ignorePatterns": [
     "**/dependencies/*.js",
     "**/polyfills/*.js",
-    "_gamification-ux-package.v3.js",
-    "_gamification-ux-package.v3-selfinit.js"
+    "_ziqni-member-widget.js",
+    "_ziqni-member-widget-selfinit.js"
   ],
   "rules": {
     "semi": ["error", "always"],

@@ -59,7 +59,7 @@ import mapObject from './utils/mapObject';
       currency: '', // default currency setting
 
       // default script that will be loaded
-      defaultScript: 'https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/_widgets/gamification-ux-package/build/javascript/gamification-ux-package.v3-selfinit.js',
+      defaultScript: 'https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/_widgets/gamification-ux-package/build/javascript/ziqni-member-widget-selfinit.js',
 
       // default stylesheet resources that will be loaded
       defaultResources: [],

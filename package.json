@@ -82,6 +82,6 @@
     "url-polyfill": "^1.1.12",
     "yargs": "^16.1.0"
   },
-  "main": "build/javascript/gamification-ux-package.v3.js",
+  "main": "build/javascript/ziqni-member-widget.js",
   "style": "build/css/style.css"
 }

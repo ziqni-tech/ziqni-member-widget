@@ -10,12 +10,12 @@ const argv = yargs(hideBin(process.argv)).argv
 // var layoutsScssTheme = new RegExp("layouts" + "/.*.scss");
 module.exports = {
   entry: {
-    'gamification-ux-package.v3.js': [
-      './src/javascript/gamification-ux-package.v3.js',
+    'ziqni-member-widget.js': [
+      './src/javascript/ziqni-member-widget.js',
       './src/scss/' + _THEME + '/style.scss',
       './src/scss/layouts/style.scss'
     ],
-    'gamification-ux-package.v3-selfinit.js': './src/javascript/gamification-ux-package.v3-selfinit.js',
+    'ziqni-member-widget-selfinit.js': './src/javascript/ziqni-member-widget-selfinit.js',
     'loader.js': './src/javascript/loader.js'
   },
   output: {

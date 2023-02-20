@@ -219,7 +219,7 @@ Running the project in dev mode will initialise with an example page.
     		};
     		var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
     		a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
-    	})(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/ziqni_widget/javascript/gamification-ux-package.v3.js',"_CLLBV3Opt");
+    	})(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/ziqni_widget/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
 </script>
 ```
 
