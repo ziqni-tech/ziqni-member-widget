@@ -610,6 +610,21 @@ export const LbWidget = function (options) {
           .then(data => {
             let leaderboardEntries = [];
             if (data && data.leaderboardEntries) {
+              // TODO: display all names and scores for debugging
+              let displayText = this.settings.competition.activeContestId + ', ';
+              console.log('--------------------');
+              console.log(`active contest=${this.settings.competition.activeContestId}`);
+              for (const leaderboardEntry of data.leaderboardEntries) {
+                for (const member of leaderboardEntry.members) {
+                  const text = `name=${member.name}, count=${member.params.count}, points=${member.params.points}`;
+                  console.log(text);
+                  displayText += text + ' ';
+                }
+              }
+              console.log('--------------------');
+              this.settings.miniScoreBoard.settings.testContainer.innerHTML = displayText;
+              // end display names
+              this.settings.leaderboard.leaderboardData = data.leaderboardEntries ?? [];
               leaderboardEntries = data.leaderboardEntries;
             }
             _this.settings.leaderboard.leaderboardData = leaderboardEntries;
@@ -799,9 +814,6 @@ export const LbWidget = function (options) {
           if (json.data[0].messageType === 'InboxItem') {
             _this.checkForAvailableMessages(1, function () {
               _this.updateMessagesNavigationCounts();
-              if (typeof callback === 'function') {
-                callback();
-              }
             });
           }
         }

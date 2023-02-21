@@ -608,9 +608,9 @@ export const MiniScoreBoard = function (options) {
 
   this.layoutRequiresOptIn = function (isProcessing = false) {
     var _this = this;
-    var startDate = _this.settings.lbWidget.settings.competition.activeContest.scheduledStart;
-    if (typeof _this.settings.lbWidget.settings.competition.activeContest.actualStart !== 'undefined') {
-      startDate = _this.settings.lbWidget.settings.competition.activeContest.actualStart;
+    var startDate = _this.settings.lbWidget.settings.competition.activeContest.scheduledStartDate;
+    if (typeof _this.settings.lbWidget.settings.competition.activeContest.actualStartDate !== 'undefined') {
+      startDate = _this.settings.lbWidget.settings.competition.activeContest.actualStartDate;
     }
     var diff = moment(startDate).diff(moment());
     var label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
@@ -863,7 +863,11 @@ export const MiniScoreBoard = function (options) {
       _this.settings.container = _this.settings.lbWidget.settings.bindContainer.appendChild(_this.layout());
       _this.settings.overlayContainer = _this.settings.lbWidget.settings.bindContainer.appendChild(_this.overlayLayout());
       _this.settings.infoContainer = query(_this.settings.container, '.cl-widget-ms-information-wrapper');
-
+      // testing stuff
+      var testDisplay = document.createElement('div');
+      testDisplay.setAttribute('class', 'ga-test-text');
+      _this.settings.testContainer = _this.settings.lbWidget.settings.bindContainer.appendChild(testDisplay);
+      // end testing stuff
       _this.eventListeners();
     }
 
