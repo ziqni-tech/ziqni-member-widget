@@ -1150,6 +1150,26 @@
   opacity: 0.7;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
+  margin: -3px -3px;
+  width: var(--lb3-widget-navigation-icon-width);
+  height: var(--lb3-widget-navigation-icon-height);
+  background-image: $lb3-missions-icon-bg-image;
+  background-repeat: no-repeat;
+  background-color: transparent;
+  background-size: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions-icon {
+  display: block;
+  min-height: 100%;
+  background-image: $lb3-missions-icon;
+  background-repeat: no-repeat;
+  background-position: 50% 42%;
+  background-size: 45%;
+  opacity: 0.7;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb:hover {
   opacity: 0.8;
 }
@@ -1179,6 +1199,14 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox-icon:hover {
+  opacity: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions:hover {
+  opacity: 0.8;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions-icon:hover {
   opacity: 1;
 }
 
@@ -1224,6 +1252,17 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav .cl-main-widget-navigation-inbox-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav .cl-main-widget-navigation-inbox-icon:hover {
+  opacity: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav:hover {
+  width: 92px;
+  height: 92px;
+  opacity: 1;
+  margin: -3px -3px 3px -3px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav .cl-main-widget-navigation-missions-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav .cl-main-widget-navigation-missions-icon:hover {
   opacity: 1;
 }
 
@@ -3815,6 +3854,17 @@
     width: 88px;
     height: 88px;
   }
+  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
+    float: left;
+    margin: 0px -5px 0 1px;
+    width: 76px;
+    height: 76px;
+  }
+  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav:hover {
+    margin: 0 -6px 0 -3px;
+    width: 88px;
+    height: 88px;
+  }
   .cl-main-widget-wrapper .cl-main-widget-section-container {
     padding: 82px 0 0 0;
   }
@@ -4023,6 +4073,17 @@
     width: 68px;
     height: 68px;
   }
+  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
+    float: left;
+    margin: 0px -5px 0 3px;
+    width: 58px;
+    height: 58px;
+  }
+  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav:hover {
+    margin: 0 -6px 0 -3px;
+    width: 68px;
+    height: 68px;
+  }
   .cl-main-widget-wrapper .cl-main-widget-section-container {
     padding: 60px 0 0 0;
   }
@@ -4053,6 +4114,9 @@ only screen and (min-device-pixel-ratio: 2) {
   }
   .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox {
     background-image: $lb3-messages-icon-bg-image-2x;
+  }
+  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
+    background-image: $lb3-missions-icon-bg-image-2x;
   }
   .cl-widget-notif-wrapper .cl-widget-notif-icon-wrapper .cl-widget-notif-icon {
     background-image: $lb3-achievements-icon-bg-image-2x;
