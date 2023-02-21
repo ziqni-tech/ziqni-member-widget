@@ -205,6 +205,13 @@ export const LbWidget = function (options) {
         navigationClassIcon: 'cl-main-widget-navigation-inbox-icon',
         containerClass: 'cl-main-widget-section-inbox',
         order: 4
+      },
+      missions: {
+        enable: false,
+        navigationClass: 'cl-main-widget-navigation-missions',
+        navigationClassIcon: 'cl-main-widget-navigation-missions-icon',
+        containerClass: 'cl-main-widget-section-missions',
+        order: 5
       }
     },
     apiWs: {
