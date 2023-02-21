@@ -2,6 +2,14 @@
 @import "./default-refresh-config";
 @import "../_main/style";
 
+// test text classes
+.ga-test-text {
+  left: 100px;
+  position: relative;
+  color: red;
+  z-index: 5000;
+}
+
 .cl-main-widget-wrapper {
   .cl-main-widget-section-container {
     .cl-main-widget-lb-details-image-container {

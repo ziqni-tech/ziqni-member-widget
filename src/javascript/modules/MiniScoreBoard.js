@@ -863,7 +863,11 @@ export const MiniScoreBoard = function (options) {
       _this.settings.container = _this.settings.lbWidget.settings.bindContainer.appendChild(_this.layout());
       _this.settings.overlayContainer = _this.settings.lbWidget.settings.bindContainer.appendChild(_this.overlayLayout());
       _this.settings.infoContainer = query(_this.settings.container, '.cl-widget-ms-information-wrapper');
-
+      // testing stuff
+      var testDisplay = document.createElement('div');
+      testDisplay.setAttribute('class', 'ga-test-text');
+      _this.settings.testContainer = _this.settings.lbWidget.settings.bindContainer.appendChild(testDisplay);
+      // end testing stuff
       _this.eventListeners();
     }
 
