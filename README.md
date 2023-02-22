@@ -208,23 +208,28 @@ Running the project in dev mode will initialise with an example page.
 ```html
 <script type="text/javascript">
 	(function(w,d,s,u,o){
-    		w[o] = {
-    			apiKey: '<api_key>',
-    			spaceName: '<space_name>',
-    			gameId: "<game_name>",
-    			memberRefId: '<member_reference_id>',
-    			language: "en",
-    			uri: {
-    				gatewayDomain: "https://gateway.ziqni.com",
-    				translationPath: "https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/_widgets/gamification-ux-package/i18n/translation_:language.json"
-    			},
-    			resources: [
-    				"https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/_widgets/gamification-ux-package/build/css/theme/cl-style-1-default-theme.css"
-    			]
-    		};
-    		var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
-    		a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
-    	})(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/ziqni_widget/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
+        w[o] = {
+            apiKey: '<api_key>',
+            memberRefId: '<member_reference_id>',
+            language: "en",
+            leaderboard: {
+                fullLeaderboardSize: 50,
+                topResultSize: 3,
+                miniScoreBoard: {
+                  rankingsCount: 2
+                },
+            },
+            uri: {
+                gatewayDomain: "https://gateway.ziqni.com",
+                translationPath: ""
+            },
+            resources: [
+                "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/cl-style-1-default-theme.css"
+            ]
+        };
+        var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
+        a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
+    })(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
 </script>
 ```
 
@@ -263,7 +268,7 @@ products: {
 
 ## FAQ
 ### How do I set the currency:
-The setting "currency" needs to be set to the appropriate ISO key used in [units of measure section](https://complabs.atlassian.net/wiki/spaces/CLRAV/pages/594935946/Units+of+Measure)
+The setting "currency" needs to be set to the appropriate ISO key used in units of measure section
 ```text
 {
   currency: "usd"

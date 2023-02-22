@@ -50,6 +50,10 @@ export const MainWidget = function (options) {
       container: null,
       detailsContainer: null
     },
+    missions: {
+      container: null,
+      detailsContainer: null
+    },
     leaderboard: {
       defaultEmptyList: 20,
       topResultSize: 3,
@@ -222,27 +226,28 @@ export const MainWidget = function (options) {
   };
 
   this.layout = function () {
-    var _this = this;
-    var wrapper = document.createElement('div');
-    var innerWrapper = document.createElement('div');
+    const _this = this;
+    const wrapper = document.createElement('div');
+    const innerWrapper = document.createElement('div');
 
-    var navigationContainer = document.createElement('div');
-    var navigationItems = document.createElement('div');
+    const navigationContainer = document.createElement('div');
+    const navigationItems = document.createElement('div');
 
-    var mainSectionContainer = document.createElement('div');
+    const mainSectionContainer = document.createElement('div');
 
-    var preLoaderContainer = document.createElement('div');
-    var preLoaderContent = document.createElement('div');
-    var preLoaderBar1 = document.createElement('div');
-    var preLoaderBar2 = document.createElement('div');
-    var preLoaderBar3 = document.createElement('div');
+    const preLoaderContainer = document.createElement('div');
+    const preLoaderContent = document.createElement('div');
+    const preLoaderBar1 = document.createElement('div');
+    const preLoaderBar2 = document.createElement('div');
+    const preLoaderBar3 = document.createElement('div');
 
-    var sectionLB = _this.leaderboardAreaLayout();
-    var sectionACH = _this.achievementsAreaLayout();
-    var sectionRewards = _this.rewardsAreaLayout();
-    var sectionInbox = _this.inboxAreaLayout();
+    const sectionLB = _this.leaderboardAreaLayout();
+    const sectionACH = _this.achievementsAreaLayout();
+    const sectionRewards = _this.rewardsAreaLayout();
+    const sectionInbox = _this.inboxAreaLayout();
+    const sectionMissions = _this.missionsAreaLayout();
 
-    var navigationItemList = [];
+    const navigationItemList = [];
     mapObject(_this.settings.lbWidget.settings.navigation, function (val, key) {
       navigationItemList.push({
         key: key,
@@ -277,6 +282,7 @@ export const MainWidget = function (options) {
     mainSectionContainer.appendChild(sectionACH);
     mainSectionContainer.appendChild(sectionRewards);
     mainSectionContainer.appendChild(sectionInbox);
+    mainSectionContainer.appendChild(sectionMissions);
     mainSectionContainer.appendChild(preLoaderContainer);
 
     innerWrapper.appendChild(navigationContainer);
@@ -806,6 +812,102 @@ export const MainWidget = function (options) {
     sectionInbox.appendChild(sectionInboxDetailsContainer);
 
     return sectionInbox;
+  };
+
+  this.missionsAreaLayout = function () {
+    const _this = this;
+    const sectionMissions = document.createElement('div');
+
+    const sectionMissionsHeader = document.createElement('div');
+    const sectionMissionsHeaderLabel = document.createElement('div');
+    const sectionMissionsHeaderDate = document.createElement('div');
+    const sectionMissionsHeaderClose = document.createElement('div');
+
+    const sectionMissionsDetails = document.createElement('div');
+    const sectionMissionsDetailsInfo = document.createElement('div');
+    const sectionMissionsDetailsInfoIcon = document.createElement('div');
+    const sectionMissionsDetailsContentContainer = document.createElement('div');
+    const sectionMissionsDetailsContentContainerLabel = document.createElement('div');
+    const sectionMissionsDetailsContentContainerDate = document.createElement('div');
+
+    const sectionMissionsList = document.createElement('div');
+    const sectionMissionsListBody = document.createElement('div');
+    const sectionMissionsListBodyResults = document.createElement('div');
+
+    const sectionMissionsFooter = document.createElement('div');
+    const sectionMissionsFooterContent = document.createElement('div');
+
+    const sectionMissionsDetailsContainer = document.createElement('div');
+    const sectionMissionsDetailsHeader = document.createElement('div');
+    const sectionMissionsDetailsHeaderLabel = document.createElement('div');
+    const sectionMissionsDetailsHeaderDate = document.createElement('div');
+    const sectionMissionsDetailsBackBtn = document.createElement('a');
+    const sectionMissionsDetailsBodyContainer = document.createElement('div');
+    const sectionMissionsDetailsBody = document.createElement('div');
+
+    sectionMissions.setAttribute('class', _this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
+    sectionMissionsHeader.setAttribute('class', 'cl-main-widget-missions-header');
+    sectionMissionsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-header-label');
+    sectionMissionsHeaderDate.setAttribute('class', 'cl-main-widget-missions-header-date');
+    sectionMissionsHeaderClose.setAttribute('class', 'cl-main-widget-missions-header-close');
+
+    sectionMissionsDetails.setAttribute('class', 'cl-main-widget-missions-details');
+    sectionMissionsDetailsInfo.setAttribute('class', 'cl-main-widget-missions-details-info');
+    sectionMissionsDetailsInfoIcon.setAttribute('class', 'cl-main-widget-missions-details-info-icon');
+    sectionMissionsDetailsContentContainer.setAttribute('class', 'cl-main-widget-missions-details-content');
+    sectionMissionsDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-missions-details-content-label');
+    sectionMissionsDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-missions-details-content-date');
+
+    // Leaderboard result container
+    sectionMissionsList.setAttribute('class', 'cl-main-widget-missions-list');
+    sectionMissionsListBody.setAttribute('class', 'cl-main-widget-missions-list-body');
+    sectionMissionsListBodyResults.setAttribute('class', 'cl-main-widget-missions-list-body-res');
+
+    // footer
+    sectionMissionsFooter.setAttribute('class', 'cl-main-widget-missions-footer');
+    sectionMissionsFooterContent.setAttribute('class', 'cl-main-widget-missions-footer-content');
+
+    // details section
+    sectionMissionsDetailsContainer.setAttribute('class', 'cl-main-widget-missions-details-container');
+    sectionMissionsDetailsHeader.setAttribute('class', 'cl-main-widget-missions-details-header');
+    sectionMissionsDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-details-header-label');
+    sectionMissionsDetailsHeaderDate.setAttribute('class', 'cl-main-widget-missions-details-header-date');
+    sectionMissionsDetailsBackBtn.setAttribute('class', 'cl-main-widget-missions-details-back-btn');
+    sectionMissionsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-missions-details-body-container');
+    sectionMissionsDetailsBody.setAttribute('class', 'cl-main-widget-missions-details-body');
+
+    sectionMissionsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.label;
+    sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
+
+    sectionMissionsHeader.appendChild(sectionMissionsHeaderLabel);
+    sectionMissionsHeader.appendChild(sectionMissionsHeaderDate);
+    sectionMissionsHeader.appendChild(sectionMissionsHeaderClose);
+
+    sectionMissionsDetailsInfo.appendChild(sectionMissionsDetailsInfoIcon);
+    sectionMissionsDetailsContentContainer.appendChild(sectionMissionsDetailsContentContainerLabel);
+    sectionMissionsDetailsContentContainer.appendChild(sectionMissionsDetailsContentContainerDate);
+    sectionMissionsDetails.appendChild(sectionMissionsDetailsInfo);
+    sectionMissionsDetails.appendChild(sectionMissionsDetailsContentContainer);
+
+    sectionMissionsListBody.appendChild(sectionMissionsListBodyResults);
+    sectionMissionsList.appendChild(sectionMissionsListBody);
+
+    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderLabel);
+    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderDate);
+    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsHeader);
+    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsBackBtn);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
+    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsBodyContainer);
+
+    sectionMissionsFooter.appendChild(sectionMissionsFooterContent);
+
+    sectionMissions.appendChild(sectionMissionsHeader);
+    sectionMissions.appendChild(sectionMissionsDetails);
+    sectionMissions.appendChild(sectionMissionsList);
+    sectionMissions.appendChild(sectionMissionsFooter);
+    sectionMissions.appendChild(sectionMissionsDetailsContainer);
+
+    return sectionMissions;
   };
 
   this.leaderboardHeader = function () {
@@ -1392,7 +1494,7 @@ export const MainWidget = function (options) {
       const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
         this.settings.lbWidget.settings.competition.activeCompetition.id
       );
-      // console.warn('mainWidget CompetitionOptInStatus optInStatus:', optInStatus);
+
       if (optInStatus.length && optInStatus[0].status === 'Entrant') {
         optIn.parentNode.style.display = 'none';
       } else if (optInStatus.length && (optInStatus[0].status === 'Entering' || optInStatus[0].status === 'Processing')) {
@@ -1492,6 +1594,8 @@ export const MainWidget = function (options) {
       _this.settings.reward.detailsContainer = query(_this.settings.container, '.cl-main-widget-reward-details-container');
       _this.settings.messages.container = query(_this.settings.container, '.' + _this.settings.lbWidget.settings.navigation.inbox.containerClass);
       _this.settings.messages.detailsContainer = query(_this.settings.container, '.cl-main-widget-inbox-details-container');
+      _this.settings.missions.container = query(_this.settings.container, '.' + _this.settings.lbWidget.settings.navigation.missions.containerClass);
+      _this.settings.missions.detailsContainer = query(_this.settings.container, '.cl-main-widget-missions-details-container');
 
       _this.mainNavigationCheck();
       _this.leaderboardHeader();
@@ -1908,8 +2012,6 @@ export const MainWidget = function (options) {
 
     const memberAchievementOptInStatus = await _this.settings.lbWidget.getMemberAchievementOptInStatus(data.id);
 
-    // console.warn('memberAchievementOptInStatus:', memberAchievementOptInStatus);
-
     if (optinRequiredForEntrants) {
       if (memberAchievementOptInStatus.length && memberAchievementOptInStatus[0].status === 'Entrant') {
         optIn.innerHTML = _this.settings.lbWidget.settings.translation.achievements.leave;
@@ -2325,6 +2427,46 @@ export const MainWidget = function (options) {
     }
   };
 
+  this.missionsListLayout = function (pageNumber) {
+    const _this = this;
+    const missionsList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.missions.containerClass + ' .cl-main-widget-missions-list-body-res');
+    const totalCount = _this.settings.lbWidget.settings.missions.totalCount;
+    const itemsPerPage = 15;
+    let paginator = query(missionsList, '.paginator');
+
+    if (!paginator && totalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(totalCount / itemsPerPage);
+      paginator = document.createElement('div');
+      paginator.setAttribute('class', 'paginator');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      paginator.innerHTML = page;
+    }
+
+    missionsList.innerHTML = '';
+
+    mapObject(_this.settings.lbWidget.settings.missions.missions, function (inboxItem, key, count) {
+      const listItem = _this.messageItem(inboxItem);
+      missionsList.appendChild(listItem);
+    });
+
+    if (paginator) {
+      const paginatorItems = query(paginator, '.paginator-item');
+      paginatorItems.forEach(item => {
+        removeClass(item, 'active');
+        if (Number(item.dataset.page) === Number(pageNumber)) {
+          addClass(item, 'active');
+        }
+      });
+
+      missionsList.appendChild(paginator);
+    }
+  };
+
   this.loadAwards = function (pageNumber, callback) {
     const _this = this;
     _this.settings.lbWidget.checkForAvailableAwards(pageNumber, function (rewards, availableRewards, expiredRewards) {
@@ -2343,6 +2485,19 @@ export const MainWidget = function (options) {
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
       _this.messagesListLayout(pageNumber);
       _this.settings.lbWidget.updateMessagesNavigationCounts();
+
+      if (typeof callback === 'function') {
+        callback();
+      }
+    });
+  };
+
+  this.loadMissions = function (pageNumber, callback) {
+    const _this = this;
+
+    _this.settings.lbWidget.checkForAvailableMissions(pageNumber, function () {
+      _this.missionsListLayout(pageNumber);
+      _this.settings.lbWidget.updateMissionsNavigationCounts();
 
       if (typeof callback === 'function') {
         callback();
@@ -2442,6 +2597,19 @@ export const MainWidget = function (options) {
                 inboxContainer.style.display = 'block';
                 changeInterval = setTimeout(function () {
                   addClass(inboxContainer, 'cl-main-active-section');
+                }, 30);
+
+                preLoader.hide();
+
+                _this.settings.navigationSwitchInProgress = false;
+              });
+            } else if (hasClass(target, 'cl-main-widget-navigation-missions-icon')) {
+              _this.loadMissions(1, function () {
+                const missionsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.missions.containerClass);
+
+                missionsContainer.style.display = 'block';
+                changeInterval = setTimeout(function () {
+                  addClass(missionsContainer, 'cl-main-active-section');
                 }, 30);
 
                 preLoader.hide();

@@ -44,7 +44,9 @@ import {
   MessageRequest,
   AwardsApiWs,
   AwardRequest,
-  ClaimAwardRequest
+  ClaimAwardRequest,
+  GraphsApiWs,
+  EntityGraphRequest
 } from '@ziqni-tech/member-api-client';
 
 const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
@@ -150,6 +152,10 @@ export const LbWidget = function (options) {
       messages: [],
       totalCount: 0
     },
+    missions: {
+      missions: [],
+      totalCount: 0
+    },
     tournaments: {
       activeCompetitionId: null,
       readyCompetitions: [], // statusCode 3
@@ -223,7 +229,8 @@ export const LbWidget = function (options) {
       optInApiWsClient: null,
       rewardsApiWsClient: null,
       awardsApiWsClient: null,
-      messagesApiWsClient: null
+      messagesApiWsClient: null,
+      missionsApiWsClient: null
     },
     uri: {
       gatewayDomain: cLabs.api.url,
@@ -685,6 +692,15 @@ export const LbWidget = function (options) {
     }
   };
 
+  this.updateMissionsNavigationCounts = function () {
+    const _this = this;
+
+    if (_this.settings.mainWidget.settings.navigation !== null) {
+      const menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.missions.navigationClass + ' .cl-main-navigation-item-count');
+      menuItemCount.innerHTML = _this.settings.missions.totalCount;
+    }
+  };
+
   // var checkAchievementsAjax = new cLabs.Ajax();
   this.checkForAvailableAchievements = function (pageNumber, callback) {
     const _this = this;
@@ -1115,6 +1131,68 @@ export const LbWidget = function (options) {
     });
   };
 
+  this.checkForAvailableMissions = function (pageNumber, callback) {
+    if (!this.settings.apiWs.achievementsApiWsClient) {
+      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
+    }
+
+    const missionsRequest = AchievementRequest.constructFromObject({
+      achievementFilter: {
+        ids: [],
+        statusCode: {
+          moreThan: 20,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: (pageNumber - 1) * this.settings.itemsPerPage,
+        limit: this.settings.itemsPerPage,
+        constraints: ['hasNoDependancies']
+      }
+    }, null);
+
+    this.settings.apiWs.achievementsApiWsClient.getAchievements(missionsRequest, async (json) => {
+      console.warn('missionsRequest:', missionsRequest);
+      console.warn('json:', json);
+      this.settings.missions.missions = json.data ?? [];
+      this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+
+      if (typeof callback === 'function') callback(this.settings.missions.missions);
+    });
+  };
+
+  this.getGraph = function (graphRequest, callback) {
+    const tempGraphRequest = EntityGraphRequest.constructFromObject({
+      ids: ['wr47SoYB4W1yU_TfNeYL']
+    });
+
+    this.getGraphApi(tempGraphRequest)
+      .then(json => {
+        this.settings.missions.missions = json.data ?? [];
+        this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+        if (typeof callback === 'function') {
+          callback();
+        }
+      })
+      .catch(error => {
+        this.log(error);
+      });
+  };
+
+  this.getGraphApi = async function (graphRequest) {
+    if (!this.settings.apiWs.missionsApiWsClient) {
+      this.settings.apiWs.missionsApiWsClient = new GraphsApiWs(this.apiClientStomp);
+    }
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.missionsApiWsClient.getGraph(graphRequest, (json) => {
+        console.warn('getGraph json:', json);
+        resolve(json);
+      });
+    });
+  };
+
   this.optInMemberToActiveCompetition = async function (callback) {
     if (!this.settings.apiWs.optInApiWsClient) {
       this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
@@ -1484,6 +1562,13 @@ export const LbWidget = function (options) {
           if (_this.settings.navigation.inbox.enable) {
             _this.checkForAvailableMessages(1, function () {
               _this.updateMessagesNavigationCounts();
+            });
+          }
+
+          // load initial available messages data
+          if (_this.settings.navigation.missions.enable) {
+            _this.checkForAvailableMissions(1, function () {
+              _this.updateMissionsNavigationCounts();
             });
           }
         });
