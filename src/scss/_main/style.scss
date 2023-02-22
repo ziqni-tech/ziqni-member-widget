@@ -3525,6 +3525,265 @@
 
 
 /**
+ * ****************************************
+ * ************ Missions Area **************
+ * ****************************************
+ */
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-missions {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  left: 0;
+  top: 0;
+  background: var(--lb3-messages-header-bg-color);
+  border-radius: 5px;
+  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
+  overflow: hidden;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header {
+  float: left;
+  width: 100%;
+  height: 30px;
+  background: var(--lb3-messages-header-bg-color);
+  border-radius: 5px 5px 0 0;
+  position: relative;
+  z-index: 2;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header .cl-main-widget-missions-header-label {
+  float: left;
+  width: 60%;
+  text-align: center;
+  line-height: 30px;
+  color: var(--lb3-messages-header-text-color);
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+  margin: 0 0 0 20%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header .cl-main-widget-missions-header-date {
+  float: left;
+  width: auto;
+  position: absolute;
+  top: 0;
+  right: 50px;
+  line-height: 30px;
+  color: var(--lb3-messages-header-date-color);
+  font-size: 11px;
+  min-width: 125px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header .cl-main-widget-missions-header-close {
+  position: absolute;
+  display: block;
+  background-image: $lb3-messages-header-close-image;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 70%;
+  width: 30px;
+  height: 30px;
+  right: 3px;
+  top: 0;
+  border-bottom: var(--lb3-messages-header-border-bottom);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-details {
+  float: left;
+  width: 100%;
+  height: 42px;
+  background: var(--lb3-messages-item-bg-color);
+  position: relative;
+  z-index: 2;
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list {
+  position: absolute;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  padding: 30px 0 22px 0;
+  background: var(--lb3-messages-item-bg-color);
+  border-radius: 5px;
+}
+.cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-missions-list {
+  padding-bottom: 5px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body {
+  position: relative;
+  float: left;
+  width: 100%;
+  z-index: 1;
+  overflow: auto;
+  height: calc(100vh - 315px);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res {
+  float: left;
+  width: 100%;
+  padding: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-item {
+  float: left;
+  width: 100%;
+  padding: 10px 15px 15px 15px;
+  margin: 0;
+  border-bottom: 1px solid var(--lb3-messages-item-divider-color);
+  transition: background-color 0.3s ease;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:hover {
+  background-color: var(--lb3-messages-item-hover-color);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-cont {
+  float: left;
+  width: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-wrap {
+  float: left;
+  width: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-label {
+  float: left;
+  width: 100%;
+  color: var(--lb3-messages-item-label-color);
+  text-transform: uppercase;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-description {
+  float: left;
+  width: 100%;
+  font-size: 11px;
+  max-height: 40px;
+  line-height: 16px;
+  color: var(--lb3-messages-item-text-color);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container {
+  position: absolute;
+  height: calc(100% - 52px);
+  background: var(--lb3-messages-details-bg-color);
+  top: 30px;
+  left: -200px;
+  width: 100%;
+  z-index: 10;
+  opacity: 0;
+  display: none;
+  transition: all 0.3s ease;
+}
+.cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-missions-details-container {
+  height: calc(100% - 30px);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container.cl-show {
+  left: 0;
+  opacity: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header {
+  float: left;
+  width: 100%;
+  min-height: 60px;
+  padding: 10px 60px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header-label {
+  float: left;
+  width: 100%;
+  text-align: center;
+  color: var(--lb3-messages-details-title-color);
+  height: 30px;
+  line-height: 30px;
+  font-size: 24px;
+  font-weight: 400;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header-date {
+  float: left;
+  width: 100%;
+  text-align: center;
+  color: var(--lb3-messages-details-date-color);
+  height: 30px;
+  line-height: 30px;
+  font-size: 18px;
+  font-weight: 300;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-back-btn {
+  position: absolute;
+  left: 20px;
+  top: 16px;
+  width: 30px;
+  height: 26px;
+  background-image: $prev-btn-icon-bg;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-container {
+  float: left;
+  width: 100%;
+  overflow: auto;
+  padding: 5px 40px 25px 40px;
+  position: absolute;
+  top: 80px;
+  height: calc(100% - 130px);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body {
+  float: left;
+  width: 100%;
+  color: var(--lb3-messages-details-text-color);
+  font-size: 14px;
+  line-height: 20px;
+  margin: 0;
+  padding: 0 0 30px 0;
+}
+
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-footer {
+  float: left;
+  width: 100%;
+  height: 22px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: var(--lb3-messages-footer-bg-color);
+  border-top: var(--lb3-messages-footer-top-border);
+  border-radius: 0 0 5px 5px;
+  z-index: 2;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-footer-content {
+  float: left;
+  width: 100%;
+  line-height: 22px;
+  color: var(--lb3-messages-footer-text-color);
+  font-size: 11px;
+  text-align: center;
+}
+
+
+/**
  * ******************************************
  * ********** Navigation controls ***********
  * ******************************************
