@@ -2146,6 +2146,27 @@ export const MainWidget = function (options) {
     }, 50);
   };
 
+  this.loadMissonDetails = function (mission, callback) {
+    console.warn('loadMissonDetails data:', mission);
+    const _this = this;
+    const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
+    const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-body');
+
+    if (!mission.data || !mission.data.name) {
+      return;
+    }
+
+    label.innerHTML = mission.data.name;
+    body.innerHTML = mission.data.description;
+
+    _this.settings.missions.detailsContainer.style.display = 'block';
+    setTimeout(function () {
+      addClass(_this.settings.missions.detailsContainer, 'cl-show');
+
+      if (typeof callback === 'function') callback();
+    }, 50);
+  };
+
   this.hideRewardDetails = function (callback) {
     var _this = this;
 
@@ -2163,6 +2184,17 @@ export const MainWidget = function (options) {
     removeClass(_this.settings.messages.detailsContainer, 'cl-show');
     setTimeout(function () {
       _this.settings.messages.detailsContainer.style.display = 'none';
+
+      if (typeof callback === 'function') callback();
+    }, 200);
+  };
+
+  this.hideMissionDetails = function (callback) {
+    const _this = this;
+
+    removeClass(_this.settings.missions.detailsContainer, 'cl-show');
+    setTimeout(function () {
+      _this.settings.missions.detailsContainer.style.display = 'none';
 
       if (typeof callback === 'function') callback();
     }, 200);
@@ -2278,6 +2310,32 @@ export const MainWidget = function (options) {
 
     listItem.dataset.id = inbox.id;
     label.innerHTML = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
+    description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
+
+    detailsWrapper.appendChild(label);
+    detailsWrapper.appendChild(description);
+    detailsContainer.appendChild(detailsWrapper);
+    listItem.appendChild(detailsContainer);
+
+    return listItem;
+  };
+
+  this.missionsItem = function (mission) {
+    const listItem = document.createElement('div');
+    const detailsContainer = document.createElement('div');
+    const detailsWrapper = document.createElement('div');
+    const label = document.createElement('div');
+    const description = document.createElement('div');
+    const content = stripHtml(mission.description);
+
+    listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
+    detailsContainer.setAttribute('class', 'cl-missions-list-details-cont');
+    detailsWrapper.setAttribute('class', 'cl-missions-list-details-wrap');
+    label.setAttribute('class', 'cl-missions-list-details-label');
+    description.setAttribute('class', 'cl-missions-list-details-description');
+
+    listItem.dataset.id = mission.id;
+    label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
     description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
 
     detailsWrapper.appendChild(label);
@@ -2449,8 +2507,8 @@ export const MainWidget = function (options) {
 
     missionsList.innerHTML = '';
 
-    mapObject(_this.settings.lbWidget.settings.missions.missions, function (inboxItem, key, count) {
-      const listItem = _this.messageItem(inboxItem);
+    mapObject(_this.settings.lbWidget.settings.missions.missions, function (missionsItem, key, count) {
+      const listItem = _this.missionsItem(missionsItem);
       missionsList.appendChild(listItem);
     });
 
