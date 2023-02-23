@@ -1147,12 +1147,12 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * this.settings.itemsPerPage,
-        limit: this.settings.itemsPerPage,
+        skip: (pageNumber - 1) * 15,
+        limit: 15,
         constraints: ['hasNoDependancies']
       }
     }, null);
-
+    console.warn('missionsRequest:', missionsRequest);
     this.settings.apiWs.achievementsApiWsClient.getAchievements(missionsRequest, async (json) => {
       console.warn('missionsRequest:', missionsRequest);
       console.warn('json:', json);
@@ -1163,22 +1163,40 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.getGraph = function (graphRequest, callback) {
-    const tempGraphRequest = EntityGraphRequest.constructFromObject({
-      ids: ['wr47SoYB4W1yU_TfNeYL']
-    });
+  this.getMission = function (id, callback) {
+    if (!this.settings.apiWs.achievementsApiWsClient) {
+      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
+    }
 
-    this.getGraphApi(tempGraphRequest)
-      .then(json => {
-        this.settings.missions.missions = json.data ?? [];
-        this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
-        if (typeof callback === 'function') {
-          callback();
-        }
-      })
-      .catch(error => {
-        this.log(error);
+    const achievementRequest = AchievementRequest.constructFromObject({
+      achievementFilter: {
+        ids: [id],
+        skip: 0,
+        limit: 1
+      }
+    }, null);
+
+    this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, (json) => {
+      const mainData = json.data[0];
+
+      const tempGraphRequest = EntityGraphRequest.constructFromObject({
+        ids: [id]
       });
+
+      this.getGraphApi(tempGraphRequest)
+        .then(json => {
+          if (typeof callback === 'function') {
+            const data = {
+              data: mainData,
+              graph: json.data
+            };
+            callback(data);
+          }
+        })
+        .catch(error => {
+          this.log(error);
+        });
+    });
   };
 
   this.getGraphApi = async function (graphRequest) {
@@ -1782,6 +1800,9 @@ export const LbWidget = function (options) {
       if (el.closest('.cl-main-widget-inbox-list-body-res')) {
         _this.settings.mainWidget.loadMessages(el.dataset.page);
       }
+      if (el.closest('.cl-main-widget-missions-list-body-res')) {
+        _this.settings.mainWidget.loadMissions(el.dataset.page);
+      }
 
       // load achievement details
     } else if (hasClass(el, 'cl-ach-list-more')) {
@@ -1810,6 +1831,11 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hideMessageDetails(function () {
       });
 
+      // mission details back button
+    } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
+      _this.settings.mainWidget.hideMissionDetails(function () {
+      });
+
       // load rewards details
     } else if (hasClass(el, 'cl-rew-list-item') || closest(el, '.cl-rew-list-item') !== null) {
       var awardId = (hasClass(el, 'cl-rew-list-item')) ? el.dataset.id : closest(el, '.cl-rew-list-item').dataset.id;
@@ -1820,9 +1846,21 @@ export const LbWidget = function (options) {
 
       // load inbox details
     } else if (hasClass(el, 'cl-inbox-list-item') || closest(el, '.cl-inbox-list-item') !== null) {
-      var messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.rewardId : closest(el, '.cl-inbox-list-item').dataset.id;
+      const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
         _this.settings.mainWidget.loadMessageDetails(data, function () {
+        });
+      });
+
+      // load mission details
+    } else if (hasClass(el, 'cl-missions-list-item') || closest(el, '.cl-missions-list-item') !== null) {
+      const missionId = (hasClass(el, 'cl-missions-list-item')) ? el.dataset.id : closest(el, '.cl-missions-list-item').dataset.id;
+      const preLoader = _this.settings.mainWidget.preloader();
+      preLoader.show(function () {
+        _this.getMission(missionId, function (data) {
+          _this.settings.mainWidget.loadMissonDetails(data, function () {
+            preLoader.hide();
+          });
         });
       });
 
