@@ -9,6 +9,12 @@ import addClass from '../utils/addClass';
 import remove from '../utils/remove';
 import appendNext from '../utils/appendNext';
 import stripHtml from '../utils/stripHtml';
+import Graph from 'graphology';
+import Sigma from 'sigma';
+import getNodeProgramImage from 'sigma/rendering/webgl/programs/node.image';
+import circular from 'graphology-layout/circular';
+import rotation from 'graphology-layout/rotation';
+import forceAtlas2 from 'graphology-layout-forceatlas2';
 
 /**
  * MainWidget
@@ -845,6 +851,14 @@ export const MainWidget = function (options) {
     const sectionMissionsDetailsBodyContainer = document.createElement('div');
     const sectionMissionsDetailsBody = document.createElement('div');
 
+    const sectionMissionsGraph = document.createElement('div');
+    const graphImage = document.createElement('div');
+
+    graphImage.setAttribute('class', 'cl-main-widget-missions-graph-image');
+
+    sectionMissionsGraph.setAttribute('id', 'graph-container');
+    sectionMissionsGraph.setAttribute('class', 'cl-main-widget-missions-graph-container');
+
     sectionMissions.setAttribute('class', _this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
     sectionMissionsHeader.setAttribute('class', 'cl-main-widget-missions-header');
     sectionMissionsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-header-label');
@@ -897,6 +911,8 @@ export const MainWidget = function (options) {
     sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsHeader);
     sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsBackBtn);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
+    sectionMissionsDetailsBodyContainer.appendChild(graphImage);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsGraph);
     sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsBodyContainer);
 
     sectionMissionsFooter.appendChild(sectionMissionsFooterContent);
@@ -2147,7 +2163,6 @@ export const MainWidget = function (options) {
   };
 
   this.loadMissonDetails = function (mission, callback) {
-    console.warn('loadMissonDetails data:', mission);
     const _this = this;
     const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
     const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-body');
@@ -2165,6 +2180,62 @@ export const MainWidget = function (options) {
 
       if (typeof callback === 'function') callback();
     }, 50);
+
+    const container = document.getElementById('graph-container');
+    container.innerHTML = '';
+
+    const graph = new Graph();
+    mission.graph.nodes.forEach((n) => {
+      graph.addNode(n.entityId, { size: 20, label: n.name, color: '#017dfb' });
+    });
+
+    const MUST_NOT_COLOR = '#e74a39';
+    const SHOULD_COLOR = '#f48f3b';
+    const MUST_COLOR = '#3bb54c';
+
+    mission.graph.graphs[0].edges.forEach(e => {
+      if (e.graphEdgeType !== 'ROOT') {
+        let color = 'black';
+        switch (e.graphEdgeType) {
+          case 'MUST NOT':
+            color = MUST_NOT_COLOR;
+            break;
+          case 'SHOULD':
+            color = SHOULD_COLOR;
+            break;
+          case 'MUST':
+            color = MUST_COLOR;
+            break;
+        }
+        graph.addEdge(
+          e.headEntityId,
+          e.tailEntityId,
+          { weight: 1, type: 'arrow', label: e.graphEdgeType, size: 5, color: color, labelColor: 'red' }
+        );
+      }
+    });
+
+    circular.assign(graph);
+    rotation.assign(graph, 0);
+
+    const settings = forceAtlas2.inferSettings(graph);
+    forceAtlas2.assign(graph, { settings, iterations: 600 });
+
+    // eslint-disable-next-line
+    const renderer = new Sigma(graph, container, {
+      renderLabels: true,
+      renderEdgeLabels: true,
+      enableEdgeWheelEvents: false,
+      allowInvalidContainer: true,
+      minCameraRatio: null, // 1.3
+      maxCameraRatio: null, // 1.3
+      labelFont: 'Gotham',
+      edgeLabelFont: 'Gotham',
+      edgeLabelWeight: 'bold',
+      nodeProgramClasses: {
+        image: getNodeProgramImage()
+      }
+    });
   };
 
   this.hideRewardDetails = function (callback) {
