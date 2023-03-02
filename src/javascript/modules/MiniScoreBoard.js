@@ -608,6 +608,8 @@ export const MiniScoreBoard = function (options) {
 
   this.layoutRequiresOptIn = function (isProcessing = false) {
     var _this = this;
+    if (!_this.settings.lbWidget.settings.competition.activeContest) return;
+
     var startDate = _this.settings.lbWidget.settings.competition.activeContest.scheduledStartDate;
     if (typeof _this.settings.lbWidget.settings.competition.activeContest.actualStartDate !== 'undefined') {
       startDate = _this.settings.lbWidget.settings.competition.activeContest.actualStartDate;

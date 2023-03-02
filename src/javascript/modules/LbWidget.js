@@ -711,7 +711,7 @@ export const LbWidget = function (options) {
 
     const achievementRequest = AchievementRequest.constructFromObject({
       achievementFilter: {
-        productIds: [],
+        productTags: [],
         tags: [],
         startDate: null,
         endDate: null,
@@ -1152,10 +1152,8 @@ export const LbWidget = function (options) {
         constraints: ['hasNoDependancies']
       }
     }, null);
-    console.warn('missionsRequest:', missionsRequest);
+
     this.settings.apiWs.achievementsApiWsClient.getAchievements(missionsRequest, async (json) => {
-      console.warn('missionsRequest:', missionsRequest);
-      console.warn('json:', json);
       this.settings.missions.missions = json.data ?? [];
       this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
 
@@ -1203,9 +1201,9 @@ export const LbWidget = function (options) {
     if (!this.settings.apiWs.missionsApiWsClient) {
       this.settings.apiWs.missionsApiWsClient = new GraphsApiWs(this.apiClientStomp);
     }
+
     return new Promise((resolve, reject) => {
       this.settings.apiWs.missionsApiWsClient.getGraph(graphRequest, (json) => {
-        console.warn('getGraph json:', json);
         resolve(json);
       });
     });
