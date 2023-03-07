@@ -2921,7 +2921,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-item {
   float: left;
   width: 100%;
-  padding: 10px 15px 15px 15px;
+  padding: 10px 30px 15px 30px;
   margin: 0;
   border-bottom: 1px solid var(--lb3-rewards-divider-color);
   transition: background-color 0.3s ease;
@@ -3058,7 +3058,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-cont {
   float: left;
   width: 100%;
-  padding: 10px 15px 15px 15px;
+  padding: 10px 30px 15px 30px;
   margin: 0;
   border-bottom: var(--lb3-tournament-list-item-cont-border-bottom);
   transition: background-color 0.3s ease;
@@ -3372,10 +3372,15 @@
   padding: 0;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .paginator {
+  margin-top: 10px;
+  margin-right: 30px;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-inbox-list-item {
   float: left;
   width: 100%;
-  padding: 10px 15px 15px 15px;
+  padding: 10px 30px 15px 30px;
   margin: 0;
   border-bottom: 1px solid var(--lb3-messages-item-divider-color);
   transition: background-color 0.3s ease;
@@ -3648,7 +3653,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-item {
   float: left;
   width: 100%;
-  padding: 10px 15px 15px 15px;
+  padding: 10px 30px 15px 30px;
   margin: 0;
   border-bottom: 1px solid var(--lb3-messages-item-divider-color);
   transition: background-color 0.3s ease;

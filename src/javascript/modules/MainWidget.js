@@ -11,7 +11,6 @@ import appendNext from '../utils/appendNext';
 import stripHtml from '../utils/stripHtml';
 import Graph from 'graphology';
 import Sigma from 'sigma';
-import getNodeProgramImage from 'sigma/rendering/webgl/programs/node.image';
 import circular from 'graphology-layout/circular';
 import rotation from 'graphology-layout/rotation';
 import forceAtlas2 from 'graphology-layout-forceatlas2';
@@ -2186,7 +2185,11 @@ export const MainWidget = function (options) {
 
     const graph = new Graph();
     mission.graph.nodes.forEach((n) => {
-      graph.addNode(n.entityId, { size: 20, label: n.name, color: '#017dfb' });
+      let color = '#017dfb';
+      if (n.entityId === mission.data.id) {
+        color = '#ff7400';
+      }
+      graph.addNode(n.entityId, { size: 20, label: n.name, color: color });
     });
 
     const MUST_NOT_COLOR = '#e74a39';
@@ -2216,9 +2219,21 @@ export const MainWidget = function (options) {
     });
 
     circular.assign(graph);
-    rotation.assign(graph, 0);
+    rotation.assign(graph, 10);
 
-    const settings = forceAtlas2.inferSettings(graph);
+    const settings = {
+      linLogMode: false,
+      outboundAttractionDistribution: false,
+      adjustSizes: false,
+      edgeWeightInfluence: 1,
+      scalingRatio: 10,
+      strongGravityMode: true,
+      gravity: 1,
+      slowDown: 3.7,
+      barnesHutOptimize: false,
+      barnesHutTheta: 0.5
+    };
+
     forceAtlas2.assign(graph, { settings, iterations: 600 });
 
     // eslint-disable-next-line
@@ -2231,10 +2246,7 @@ export const MainWidget = function (options) {
       maxCameraRatio: null, // 1.3
       labelFont: 'Gotham',
       edgeLabelFont: 'Gotham',
-      edgeLabelWeight: 'bold',
-      nodeProgramClasses: {
-        image: getNodeProgramImage()
-      }
+      edgeLabelWeight: 'bold'
     });
   };
 
@@ -2506,14 +2518,6 @@ export const MainWidget = function (options) {
         }
       }
     }
-
-    // mapObject(rewardData, function(rew){
-    //   if( query(rewardList, ".cl-reward-" + rew.id) === null ) {
-    //     var listItem = _this.rewardItem(rew);
-    //
-    //     rewardList.appendChild(listItem);
-    //   }
-    // });
   };
 
   this.messagesListLayout = function (pageNumber) {
