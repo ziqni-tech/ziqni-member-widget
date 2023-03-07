@@ -158,9 +158,12 @@ export const LbWidget = function (options) {
     },
     tournaments: {
       activeCompetitionId: null,
-      readyCompetitions: [], // statusCode 3
-      activeCompetitions: [], // statusCode 5
-      finishedCompetitions: [] // statusCode 7
+      readyCompetitions: [],
+      activeCompetitions: [],
+      finishedCompetitions: [],
+      totalCount: 0,
+      readyTotalCount: 0,
+      finishedTotalCount: 0
     },
     leaderboard: {
       fullLeaderboardSize: 100,
@@ -186,6 +189,7 @@ export const LbWidget = function (options) {
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
       tournaments: {
         enable: true,
+        showFinishedTournaments: true,
         navigationClass: 'cl-main-widget-navigation-lb',
         navigationClassIcon: 'cl-main-widget-navigation-lb-icon',
         containerClass: 'cl-main-widget-lb',
@@ -436,9 +440,19 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    this.settings.tournaments.readyCompetitions = await this.getCompetitionsApi(readyCompetitionRequest);
-    this.settings.tournaments.activeCompetitions = await this.getCompetitionsApi(activeCompetitionRequest);
-    this.settings.tournaments.finishedCompetitions = await this.getCompetitionsApi(finishedCompetitionRequest);
+    const readyCompetitions = await this.getCompetitionsApi(readyCompetitionRequest);
+    this.settings.tournaments.readyCompetitions = readyCompetitions.data;
+    this.settings.tournaments.readyTotalCount = readyCompetitions.meta.totalRecordsFound;
+
+    const activeCompetitions = await this.getCompetitionsApi(activeCompetitionRequest);
+    this.settings.tournaments.activeCompetitions = activeCompetitions.data;
+    this.settings.tournaments.totalCount = activeCompetitions.meta.totalRecordsFound;
+
+    if (this.settings.navigation.tournaments.showFinishedTournaments) {
+      const finishedCompetitions = await this.getCompetitionsApi(finishedCompetitionRequest);
+      this.settings.tournaments.finishedCompetitions = finishedCompetitions.data;
+      this.settings.tournaments.finishedTotalCount = finishedCompetitions.meta.totalRecordsFound;
+    }
 
     if (typeof callback === 'function') {
       callback();
@@ -454,7 +468,7 @@ export const LbWidget = function (options) {
     }
     return new Promise((resolve, reject) => {
       this.settings.apiWs.competitionsApiWsClient.getCompetitions(competitionRequest, (json) => {
-        resolve(json.data);
+        resolve(json);
       });
     });
   };
@@ -659,7 +673,7 @@ export const LbWidget = function (options) {
 
     if (_this.settings.mainWidget.settings.navigation !== null) {
       var menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.tournaments.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.tournaments.activeCompetitions.length;
+      menuItemCount.innerHTML = _this.settings.tournaments.totalCount;
     }
   };
 
