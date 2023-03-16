@@ -1814,6 +1814,61 @@ export const MainWidget = function (options) {
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const preLoader = _this.preloader();
 
+    const totalCount = _this.settings.lbWidget.settings.tournaments.totalCount;
+    const readyTotalCount = _this.settings.lbWidget.settings.tournaments.readyTotalCount;
+    const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
+    const itemsPerPage = 20;
+
+    let paginator = query(listResContainer, '.paginator');
+    if (!paginator && totalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(totalCount / itemsPerPage);
+      paginator = document.createElement('div');
+      paginator.setAttribute('class', 'paginator');
+      addClass(paginator, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      paginator.innerHTML = page;
+    }
+
+    console.warn('paginator', paginator);
+
+    let readyPaginator = query(listResContainer, '.paginator-ready');
+    if (!readyPaginator && readyTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(totalCount / itemsPerPage);
+      readyPaginator = document.createElement('div');
+      readyPaginator.setAttribute('class', 'paginator-ready');
+      addClass(readyPaginator, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      readyPaginator.innerHTML = page;
+    }
+
+    console.warn('readyPaginator', readyPaginator);
+
+    let finishedPaginator = query(listResContainer, '.paginator-finished');
+    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(totalCount / itemsPerPage);
+      finishedPaginator = document.createElement('div');
+      finishedPaginator.setAttribute('class', 'paginator-finished');
+      addClass(finishedPaginator, 'paginator');
+      addClass(finishedPaginator, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      finishedPaginator.innerHTML = page;
+    }
+
     preLoader.show(function () {
       listIcon.style.opacity = '0';
       const accordionObj = _this.accordionStyle(_this.settings.tournamentsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout) {
@@ -1839,6 +1894,12 @@ export const MainWidget = function (options) {
 
       listResContainer.innerHTML = '';
       listResContainer.appendChild(accordionObj);
+
+      if (finishedPaginator) {
+        const finishedContainer = query(listResContainer, 'finishedCompetitions');
+        console.warn('finishedPaginator:', finishedPaginator);
+        console.warn('finishedContainer:', finishedContainer);
+      }
 
       _this.settings.tournamentListContainer.style.display = 'block';
       setTimeout(function () {
