@@ -1262,11 +1262,31 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.leaderboardDataRefresh = function () {
+  this.leaderboardDataRefresh = async function () {
     var _this = this;
 
     if (_this.settings.leaderboard.refreshLbDataInterval) {
       clearTimeout(_this.settings.leaderboard.refreshLbDataInterval);
+    }
+
+    if (
+      _this.settings.competition.activeCompetition.constraints &&
+      _this.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
+    ) {
+      if (
+        !_this.settings.competition.activeCompetition.optin ||
+        (
+          typeof _this.settings.competition.activeCompetition.optin === 'boolean' &&
+          !_this.settings.competition.activeCompetition.optin
+        )
+      ) {
+        const optInStatus = await this.getCompetitionOptInStatus(
+          this.settings.competition.activeCompetition.id
+        );
+        if (optInStatus.length && optInStatus[0].status === 'Entrant') {
+          this.settings.competition.activeCompetition.optin = true;
+        }
+      }
     }
 
     if (
