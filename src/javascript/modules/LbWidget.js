@@ -1844,7 +1844,19 @@ export const LbWidget = function (options) {
       if (el.closest('.paginator-finished')) {
         preLoader.show(async function () {
           await _this.checkForAvailableCompetitions(null, 1, 1, Number(el.dataset.page));
-          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), null, null, Number(el.dataset.page));
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, 1, Number(el.dataset.page));
+        });
+      }
+      if (el.closest('.paginator-ready')) {
+        preLoader.show(async function () {
+          await _this.checkForAvailableCompetitions(null, Number(el.dataset.page), 1, 1);
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), Number(el.dataset.page), 1, 1);
+        });
+      }
+      if (el.closest('.paginator-active')) {
+        preLoader.show(async function () {
+          await _this.checkForAvailableCompetitions(null, 1, Number(el.dataset.page), 1);
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, Number(el.dataset.page), 1);
         });
       }
 
