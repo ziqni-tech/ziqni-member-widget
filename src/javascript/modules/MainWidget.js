@@ -1808,11 +1808,93 @@ export const MainWidget = function (options) {
     }, 50);
   };
 
-  this.loadCompetitionList = function (callback) {
+  this.loadCompetitionList = function (
+    callback,
+    readyPageNumber = 1,
+    activePageNumber = 1,
+    finishedPageNumber = 1
+  ) {
     const _this = this;
     const listResContainer = query(_this.settings.tournamentListContainer, '.cl-main-widget-tournaments-list-body-res');
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const preLoader = _this.preloader();
+
+    const totalCount = _this.settings.lbWidget.settings.tournaments.totalCount;
+    const readyTotalCount = _this.settings.lbWidget.settings.tournaments.readyTotalCount;
+    const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
+    const itemsPerPage = 20;
+
+    let paginator = query(listResContainer, '.paginator');
+    if (!paginator && totalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(totalCount / itemsPerPage);
+      paginator = document.createElement('div');
+      paginator.setAttribute('class', 'paginator');
+      addClass(paginator, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      paginator.innerHTML = page;
+    }
+
+    let readyPaginator = query(listResContainer, '.paginator-ready');
+    if (!readyPaginator && readyTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(readyTotalCount / itemsPerPage);
+      readyPaginator = document.createElement('div');
+      readyPaginator.setAttribute('class', 'paginator-ready');
+      addClass(readyPaginator, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      readyPaginator.innerHTML = page;
+    }
+
+    let finishedPaginator = query(listResContainer, '.paginator-finished');
+    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(finishedTotalCount / itemsPerPage);
+      finishedPaginator = document.createElement('div');
+      finishedPaginator.setAttribute('class', 'paginator-finished');
+      addClass(finishedPaginator, 'paginator');
+      addClass(finishedPaginator, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      finishedPaginator.innerHTML = page;
+    }
+
+    if (readyPageNumber > 1) {
+      _this.settings.tournamentsSection.accordionLayout.map(t => {
+        if (t.type === 'readyCompetitions') {
+          t.show = true;
+        } else {
+          t.show = false;
+        }
+      });
+    } else if (finishedPageNumber > 1) {
+      _this.settings.tournamentsSection.accordionLayout.map(t => {
+        if (t.type === 'finishedCompetitions') {
+          t.show = true;
+        } else {
+          t.show = false;
+        }
+      });
+    } else {
+      _this.settings.tournamentsSection.accordionLayout.map(t => {
+        if (t.type === 'activeCompetitions') {
+          t.show = true;
+        } else {
+          t.show = false;
+        }
+      });
+    }
 
     preLoader.show(function () {
       listIcon.style.opacity = '0';
@@ -1839,6 +1921,21 @@ export const MainWidget = function (options) {
 
       listResContainer.innerHTML = '';
       listResContainer.appendChild(accordionObj);
+
+      if (finishedPaginator) {
+        const finishedContainer = query(listResContainer, '.finishedCompetitions');
+        if (finishedContainer) {
+          const paginatorItems = query(finishedPaginator, '.paginator-item');
+          paginatorItems.forEach(item => {
+            removeClass(item, 'active');
+            if (Number(item.dataset.page) === Number(finishedPageNumber)) {
+              addClass(item, 'active');
+            }
+          });
+
+          finishedContainer.appendChild(finishedPaginator);
+        }
+      }
 
       _this.settings.tournamentListContainer.style.display = 'block';
       setTimeout(function () {
