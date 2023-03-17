@@ -1824,11 +1824,12 @@ export const MainWidget = function (options) {
     const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
     const itemsPerPage = 20;
 
-    let paginator = query(listResContainer, '.paginator');
+    let paginator = query(listResContainer, '.paginator-active');
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
       paginator = document.createElement('div');
-      paginator.setAttribute('class', 'paginator');
+      paginator.setAttribute('class', 'paginator-active');
+      addClass(paginator, 'paginator');
       addClass(paginator, 'accordion');
 
       let page = '';
@@ -1844,6 +1845,7 @@ export const MainWidget = function (options) {
       const pagesCount = Math.ceil(readyTotalCount / itemsPerPage);
       readyPaginator = document.createElement('div');
       readyPaginator.setAttribute('class', 'paginator-ready');
+      addClass(readyPaginator, 'paginator');
       addClass(readyPaginator, 'accordion');
 
       let page = '';
@@ -1934,6 +1936,36 @@ export const MainWidget = function (options) {
           });
 
           finishedContainer.appendChild(finishedPaginator);
+        }
+      }
+
+      if (readyPaginator) {
+        const readyContainer = query(listResContainer, '.readyCompetitions');
+        if (readyContainer) {
+          const paginatorItems = query(readyPaginator, '.paginator-item');
+          paginatorItems.forEach(item => {
+            removeClass(item, 'active');
+            if (Number(item.dataset.page) === Number(readyPageNumber)) {
+              addClass(item, 'active');
+            }
+          });
+
+          readyContainer.appendChild(readyPaginator);
+        }
+      }
+
+      if (paginator) {
+        const activeContainer = query(listResContainer, '.activeCompetitions');
+        if (activeContainer) {
+          const paginatorItems = query(paginator, '.paginator-item');
+          paginatorItems.forEach(item => {
+            removeClass(item, 'active');
+            if (Number(item.dataset.page) === Number(activePageNumber)) {
+              addClass(item, 'active');
+            }
+          });
+
+          activeContainer.appendChild(paginator);
         }
       }
 

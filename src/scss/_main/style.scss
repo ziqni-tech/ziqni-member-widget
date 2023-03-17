@@ -3845,8 +3845,20 @@
   .paginator-finished {
     display: none;
   }
+  .paginator-ready {
+    display: none;
+  }
+  .paginator-active {
+    display: none;
+  }
   .cl-shown {
     .paginator-finished {
+      display: block;
+    }
+    .paginator-ready {
+      display: block;
+    }
+    .paginator-active {
       display: block;
     }
   }
