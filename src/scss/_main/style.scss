@@ -3842,6 +3842,14 @@
       margin: 12px;
     }
   }
+  .paginator-finished {
+    display: none;
+  }
+  .cl-shown {
+    .paginator-finished {
+      display: block;
+    }
+  }
 }
 
 /**

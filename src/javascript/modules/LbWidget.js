@@ -394,7 +394,12 @@ export const LbWidget = function (options) {
    */
   // const competitionCheckAjax = new cLabs.Ajax();
 
-  this.checkForAvailableCompetitions = async function (callback) {
+  this.checkForAvailableCompetitions = async function (
+    callback,
+    readyPageNumber = 1,
+    activePageNumber = 1,
+    finishedPageNumber = 1
+  ) {
     const readyCompetitionRequest = CompetitionRequest.constructFromObject({
       competitionFilter: {
         statusCode: {
@@ -406,7 +411,7 @@ export const LbWidget = function (options) {
           order: 'Desc'
         }],
         limit: 20,
-        skip: 0
+        skip: (readyPageNumber - 1) * 20
       }
     }, null);
 
@@ -421,7 +426,7 @@ export const LbWidget = function (options) {
           order: 'Desc'
         }],
         limit: 20,
-        skip: 0
+        skip: (activePageNumber - 1) * 20
       }
     }, null);
 
@@ -436,7 +441,7 @@ export const LbWidget = function (options) {
           order: 'Desc'
         }],
         limit: 20,
-        skip: 0
+        skip: (finishedPageNumber - 1) * 20
       }
     }, null);
 
@@ -1823,6 +1828,7 @@ export const LbWidget = function (options) {
 
       // pagination
     } else if (hasClass(el, 'paginator-item')) {
+      const preLoader = _this.settings.mainWidget.preloader();
       if (el.closest('.cl-main-widget-ach-list-body-res')) {
         _this.settings.mainWidget.loadAchievements(el.dataset.page);
       }
@@ -1834,6 +1840,12 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.cl-main-widget-missions-list-body-res')) {
         _this.settings.mainWidget.loadMissions(el.dataset.page);
+      }
+      if (el.closest('.paginator-finished')) {
+        preLoader.show(async function () {
+          await _this.checkForAvailableCompetitions(null, 1, 1, Number(el.dataset.page));
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), null, null, Number(el.dataset.page));
+        });
       }
 
       // load achievement details
