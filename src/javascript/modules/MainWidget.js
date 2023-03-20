@@ -1510,9 +1510,9 @@ export const MainWidget = function (options) {
         this.settings.lbWidget.settings.competition.activeCompetition.id
       );
 
-      if (optInStatus.length && optInStatus[0].status === 'Entrant') {
+      if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
         optIn.parentNode.style.display = 'none';
-      } else if (optInStatus.length && (optInStatus[0].status === 'Entering' || optInStatus[0].status === 'Processing')) {
+      } else if (optInStatus.length && (optInStatus[0].statusCode === 10 || optInStatus[0].statusCode === 0)) {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.processing;
         addClass(optIn, 'checking');
         optIn.parentNode.style.display = 'block';
@@ -2080,9 +2080,9 @@ export const MainWidget = function (options) {
     progressionWrapper.appendChild(progressionCont);
 
     if (Array.isArray(ach.constraints) && ach.constraints.includes('optinRequiredForEntrants')) {
-      if (ach.optInStatus && ach.optInStatus === 'Entrant') {
+      if (ach.optInStatus && ach.optInStatus >= 15 && ach.optInStatus <= 35) {
         progressionWrapper.appendChild(leaveButton);
-      } else if (ach.optInStatus && (ach.optInStatus === 'Entering' || ach.optInStatus === 'Processing')) {
+      } else if (!isNaN(ach.optInStatus) && (ach.optInStatus === 10 || ach.optInStatus === 0)) {
         progressionWrapper.appendChild(progressionButton);
       } else {
         progressionWrapper.appendChild(enterButton);
@@ -2157,14 +2157,18 @@ export const MainWidget = function (options) {
     const memberAchievementOptInStatus = await _this.settings.lbWidget.getMemberAchievementOptInStatus(data.id);
 
     if (optinRequiredForEntrants) {
-      if (memberAchievementOptInStatus.length && memberAchievementOptInStatus[0].status === 'Entrant') {
+      if (
+        memberAchievementOptInStatus.length &&
+        memberAchievementOptInStatus[0].statusCode >= 15 &&
+        memberAchievementOptInStatus[0].statusCode <= 35
+      ) {
         optIn.innerHTML = _this.settings.lbWidget.settings.translation.achievements.leave;
         removeClass(optIn, 'cl-disabled');
         addClass(optIn, 'leave-achievement');
         optIn.parentNode.style.display = 'block';
       } else if (
         memberAchievementOptInStatus.length &&
-        (memberAchievementOptInStatus[0].status === 'Entering' || memberAchievementOptInStatus[0].status === 'Processing')
+        (memberAchievementOptInStatus[0].statusCode === 10 || memberAchievementOptInStatus[0].statusCode === 0)
       ) {
         optIn.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listProgressionBtn;
         removeClass(optIn, 'cl-disabled');

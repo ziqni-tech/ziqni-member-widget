@@ -768,7 +768,7 @@ export const LbWidget = function (options) {
           statuses.forEach(s => {
             const idx = _this.settings.achievements.list.findIndex(a => a.id === s.entityId);
             if (idx !== -1) {
-              _this.settings.achievements.list[idx].optInStatus = s.status;
+              _this.settings.achievements.list[idx].optInStatus = s.statusCode;
             }
           });
         }
@@ -1288,7 +1288,8 @@ export const LbWidget = function (options) {
         const optInStatus = await this.getCompetitionOptInStatus(
           this.settings.competition.activeCompetition.id
         );
-        if (optInStatus.length && optInStatus[0].status === 'Entrant') {
+
+        if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
           this.settings.competition.activeCompetition.optin = true;
         }
       }
