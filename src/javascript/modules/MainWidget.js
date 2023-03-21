@@ -2589,17 +2589,19 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
-  this.rewardsListLayout = function (pageNumber, rewards, availableRewards, expiredRewards) {
+  this.rewardsListLayout = function (pageNumber = 1, claimedPageNumber = 1, rewards, availableRewards, expiredRewards) {
     const _this = this;
     const rewardList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
-    const itemsPerPage = 10;
-    let paginator = query(rewardList, '.paginator');
+    const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
+    const itemsPerPage = 20;
+    let paginator = query(rewardList, '.paginator-available');
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
       paginator = document.createElement('div');
-      paginator.setAttribute('class', 'paginator');
+      paginator.setAttribute('class', 'paginator-available');
+      addClass(paginator, 'paginator');
       addClass(paginator, 'accordion');
 
       let page = '';
@@ -2608,6 +2610,40 @@ export const MainWidget = function (options) {
         page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
       }
       paginator.innerHTML = page;
+    }
+
+    let paginatorClaimed = query(rewardList, '.paginator-claimed');
+    if (!paginatorClaimed && claimedTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(claimedTotalCount / itemsPerPage);
+      paginatorClaimed = document.createElement('div');
+      paginatorClaimed.setAttribute('class', 'paginator-claimed');
+      addClass(paginatorClaimed, 'paginator');
+      addClass(paginatorClaimed, 'accordion');
+
+      let page = '';
+
+      for (let i = 0; i < pagesCount; i++) {
+        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      }
+      paginatorClaimed.innerHTML = page;
+    }
+
+    if (claimedPageNumber > 1) {
+      _this.settings.rewardsSection.accordionLayout.map(t => {
+        if (t.type === 'claimedAwards') {
+          t.show = true;
+        } else {
+          t.show = false;
+        }
+      });
+    } else {
+      _this.settings.rewardsSection.accordionLayout.map(t => {
+        if (t.type === 'availableAwards') {
+          t.show = true;
+        } else {
+          t.show = false;
+        }
+      });
     }
 
     const accordionObj = _this.accordionStyle(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
@@ -2645,10 +2681,21 @@ export const MainWidget = function (options) {
 
       const availableRewards = query(rewardList, '.cl-accordion.availableAwards');
       if (availableRewards) {
-        const availableRewardsList = query(availableRewards, '.cl-accordion-list');
-        if (availableRewardsList) {
-          availableRewardsList.appendChild(paginator);
+        availableRewards.appendChild(paginator);
+      }
+    }
+
+    if (paginatorClaimed) {
+      const paginatorItems = query(paginatorClaimed, '.paginator-item');
+      paginatorItems.forEach(item => {
+        removeClass(item, 'active');
+        if (Number(item.dataset.page) === Number(claimedPageNumber)) {
+          addClass(item, 'active');
         }
+      });
+      const claimedRewards = query(rewardList, '.cl-accordion.claimedAwards');
+      if (claimedRewards) {
+        claimedRewards.appendChild(paginatorClaimed);
       }
     }
   };
@@ -2733,16 +2780,20 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.loadAwards = function (pageNumber, callback) {
+  this.loadAwards = function (callback, pageNumber, claimedPageNumber) {
     const _this = this;
-    _this.settings.lbWidget.checkForAvailableAwards(pageNumber, function (rewards, availableRewards, expiredRewards) {
-      _this.settings.lbWidget.updateRewardsNavigationCounts();
-      _this.rewardsListLayout(pageNumber, rewards, availableRewards, expiredRewards);
+    _this.settings.lbWidget.checkForAvailableAwards(
+      function (rewards, availableRewards, expiredRewards) {
+        _this.settings.lbWidget.updateRewardsNavigationCounts();
+        _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards);
 
-      if (typeof callback === 'function') {
-        callback();
-      }
-    });
+        if (typeof callback === 'function') {
+          callback();
+        }
+      },
+      pageNumber,
+      claimedPageNumber
+    );
   };
 
   this.loadMessages = function (pageNumber, callback) {
@@ -2840,22 +2891,26 @@ export const MainWidget = function (options) {
                 _this.settings.navigationSwitchInProgress = false;
               });
             } else if (hasClass(target, 'cl-main-widget-navigation-rewards-icon')) {
-              _this.loadAwards(1, function () {
-                const rewardsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.rewards.containerClass);
+              _this.loadAwards(
+                function () {
+                  const rewardsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.rewards.containerClass);
 
-                rewardsContainer.style.display = 'block';
-                changeInterval = setTimeout(function () {
-                  addClass(rewardsContainer, 'cl-main-active-section');
-                }, 30);
+                  rewardsContainer.style.display = 'block';
+                  changeInterval = setTimeout(function () {
+                    addClass(rewardsContainer, 'cl-main-active-section');
+                  }, 30);
 
-                if (typeof callback === 'function') {
-                  callback();
-                }
+                  if (typeof callback === 'function') {
+                    callback();
+                  }
 
-                preLoader.hide();
+                  preLoader.hide();
 
-                _this.settings.navigationSwitchInProgress = false;
-              });
+                  _this.settings.navigationSwitchInProgress = false;
+                },
+                1,
+                1
+              );
             } else if (hasClass(target, 'cl-main-widget-navigation-inbox-icon')) {
               _this.loadMessages(1, function () {
                 var inboxContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.inbox.containerClass);

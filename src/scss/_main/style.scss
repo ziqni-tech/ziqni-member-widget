@@ -3851,6 +3851,12 @@
   .paginator-active {
     display: none;
   }
+  .paginator-claimed {
+    display: none;
+  }
+  .paginator-available {
+    display: none;
+  }
   .cl-shown {
     .paginator-finished {
       display: block;
@@ -3859,6 +3865,12 @@
       display: block;
     }
     .paginator-active {
+      display: block;
+    }
+    .paginator-claimed {
+      display: block;
+    }
+    .paginator-available {
       display: block;
     }
   }
