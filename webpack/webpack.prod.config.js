@@ -29,12 +29,19 @@ module.exports = {
       './src/scss/' + _THEME + '/style.scss'
     ],
     'ziqni-member-widget-selfinit.js': './src/javascript/ziqni-member-widget-selfinit.js',
-    'loader.js': './src/javascript/loader.js'
+    'loader.js': './src/javascript/loader.js',
+    'index.js': './src/javascript/index.js'
   },
   output: {
     filename: '[name]',
-    path: path.resolve(__dirname, '../build/javascript')
+    path: path.resolve(__dirname, '../build/javascript'),
+    library: 'member-widget',
+    libraryTarget: 'umd'
   },
+  // output: {
+  //   filename: '[name]',
+  //   path: path.resolve(__dirname, '../build/javascript')
+  // },
   mode: 'production', // production | development
   optimization: {
     minimize: true

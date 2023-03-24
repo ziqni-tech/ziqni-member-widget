@@ -20,13 +20,13 @@ The widget is designed to work with the new ZIQNI platform APIs
 The Leaderboard Widget package lives in [npm](https://www.npmjs.com/get-npm). To install the latest stable version, run the following command:
 
 ```sh
-npm install @ziqni-tech/gamification-ux-package
+npm install @ziqni-tech/member-widget
 ```
 
 Or if you're using [yarn](https://classic.yarnpkg.com/en/docs/install/):
 
 ```sh
-yarn add @ziqni-tech/gamification-ux-package
+yarn add @ziqni-tech/member-widget
 ```
 
 ## Build
@@ -220,7 +220,6 @@ Running the project in dev mode will initialise with an example page.
                 },
             },
             uri: {
-                gatewayDomain: "https://gateway.ziqni.com",
                 translationPath: ""
             },
             resources: [
@@ -231,6 +230,43 @@ Running the project in dev mode will initialise with an example page.
         a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
     })(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
 </script>
+```
+### Or
+```js
+    import MemberWidget from '@ziqni-tech/member-widget';
+    
+    const instance = new MemberWidget({
+      autoStart: false,
+      debug: false,
+      apiKey: '<api_key>',
+      memberRefId: '<member_reference_id>',
+      loadTranslations: false,
+      enableNotifications: true,
+      navigation: {
+        tournaments: {enable: true},
+        achievements: {enable: true},
+        rewards: {enable: true},
+        inbox: {enable: true},
+        missions: {enable: true},
+      },
+      leaderboard: {
+        fullLeaderboardSize: 100,
+        miniScoreBoard: {
+          rankingsCount: 2
+        },
+        pointsFormatter: function(points) {
+          if (isNaN(points)) {
+            return points;
+          }
+          return Math.round(points)
+        }
+      },
+      resources: [
+        "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/cl-style-1-default-theme.css"
+      ]
+    });
+    
+    instance.init();
 ```
 
 ## Using the loader script
