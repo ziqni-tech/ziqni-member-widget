@@ -9,6 +9,7 @@
  */
 const stripHtml = function (html) {
   var tmp = document.createElement('DIV');
+  html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || '';
 };

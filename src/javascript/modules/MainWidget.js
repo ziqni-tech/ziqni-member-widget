@@ -2284,7 +2284,9 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = data.subject;
-    body.innerHTML = data.body;
+    let bodyHtml = data.body;
+    bodyHtml = bodyHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    body.innerHTML = bodyHtml;
 
     _this.settings.messages.detailsContainer.style.display = 'block';
     setTimeout(function () {

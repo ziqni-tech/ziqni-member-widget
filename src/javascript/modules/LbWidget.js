@@ -1125,6 +1125,10 @@ export const LbWidget = function (options) {
     const messageRequest = MessageRequest.constructFromObject({
       messageFilter: {
         messageType: 'InboxItem', // NotificationInboxItem Achievement Ticket Reward Text Notification InboxItem
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
         skip: (pageNumber - 1) * 15,
         limit: 15
       }
