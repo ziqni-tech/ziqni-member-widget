@@ -2284,7 +2284,14 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = data.subject;
-    body.innerHTML = data.body;
+    // htmlStr = htmlStr.replace(/&lt;/g , "<");
+    // htmlStr = htmlStr.replace(/&gt;/g , ">");
+    // htmlStr = htmlStr.replace(/&quot;/g , "\"");
+    // htmlStr = htmlStr.replace(/&#39;/g , "\'");
+    // htmlStr = htmlStr.replace(/&amp;/g , "&");
+    let bodyHtml = data.body;
+    bodyHtml = bodyHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    body.innerHTML = bodyHtml;
 
     _this.settings.messages.detailsContainer.style.display = 'block';
     setTimeout(function () {
