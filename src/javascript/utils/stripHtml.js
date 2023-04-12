@@ -8,8 +8,10 @@
  * @returns {string | string}
  */
 const stripHtml = function (html) {
-  var tmp = document.createElement('DIV');
-  html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  const tmp = document.createElement('DIV');
+  if (html) {
+    html = html.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+  }
   tmp.innerHTML = html;
   return tmp.textContent || tmp.innerText || '';
 };
