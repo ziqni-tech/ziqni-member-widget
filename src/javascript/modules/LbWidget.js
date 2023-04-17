@@ -36,6 +36,7 @@ import {
   MemberRequest,
   MembersApiWs,
   OptInApiWs,
+  FilesApiWs,
   OptInStatesRequest,
   RewardsApiWs,
   LeaderboardApiWs,
@@ -235,7 +236,8 @@ export const LbWidget = function (options) {
       rewardsApiWsClient: null,
       awardsApiWsClient: null,
       messagesApiWsClient: null,
-      missionsApiWsClient: null
+      missionsApiWsClient: null,
+      filesApiWsClient: null
     },
     uri: {
       gatewayDomain: cLabs.api.url,
@@ -788,17 +790,50 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.getAward = function (awardId, callback) {
+  this.getAward = async function (awardId, callback) {
     let awardData = null;
     const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards];
     const idx = awards.findIndex(r => r.id === awardId);
     if (idx !== -1) {
       awardData = awards[idx];
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Reward',
+          entityIds: [awardData.rewardId]
+        }],
+        limit: 1,
+        skip: 0
+      };
+      const reward = await this.getRewardsApi(rewardRequest);
+      if (reward.data && reward.data.length && reward.data[0].icon) {
+        const file = await this.getFile(reward.data[0].icon);
+        if (file && file.data && file.data.length && file.data[0].uri) {
+          awardData.icon = file.data[0].uri;
+        }
+      }
     }
 
     if (typeof callback === 'function') {
       callback(awardData);
     }
+  };
+
+  this.getFile = async function (id) {
+    if (!this.settings.apiWs.filesApiWsClient) {
+      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
+    }
+
+    const fileRequest = {
+      ids: [id],
+      limit: 1,
+      skip: 0
+    };
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, (json) => {
+        resolve(json);
+      });
+    });
   };
 
   // var getRewardAjax = new cLabs.Ajax();
