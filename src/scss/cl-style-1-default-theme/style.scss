@@ -3,6 +3,9 @@
 @import "../_main/style";
 
 .cl-main-widget-wrapper {
+  a {
+    color: var(--primary-button-color);
+  }
   .cl-main-widget-section-container {
     .cl-main-widget-lb-details-image-container {
       .cl-main-widget-lb-details-image {
