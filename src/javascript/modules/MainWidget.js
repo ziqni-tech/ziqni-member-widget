@@ -2248,7 +2248,7 @@ export const MainWidget = function (options) {
       imageIconWrapper.setAttribute('class', 'cl-reward-list-item-img-wrapper');
       _image.setAttribute('class', 'cl-reward-list-item-img');
 
-      _image.src = _this.settings.lbWidget.settings.uri.gatewayDomain + _this.settings.lbWidget.settings.uri.assets.replace(':attachmentId', data.icon);
+      _image.src = data.icon;
       _image.alt = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(data);
 
       icon.appendChild(_image);
