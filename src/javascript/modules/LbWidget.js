@@ -1542,6 +1542,11 @@ export const LbWidget = function (options) {
         }
       });
     } else {
+      if (_this.settings.language) {
+        const translation = require(`../../i18n/translation_${_this.settings.language}.json`);
+        _this.settings.translation = mergeObjects(_this.settings.translation, translation);
+      }
+
       callback();
     }
   };
