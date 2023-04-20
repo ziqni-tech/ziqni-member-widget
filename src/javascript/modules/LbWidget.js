@@ -47,7 +47,8 @@ import {
   AwardRequest,
   ClaimAwardRequest,
   GraphsApiWs,
-  EntityGraphRequest
+  EntityGraphRequest,
+  EntityRequest
 } from '@ziqni-tech/member-api-client';
 
 const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
@@ -796,14 +797,15 @@ export const LbWidget = function (options) {
     const idx = awards.findIndex(r => r.id === awardId);
     if (idx !== -1) {
       awardData = awards[idx];
-      const rewardRequest = {
+      const rewardRequest = EntityRequest.constructFromObject({
         entityFilter: [{
           entityType: 'Reward',
           entityIds: [awardData.rewardId]
         }],
         limit: 1,
         skip: 0
-      };
+      });
+
       const reward = await this.getRewardsApi(rewardRequest);
       if (reward.data && reward.data.length && reward.data[0].icon) {
         const file = await this.getFile(reward.data[0].icon);
@@ -1002,7 +1004,8 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 20,
         limit: 20
-      }
+      },
+      currencyKey: this.settings.currency
     });
 
     const claimedAwardRequest = AwardRequest.constructFromObject({
@@ -1017,7 +1020,8 @@ export const LbWidget = function (options) {
         }],
         skip: (claimedPageNumber - 1) * 20,
         limit: 20
-      }
+      },
+      currencyKey: this.settings.currency
     });
 
     this.getAwardsApi(claimedAwardRequest)
@@ -1113,14 +1117,14 @@ export const LbWidget = function (options) {
     this.settings.rewards.totalCount = 0;
 
     if (this.settings.competition.activeContestId) {
-      const rewardRequest = {
+      const rewardRequest = EntityRequest.constructFromObject({
         entityFilter: [{
           entityType: 'Contest',
           entityIds: [this.settings.competition.activeContestId]
         }],
-        limit: 10,
-        skip: (pageNumber - 1) * 10
-      };
+        limit: 1,
+        skip: 0
+      });
 
       this.getRewardsApi(rewardRequest)
         .then(json => {
