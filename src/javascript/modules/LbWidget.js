@@ -131,16 +131,7 @@ export const LbWidget = function (options) {
       availableRewards: [],
       rewards: [],
       totalCount: 0,
-      expiredRewards: [],
-      rewardFormatter: function (reward) {
-        let defaultRewardValue = Number.isInteger(reward.rewardValue) ? reward.rewardValue : reward.rewardValue.toFixed(6);
-
-        if (typeof reward.unitOfMeasure !== 'undefined' && typeof reward.unitOfMeasure.symbol !== 'undefined' && reward.unitOfMeasure.symbol !== null) {
-          defaultRewardValue = reward.unitOfMeasure.symbol + reward.value;
-        }
-
-        return defaultRewardValue;
-      }
+      expiredRewards: []
     },
     awards: {
       availableAwards: [],
@@ -298,8 +289,8 @@ export const LbWidget = function (options) {
           ? reward.rewardValue
           : reward.rewardValue.toFixed(6);
 
-        if (typeof reward.unitOfMeasure !== 'undefined' && typeof reward.unitOfMeasure.symbol !== 'undefined' && reward.unitOfMeasure.symbol !== null) {
-          defaultRewardValue = reward.unitOfMeasure.symbol + reward.value;
+        if (reward.rewardType && reward.rewardType.uomSymbol) {
+          defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
         }
 
         return defaultRewardValue;
