@@ -1439,8 +1439,6 @@ export const MainWidget = function (options) {
 
             body.innerHTML = body.innerHTML.replace(url[0], '');
             imageFound = true;
-          } else {
-            imageContainer.innerHTML = '';
           }
         }
       }
@@ -1448,6 +1446,8 @@ export const MainWidget = function (options) {
 
     if (!imageFound && activeImageContainer !== null) {
       removeClass(activeImageContainer, 'cl-main-section-image-banner-active');
+      const detailsImageContainer = query(activeImageContainer, '.cl-main-widget-lb-details-image-container');
+      detailsImageContainer.innerHTML = '';
     } else if (imageFound && activeImageContainer === null && _this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner && !isBodyVirtual) {
       addClass(closest(body, '.cl-main-section-item'), 'cl-main-section-image-banner-active');
     }
