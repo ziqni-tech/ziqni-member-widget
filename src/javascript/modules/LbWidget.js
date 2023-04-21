@@ -299,10 +299,8 @@ export const LbWidget = function (options) {
           ? award.rewardValue
           : award.rewardValue.toFixed(2);
 
-        if (award.uomSymbol) {
-          defaultAwardValue = award.uomSymbol + defaultAwardValue;
-        } else if (!award.uom && award.rewardType && award.rewardType.uomSymbol) {
-          defaultAwardValue = award.uomSymbol + award.rewardType.uomSymbol;
+        if (award.rewardType && award.rewardType.uomSymbol) {
+          defaultAwardValue = award.rewardType.uomSymbol + defaultAwardValue;
         }
 
         return defaultAwardValue;
