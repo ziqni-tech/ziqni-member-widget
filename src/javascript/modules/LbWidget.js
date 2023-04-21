@@ -47,8 +47,7 @@ import {
   AwardRequest,
   ClaimAwardRequest,
   GraphsApiWs,
-  EntityGraphRequest,
-  EntityRequest
+  EntityGraphRequest
 } from '@ziqni-tech/member-api-client';
 
 const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
@@ -287,13 +286,26 @@ export const LbWidget = function (options) {
       rewardFormatter: function (reward) {
         let defaultRewardValue = Number.isInteger(reward.rewardValue)
           ? reward.rewardValue
-          : reward.rewardValue.toFixed(6);
+          : reward.rewardValue.toFixed(2);
 
         if (reward.rewardType && reward.rewardType.uomSymbol) {
           defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
         }
 
         return defaultRewardValue;
+      },
+      awardFormatter: function (award) {
+        let defaultAwardValue = Number.isInteger(award.rewardValue)
+          ? award.rewardValue
+          : award.rewardValue.toFixed(2);
+
+        if (award.uomSymbol) {
+          defaultAwardValue = award.uomSymbol + defaultAwardValue;
+        } else if (!award.uom && award.rewardType && award.rewardType.uomSymbol) {
+          defaultAwardValue = award.uomSymbol + award.rewardType.uomSymbol;
+        }
+
+        return defaultAwardValue;
       },
       competitionDataAvailableResponseParser: function (competitionData, callback) { callback(competitionData); },
       competitionDataFinishedResponseParser: function (competitionData, callback) { callback(competitionData); },
@@ -788,14 +800,15 @@ export const LbWidget = function (options) {
     const idx = awards.findIndex(r => r.id === awardId);
     if (idx !== -1) {
       awardData = awards[idx];
-      const rewardRequest = EntityRequest.constructFromObject({
+      const rewardRequest = {
         entityFilter: [{
           entityType: 'Reward',
           entityIds: [awardData.rewardId]
         }],
-        limit: 1,
-        skip: 0
-      });
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 1
+      };
 
       const reward = await this.getRewardsApi(rewardRequest);
       if (reward.data && reward.data.length && reward.data[0].icon) {
@@ -1108,14 +1121,15 @@ export const LbWidget = function (options) {
     this.settings.rewards.totalCount = 0;
 
     if (this.settings.competition.activeContestId) {
-      const rewardRequest = EntityRequest.constructFromObject({
+      const rewardRequest = {
         entityFilter: [{
           entityType: 'Contest',
           entityIds: [this.settings.competition.activeContestId]
         }],
-        limit: 1,
-        skip: 0
-      });
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 0
+      };
 
       this.getRewardsApi(rewardRequest)
         .then(json => {

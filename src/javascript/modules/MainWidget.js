@@ -2229,7 +2229,7 @@ export const MainWidget = function (options) {
 
     label.innerHTML = data.name;
     body.innerHTML = data.description;
-    value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(data);
+    value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.awardFormatter(data);
     claimBtn.dataset.id = data.id;
 
     if (data.claimed) {
