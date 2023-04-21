@@ -2229,7 +2229,6 @@ export const MainWidget = function (options) {
 
     label.innerHTML = data.name;
     body.innerHTML = data.description;
-    console.log('data:', data);
     value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.awardFormatter(data);
     claimBtn.dataset.id = data.id;
 
