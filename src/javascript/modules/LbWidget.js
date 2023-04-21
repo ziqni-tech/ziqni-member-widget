@@ -811,7 +811,6 @@ export const LbWidget = function (options) {
       };
 
       const reward = await this.getRewardsApi(rewardRequest);
-      console.log('reward:', reward);
       if (reward.data && reward.data.length && reward.data[0].icon) {
         const file = await this.getFile(reward.data[0].icon);
         if (file && file.data && file.data.length && file.data[0].uri) {
