@@ -302,7 +302,7 @@ export const LbWidget = function (options) {
         if (award.uomSymbol) {
           defaultAwardValue = award.uomSymbol + defaultAwardValue;
         } else if (!award.uom && award.rewardType && award.rewardType.uomSymbol) {
-          defaultAwardValue = award.uomSymbol + award.rewardType.uomSymbol;
+          defaultAwardValue = award.rewardType.uomSymbol + award.rewardValue;
         }
 
         return defaultAwardValue;
@@ -367,7 +367,7 @@ export const LbWidget = function (options) {
   };
 
   this.populateIdenticonBase64Image = function (str) {
-    if (str.length > 0) {
+    if (str && str.length > 0) {
       /* eslint new-cap: "off" */
       var shaObj = new jsSHA('SHA-512', 'TEXT');
       shaObj.update(str);
