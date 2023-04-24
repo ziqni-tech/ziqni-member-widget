@@ -367,7 +367,7 @@ export const LbWidget = function (options) {
   };
 
   this.populateIdenticonBase64Image = function (str) {
-    if (str.length > 0) {
+    if (str && str.length > 0) {
       /* eslint new-cap: "off" */
       var shaObj = new jsSHA('SHA-512', 'TEXT');
       shaObj.update(str);
