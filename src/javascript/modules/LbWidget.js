@@ -1128,7 +1128,7 @@ export const LbWidget = function (options) {
         }],
         currencyKey: this.settings.currency,
         skip: 0,
-        limit: 0
+        limit: 20
       };
 
       this.getRewardsApi(rewardRequest)
