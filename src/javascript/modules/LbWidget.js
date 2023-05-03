@@ -1381,7 +1381,7 @@ export const LbWidget = function (options) {
     }
 
     _this.checkForAvailableCompetitions(async function () {
-      _this.updateLeaderboardNavigationCounts();
+      // _this.updateLeaderboardNavigationCounts();
       await _this.prepareActiveCompetition(function () {
         // clear to not clash with LB refresh that could happen at same time
         if (_this.settings.leaderboard.refreshInterval) {
@@ -1422,7 +1422,7 @@ export const LbWidget = function (options) {
         }
         _this.checkForAvailableAwards(
           function () {
-            _this.updateRewardsNavigationCounts();
+            // _this.updateRewardsNavigationCounts();
           },
           1,
           1
@@ -1663,7 +1663,7 @@ export const LbWidget = function (options) {
           // load achievement data
           if (_this.settings.navigation.achievements.enable) {
             _this.checkForAvailableAchievements(1, function () {
-              _this.updateAchievementNavigationCounts();
+              // _this.updateAchievementNavigationCounts();
             });
           }
 
@@ -1671,7 +1671,7 @@ export const LbWidget = function (options) {
           if (_this.settings.navigation.rewards.enable) {
             _this.checkForAvailableAwards(
               function () {
-                _this.updateRewardsNavigationCounts();
+                // _this.updateRewardsNavigationCounts();
               },
               1,
               1
@@ -1682,14 +1682,14 @@ export const LbWidget = function (options) {
           // load initial available messages data
           if (_this.settings.navigation.inbox.enable) {
             _this.checkForAvailableMessages(1, function () {
-              _this.updateMessagesNavigationCounts();
+              // _this.updateMessagesNavigationCounts();
             });
           }
 
           // load initial available messages data
           if (_this.settings.navigation.missions.enable) {
             _this.checkForAvailableMissions(1, function () {
-              _this.updateMissionsNavigationCounts();
+              // _this.updateMissionsNavigationCounts();
             });
           }
         });
