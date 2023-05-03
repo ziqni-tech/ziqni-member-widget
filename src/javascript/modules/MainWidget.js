@@ -208,16 +208,25 @@ export const MainWidget = function (options) {
     navigationList.sort(_this.navigationSorter);
 
     mapObject(navigationList, function (val, key) {
-      var navigationItem = document.createElement('div');
-      var navigationItemIcon = document.createElement('div');
-      var navigationItemCount = document.createElement('div');
+      const navigationItem = document.createElement('div');
+      const navigationItemIcon = document.createElement('div');
+      const navigationItemTitle = document.createElement('div');
+      if (val.key === 'inbox') {
+        navigationItemTitle.innerHTML = _this.settings.lbWidget.settings.translation.messages.label;
+      } else {
+        navigationItemTitle.innerHTML = _this.settings.lbWidget.settings.translation[val.key].label;
+      }
+
+      // var navigationItemCount = document.createElement('div');
 
       navigationItem.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClass + ' cl-main-widget-navigation-item' + (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item'));
       navigationItemIcon.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClassIcon + ' cl-main-navigation-item');
-      navigationItemCount.setAttribute('class', 'cl-main-navigation-item-count');
+      navigationItemTitle.setAttribute('class', 'cl-main-navigation-item-title');
+      // navigationItemCount.setAttribute('class', 'cl-main-navigation-item-count');
 
-      navigationItemIcon.appendChild(navigationItemCount);
+      // navigationItemIcon.appendChild(navigationItemCount);
       navigationItem.appendChild(navigationItemIcon);
+      navigationItem.appendChild(navigationItemTitle);
       container.appendChild(navigationItem);
     });
   };
@@ -237,6 +246,7 @@ export const MainWidget = function (options) {
 
     const navigationContainer = document.createElement('div');
     const navigationItems = document.createElement('div');
+    const navigationLogo = document.createElement('div');
 
     const mainSectionContainer = document.createElement('div');
 
@@ -267,6 +277,7 @@ export const MainWidget = function (options) {
 
     navigationContainer.setAttribute('class', 'cl-main-widget-navigation-container');
     navigationItems.setAttribute('class', 'cl-main-widget-navigation-items');
+    navigationLogo.setAttribute('class', 'cl-main-widget-navigation-logo');
 
     mainSectionContainer.setAttribute('class', 'cl-main-widget-section-container' + (_this.settings.lbWidget.settings.showCopyright ? '' : ' cl-hidden-copyright'));
 
@@ -281,6 +292,7 @@ export const MainWidget = function (options) {
     preLoaderContent.appendChild(preLoaderBar3);
     preLoaderContainer.appendChild(preLoaderContent);
 
+    navigationContainer.appendChild(navigationLogo);
     navigationContainer.appendChild(navigationItems);
 
     mainSectionContainer.appendChild(sectionLB);
@@ -2453,7 +2465,7 @@ export const MainWidget = function (options) {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableAchievements(pageNumber, function (achievementData) {
-      _this.settings.lbWidget.updateAchievementNavigationCounts();
+      // _this.settings.lbWidget.updateAchievementNavigationCounts();
       _this.achievementListLayout(pageNumber, achievementData);
 
       const idList = [];
@@ -2786,7 +2798,7 @@ export const MainWidget = function (options) {
     const _this = this;
     _this.settings.lbWidget.checkForAvailableAwards(
       function (rewards, availableRewards, expiredRewards) {
-        _this.settings.lbWidget.updateRewardsNavigationCounts();
+        // _this.settings.lbWidget.updateRewardsNavigationCounts();
         _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards);
 
         if (typeof callback === 'function') {
@@ -2803,7 +2815,7 @@ export const MainWidget = function (options) {
 
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
       _this.messagesListLayout(pageNumber);
-      _this.settings.lbWidget.updateMessagesNavigationCounts();
+      // _this.settings.lbWidget.updateMessagesNavigationCounts();
 
       if (typeof callback === 'function') {
         callback();
@@ -2816,7 +2828,7 @@ export const MainWidget = function (options) {
 
     _this.settings.lbWidget.checkForAvailableMissions(pageNumber, function () {
       _this.missionsListLayout(pageNumber);
-      _this.settings.lbWidget.updateMissionsNavigationCounts();
+      // _this.settings.lbWidget.updateMissionsNavigationCounts();
 
       if (typeof callback === 'function') {
         callback();

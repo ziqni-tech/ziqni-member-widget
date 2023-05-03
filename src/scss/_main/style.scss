@@ -1,3 +1,5 @@
+@import url('https://fonts.googleapis.com/css2?family=Syne:wght@500&display=swap');
+
 .cl-widget-ms-wrapper, .cl-widget-notif-wrapper {
   float: left;
   width: 100%;
@@ -73,6 +75,7 @@
   border: 0;
   font-size: 100%;
   font: inherit;
+  color: var(--primary-font-color);
   vertical-align: baseline;
   background: none;
 }
@@ -1030,27 +1033,54 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  padding-top: 20px;
   width: 148px;
   height: 100%;
   z-index: 2;
-  left: 0;
-  top: 0;
 }
+
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-navigation-container {
   display:none;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items {
-  float: left;
-  width: 100%;
-  padding: 25px 0 0 0;
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-logo {
+  width: 68px;
+  height: 68px;
+  background-image: $lb3-widget-icon-nav;
+  background-size: 100%;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items {
+  padding: 46px 0 0 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items .cl-main-widget-navigation-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  width: 108px;
+  min-height: 67px;
+  margin-bottom: 20px;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items .cl-main-widget-navigation-item.cl-active-nav {
+  background: #EE3EC8;
+  border-radius: 10px;
+}
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-navigation-item {
   position:relative;
 }
-
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-navigation-item .cl-main-navigation-item-count {
   position: absolute;
@@ -1072,103 +1102,87 @@
   font-size: 12px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb {
-  margin: -3px -3px;
-  width: var(--lb3-widget-navigation-icon-width);
-  height: var(--lb3-widget-navigation-icon-height);
-  background-image: $lb3-tournament-icon-bg-image;
-  background-repeat: no-repeat;
-  background-color: transparent;
-  background-size: 100%;
-}
+//.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb {
+//  width: var(--lb3-widget-navigation-icon-width);
+//  height: var(--lb3-widget-navigation-icon-height);
+//}
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb-icon {
   display: block;
-  min-height: 100%;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
   background-image: $lb3-tournament-icon;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: 50%;
+  background-size: 100%;
   opacity: 0.7;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach {
-  margin: -6px -3px;
-  width: var(--lb3-widget-navigation-icon-width);
-  height: var(--lb3-widget-navigation-icon-height);
-  background-image: $lb3-achievements-icon-bg-image;
-  background-repeat: no-repeat;
-  background-color: transparent;
-  background-size: 100%;
-}
+//.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach {
+//  width: var(--lb3-widget-navigation-icon-width);
+//  height: var(--lb3-widget-navigation-icon-height);
+//}
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach-icon {
   display: block;
-  min-height: 100%;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
   background-image: $lb3-achievements-icon;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: 45%;
-  opacity: 0.7;
-}
-
-.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards {
-  margin: -6px -3px;
-  width: var(--lb3-widget-navigation-icon-width);
-  height: var(--lb3-widget-navigation-icon-height);
-  background-image: $lb3-rewards-icon-bg-image;
-  background-repeat: no-repeat;
-  background-color: transparent;
   background-size: 100%;
 }
+
+//.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards {
+//  width: var(--lb3-widget-navigation-icon-width);
+//  height: var(--lb3-widget-navigation-icon-height);
+//}
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards-icon {
   display: block;
-  min-height: 100%;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
   background-image: $lb3-rewards-icon;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: 45%;
+  background-size: 100%;
   opacity: 0.7;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox {
-  margin: -3px -3px;
-  width: var(--lb3-widget-navigation-icon-width);
-  height: var(--lb3-widget-navigation-icon-height);
-  background-image: $lb3-messages-icon-bg-image;
-  background-repeat: no-repeat;
-  background-color: transparent;
-  background-size: 100%;
-}
+//.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox {
+//  width: var(--lb3-widget-navigation-icon-width);
+//  height: var(--lb3-widget-navigation-icon-height);
+//}
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox-icon {
   display: block;
-  min-height: 100%;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
   background-image: $lb3-messages-icon;
   background-repeat: no-repeat;
-  background-position: 50% 42%;
-  background-size: 45%;
+  background-size: 100%;
   opacity: 0.7;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
-  margin: -3px -3px;
-  width: var(--lb3-widget-navigation-icon-width);
-  height: var(--lb3-widget-navigation-icon-height);
-  background-image: $lb3-missions-icon-bg-image;
-  background-repeat: no-repeat;
-  background-color: transparent;
-  background-size: 100%;
-}
+//.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
+//  width: var(--lb3-widget-navigation-icon-width);
+//  height: var(--lb3-widget-navigation-icon-height);
+//}
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions-icon {
   display: block;
-  min-height: 100%;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
   background-image: $lb3-missions-icon;
   background-repeat: no-repeat;
-  background-position: 50% 42%;
-  background-size: 45%;
+  background-size: 100%;
   opacity: 0.7;
 }
 
@@ -1214,10 +1228,7 @@
 
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav:hover {
-  width: 92px;
-  height: 92px;
   opacity: 1;
-  margin: -3px -3px 3px -3px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav .cl-main-widget-navigation-lb-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav .cl-main-widget-navigation-lb-icon:hover {
@@ -1225,10 +1236,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav:hover {
-  width: 92px;
-  height: 92px;
   opacity: 1;
-  margin: -3px -3px 3px -3px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav .cl-main-widget-navigation-ach-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav .cl-main-widget-navigation-ach-icon:hover {
@@ -1236,10 +1244,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav:hover {
-  width: 92px;
-  height: 92px;
   opacity: 1;
-  margin: -3px -3px 3px -3px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav .cl-main-widget-navigation-rewards-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav .cl-main-widget-navigation-rewards-icon:hover {
@@ -1247,10 +1252,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav:hover {
-  width: 92px;
-  height: 92px;
   opacity: 1;
-  margin: -3px -3px 3px -3px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav .cl-main-widget-navigation-inbox-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav .cl-main-widget-navigation-inbox-icon:hover {
@@ -1258,10 +1260,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav:hover {
-  width: 92px;
-  height: 92px;
   opacity: 1;
-  margin: -3px -3px 3px -3px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav .cl-main-widget-navigation-missions-icon, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav .cl-main-widget-navigation-missions-icon:hover {
