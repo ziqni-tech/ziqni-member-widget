@@ -999,7 +999,7 @@
   width: 100%;
   height: 100%;
   background: transparent;
-  padding: 10px 20px;
+  padding: 40px 20px 10px;
   font-family: var(--lb3-widget-font);
   font-weight: 300;
   margin: 0;
@@ -1008,7 +1008,7 @@
   border: 0;
   vertical-align: baseline;
   background: none;
-  max-width: 1000px;
+  max-width: 1037px;
   transform: translate(-50%, 0);
 }
 
@@ -1019,6 +1019,9 @@
 
 .cl-main-widget-wrapper .cl-main-widget-inner-wrapper {
   position: relative;
+  display: flex;
+  max-width: 997px;
+  max-height: 816px;
   width: 100%;
   height: 100%;
   z-index: 1;
@@ -1027,8 +1030,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container {
-  position: absolute;
-  width: 92px;
+  width: 148px;
   height: 100%;
   z-index: 2;
   left: 0;
@@ -1272,13 +1274,8 @@
 
 
 .cl-main-widget-wrapper .cl-main-widget-section-container {
-  position: relative;
-  width: 100%;
+  flex: 1;
   height: 100%;
-  z-index: 1;
-  left: 0;
-  top: 0;
-  padding: 0 0 0 73px;
 }
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-section-container {
   padding: 0 0 0 0;
@@ -1292,21 +1289,13 @@
   z-index: 1;
   left: 0;
   top: 0;
-  background: var(--primary-color);
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header {
-  float: left;
   width: 100%;
-  height: 30px;
-  background: var(--lb3-tournament-header-back);
-  border-radius: 5px 5px 0 0;
+  height: 84px;
   position: relative;
   z-index: 2;
-  border-bottom: var(--lb3-tournament-header-border-bottom);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list {
@@ -1358,18 +1347,16 @@
   background-image: $lb3-tournament-header-close-back-image;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
   cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details {
-  float: left;
   width: 100%;
-  background: var(--lb3-tournament-details-bg-color);
   position: relative;
   z-index: 2;
 }
@@ -1566,16 +1553,12 @@
 // }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-footer {
-  float: left;
   width: 100%;
   height: 22px;
   position: absolute;
   bottom: 0;
   left: 0;
-  background: var(--lb3-tournament-footer-bg-color);
-  border-radius: 0 0 5px 5px;
   z-index: 2;
-  border-top: var(--lb3-tournament-footer-top-border);
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-lb-footer {
   display:none;
@@ -1620,14 +1603,10 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard {
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
   padding: 80px 0 22px 0;
-  background: var(--lb3-tournament-container-bg-color);
   border-radius: 5px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-lb-leaderboard {
@@ -1703,10 +1682,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-top-res {
   float: left;
   width: 100%;
-  background: var(--lb3-tournament-top-results-bg-color);
   padding: 0 30px;
-  box-shadow: var(--lb3-tournament-top-results-bg-box-shadow);
-  border-radius: 0 0 5px 5px;
 }
 
 
@@ -2352,10 +2328,6 @@
   z-index: 1;
   left: 0;
   top: 0;
-  background: var(--lb3-achievements-header-bg-color);
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header {
@@ -2399,11 +2371,11 @@
   background-image: $lb3-achievements-header-close-image;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-details {
@@ -2803,10 +2775,6 @@
   z-index: 1;
   left: 0;
   top: 0;
-  background: var(--lb3-rewards-header-bg-color);
-  border-radius: 5px;
-  box-shadow: 0px 3px 4px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header {
@@ -2849,11 +2817,11 @@
   background-image: $lb3-rewards-header-close-image;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
   border-bottom: var(--lb3-rewards-header-border-bottom);
 }
 
@@ -3284,10 +3252,6 @@
   z-index: 1;
   left: 0;
   top: 0;
-  background: var(--lb3-messages-header-bg-color);
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header {
@@ -3330,11 +3294,11 @@
   background-image: $lb3-messages-header-close-image;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
   border-bottom: var(--lb3-messages-header-border-bottom);
 }
 
@@ -3548,10 +3512,6 @@
   z-index: 1;
   left: 0;
   top: 0;
-  background: var(--lb3-messages-header-bg-color);
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
-  overflow: hidden;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container {
@@ -3608,11 +3568,11 @@
   background-image: $lb3-messages-header-close-image;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
   border-bottom: var(--lb3-messages-header-border-bottom);
 }
 
