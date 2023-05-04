@@ -2296,12 +2296,12 @@ export const LbWidget = function (options) {
         }
         if (json && json.entityType === 'Contest') {
           _this.checkForAvailableCompetitions(async function () {
-            _this.updateLeaderboardNavigationCounts();
+            // _this.updateLeaderboardNavigationCounts();
           });
         }
         if (json && json.entityType === 'Competition') {
           _this.checkForAvailableCompetitions(async function () {
-            _this.updateLeaderboardNavigationCounts();
+            // _this.updateLeaderboardNavigationCounts();
           });
         }
         if (json && json.entityType === 'Achievement') {
