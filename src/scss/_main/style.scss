@@ -1291,39 +1291,39 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header {
+  display: flex;
+  align-items: center;
+  justify-content: center;
   width: 100%;
   height: 84px;
   position: relative;
   z-index: 2;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list {
-  float: left;
-  width: 20%;
-}
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list {}
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list-icon {
   display: block;
-  min-height: 100%;
   background-image: $lb3-tournament-header-list-back-image;
   background-repeat: no-repeat;
-  background-position: 50% 50%;
-  width: 30px;
-  height: 30px;
-  margin: 0 0 0 10px;
-  background-size: 85%;
+  width: 50px;
+  height: 50px;
+  background-size: 100%;
   cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-label {
-  float: left;
-  width: 60%;
+  width: 100%;
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-date {
