@@ -33,7 +33,7 @@ $prev-btn-icon-bg: url(../../images/prev-btn-icon-grey.svg);
 :root {
   //Theme Colours
   --primary-color: #f1f2f4;
-  --primary-color-darken: #000000;
+  --primary-color-darken: #0F1921;
   --primary-color-lighten: #999999;
   --primary-button-color: #007dfb;
   --primary-border-color: #636f83;
@@ -47,13 +47,15 @@ $prev-btn-icon-bg: url(../../images/prev-btn-icon-grey.svg);
   --darkest-color: #212121;
   --light-grey: #737373;
 
+  --lb-widget-bg-color: #0F1921;
+  --lb-widget-border-color: #304F69;
+  --lb-widget-header-text-color: rgba(255, 255, 255, 0.8);
+
+
   // MAIN
   --lb3-widget-font: "Gotham A", "Gotham B", "Gotham", Helvetica, Arial, serif;
-  --lb3-widget-bg-color: var(--primary-color);
-  --lb3-widget-border-color: var(--primary-border-color);
   --lb3-widget-text-color: var(--dark-font-color);
   --lb3-widget-date-text-color: var(--primary-font-color);
-  --lb3-widget-header-text-color: var(--light-grey);
 
   --lb3-widget-navigation-icon-width: 73px;
   --lb3-widget-navigation-icon-height: 73px;
