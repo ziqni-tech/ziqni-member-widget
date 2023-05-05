@@ -129,7 +129,7 @@
 .cl-widget-ms-wrapper {
   .cl-widget-ms-information-top-wrapper {
     .cl-widget-ms-information-wrapper {
-      padding: 0 10px 0 30px;
+      padding: 0 14px 14px 50px;
       .cl-widget-ms-first-to-wrapper {
         .cl-widget-ms-first-to-date-wrapper {
           padding: 2px 0 2px 12px;
@@ -152,19 +152,16 @@
       }
       .cl-widget-ms-default-wrapper {
         .cl-widget-ms-default-date-wrapper {
-          padding: 2px 0 2px 12px;
+          padding: 4px 11px 2px 12px;
         }
         .cl-widget-ms-default-results-wrapper {
           .cl-widget-ms-default-results-list {
             .cl-widget-ms-default-mem-entry {
-              float: left;
               width: 100%;
-              padding: 3px 0 3px 10px;
-              &:last-of-type {
-                padding-bottom: 6px;
-              }
               &.cl-widget-ms-default-mem-self {
-                background-color: rgba(0, 125, 251, .2);
+                background-color: #2F0426;
+                border: 1px solid #406A8C;
+                box-shadow: 0 2px 6px rgba(64, 106, 140, 0.5);
               }
             }
           }
