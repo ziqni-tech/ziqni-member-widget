@@ -1373,9 +1373,11 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details {
-  width: 100%;
   position: relative;
   z-index: 2;
+  background-image: $lb3-tournament-default-banner;
+  background-repeat: no-repeat;
+  margin-right: 16px;
 }
 
 // .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-info {
@@ -1383,10 +1385,11 @@
 // }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content {
-  width: 100%;
   height: 176px;
   text-align: center;
   margin: 0 0 20px 0;
+  border-radius: 10px;
+  background: linear-gradient(93.25deg, rgba(56, 172, 207, 0.29) -4.57%, rgba(16, 26, 34, 0.5) 49.35%, rgba(56, 172, 207, 0.29) 100%);
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-section-image-banner-active .cl-main-widget-lb-details-content {
   background-color: var(--main-widget-image-banner-active-details-content-background);
@@ -1515,25 +1518,27 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label {
   text-align: center;
-  padding: 0 0 0 40px;
-  line-height: 32px;
   color: var(--lb3-tournament-details-label-color);
-  text-transform: uppercase;
   display: inline-block;
   position: relative;
   margin: 0 auto;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 98%;
+  max-width: 100%;
+  padding-top: 26px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label-text {
   display: block;
-  line-height: 20px;
   max-width: 100%;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date {
   float: left;
@@ -1545,18 +1550,18 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label::before {
-  position: absolute;
-  content: "";
-  display: block;
-  background-image: $lb3-widget-info-icon-bg-img;
-  background-repeat: no-repeat;
-  background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  left: 0;
-  top: 1px;
-  cursor: pointer;
+  //position: absolute;
+  //content: "";
+  //display: block;
+  //background-image: $lb3-widget-info-icon-bg-img;
+  //background-repeat: no-repeat;
+  //background-position: 50% 50%;
+  //background-size: 70%;
+  //width: 30px;
+  //height: 30px;
+  //left: 0;
+  //top: 1px;
+  //cursor: pointer;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-section-image-banner-active  .cl-main-widget-lb-details-content-label{
   color: var(--lb3-image-banner-active-tournament-details-label-color);
@@ -1649,6 +1654,10 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header {
   width: 100%;
   padding: 0 30px;
+  position: sticky;
+  z-index: 2;
+  top: 0;
+  background: #0F1921;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels {
