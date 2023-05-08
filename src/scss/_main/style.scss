@@ -1597,16 +1597,22 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-missing-member {
   display: none;
-  float: left;
   width: 100%;
-  height: 30px;
+  height: 40px;
+  border-radius: 10px;
+  align-items: center;
+  font-family: "Syne",sans-serif;
+  font-weight: 500;
+  font-size: 12px;
   position: absolute;
-  bottom: 22px;
+  bottom: 0;
   left: 0;
-  background: var(--lb3-tournament-lb-active-member-row-back);
+  padding-left: 24px;
+  background: #2F0426 !important;
+  border: 1px solid #406A8C;
+  box-shadow: 0 2px 12px rgba(64, 106, 140, 0.5);
   z-index: 3;
   color: var(--lb3-tournament-lb-active-member-row-color);
-  padding: 0 30px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-lb-missing-member {
   bottom: 3px;
@@ -1625,6 +1631,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard {
+  position: relative;
   height: 463px;
   border: 1px solid #223241;
   border-radius: 10px;

@@ -478,6 +478,7 @@ export const MainWidget = function (options) {
     sectionLBLeaderboardBody.appendChild(sectionLBLeaderboardBodyResults);
     sectionLBLeaderboardResultsContainer.appendChild(sectionLBLeaderboardBody);
     sectionLBLeaderboard.appendChild(sectionLBLeaderboardResultsContainer);
+    sectionLBLeaderboard.appendChild(sectionLBMissingMember);
 
     sectionLBFooter.appendChild(sectionLBFooterContent);
 
@@ -500,7 +501,7 @@ export const MainWidget = function (options) {
     sectionLB.appendChild(sectionLBHeader);
     sectionLB.appendChild(sectionLBDetails);
     sectionLB.appendChild(sectionLBLeaderboard);
-    sectionLB.appendChild(sectionLBMissingMember);
+    // sectionLB.appendChild(sectionLBMissingMember);
     sectionLB.appendChild(sectionLBOptInContainer);
     sectionLB.appendChild(sectionLBFooter);
     sectionLB.appendChild(sectionTournamentDetailsContainer);
@@ -1698,7 +1699,7 @@ export const MainWidget = function (options) {
 
     if (!isVisible) {
       if (area !== null && member !== null) {
-        area.style.display = 'block';
+        area.style.display = 'flex';
       } else {
         area.style.display = 'none';
       }
@@ -1723,8 +1724,8 @@ export const MainWidget = function (options) {
     var elemBottom = position.bottom;
     var elemHeight = position.height;
 
-    return elemTop <= elemContainer.top
-      ? elemContainer.top - elemTop <= elemHeight : elemBottom - elemContainer.bottom <= elemHeight;
+    return (elemTop - 110) <= elemContainer.top
+      ? elemContainer.top - (elemTop - 110) <= elemHeight : elemBottom - elemContainer.bottom <= elemHeight;
   };
 
   var onresizeInitialised = false;
