@@ -333,8 +333,8 @@
 
 .cl-widget-ms-wrapper .cl-widget-ms-default-mem-entry .cl-widget-ms-default-mem-rank {
   float: left;
-  width: 53px;
-  padding: 0 5px 0 0;
+  width: 57px;
+  padding: 0 10px 0 0;
   text-align: right;
   text-overflow: ellipsis;
   overflow: hidden;
@@ -345,6 +345,45 @@
   font-size: 14px;
   line-height: 17px;
   color: #ffffff;
+}
+
+.cl-widget-ms-wrapper .cl-widget-ms-default-mem-entry .cl-widget-ms-default-mem-rank .cl-mem-rank-1 {
+  display: block;
+  background-image: url(../../images/gold.svg);
+  background-repeat: no-repeat;
+  background-position: 2px 3px;
+  height: 26px;
+  width: 33px;
+  font-size: 13px;
+  line-height: 24px;
+  transform: translate(27px, 0);
+  text-align: center;
+}
+
+.cl-widget-ms-wrapper .cl-widget-ms-default-mem-entry .cl-widget-ms-default-mem-rank .cl-mem-rank-2 {
+  display: block;
+  background-image: url(../../images/silver.svg);
+  background-repeat: no-repeat;
+  background-position: 2px 3px;
+  height: 26px;
+  width: 33px;
+  font-size: 13px;
+  line-height: 24px;
+  transform: translate(27px, 0);
+  text-align: center;
+}
+
+.cl-widget-ms-wrapper .cl-widget-ms-default-mem-entry .cl-widget-ms-default-mem-rank .cl-mem-rank-3 {
+  display: block;
+  background-image: url(../../images/bronze.svg);
+  background-repeat: no-repeat;
+  background-position: 2px 3px;
+  height: 26px;
+  width: 33px;
+  font-size: 13px;
+  line-height: 24px;
+  transform: translate(27px, 0);
+  text-align: center;
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-default-mem-entry .cl-widget-ms-default-mem-icon {
@@ -1779,54 +1818,40 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-top-res .cl-rank-col-value {
   min-width: 20px;
-  background: #ffe500;
-  border: 1px solid #e2d45f;
-  border-radius: 100%;
   color: var(--lb3-tournament-lb-place-font-color);
-  background-image: $lb3-tournament-lb-top-res-back;
+  background-position: 2px 3px;
   text-align: center;
   font-size: 11px;
   font-weight: 400;
   line-height: 18px;
   padding: 0;
   min-height: 20px;
-  margin: 3px 0 0 0;
-  box-shadow: var(--lb3-tournament-lb-top-results-place-box-shadow);
-  transform: translate(28px, 0);
+  transform: translate(23px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-1 .cl-rank-col-value {
-  background-position: var(--lb3-tournament-lb-first-place-back-position);
-  background-size: var(--lb3-tournament-lb-first-place-back-size);
+  background-image: url(../../images/gold.svg);
   background-repeat: no-repeat;
-  background-color: var(--lb3-tournament-lb-first-place-color);
-  border: var(--lb3-tournament-lb-first-place-border);
-  height: 23px;
-  width: 23px;
+  height: 26px;
+  width: 33px;
   font-size: 13px;
   line-height: 24px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-2 .cl-rank-col-value {
-  background-position: var(--lb3-tournament-lb-second-place-back-position);
-  background-size: var(--lb3-tournament-lb-second-place-back-size);
+  background-image: url(../../images/silver.svg);
   background-repeat: no-repeat;
-  background-color: var(--lb3-tournament-lb-second-place-color);
-  border: var(--lb3-tournament-lb-second-place-border);
-  height: 23px;
-  width: 23px;
+  height: 26px;
+  width: 33px;
   font-size: 13px;
   line-height: 24px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-3 .cl-rank-col-value {
-  background-position: var(--lb3-tournament-lb-third-place-back-position);
-  background-size: var(--lb3-tournament-lb-third-place-back-size);
+  background-image: url(../../images/bronze.svg);
   background-repeat: no-repeat;
-  background-color: var(--lb3-tournament-lb-third-place-color);
-  border: var(--lb3-tournament-lb-third-place-border);
-  height: 23px;
-  width: 23px;
+  height: 26px;
+  width: 33px;
   font-size: 13px;
   line-height: 24px;
 }
