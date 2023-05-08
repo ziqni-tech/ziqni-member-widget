@@ -362,7 +362,7 @@ export const MiniScoreBoard = function (options) {
     }
 
     query(lbWrapper, '.cl-widget-ms-default-mem-label').innerHTML = selfMember ? '(' + _this.settings.lbWidget.settings.translation.leaderboard.you + ')' : '';
-    query(lbWrapper, '.cl-widget-ms-default-mem-rank').innerHTML = "<span class='cl-mem-rank-label'>" + _this.settings.lbWidget.settings.translation.leaderboard.rank + "</span><span class='cl-mem-rank'>" + lbEntry.rank + '</span>';
+    query(lbWrapper, '.cl-widget-ms-default-mem-rank').innerHTML = "<span class='cl-mem-rank-label'>" + _this.settings.lbWidget.settings.translation.leaderboard.rank + "</span><span class='cl-mem-rank cl-mem-rank-" + lbEntry.rank + "'>" + lbEntry.rank + '</span>';
     query(lbWrapper, '.cl-widget-ms-default-mem-points').innerHTML = "<span class='cl-mem-points-label'>" + _this.settings.lbWidget.settings.translation.leaderboard.points + "</span><span class='cl-mem-points'>" + formattedPoints + '</span>';
 
     return lbWrapper;
