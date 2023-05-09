@@ -334,6 +334,7 @@ export const MainWidget = function (options) {
     var sectionLBHeader = document.createElement('div');
     var sectionLBHeaderList = document.createElement('div');
     var sectionLBHeaderListIcon = document.createElement('div');
+    const sectionLBHeaderBackIcon = document.createElement('div');
     var sectionLBHeaderLabel = document.createElement('div');
     var sectionLBHeaderDate = document.createElement('div');
     var sectionLBHeaderClose = document.createElement('div');
@@ -347,6 +348,10 @@ export const MainWidget = function (options) {
     var sectionLBDetailsContentContainerLabelText = document.createElement('span');
     var sectionLBDetailsContentContainerDate = document.createElement('span');
     var sectionLBDetailsDescriptionContainer = document.createElement('div');
+    const sectionLBDetailsDescriptionHeader = document.createElement('div');
+    const sectionLBDetailsDescriptionHeaderTitle = document.createElement('div');
+    const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
+    const sectionLBDetailsDescriptionBanner = document.createElement('div');
     var sectionLBDetailsDescription = document.createElement('div');
     var sectionLBDetailsDescriptionClose = document.createElement('span');
 
@@ -359,6 +364,7 @@ export const MainWidget = function (options) {
     var sectionLBLeaderboardBodyResults = document.createElement('div');
 
     var sectionLBMissingMember = document.createElement('div');
+    var sectionLBMissingMemberDetails = document.createElement('div');
 
     var sectionLBOptInContainer = document.createElement('div');
     var sectionLBOptInAction = document.createElement('a');
@@ -386,6 +392,7 @@ export const MainWidget = function (options) {
     sectionLBHeader.setAttribute('class', 'cl-main-widget-lb-header');
     sectionLBHeaderList.setAttribute('class', 'cl-main-widget-lb-header-list');
     sectionLBHeaderListIcon.setAttribute('class', 'cl-main-widget-lb-header-list-icon');
+    sectionLBHeaderBackIcon.setAttribute('class', 'cl-main-widget-lb-header-back-icon');
     sectionLBHeaderLabel.setAttribute('class', 'cl-main-widget-lb-header-label');
     sectionLBHeaderDate.setAttribute('class', 'cl-main-widget-lb-header-date');
     sectionLBHeaderClose.setAttribute('class', 'cl-main-widget-lb-header-close');
@@ -400,6 +407,10 @@ export const MainWidget = function (options) {
     sectionLBDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-lb-details-content-date');
     sectionLBDetailsDescriptionContainer.setAttribute('class', 'cl-main-widget-lb-details-description-container');
     sectionLBDetailsDescription.setAttribute('class', 'cl-main-widget-lb-details-description');
+    sectionLBDetailsDescriptionHeader.setAttribute('class', 'cl-main-widget-lb-details-description-header');
+    sectionLBDetailsDescriptionHeaderTitle.setAttribute('class', 'cl-main-widget-lb-details-description-header-title');
+    sectionLBDetailsDescriptionHeaderBack.setAttribute('class', 'cl-main-widget-lb-details-description-header-back');
+    sectionLBDetailsDescriptionBanner.setAttribute('class', 'cl-main-widget-lb-details-description-banner');
     sectionLBDetailsDescriptionClose.setAttribute('class', 'cl-main-widget-lb-details-description-close');
 
     // Leaderboard result container
@@ -412,6 +423,7 @@ export const MainWidget = function (options) {
     sectionLBLeaderboardBodyResults.setAttribute('class', 'cl-main-widget-lb-leaderboard-body-res');
 
     sectionLBMissingMember.setAttribute('class', 'cl-main-widget-lb-missing-member');
+    sectionLBMissingMemberDetails.setAttribute('class', 'cl-main-widget-lb-missing-member-details');
 
     // footer
     sectionLBFooter.setAttribute('class', 'cl-main-widget-lb-footer');
@@ -445,6 +457,7 @@ export const MainWidget = function (options) {
     sectionLBOptInAction.href = 'javascript:void(0);';
 
     sectionLBHeaderList.appendChild(sectionLBHeaderListIcon);
+    sectionLBHeaderList.appendChild(sectionLBHeaderBackIcon);
     sectionLBHeader.appendChild(sectionLBHeaderList);
     sectionLBHeader.appendChild(sectionLBHeaderLabel);
     sectionLBHeader.appendChild(sectionLBHeaderDate);
@@ -463,8 +476,14 @@ export const MainWidget = function (options) {
     sectionLBDetails.appendChild(sectionLBDetailsContentContainer);
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
+      sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderBack);
+      sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderTitle);
+
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionHeader);
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionBanner);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescription);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionClose);
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBMissingMemberDetails);
       sectionLBDetails.appendChild(sectionLBDetailsDescriptionContainer);
     }
 
@@ -1402,6 +1421,15 @@ export const MainWidget = function (options) {
     }, 1000);
   };
 
+  this.getActiveContestTitle = function () {
+    return (
+      this.settings.lbWidget.settings.competition.activeContest !== null &&
+      this.settings.lbWidget.settings.competition.activeContest.name
+    )
+      ? this.settings.lbWidget.settings.competition.activeContest.name
+      : '';
+  };
+
   this.getActiveCompetitionDescription = function () {
     return (this.settings.lbWidget.settings.competition.activeContest !== null &&
         this.settings.lbWidget.settings.competition.activeContest.description &&
@@ -1470,11 +1498,14 @@ export const MainWidget = function (options) {
     var _this = this;
     var mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
     var body = null;
+    let title = null;
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
       body = query(_this.settings.section, '.cl-main-widget-lb-details-description');
+      title = query(_this.settings.section, '.cl-main-widget-lb-details-description-header-title');
       if (!body) return;
       body.innerHTML = _this.getActiveCompetitionDescription();
+      title.innerHTML = _this.getActiveContestTitle();
     }
 
     if (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner) {
@@ -1683,6 +1714,7 @@ export const MainWidget = function (options) {
   this.missingMember = function (isVisible) {
     var _this = this;
     var area = query(_this.settings.container, '.cl-main-widget-lb-missing-member');
+    var areaDetails = query(_this.settings.container, '.cl-main-widget-lb-missing-member-details');
     var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
 
     if (!member) {
@@ -1697,21 +1729,34 @@ export const MainWidget = function (options) {
       area.innerHTML = member.innerHTML;
     }
 
+    if (areaDetails !== null && member !== null) {
+      areaDetails.innerHTML = member.innerHTML;
+    }
+
     if (!isVisible) {
       if (area !== null && member !== null) {
         area.style.display = 'flex';
       } else {
         area.style.display = 'none';
       }
+
+      if (areaDetails !== null && member !== null) {
+        areaDetails.style.display = 'flex';
+      } else {
+        areaDetails.style.display = 'none';
+      }
     } else {
       area.style.display = 'none';
+      areaDetails.style.display = 'none';
     }
   };
 
   this.missingMemberReset = function () {
-    var _this = this;
-    var area = query(_this.settings.container, '.cl-main-widget-lb-missing-member');
+    const _this = this;
+    const area = query(_this.settings.container, '.cl-main-widget-lb-missing-member');
+    const areaDetails = query(_this.settings.container, '.cl-main-widget-lb-missing-member-details');
     area.innerHTML = '';
+    areaDetails.innerHTML = '';
   };
 
   this.isElementVisibleInView = function (el, container) {

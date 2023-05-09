@@ -1882,7 +1882,14 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
 
       // hide embedded competition details
-    } else if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage && hasClass(el, 'cl-main-widget-lb-details-description-close')) {
+    } else if (
+      !_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage &&
+      (
+        hasClass(el, 'cl-main-widget-lb-details-description-close') ||
+        hasClass(el, 'cl-main-widget-lb-header-back-icon') ||
+        hasClass(el, 'cl-main-widget-lb-details-description-header-back')
+      )
+    ) {
       _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
 
       // load competition details
