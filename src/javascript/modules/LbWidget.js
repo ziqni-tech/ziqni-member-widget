@@ -417,7 +417,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 20,
+        limit: 13,
         skip: (readyPageNumber - 1) * 20
       }
     }, null);
@@ -432,7 +432,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 20,
+        limit: 13,
         skip: (activePageNumber - 1) * 20
       }
     }, null);
@@ -447,7 +447,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 20,
+        limit: 13,
         skip: (finishedPageNumber - 1) * 20
       }
     }, null);
@@ -1891,6 +1891,7 @@ export const LbWidget = function (options) {
       )
     ) {
       _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
+      _this.settings.mainWidget.hideCompetitionList();
 
       // load competition details
     } else if (hasClass(el, 'cl-main-widget-lb-details-content-label') || closest(el, '.cl-main-widget-lb-details-content-label') !== null) {
@@ -2074,7 +2075,7 @@ export const LbWidget = function (options) {
       });
 
       // hide competition list view
-    } else if (hasClass(el, 'cl-main-widget-tournaments-back-btn')) {
+    } else if (hasClass(el, 'cl-main-widget-tournaments-back-btn') || hasClass(el, 'cl-main-widget-lb-header-back-icon')) {
       _this.settings.mainWidget.hideCompetitionList();
 
       // mini scoreboard action to open primary widget
@@ -2084,6 +2085,8 @@ export const LbWidget = function (options) {
       // accordion navigation
     } else if (hasClass(el, 'cl-accordion-label')) {
       _this.settings.mainWidget.accordionNavigation(el);
+    } else if (hasClass(el, 'cl-main-accordion-container-menu-item')) {
+      _this.settings.mainWidget.tournamentsNavigation(el);
     }
   };
 
