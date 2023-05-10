@@ -70,22 +70,26 @@ export const MainWidget = function (options) {
       timerInterval: null
     },
     tournamentsSection: {
-      accordionLayout: [{
-        label: 'Upcoming Tournaments',
-        type: 'readyCompetitions',
-        show: false,
-        showTopResults: 1
-      }, {
-        label: 'Active Tournaments',
-        type: 'activeCompetitions',
-        show: true,
-        showTopResults: 1
-      }, {
-        label: 'Finished Tournaments',
-        type: 'finishedCompetitions',
-        show: false,
-        showTopResults: 1
-      }]
+      accordionLayout: [
+        {
+          label: 'Upcoming Tournaments',
+          type: 'readyCompetitions',
+          show: false,
+          showTopResults: 0
+        },
+        {
+          label: 'Active Tournaments',
+          type: 'activeCompetitions',
+          show: true,
+          showTopResults: 0
+        },
+        {
+          label: 'Finished Tournaments',
+          type: 'finishedCompetitions',
+          show: false,
+          showTopResults: 0
+        }
+      ]
     },
     rewardsSection: {
       accordionLayout: [
@@ -174,6 +178,121 @@ export const MainWidget = function (options) {
     });
 
     return accordionWrapper;
+  };
+
+  this.tournamentsList = function (data, onLayout) {
+    const _this = this;
+    const accordionWrapper = document.createElement('div');
+
+    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
+
+    const statusMenu = document.createElement('div');
+    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
+
+    const finishedTitle = document.createElement('div');
+    const activeTitle = document.createElement('div');
+    const readyTitle = document.createElement('div');
+
+    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedTournaments');
+    activeTitle.setAttribute('class', 'cl-main-accordion-container-menu-item activeTournaments active');
+    readyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item readyTournaments');
+
+    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions;
+    activeTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions;
+    readyTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions;
+
+    statusMenu.appendChild(finishedTitle);
+    statusMenu.appendChild(activeTitle);
+    statusMenu.appendChild(readyTitle);
+
+    accordionWrapper.appendChild(statusMenu);
+
+    mapObject(data, function (entry) {
+      const accordionSection = document.createElement('div');
+      const accordionLabel = document.createElement('div');
+      const topShownEntry = document.createElement('div');
+      const accordionListContainer = document.createElement('div');
+      const header = document.createElement('div');
+      const headerLabel = document.createElement('div');
+      const headerDate = document.createElement('div');
+      const headerPrize = document.createElement('div');
+      const accordionList = document.createElement('div');
+
+      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
+      // accordionLabel.setAttribute('class', 'cl-accordion-label');
+      topShownEntry.setAttribute('class', 'cl-accordion-entry');
+      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
+      header.setAttribute('class', 'cl-accordion-list-container-header');
+      headerLabel.setAttribute('class', 'cl-accordion-list-container-header-label');
+      headerDate.setAttribute('class', 'cl-accordion-list-container-header-date');
+      headerPrize.setAttribute('class', 'cl-accordion-list-container-header-prize');
+      accordionList.setAttribute('class', 'cl-accordion-list');
+
+      headerLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
+      headerDate.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.date;
+      headerPrize.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.prize;
+
+      // if (typeof _this.settings.lbWidget.settings.translation.rewards[entry.type] !== 'undefined') {
+      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards[entry.type];
+      // } else if (typeof _this.settings.lbWidget.settings.translation.tournaments[entry.type] !== 'undefined') {
+      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments[entry.type];
+      // } else {
+      //   accordionLabel.innerHTML = entry.label;
+      // }
+
+      if (typeof onLayout === 'function') {
+        onLayout(accordionSection, accordionList, topShownEntry, entry);
+      }
+
+      header.appendChild(headerLabel);
+      header.appendChild(headerDate);
+      header.appendChild(headerPrize);
+
+      accordionListContainer.appendChild(header);
+      accordionListContainer.appendChild(accordionList);
+
+      accordionSection.appendChild(accordionLabel);
+      accordionSection.appendChild(topShownEntry);
+      accordionSection.appendChild(accordionListContainer);
+
+      accordionWrapper.appendChild(accordionSection);
+    });
+
+    return accordionWrapper;
+  };
+
+  this.tournamentsNavigation = function (element) {
+    const menuItems = element.parentNode.querySelectorAll('.cl-main-accordion-container-menu-item');
+    const container = element.closest('.cl-main-accordion-container');
+    const sections = container.querySelectorAll('.cl-accordion');
+
+    menuItems.forEach(i => i.classList.remove('active'));
+    element.classList.add('active');
+
+    sections.forEach(s => s.classList.remove('cl-shown'));
+
+    if (element.classList.contains('finishedTournaments')) {
+      const finishedContainer = container.querySelector('.finishedCompetitions');
+      finishedContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('activeTournaments')) {
+      const activeContainer = container.querySelector('.activeCompetitions');
+      activeContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('readyTournaments')) {
+      const readyContainer = container.querySelector('.readyCompetitions');
+      readyContainer.classList.add('cl-shown');
+    }
+
+    // if (hasClass(parentEl, 'cl-shown')) {
+    //   removeClass(parentEl, 'cl-shown');
+    // } else {
+    //   objectIterator(query(closest(parentEl, '.cl-main-accordion-container'), '.cl-shown'), function (obj) {
+    //     removeClass(obj, 'cl-shown');
+    //   });
+    //
+    //   addClass(parentEl, 'cl-shown');
+    // }
   };
 
   this.accordionNavigation = function (element) {
@@ -386,7 +505,7 @@ export const MainWidget = function (options) {
     var sectionTournamentList = document.createElement('div');
     var sectionTournamentListBody = document.createElement('div');
     var sectionTournamentListBodyResults = document.createElement('div');
-    var sectionTournamentBackAction = document.createElement('a');
+    // var sectionTournamentBackAction = document.createElement('a');
 
     sectionLB.setAttribute('class', _this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section' + (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner ? ' cl-main-section-image-banner-active' : ''));
     sectionLBHeader.setAttribute('class', 'cl-main-widget-lb-header');
@@ -442,7 +561,7 @@ export const MainWidget = function (options) {
     sectionTournamentDetailsOptInAction.setAttribute('class', 'cl-main-widget-lb-details-optin-action');
 
     sectionTournamentList.setAttribute('class', 'cl-main-widget-tournaments-list');
-    sectionTournamentBackAction.setAttribute('class', 'cl-main-widget-tournaments-back-btn');
+    // sectionTournamentBackAction.setAttribute('class', 'cl-main-widget-tournaments-back-btn');
     sectionTournamentListBody.setAttribute('class', 'cl-main-widget-tournaments-list-body');
     sectionTournamentListBodyResults.setAttribute('class', 'cl-main-widget-tournaments-list-body-res');
 
@@ -503,7 +622,7 @@ export const MainWidget = function (options) {
 
     sectionTournamentListBody.appendChild(sectionTournamentListBodyResults);
     sectionTournamentList.appendChild(sectionTournamentListBody);
-    sectionTournamentList.appendChild(sectionTournamentBackAction);
+    // sectionTournamentList.appendChild(sectionTournamentBackAction);
 
     sectionTournamentDetailsHeader.appendChild(sectionTournamentDetailsHeaderLabel);
     sectionTournamentDetailsHeader.appendChild(sectionTournamentDetailsHeaderDate);
@@ -1528,6 +1647,12 @@ export const MainWidget = function (options) {
   };
 
   this.showEmbeddedCompetitionDetailsContent = function (callback) {
+    const listIcon = query(this.settings.container, '.cl-main-widget-lb-header-list-icon');
+    const backIcon = query(this.settings.container, '.cl-main-widget-lb-header-back-icon');
+
+    listIcon.style.display = 'none';
+    backIcon.style.display = 'block';
+
     if (hasClass(this.settings.section, 'cl-main-active-embedded-description')) {
       removeClass(this.settings.section, 'cl-main-active-embedded-description');
     } else {
@@ -1537,6 +1662,12 @@ export const MainWidget = function (options) {
   };
 
   this.hideEmbeddedCompetitionDetailsContent = function (callback) {
+    const listIcon = query(this.settings.container, '.cl-main-widget-lb-header-list-icon');
+    const backIcon = query(this.settings.container, '.cl-main-widget-lb-header-back-icon');
+
+    listIcon.style.display = 'block';
+    backIcon.style.display = 'none';
+
     removeClass(this.settings.section, 'cl-main-active-embedded-description');
     if (typeof callback === 'function') callback();
   };
@@ -1848,6 +1979,11 @@ export const MainWidget = function (options) {
     // var date = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-header-date');
     var body = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-body');
     var image = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-body-image-cont');
+    const listIcon = query(this.settings.container, '.cl-main-widget-lb-header-list-icon');
+    const backIcon = query(this.settings.container, '.cl-main-widget-lb-header-back-icon');
+
+    listIcon.style.display = 'none';
+    backIcon.style.display = 'block';
 
     image.innerHTML = '';
     label.innerHTML = (_this.settings.lbWidget.settings.competition.activeContest.label.length > 0) ? _this.settings.lbWidget.settings.competition.activeContest.label : _this.settings.lbWidget.settings.competition.activeCompetition.label;
@@ -1875,12 +2011,13 @@ export const MainWidget = function (options) {
     const _this = this;
     const listResContainer = query(_this.settings.tournamentListContainer, '.cl-main-widget-tournaments-list-body-res');
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
+    const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
     const preLoader = _this.preloader();
 
     const totalCount = _this.settings.lbWidget.settings.tournaments.totalCount;
     const readyTotalCount = _this.settings.lbWidget.settings.tournaments.readyTotalCount;
     const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
-    const itemsPerPage = 20;
+    const itemsPerPage = 13;
 
     let paginator = query(listResContainer, '.paginator-active');
     if (!paginator && totalCount > itemsPerPage) {
@@ -1932,33 +2069,22 @@ export const MainWidget = function (options) {
 
     if (readyPageNumber > 1) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
-        if (t.type === 'readyCompetitions') {
-          t.show = true;
-        } else {
-          t.show = false;
-        }
+        t.show = t.type === 'readyCompetitions';
       });
     } else if (finishedPageNumber > 1) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
-        if (t.type === 'finishedCompetitions') {
-          t.show = true;
-        } else {
-          t.show = false;
-        }
+        t.show = t.type === 'finishedCompetitions';
       });
     } else {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
-        if (t.type === 'activeCompetitions') {
-          t.show = true;
-        } else {
-          t.show = false;
-        }
+        t.show = t.type === 'activeCompetitions';
       });
     }
 
     preLoader.show(function () {
-      listIcon.style.opacity = '0';
-      const accordionObj = _this.accordionStyle(_this.settings.tournamentsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout) {
+      listIcon.style.display = 'none';
+      backIcon.style.display = 'block';
+      const accordionObj = _this.tournamentsList(_this.settings.tournamentsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout) {
         const tournamentData = _this.settings.lbWidget.settings.tournaments[layout.type];
 
         if (typeof tournamentData !== 'undefined') {
@@ -1985,6 +2111,7 @@ export const MainWidget = function (options) {
       if (finishedPaginator) {
         const finishedContainer = query(listResContainer, '.finishedCompetitions');
         if (finishedContainer) {
+          const listContainer = query(finishedContainer, '.cl-accordion-list-container');
           const paginatorItems = query(finishedPaginator, '.paginator-item');
           paginatorItems.forEach(item => {
             removeClass(item, 'active');
@@ -1993,13 +2120,14 @@ export const MainWidget = function (options) {
             }
           });
 
-          finishedContainer.appendChild(finishedPaginator);
+          listContainer.appendChild(finishedPaginator);
         }
       }
 
       if (readyPaginator) {
         const readyContainer = query(listResContainer, '.readyCompetitions');
         if (readyContainer) {
+          const listContainer = query(readyContainer, '.cl-accordion-list-container');
           const paginatorItems = query(readyPaginator, '.paginator-item');
           paginatorItems.forEach(item => {
             removeClass(item, 'active');
@@ -2008,13 +2136,14 @@ export const MainWidget = function (options) {
             }
           });
 
-          readyContainer.appendChild(readyPaginator);
+          listContainer.appendChild(readyPaginator);
         }
       }
 
       if (paginator) {
         const activeContainer = query(listResContainer, '.activeCompetitions');
         if (activeContainer) {
+          const listContainer = query(activeContainer, '.cl-accordion-list-container');
           const paginatorItems = query(paginator, '.paginator-item');
           paginatorItems.forEach(item => {
             removeClass(item, 'active');
@@ -2023,7 +2152,7 @@ export const MainWidget = function (options) {
             }
           });
 
-          activeContainer.appendChild(paginator);
+          listContainer.appendChild(paginator);
         }
       }
 
@@ -2041,8 +2170,10 @@ export const MainWidget = function (options) {
   this.hideCompetitionList = function (callback) {
     var _this = this;
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
+    const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
 
-    listIcon.style.opacity = '1';
+    listIcon.style.display = 'block';
+    backIcon.style.display = 'none';
     _this.hideEmbeddedCompetitionDetailsContent();
     _this.missingMemberReset();
 
@@ -2624,26 +2755,37 @@ export const MainWidget = function (options) {
 
   this.tournamentItem = function (tournament) {
     // var _this = this;
-    var listItem = document.createElement('div');
-    var detailsContainer = document.createElement('div');
-    var detailsWrapper = document.createElement('div');
-    var label = document.createElement('div');
-    var description = document.createElement('div');
-    var descriptionContent = stripHtml(tournament.description);
+    const listItem = document.createElement('div');
+    const detailsContainer = document.createElement('div');
+    // const detailsWrapper = document.createElement('div');
+    const label = document.createElement('div');
+    const period = document.createElement('div');
+
+    let startDate = new Date(tournament.actualStartDate ?? tournament.scheduledStartDate);
+    let endDate = new Date(tournament.actualEndDate ?? tournament.scheduledEndDate);
+    startDate = startDate.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+    endDate = endDate.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+
+    // var description = document.createElement('div');
+    // var descriptionContent = stripHtml(tournament.description);
 
     listItem.setAttribute('class', 'cl-tour-list-item cl-tour-' + tournament.id);
     detailsContainer.setAttribute('class', 'cl-tour-list-details-cont');
-    detailsWrapper.setAttribute('class', 'cl-tour-list-details-wrap');
+    // detailsWrapper.setAttribute('class', 'cl-tour-list-details-wrap');
     label.setAttribute('class', 'cl-tour-list-details-label');
-    description.setAttribute('class', 'cl-tour-list-details-description');
+    period.setAttribute('class', 'cl-tour-list-details-period');
+    // description.setAttribute('class', 'cl-tour-list-details-description');
 
     listItem.dataset.id = tournament.id;
     label.innerHTML = tournament.name ?? '';
-    description.innerHTML = (descriptionContent.length > 100) ? descriptionContent.substr(0, 100) + '...' : descriptionContent;
+    period.innerHTML = startDate + ' - ' + endDate;
+    /// description.innerHTML = (descriptionContent.length > 100) ? descriptionContent.substr(0, 100) + '...' : descriptionContent;
 
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(description);
-    detailsContainer.appendChild(detailsWrapper);
+    // detailsWrapper.appendChild(label);
+    // detailsWrapper.appendChild(period);
+    // detailsWrapper.appendChild(description);
+    detailsContainer.appendChild(label);
+    detailsContainer.appendChild(period);
     listItem.appendChild(detailsContainer);
 
     return listItem;
@@ -3012,6 +3154,7 @@ export const MainWidget = function (options) {
   this.resetNavigation = function (callback) {
     var _this = this;
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
+    const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
 
     objectIterator(query(_this.settings.container, '.cl-main-widget-navigation-items .cl-active-nav'), function (obj) {
       removeClass(obj, 'cl-active-nav');
@@ -3030,7 +3173,8 @@ export const MainWidget = function (options) {
       }
     });
 
-    listIcon.style.opacity = '1';
+    listIcon.style.display = 'block';
+    backIcon.style.display = 'none';
     _this.hideEmbeddedCompetitionDetailsContent();
     _this.hideCompetitionList();
 

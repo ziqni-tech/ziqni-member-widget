@@ -20,13 +20,14 @@
     "label": "Tournaments",
     "enter": "Enter Tournament",
     "processing": "Processing...",
-    "readyCompetitions": "Upcoming Tournaments",
-    "activeCompetitions": "Active Tournaments",
-    "finishedCompetitions": "Finished Tournaments",
+    "readyCompetitions": "Upcoming",
+    "activeCompetitions": "Active",
+    "finishedCompetitions": "Finished",
     "finishing": "Finishing",
     "finished": "Finished",
     "registered": "Registered",
-    "noAvailableCompetitions": "No available competition"
+    "noAvailableCompetitions": "No available competition",
+    "date": "Date"
   },
   "leaderboard": {
     "rank": "Rank",
