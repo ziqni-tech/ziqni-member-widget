@@ -1141,7 +1141,7 @@ export const MainWidget = function (options) {
     var rankCel = document.createElement('div');
     var rankCelValue = document.createElement('div');
     var iconCel = document.createElement('div');
-    var iconCelImg = new Image();
+    var iconCelImg = document.createElement('div');
     var nameCel = document.createElement('div');
     var growthCel = document.createElement('div');
     var pointsCel = document.createElement('div');
@@ -1165,12 +1165,7 @@ export const MainWidget = function (options) {
     growthCel.innerHTML = growth;
     pointsCel.innerHTML = points;
 
-    if (icon.length > 0) {
-      iconCelImg.src = icon;
-      iconCelImg.alt = name;
-    } else {
-      iconCelImg.style.display = 'none';
-    }
+    iconCelImg.innerHTML = icon;
 
     rankCel.appendChild(rankCelValue);
     cellWrapper.appendChild(rankCel);
@@ -1197,7 +1192,7 @@ export const MainWidget = function (options) {
     var cellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + count);
 
     if (cellRow === null) {
-      onMissing(rank, icon, name, change, growth, points, reward, count, memberFound);
+      onMissing(rank, name[0], name, change, growth, points, reward, count, memberFound);
     } else {
       var rankCel = query(cellRow, '.cl-rank-col-value');
       var iconCel = query(cellRow, '.cl-icon-col-img');
@@ -1228,13 +1223,7 @@ export const MainWidget = function (options) {
 
       pointsCel.innerHTML = points;
 
-      if (icon.length > 0) {
-        iconCel.src = icon;
-        iconCel.alt = name;
-        iconCel.style.display = 'block';
-      } else {
-        iconCel.style.display = 'none';
-      }
+      iconCel.innerText = name[0];
 
       if (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0) {
         var rewardCel = query(cellRow, '.cl-reward-col');
@@ -1305,19 +1294,16 @@ export const MainWidget = function (options) {
     });
 
     mapObject(topResults, function (lb) {
-      let memberId = '';
       let memberNames = '';
       let memberLbName = '';
       if (lb.members && lb.members.length) {
-        memberId = lb.members[0].memberId;
         memberNames = lb.members.map((m) => m.name);
         memberLbName = memberNames.join();
       } else {
-        memberId = lb.memberId;
         memberLbName = lb.name;
       }
       var count = 0;
-      var icon = _this.settings.lbWidget.populateIdenticonBase64Image(memberId);
+      // const icon = memberLbName && memberLbName.length ? memberLbName[0] : '';
       const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
 
       var memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
@@ -1342,7 +1328,7 @@ export const MainWidget = function (options) {
 
       _this.leaderboardRowUpdate(
         lb.rank,
-        icon, // icon
+        memberName[0], // icon
         memberName,
         change,
         growthIcon, // growth
@@ -1351,7 +1337,7 @@ export const MainWidget = function (options) {
         count,
         memberFound,
         function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-          var newRow = _this.leaderboardRow(rank, icon, name, change, growth, points, reward, count, memberFound);
+          var newRow = _this.leaderboardRow(rank, name[0], name, change, growth, points, reward, count, memberFound);
           var prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
 
           if (prevCellRow !== null && typeof prevCellRow.length === 'undefined') {
@@ -1432,19 +1418,19 @@ export const MainWidget = function (options) {
     });
 
     mapObject(remainingResults, function (lb) {
-      let memberId = '';
+      // let memberId = '';
       let memberNames = '';
       let memberLbName = '';
       if (lb.members && lb.members.length) {
-        memberId = lb.members[0].memberId;
+        // memberId = lb.members[0].memberId;
         memberNames = lb.members.map((m) => m.name);
         memberLbName = memberNames.join();
       } else {
-        memberId = lb.memberId;
+        // memberId = lb.memberId;
         memberLbName = lb.name;
       }
       var count = 0;
-      var icon = _this.settings.lbWidget.populateIdenticonBase64Image(memberId);
+      const icon = memberLbName && memberLbName.length ? memberLbName[0] : '';
       const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
       var memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
       var memberNameLength = _this.settings.lbWidget.settings.memberNameLength;

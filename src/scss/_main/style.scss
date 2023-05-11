@@ -1877,7 +1877,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels .cl-col.cl-name-col {
-  transform: translate(-38px, 0);
+  transform: translate(-33px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels .cl-col.cl-points-col {
@@ -2011,14 +2011,18 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-icon-col {
-  width: 24px;
+  width: 25px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-icon-col .cl-icon-col-img {
-  height: 20px;
-  float: left;
-  box-shadow: 1px 2px 2px #979797;
-  margin: 3px 0 0 0;
+  height: 24px;
+  width: 24px;
+  background: #406A8C;
+  border-radius: 50%;
+  text-align: center;
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  line-height: 24px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-name-col {
