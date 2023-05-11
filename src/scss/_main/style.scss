@@ -3320,11 +3320,23 @@
   background: #141E28;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-label-icon {
+  width: 24px;
+  height: 24px;
+  border-radius: 50%;
+  background-image: $lb3-tournament-default-icon;
+  background-repeat: no-repeat;
+  background-size: cover;
+  background-color: #223241;
+  background-position: 50% 50%;
+  margin-left: 24px;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-label {
   color: var(--primary-font-color);
   max-width: 280px;
   width: 100%;
-  padding-left: 24px;
+  padding-left: 6px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-description {

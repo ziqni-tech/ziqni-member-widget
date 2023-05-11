@@ -2775,6 +2775,7 @@ export const MainWidget = function (options) {
     const detailsContainer = document.createElement('div');
     // const detailsWrapper = document.createElement('div');
     const label = document.createElement('div');
+    const labelIcon = document.createElement('div');
     const period = document.createElement('div');
 
     let startDate = new Date(tournament.actualStartDate ?? tournament.scheduledStartDate);
@@ -2789,6 +2790,7 @@ export const MainWidget = function (options) {
     detailsContainer.setAttribute('class', 'cl-tour-list-details-cont');
     // detailsWrapper.setAttribute('class', 'cl-tour-list-details-wrap');
     label.setAttribute('class', 'cl-tour-list-details-label');
+    labelIcon.setAttribute('class', 'cl-tour-list-details-label-icon');
     period.setAttribute('class', 'cl-tour-list-details-period');
     // description.setAttribute('class', 'cl-tour-list-details-description');
 
@@ -2800,6 +2802,7 @@ export const MainWidget = function (options) {
     // detailsWrapper.appendChild(label);
     // detailsWrapper.appendChild(period);
     // detailsWrapper.appendChild(description);
+    detailsContainer.appendChild(labelIcon);
     detailsContainer.appendChild(label);
     detailsContainer.appendChild(period);
     listItem.appendChild(detailsContainer);
