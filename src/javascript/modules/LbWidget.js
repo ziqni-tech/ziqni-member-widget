@@ -366,6 +366,20 @@ export const LbWidget = function (options) {
     return (largeResult.length > 0) ? (largeResult.join(' ') + ' ' + result.join(':')) : result.join(':');
   };
 
+  this.formatBannerDateTime = function (duration) {
+    const days = formatNumberLeadingZeros(duration.days(), 2);
+    const hours = formatNumberLeadingZeros(duration.hours(), 2);
+    const minutes = formatNumberLeadingZeros(duration.minutes(), 2);
+    const seconds = formatNumberLeadingZeros(duration.seconds(), 2);
+
+    const daysElem = '<div class="banner-days"><div class="banner-date-cell">' + days[0] + '</div><div class="banner-date-cell">' + days[1] + '</div></div>';
+    const hoursElem = '<div class="banner-hours"><div class="banner-date-cell">' + hours[0] + '</div><div class="banner-date-cell">' + hours[1] + '</div></div>';
+    const minutesElem = '<div class="banner-minutes"><div class="banner-date-cell">' + minutes[0] + '</div><div class="banner-date-cell">' + minutes[1] + '</div></div>';
+    const secondsElem = '<div class="banner-seconds"><div class="banner-date-cell">' + seconds[0] + '</div><div class="banner-date-cell">' + seconds[1] + '</div></div>';
+
+    return '<div class="banner-date">' + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
+  };
+
   this.populateIdenticonBase64Image = function (str) {
     if (str && str.length > 0) {
       /* eslint new-cap: "off" */

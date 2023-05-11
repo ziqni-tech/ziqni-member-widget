@@ -1635,13 +1635,14 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label {
   text-align: center;
   color: var(--lb3-tournament-details-label-color);
-  display: inline-block;
+  display: flex;
+  flex-direction: column;
   position: relative;
   margin: 0 auto;
   overflow: hidden;
   white-space: nowrap;
   text-overflow: ellipsis;
-  max-width: 100%;
+  width: 100%;
   padding-top: 26px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label-text {
@@ -1657,12 +1658,69 @@
   line-height: 24px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date {
-  float: left;
-  clear: both;
   font-size: 12px;
   line-height: 14px;
   min-height: 14px;
   width: 100%;
+  margin-top: 16px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date {
+  display: flex;
+  justify-content: center;
+  width: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-date-cell {
+  width: 32px;
+  height: 48px;
+  border: 1px solid #EE3EC8;
+  border-radius: 5px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 28px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-date-cell:nth-child(even) {
+  margin-left: 5px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-days {
+  display: flex;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-hours {
+  display: flex;
+  padding-left: 30px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-minutes {
+  display: flex;
+  padding-left: 30px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-seconds {
+  display: flex;
+  padding-left: 30px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-headers {
+  display: flex;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  align-items: center;
+  justify-content: center;
+  height: 34px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-headers-item {
+  width: 100px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label::before {
@@ -1789,7 +1847,6 @@
   position: sticky;
   z-index: 2;
   top: 0;
-  background: #0F1921;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels {

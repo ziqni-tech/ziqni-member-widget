@@ -4,7 +4,11 @@
     "hours": "h",
     "minutesShortHand": "min",
     "minutes": "m",
-    "seconds": "s"
+    "seconds": "s",
+    "daysFull": "Days",
+    "hoursFull": "Hours",
+    "minutesFull": "Minutes",
+    "secondsFull": "Seconds"
   },
   "achievements": {
     "label": "Achievements",
