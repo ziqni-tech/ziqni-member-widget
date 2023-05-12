@@ -1187,8 +1187,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 15,
-        limit: 15
+        skip: (pageNumber - 1) * 9,
+        limit: 9
       }
     });
 

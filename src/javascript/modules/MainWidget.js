@@ -956,7 +956,7 @@ export const MainWidget = function (options) {
 
     var sectionInboxHeader = document.createElement('div');
     var sectionInboxHeaderLabel = document.createElement('div');
-    var sectionInboxHeaderDate = document.createElement('div');
+    // var sectionInboxHeaderDate = document.createElement('div');
     var sectionInboxHeaderClose = document.createElement('div');
 
     var sectionInboxDetails = document.createElement('div');
@@ -984,7 +984,7 @@ export const MainWidget = function (options) {
     sectionInbox.setAttribute('class', _this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
     sectionInboxHeader.setAttribute('class', 'cl-main-widget-inbox-header');
     sectionInboxHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-header-label');
-    sectionInboxHeaderDate.setAttribute('class', 'cl-main-widget-inbox-header-date');
+    // sectionInboxHeaderDate.setAttribute('class', 'cl-main-widget-inbox-header-date');
     sectionInboxHeaderClose.setAttribute('class', 'cl-main-widget-inbox-header-close');
 
     sectionInboxDetails.setAttribute('class', 'cl-main-widget-inbox-details');
@@ -1016,7 +1016,7 @@ export const MainWidget = function (options) {
     sectionInboxFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
 
     sectionInboxHeader.appendChild(sectionInboxHeaderLabel);
-    sectionInboxHeader.appendChild(sectionInboxHeaderDate);
+    // sectionInboxHeader.appendChild(sectionInboxHeaderDate);
     sectionInboxHeader.appendChild(sectionInboxHeaderClose);
 
     sectionInboxDetailsInfo.appendChild(sectionInboxDetailsInfoIcon);
@@ -2999,7 +2999,7 @@ export const MainWidget = function (options) {
     const _this = this;
     const messageList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.inbox.containerClass + ' .cl-main-widget-inbox-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.messages.totalCount;
-    const itemsPerPage = 15;
+    const itemsPerPage = 9;
     let paginator = query(messageList, '.paginator');
 
     if (!paginator && totalCount > itemsPerPage) {
@@ -3210,7 +3210,7 @@ export const MainWidget = function (options) {
               _this.loadMessages(1, function () {
                 var inboxContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.inbox.containerClass);
 
-                inboxContainer.style.display = 'block';
+                inboxContainer.style.display = 'flex';
                 changeInterval = setTimeout(function () {
                   addClass(inboxContainer, 'cl-main-active-section');
                 }, 30);
