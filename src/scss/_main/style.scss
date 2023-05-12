@@ -4126,16 +4126,34 @@
     float: right;
     padding: 2px 12px;
     border-radius: 3px;
+    font-family: 'Syne', sans-serif;
+    font-style: normal;
+    font-weight: 700;
+    font-size: 12px;
+    line-height: 26px;
     &-item {
-      padding: 3px 8px;
+      display: inline-block;
+      width: 30px;
+      height: 30px;
+      border: 1px solid #333333;
+      border-radius: 5px;
       cursor: pointer;
+      text-align: center;
+      margin-left: 6px;
       &.active {
         background: #2F0426;
-        border-radius: 3px;
+        border: 1px solid #406A8C;
+        box-shadow: 0 2px 12px rgba(64, 106, 140, 0.5);
+      }
+      &.prev {
+        background: $pagination-prev-icon no-repeat center;
+      }
+      &.next {
+        background: $pagination-next-icon no-repeat center;
       }
     }
     &.accordion {
-      margin: 12px;
+      margin: 42px 12px 0 12px;
     }
   }
   .paginator-finished {
@@ -4155,13 +4173,13 @@
   }
   .cl-shown {
     .paginator-finished {
-      display: block;
+      display: flex;
     }
     .paginator-ready {
-      display: block;
+      display: flex;
     }
     .paginator-active {
-      display: block;
+      display: flex;
     }
     .paginator-claimed {
       display: block;

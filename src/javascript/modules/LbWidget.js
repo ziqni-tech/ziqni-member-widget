@@ -431,7 +431,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 13,
+        limit: 12,
         skip: (readyPageNumber - 1) * 20
       }
     }, null);
@@ -446,8 +446,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 13,
-        skip: (activePageNumber - 1) * 20
+        limit: 12,
+        skip: (activePageNumber - 1) * 12
       }
     }, null);
 
@@ -461,8 +461,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 13,
-        skip: (finishedPageNumber - 1) * 20
+        limit: 12,
+        skip: (finishedPageNumber - 1) * 12
       }
     }, null);
 
@@ -1940,19 +1940,82 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-finished')) {
         preLoader.show(async function () {
-          await _this.checkForAvailableCompetitions(null, 1, 1, Number(el.dataset.page));
-          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, 1, Number(el.dataset.page));
+          let pageNumber;
+
+          if (el.classList.contains('prev')) {
+            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              pageNumber = 1;
+            }
+          } else if (el.classList.contains('next')) {
+            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+            const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              pageNumber = pagesCount;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          await _this.checkForAvailableCompetitions(null, 1, 1, pageNumber);
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, 1, pageNumber);
         });
       }
       if (el.closest('.paginator-ready')) {
         preLoader.show(async function () {
-          await _this.checkForAvailableCompetitions(null, Number(el.dataset.page), 1, 1);
+          let pageNumber;
+
+          if (el.classList.contains('prev')) {
+            const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              pageNumber = 1;
+            }
+          } else if (el.classList.contains('next')) {
+            const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
+            const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              pageNumber = pagesCount;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          await _this.checkForAvailableCompetitions(null, pageNumber, 1, 1);
           _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), Number(el.dataset.page), 1, 1);
         });
       }
       if (el.closest('.paginator-active')) {
+        let pageNumber;
+
+        if (el.classList.contains('prev')) {
+          const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
+          if (activePage > 1) {
+            pageNumber = activePage - 1;
+          } else {
+            pageNumber = 1;
+          }
+        } else if (el.classList.contains('next')) {
+          const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
+          const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
+          if (activePage < pagesCount) {
+            pageNumber = activePage + 1;
+          } else {
+            pageNumber = pagesCount;
+          }
+        } else {
+          pageNumber = Number(el.dataset.page);
+        }
+
         preLoader.show(async function () {
-          await _this.checkForAvailableCompetitions(null, 1, Number(el.dataset.page), 1);
+          await _this.checkForAvailableCompetitions(null, 1, pageNumber, 1);
           _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, Number(el.dataset.page), 1);
         });
       }

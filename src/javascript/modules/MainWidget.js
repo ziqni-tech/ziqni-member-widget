@@ -195,8 +195,23 @@ export const MainWidget = function (options) {
     const readyTitle = document.createElement('div');
 
     finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedTournaments');
-    activeTitle.setAttribute('class', 'cl-main-accordion-container-menu-item activeTournaments active');
+    activeTitle.setAttribute('class', 'cl-main-accordion-container-menu-item activeTournaments');
     readyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item readyTournaments');
+
+    const idx = data.findIndex(d => d.show === true);
+    if (idx !== -1) {
+      switch (data[idx].type) {
+        case 'activeCompetitions':
+          activeTitle.classList.add('active');
+          break;
+        case 'finishedCompetitions':
+          finishedTitle.classList.add('active');
+          break;
+        case 'readyCompetitions':
+          readyTitle.classList.add('active');
+          break;
+      }
+    }
 
     finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions;
     activeTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions;
@@ -2084,7 +2099,7 @@ export const MainWidget = function (options) {
     const totalCount = _this.settings.lbWidget.settings.tournaments.totalCount;
     const readyTotalCount = _this.settings.lbWidget.settings.tournaments.readyTotalCount;
     const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
-    const itemsPerPage = 13;
+    const itemsPerPage = 12;
 
     let paginator = query(listResContainer, '.paginator-active');
     if (!paginator && totalCount > itemsPerPage) {
@@ -2132,6 +2147,14 @@ export const MainWidget = function (options) {
         page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
       }
       finishedPaginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      finishedPaginator.prepend(prev);
+      finishedPaginator.appendChild(next);
     }
 
     if (readyPageNumber > 1) {
