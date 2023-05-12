@@ -37,6 +37,7 @@ export const MainWidget = function (options) {
     tournamentListContainer: null,
     headerDate: null,
     labelDate: null,
+    descriptionDate: null,
     preLoader: {
       preLoaderActive: false,
       preLoaderlastAttempt: null,
@@ -476,6 +477,16 @@ export const MainWidget = function (options) {
     const sectionLBDetailsDescriptionHeaderTitle = document.createElement('div');
     const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
     const sectionLBDetailsDescriptionBanner = document.createElement('div');
+
+    const sectionLBDetailsDescriptionLabel = document.createElement('div');
+    const sectionLBDetailsDescriptionLabelText = document.createElement('span');
+    const sectionLBDetailsDescriptionDate = document.createElement('span');
+    const sectionLBDetailsDescriptionDateHeaders = document.createElement('div');
+    const sectionLBDetailsDescriptionDateDays = document.createElement('div');
+    const sectionLBDetailsDescriptionDateHours = document.createElement('div');
+    const sectionLBDetailsDescriptionDateMinutes = document.createElement('div');
+    const sectionLBDetailsDescriptionDateSeconds = document.createElement('div');
+
     var sectionLBDetailsDescription = document.createElement('div');
     var sectionLBDetailsDescriptionClose = document.createElement('span');
 
@@ -542,6 +553,17 @@ export const MainWidget = function (options) {
     sectionLBDetailsDescriptionHeaderTitle.setAttribute('class', 'cl-main-widget-lb-details-description-header-title');
     sectionLBDetailsDescriptionHeaderBack.setAttribute('class', 'cl-main-widget-lb-details-description-header-back');
     sectionLBDetailsDescriptionBanner.setAttribute('class', 'cl-main-widget-lb-details-description-banner');
+
+    sectionLBDetailsDescriptionLabel.setAttribute('class', 'cl-main-widget-lb-details-description-label');
+    sectionLBDetailsDescriptionLabelText.setAttribute('class', 'cl-main-widget-lb-details-description-label-text');
+
+    sectionLBDetailsDescriptionDate.setAttribute('class', 'cl-main-widget-lb-details-description-date');
+    sectionLBDetailsDescriptionDateHeaders.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers');
+    sectionLBDetailsDescriptionDateDays.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item days');
+    sectionLBDetailsDescriptionDateHours.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item hours');
+    sectionLBDetailsDescriptionDateMinutes.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item minutes');
+    sectionLBDetailsDescriptionDateSeconds.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item seconds');
+
     sectionLBDetailsDescriptionClose.setAttribute('class', 'cl-main-widget-lb-details-description-close');
 
     // Leaderboard result container
@@ -620,6 +642,22 @@ export const MainWidget = function (options) {
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
       sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderBack);
       sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderTitle);
+
+      sectionLBDetailsDescriptionDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
+      sectionLBDetailsDescriptionDateHours.innerHTML = this.settings.lbWidget.settings.translation.time.hoursFull;
+      sectionLBDetailsDescriptionDateMinutes.innerHTML = this.settings.lbWidget.settings.translation.time.minutesFull;
+      sectionLBDetailsDescriptionDateSeconds.innerHTML = this.settings.lbWidget.settings.translation.time.secondsFull;
+
+      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateDays);
+      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateHours);
+      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateMinutes);
+      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateSeconds);
+
+      sectionLBDetailsDescriptionLabel.appendChild(sectionLBDetailsDescriptionLabelText);
+      sectionLBDetailsDescriptionLabel.appendChild(sectionLBDetailsDescriptionDate);
+      sectionLBDetailsDescriptionLabel.appendChild(sectionLBDetailsDescriptionDateHeaders);
+
+      sectionLBDetailsDescriptionBanner.appendChild(sectionLBDetailsDescriptionLabel);
 
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionHeader);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionBanner);
@@ -1514,11 +1552,13 @@ export const MainWidget = function (options) {
     if (!_this.settings.lbWidget.settings.competition.activeContest) {
       _this.settings.headerDate.innerHTML = '';
       _this.settings.labelDate.innerHTML = '';
+      _this.settings.descriptionDate.innerHTML = '';
       _this.settings.detailsContainerDate.innerHTML = '';
     } else {
       let diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledStartDate).diff(moment());
       let date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
       let labelDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+      let descriptionDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
 
       if (_this.settings.leaderboard.timerInterval) {
         clearTimeout(_this.settings.leaderboard.timerInterval);
@@ -1527,28 +1567,35 @@ export const MainWidget = function (options) {
       if (diff <= 0 && _this.settings.lbWidget.settings.competition.activeContest.statusCode === 15) {
         date = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
         labelDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
+        descriptionDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 20) {
         date = _this.settings.lbWidget.settings.translation.tournaments.starting;
         labelDate = _this.settings.lbWidget.settings.translation.tournaments.starting;
+        descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.starting;
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 25) {
         diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledEndDate).diff(moment());
         date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
         labelDate = _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+        descriptionDate = _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
 
         if (diff <= 0) {
           date = _this.settings.lbWidget.settings.translation.tournaments.finishing;
           labelDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
+          descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
         }
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 30) {
         date = _this.settings.lbWidget.settings.translation.tournaments.finishing;
         labelDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
+        descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode >= 35) {
         date = _this.settings.lbWidget.settings.translation.tournaments.finished;
         labelDate = _this.settings.lbWidget.settings.translation.tournaments.finished;
+        descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.finished;
       }
 
       _this.settings.headerDate.innerHTML = date;
       _this.settings.labelDate.innerHTML = labelDate;
+      _this.settings.descriptionDate.innerHTML = descriptionDate;
       _this.settings.detailsContainerDate.innerHTML = date;
     }
     _this.settings.leaderboard.timerInterval = setTimeout(function () {
@@ -1634,13 +1681,17 @@ export const MainWidget = function (options) {
     var mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
     var body = null;
     let title = null;
+    let bannerTitle = null;
+    _this.settings.descriptionDate = query(_this.settings.container, '.cl-main-widget-lb-details-description-date');
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
       body = query(_this.settings.section, '.cl-main-widget-lb-details-description');
       title = query(_this.settings.section, '.cl-main-widget-lb-details-description-header-title');
+      bannerTitle = query(_this.settings.section, '.cl-main-widget-lb-details-description-label-text');
       if (!body) return;
       body.innerHTML = _this.getActiveCompetitionDescription();
       title.innerHTML = _this.getActiveContestTitle();
+      bannerTitle.innerHTML = _this.getActiveContestTitle();
     }
 
     if (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner) {
