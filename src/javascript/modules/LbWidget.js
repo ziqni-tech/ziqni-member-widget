@@ -1933,7 +1933,9 @@ export const LbWidget = function (options) {
         }
       }
       if (el.closest('.cl-main-widget-inbox-list-body-res')) {
-        _this.settings.mainWidget.loadMessages(el.dataset.page);
+        preLoader.show(async function () {
+          _this.settings.mainWidget.loadMessages(el.dataset.page, preLoader.hide());
+        });
       }
       if (el.closest('.cl-main-widget-missions-list-body-res')) {
         _this.settings.mainWidget.loadMissions(el.dataset.page);

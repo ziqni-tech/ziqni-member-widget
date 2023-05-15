@@ -974,6 +974,7 @@ export const MainWidget = function (options) {
     var sectionInboxFooterContent = document.createElement('div');
 
     var sectionInboxDetailsContainer = document.createElement('div');
+    const sectionInboxDetailsWrapper = document.createElement('div');
     var sectionInboxDetailsHeader = document.createElement('div');
     var sectionInboxDetailsHeaderLabel = document.createElement('div');
     var sectionInboxDetailsHeaderDate = document.createElement('div');
@@ -1005,6 +1006,7 @@ export const MainWidget = function (options) {
 
     // details section
     sectionInboxDetailsContainer.setAttribute('class', 'cl-main-widget-inbox-details-container');
+    sectionInboxDetailsWrapper.setAttribute('class', 'cl-main-widget-inbox-details-wrapper');
     sectionInboxDetailsHeader.setAttribute('class', 'cl-main-widget-inbox-details-header');
     sectionInboxDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-details-header-label');
     sectionInboxDetailsHeaderDate.setAttribute('class', 'cl-main-widget-inbox-details-header-date');
@@ -1028,12 +1030,13 @@ export const MainWidget = function (options) {
     sectionInboxListBody.appendChild(sectionInboxListBodyResults);
     sectionInboxList.appendChild(sectionInboxListBody);
 
+    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsBackBtn);
     sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderLabel);
     sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderDate);
-    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsHeader);
-    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsBackBtn);
+    sectionInboxDetailsWrapper.appendChild(sectionInboxDetailsHeader);
     sectionInboxDetailsBodyContainer.appendChild(sectionInboxDetailsBody);
-    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsBodyContainer);
+    sectionInboxDetailsWrapper.appendChild(sectionInboxDetailsBodyContainer);
+    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsWrapper);
 
     sectionInboxFooter.appendChild(sectionInboxFooterContent);
 
@@ -1245,7 +1248,7 @@ export const MainWidget = function (options) {
     var cellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + count);
 
     if (cellRow === null) {
-      onMissing(rank, name[0], name, change, growth, points, reward, count, memberFound);
+      onMissing(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
     } else {
       var rankCel = query(cellRow, '.cl-rank-col-value');
       var iconCel = query(cellRow, '.cl-icon-col-img');
@@ -1276,7 +1279,7 @@ export const MainWidget = function (options) {
 
       pointsCel.innerHTML = points;
 
-      iconCel.innerText = name[0];
+      iconCel.innerText = name ? name[0] : '';
 
       if (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0) {
         var rewardCel = query(cellRow, '.cl-reward-col');
@@ -1381,7 +1384,7 @@ export const MainWidget = function (options) {
 
       _this.leaderboardRowUpdate(
         lb.rank,
-        memberName[0], // icon
+        memberName ? memberName[0] : '', // icon
         memberName,
         change,
         growthIcon, // growth
@@ -1390,7 +1393,7 @@ export const MainWidget = function (options) {
         count,
         memberFound,
         function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-          var newRow = _this.leaderboardRow(rank, name[0], name, change, growth, points, reward, count, memberFound);
+          var newRow = _this.leaderboardRow(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
           var prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
 
           if (prevCellRow !== null && typeof prevCellRow.length === 'undefined') {
@@ -2557,12 +2560,14 @@ export const MainWidget = function (options) {
     const _this = this;
     const label = query(_this.settings.messages.detailsContainer, '.cl-main-widget-inbox-details-header-label');
     const body = query(_this.settings.messages.detailsContainer, '.cl-main-widget-inbox-details-body');
+    const date = query(_this.settings.messages.detailsContainer, '.cl-main-widget-inbox-details-header-date');
 
     if (!data || !data.subject) {
       return;
     }
 
     label.innerHTML = data.subject;
+    date.innerHTML = (new Date(data.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
     let bodyHtml = data.body;
     bodyHtml = bodyHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     body.innerHTML = bodyHtml;
@@ -2792,26 +2797,30 @@ export const MainWidget = function (options) {
 
   this.messageItem = function (inbox) {
     // var _this = this;
-    var listItem = document.createElement('div');
-    var detailsContainer = document.createElement('div');
-    var detailsWrapper = document.createElement('div');
-    var label = document.createElement('div');
-    var description = document.createElement('div');
-    var content = stripHtml(inbox.body);
+    const listItem = document.createElement('div');
+    const detailsContainer = document.createElement('div');
+    const detailsWrapper = document.createElement('div');
+    const label = document.createElement('div');
+    const description = document.createElement('div');
+    const date = document.createElement('div');
+    const content = stripHtml(inbox.body);
 
     listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
     detailsContainer.setAttribute('class', 'cl-inbox-list-details-cont');
     detailsWrapper.setAttribute('class', 'cl-inbox-list-details-wrap');
     label.setAttribute('class', 'cl-inbox-list-details-label');
     description.setAttribute('class', 'cl-inbox-list-details-description');
+    date.setAttribute('class', 'cl-inbox-list-details-date');
 
     listItem.dataset.id = inbox.id;
     label.innerHTML = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
     description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
+    date.innerHTML = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
 
     detailsWrapper.appendChild(label);
     detailsWrapper.appendChild(description);
     detailsContainer.appendChild(detailsWrapper);
+    detailsContainer.appendChild(date);
     listItem.appendChild(detailsContainer);
 
     return listItem;

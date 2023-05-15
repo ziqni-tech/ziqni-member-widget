@@ -3687,13 +3687,22 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-cont {
-  float: left;
+  display: flex;
+  align-items: center;
   width: 100%;
+  font-family: 'Syne', sans-serif;
+  font-weight: 500;
+  font-size: 12px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-wrap {
   float: left;
   width: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-date {
+  width: 160px;
+  text-align: right;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-label {
@@ -3715,9 +3724,9 @@
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container {
   position: absolute;
-  height: calc(100% - 52px);
+  height: calc(100% - 134px);
   background: var(--lb3-messages-details-bg-color);
-  top: 30px;
+  top: 76px;
   left: -200px;
   width: 100%;
   z-index: 10;
@@ -3732,71 +3741,69 @@
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container.cl-show {
   left: 0;
   opacity: 1;
+  padding-left: 44px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-header {
-  float: left;
   width: 100%;
   min-height: 60px;
-  padding: 10px 60px;
+  padding: 26px 16px;
+  display: flex;
+  align-items: center;
+  font-family: 'Syne', sans-serif;
+  justify-content: space-between;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-header-label {
-  float: left;
-  width: 100%;
   text-align: center;
   color: var(--lb3-messages-details-title-color);
-  height: 30px;
-  line-height: 30px;
-  font-size: 24px;
-  font-weight: 400;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  padding: 0 20px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-header-date {
-  float: left;
-  width: 100%;
   text-align: center;
   color: var(--lb3-messages-details-date-color);
-  height: 30px;
-  line-height: 30px;
-  font-size: 18px;
-  font-weight: 300;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-back-btn {
-  position: absolute;
-  left: 20px;
-  top: 16px;
-  width: 30px;
-  height: 26px;
-  background-image: $prev-btn-icon-bg;
+  display: block;
+  background-image: $lb3-tournament-description-back-image;
   background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
   background-size: 100%;
   cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-body-container {
-  float: left;
   width: 100%;
   overflow: auto;
-  padding: 5px 40px 25px 40px;
-  position: absolute;
-  top: 80px;
-  height: calc(100% - 130px);
+  padding: 0 74px 33px 74px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-wrapper {
+  width: 100%;
+  max-width: 748px;
+  background: #141E28;
+  border-radius: 10px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-body {
-  float: left;
-  width: 100%;
   color: var(--lb3-messages-details-text-color);
+  font-family: 'Syne', sans-serif;
+  font-weight: 400;
   font-size: 14px;
-  line-height: 20px;
+  line-height: 17px;
   margin: 0;
-  padding: 0 0 30px 0;
 }
 
 
