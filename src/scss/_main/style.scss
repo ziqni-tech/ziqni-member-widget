@@ -2589,26 +2589,22 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header {
-  float: left;
-  width: 100%;
-  height: 30px;
-  background: var(--lb3-achievements-header-bg-color);
-  border-radius: 5px 5px 0 0;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 84px;
   position: relative;
   z-index: 2;
-  border-bottom: var(--lb3-achievements-header-border-bottom);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header .cl-main-widget-ach-header-label {
-  float: left;
-  width: 60%;
+  width: 100%;
   text-align: center;
   line-height: 30px;
-  color: var(--lb3-achievements-header-label-color);
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0 0 0 20%;
+  color: var(--lb3-tournament-header-label-color);
+  font-family: "Syne",sans-serif;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header .cl-main-widget-ach-header-date {
@@ -2647,15 +2643,11 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list {
-  position: absolute;
-  left: 0;
-  top: 0;
   width: 100%;
   height: 100%;
   z-index: 1;
-  padding: 32px 0 22px 0;
-  background: var(--lb3-achievements-container-bg-color);
-  border-radius: 5px;
+  padding-right: 77px;
+  padding-left: 60px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-ach-list {
   padding-bottom:5px;
@@ -2663,7 +2655,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body {
   position: relative;
-  float: left;
   width: 100%;
   z-index: 1;
   overflow: auto;
@@ -2671,9 +2662,11 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res {
-  float: left;
   width: 100%;
-  padding: 20px 30px 20px 30px;
+  padding: 0;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container {
@@ -2808,35 +2801,27 @@
 
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-footer {
-  float: left;
   width: 100%;
-  height: 22px;
-  position: absolute;
-  bottom: 0;
-  left: 0;
-  background: var(--lb3-achievements-footer-bg-color);
-  border-radius: 0 0 5px 5px;
-  z-index: 2;
-  border-top: var(--lb3-achievements-footer-top-border);
+  height: 60px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-footer-content {
-  float: left;
-  width: 100%;
   line-height: 22px;
-  color: var(--lb3-achievements-footer-text-color);
+  color: var(--lb3-messages-footer-text-color);
   font-size: 11px;
   text-align: center;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-item {
-  float: left;
-  width: 100%;
-  min-height: 70px;
-  padding: 0 0 25px 0;
-  border-bottom: 1px solid var(--lb3-achievements-divider-color);
-  margin: 0 0 10px 0;
-  &--notentered {}
+  width: 340px;
+  height: 164px;
+  background: #141E28;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-item:last-child {
@@ -2844,15 +2829,58 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-cont {
-  float: left;
+  display: flex;
   width: 100%;
   position: relative;
   z-index: 1;
+  padding-bottom: 14px;
+  border-bottom: solid 1px #223241;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-icon {
+  flex-shrink: 0;
+  width: 74px;
+  height: 74px;
+  position: relative;
+  background-image: $lb3-achievements-default-icon;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-icon::before {
+  content: '';
+  display: block;
+  width: 74px;
+  height: 74px;
+  background: radial-gradient(50% 50% at 50% 50%, #38ACCF 0%, rgba(56, 172, 207, 0) 100%);
+  opacity: 0.4;
+  filter: blur(12.5px);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-icon::after {
+  content: '';
+  display: block;
+  width: 74px;
+  height: 37px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: $lb3-achievements-default-icon-border no-repeat;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-actions {
+  display: flex;
+  padding-top: 14px;
+  justify-content: flex-end;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-wrap {
-  float: left;
   width: 100%;
+  padding-left: 24px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-with-image .cl-ach-list-details-wrap {
@@ -2861,13 +2889,15 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-label {
-  float: left;
   width: 100%;
   color: var(--lb3-achievements-item-label-color);
-  font-size: 16px;
-  font-weight: 500;
-  line-height: 30px;
-  text-transform: uppercase;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  padding-top: 9px;
+  padding-bottom: 14px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-category {
@@ -2889,25 +2919,23 @@
   align-items: center;
   justify-content: flex-end;
   width: 100%;
-  padding: 10px 0 0 0;
   position: relative;
   z-index: 1;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-progression-cont {
-  float: left;
   width: 100%;
   background: var(--lb3-achievements-progress-bg-color);
-  height: 13px;
+  height: 4px;
   border-radius: 5px;
-  border: var(--lb3-achievements-progress-border);
+  background: #223241;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-progression-bar {
   float: left;
   width: 0;
-  height: 11px;
-  background: var(--lb3-achievements-progress-fill-color);
+  height: 4px;
+  background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
   border-radius: 5px;
   transition: all 0.3s ease;
   font-size: 10px;
@@ -2925,17 +2953,17 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-more {
   text-align: center;
   color: var(--light-font-color);
-  line-height: 25px;
-  background: var(--lb3-achievements-btn-bg-color);
+  border: 1px solid #EE3EC8;
   text-decoration: none;
-  border-radius: var(--lb3-achievements-btn-border-radius);
-  box-shadow: var(--lb3-achievements-btn-box-shadow);
-  text-transform: uppercase;
-  padding: 4px 25px;
-  margin-left: 16px;
+  border-radius: 10px;
+  padding: 10px 28px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: var(--lb3-achievements-btn-border);
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-more:hover {
@@ -2945,17 +2973,18 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-enter {
   text-align: center;
   color: var(--light-font-color);
-  line-height: 25px;
-  background: var(--lb3-achievements-btn-bg-color);
+  background: #EE3EC8;
   text-decoration: none;
-  border-radius: var(--lb3-achievements-btn-border-radius);
-  box-shadow: var(--lb3-achievements-btn-box-shadow);
-  text-transform: uppercase;
-  padding: 4px 25px;
+  border-radius: 10px;
+  padding: 10px 28px;
   margin-left: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  border: var(--lb3-achievements-btn-border);
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-enter:hover {
@@ -4121,14 +4150,11 @@
 
 .cl-main-widget-wrapper {
   .paginator {
-    float: right;
-    padding: 2px 12px;
-    border-radius: 3px;
-    font-family: 'Syne', sans-serif;
-    font-style: normal;
-    font-weight: 700;
-    font-size: 12px;
-    line-height: 26px;
+    margin-top: 10px;
+    margin-right: 0;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
     &-item {
       display: inline-block;
       width: 30px;
@@ -4136,6 +4162,11 @@
       border: 1px solid #333333;
       border-radius: 5px;
       cursor: pointer;
+      font-family: 'Syne', sans-serif;
+      font-style: normal;
+      font-weight: 700;
+      font-size: 12px;
+      line-height: 26px;
       text-align: center;
       margin-left: 6px;
       &.active {
@@ -4151,7 +4182,7 @@
       }
     }
     &.accordion {
-      margin: 42px 12px 0 12px;
+      padding: 42px 12px 0 12px;
     }
   }
   .paginator-finished {
