@@ -764,8 +764,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * this.settings.itemsPerPage,
-        limit: this.settings.itemsPerPage,
+        skip: (pageNumber - 1) * 6,
+        limit: 6,
         constraints: []
       }
     }, null);

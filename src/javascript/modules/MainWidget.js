@@ -2292,29 +2292,33 @@ export const MainWidget = function (options) {
   };
 
   this.achievementItem = function (ach, achieved, perc) {
-    var _this = this;
-    var listItem = document.createElement('div');
-    var detailsContainer = document.createElement('div');
-    var detailsWrapper = document.createElement('div');
-    var label = document.createElement('div');
-    var description = document.createElement('div');
-    var progressionWrapper = document.createElement('div');
-    var progressionCont = document.createElement('div');
-    var progressionBar = document.createElement('div');
-    var moreButton = document.createElement('a');
-    var enterButton = document.createElement('a');
-    var leaveButton = document.createElement('a');
-    var progressionButton = document.createElement('a');
-    var cpomntainsImage = (typeof ach.icon !== 'undefined' && ach.icon.length > 0);
+    const _this = this;
+    const listItem = document.createElement('div');
+    const detailsContainer = document.createElement('div');
+    const detailsWrapper = document.createElement('div');
+    const icon = document.createElement('div');
+    const label = document.createElement('div');
+    // var description = document.createElement('div');
+    const progressionWrapper = document.createElement('div');
+    const progressionCont = document.createElement('div');
+    const progressionBar = document.createElement('div');
+    const actionsWrapper = document.createElement('div');
+    const moreButton = document.createElement('a');
+    const enterButton = document.createElement('a');
+    const leaveButton = document.createElement('a');
+    const progressionButton = document.createElement('a');
+    // var cpomntainsImage = (typeof ach.icon !== 'undefined' && ach.icon.length > 0);
 
-    listItem.setAttribute('class', 'cl-ach-list-item cl-ach-' + ach.id + (cpomntainsImage ? ' cl-ach-with-image' : ''));
+    listItem.setAttribute('class', 'cl-ach-list-item cl-ach-' + ach.id);
     detailsContainer.setAttribute('class', 'cl-ach-list-details-cont');
+    icon.setAttribute('class', 'cl-ach-list-icon');
     detailsWrapper.setAttribute('class', 'cl-ach-list-details-wrap');
     label.setAttribute('class', 'cl-ach-list-details-label');
-    description.setAttribute('class', 'cl-ach-list-details-description');
+    // description.setAttribute('class', 'cl-ach-list-details-description');
     progressionWrapper.setAttribute('class', 'cl-ach-list-progression');
     progressionCont.setAttribute('class', 'cl-ach-list-progression-cont');
     progressionBar.setAttribute('class', 'cl-ach-list-progression-bar');
+    actionsWrapper.setAttribute('class', 'cl-ach-list-actions');
     moreButton.setAttribute('class', 'cl-ach-list-more');
     enterButton.setAttribute('class', 'cl-ach-list-enter');
     leaveButton.setAttribute('class', 'cl-ach-list-leave');
@@ -2340,42 +2344,46 @@ export const MainWidget = function (options) {
 
     label.innerHTML = ach.name;
 
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(description);
+    // detailsWrapper.appendChild(description);
 
-    if (cpomntainsImage) {
-      var image = new Image();
-      var imageIconWrapper = document.createElement('div');
-      imageIconWrapper.setAttribute('class', 'cl-ach-list-item-img-wrapper');
-      image.setAttribute('class', 'cl-ach-list-item-img');
+    // if (cpomntainsImage) {
+    //   var image = new Image();
+    //   var imageIconWrapper = document.createElement('div');
+    //   imageIconWrapper.setAttribute('class', 'cl-ach-list-item-img-wrapper');
+    //   image.setAttribute('class', 'cl-ach-list-item-img');
+    //
+    //   image.src = _this.settings.lbWidget.settings.uri.gatewayDomain + _this.settings.lbWidget.settings.uri.assets.replace(':attachmentId', ach.icon);
+    //   image.alt = ach.name;
+    //
+    //   imageIconWrapper.appendChild(image);
+    //   detailsContainer.appendChild(imageIconWrapper);
+    // }
 
-      image.src = _this.settings.lbWidget.settings.uri.gatewayDomain + _this.settings.lbWidget.settings.uri.assets.replace(':attachmentId', ach.icon);
-      image.alt = ach.name;
-
-      imageIconWrapper.appendChild(image);
-      detailsContainer.appendChild(imageIconWrapper);
-    }
+    detailsContainer.appendChild(icon);
 
     detailsContainer.appendChild(detailsWrapper);
 
     progressionCont.appendChild(progressionBar);
     progressionWrapper.appendChild(progressionCont);
 
+    detailsWrapper.appendChild(label);
+    detailsWrapper.appendChild(progressionWrapper);
+
+    actionsWrapper.appendChild(moreButton);
+
     if (Array.isArray(ach.constraints) && ach.constraints.includes('optinRequiredForEntrants')) {
       if (ach.optInStatus && ach.optInStatus >= 15 && ach.optInStatus <= 35) {
-        progressionWrapper.appendChild(leaveButton);
+        actionsWrapper.appendChild(leaveButton);
       } else if (!isNaN(ach.optInStatus) && (ach.optInStatus === 10 || ach.optInStatus === 0)) {
-        progressionWrapper.appendChild(progressionButton);
+        actionsWrapper.appendChild(progressionButton);
       } else {
-        progressionWrapper.appendChild(enterButton);
+        actionsWrapper.appendChild(enterButton);
       }
       addClass(listItem, 'cl-ach-list-item--notentered');
     }
 
-    progressionWrapper.appendChild(moreButton);
-
     listItem.appendChild(detailsContainer);
-    listItem.appendChild(progressionWrapper);
+    listItem.appendChild(actionsWrapper);
 
     return listItem;
   };
@@ -2390,7 +2398,7 @@ export const MainWidget = function (options) {
     achList.innerHTML = '';
 
     if (!paginator && totalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(totalCount / itemsPerPage);
+      const pagesCount = Math.ceil(totalCount / 6);
       paginator = document.createElement('div');
       paginator.setAttribute('class', 'paginator');
 
@@ -3181,7 +3189,7 @@ export const MainWidget = function (options) {
 
                 _this.settings.achievement.detailsContainer.style.display = 'none';
 
-                achContainer.style.display = 'block';
+                achContainer.style.display = 'flex';
                 changeInterval = setTimeout(function () {
                   addClass(achContainer, 'cl-main-active-section');
 
