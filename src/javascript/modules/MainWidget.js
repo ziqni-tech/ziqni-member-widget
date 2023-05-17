@@ -2419,17 +2419,17 @@ export const MainWidget = function (options) {
   };
 
   this.updateAchievementProgressionAndIssued = function (issued, progression) {
-    var _this = this;
-    var achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
+    const _this = this;
+    const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
 
     objectIterator(query(achList, '.cl-ach-list-item'), function (ach) {
       var id = ach.dataset.id;
-      var issuedStatus = (issued.indexOf(id) !== -1);
+      var issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
 
       var perc = 0;
       mapObject(progression, function (pr) {
-        if (pr.achievementId === id) {
-          perc = (parseFloat(pr.goalPercentageComplete) * 100).toFixed(1);
+        if (pr.entityId === id) {
+          perc = parseFloat(pr.percentageComplete).toFixed(1);
         }
       });
 
@@ -2456,18 +2456,11 @@ export const MainWidget = function (options) {
       _this.settings.lbWidget.updateAchievementNavigationCounts();
       _this.achievementListLayout(pageNumber, achievementData);
 
-      const idList = [];
-      mapObject(_this.settings.lbWidget.settings.achievements.list, function (ach) {
-        idList.push(ach.id);
-      });
+      const idList = _this.settings.lbWidget.settings.achievements.list.map(a => a.id);
 
-      setTimeout(function () {
-        _this.settings.lbWidget.checkForMemberAchievementsIssued(function (issued) {
-          _this.settings.lbWidget.checkForMemberAchievementsProgression(idList, function (progression) {
-            _this.updateAchievementProgressionAndIssued(issued, progression);
-          });
-        });
-      }, 400);
+      _this.settings.lbWidget.checkForMemberAchievementsProgression(idList, function (issued, progression) {
+        _this.updateAchievementProgressionAndIssued(issued, progression);
+      });
 
       if (typeof callback === 'function') {
         callback();
