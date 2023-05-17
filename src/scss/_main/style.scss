@@ -2881,6 +2881,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-label {
   width: 100%;
+  max-width: 204px;
   color: var(--lb3-achievements-item-label-color);
   font-family: 'Syne', sans-serif;
   font-style: normal;
@@ -2889,6 +2890,9 @@
   line-height: 14px;
   padding-top: 9px;
   padding-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-category {
@@ -2945,7 +2949,6 @@
   text-align: right;
   color: var(--lb3-achievements-progress-text-color);
   text-transform: uppercase;
-  padding: 0 6px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-progression-bar.cl-ach-complete {
