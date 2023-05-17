@@ -748,6 +748,7 @@ export const MainWidget = function (options) {
     var sectionACHFooterContent = document.createElement('div');
 
     var sectionAchievementDetailsContainer = document.createElement('div');
+    const sectionAchievementDetailsWrapper = document.createElement('div');
     var sectionAchievementDetailsHeader = document.createElement('div');
     var sectionAchievementDetailsHeaderLabel = document.createElement('div');
     var sectionAchievementDetailsHeaderDate = document.createElement('div');
@@ -783,6 +784,7 @@ export const MainWidget = function (options) {
 
     // details section
     sectionAchievementDetailsContainer.setAttribute('class', 'cl-main-widget-ach-details-container');
+    sectionAchievementDetailsWrapper.setAttribute('class', 'cl-main-widget-ach-details-wrapper');
     sectionAchievementDetailsHeader.setAttribute('class', 'cl-main-widget-ach-details-header');
     sectionAchievementDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-ach-details-header-label');
     sectionAchievementDetailsHeaderDate.setAttribute('class', 'cl-main-widget-ach-details-header-date');
@@ -799,13 +801,21 @@ export const MainWidget = function (options) {
     sectionAchievementDetailsOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
     sectionAchievementDetailsOptInAction.href = 'javascript:void(0);';
 
+    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsOptInAction);
+
+    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsBackBtn);
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderLabel);
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderDate);
-    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsHeader);
-    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsBackBtn);
+    // sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsHeader);
+    // sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsBackBtn);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyImageContainer);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBody);
-    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsBodyContainer);
+    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsOptInContainer);
+
+    sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsHeader);
+    sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsBodyContainer);
+
+    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsWrapper);
 
     sectionACHHeader.appendChild(sectionACHHeaderLabel);
     sectionACHHeader.appendChild(sectionACHHeaderDate);
@@ -817,8 +827,7 @@ export const MainWidget = function (options) {
     sectionACHDetails.appendChild(sectionACHDetailsInfo);
     sectionACHDetails.appendChild(sectionACHDetailsContentContainer);
 
-    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsOptInAction);
-    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsOptInContainer);
+    // sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsOptInContainer);
 
     sectionACHListBody.appendChild(sectionACHListBodyResults);
     sectionACHList.appendChild(sectionACHListBody);
@@ -2302,6 +2311,7 @@ export const MainWidget = function (options) {
     const progressionWrapper = document.createElement('div');
     const progressionCont = document.createElement('div');
     const progressionBar = document.createElement('div');
+    const progressionLabel = document.createElement('div');
     const actionsWrapper = document.createElement('div');
     const moreButton = document.createElement('a');
     const enterButton = document.createElement('a');
@@ -2318,6 +2328,7 @@ export const MainWidget = function (options) {
     progressionWrapper.setAttribute('class', 'cl-ach-list-progression');
     progressionCont.setAttribute('class', 'cl-ach-list-progression-cont');
     progressionBar.setAttribute('class', 'cl-ach-list-progression-bar');
+    progressionLabel.setAttribute('class', 'cl-ach-list-progression-label');
     actionsWrapper.setAttribute('class', 'cl-ach-list-actions');
     moreButton.setAttribute('class', 'cl-ach-list-more');
     enterButton.setAttribute('class', 'cl-ach-list-enter');
@@ -2365,6 +2376,10 @@ export const MainWidget = function (options) {
 
     progressionCont.appendChild(progressionBar);
     progressionWrapper.appendChild(progressionCont);
+
+    // TODO: remove
+    progressionLabel.innerHTML = '0/100';
+    progressionWrapper.appendChild(progressionLabel);
 
     detailsWrapper.appendChild(label);
     detailsWrapper.appendChild(progressionWrapper);
