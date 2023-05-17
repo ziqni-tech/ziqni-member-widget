@@ -931,64 +931,22 @@ export const LbWidget = function (options) {
     });
   };
 
-  // var checkForMemberAchievementsAjax = new cLabs.Ajax();
-  this.checkForMemberAchievementsIssued = function (callback) {
-    // var _this = this;
-    // var url = _this.settings.uri.achievementsIssued.replace(':space', _this.settings.spaceName).replace(':id', _this.settings.memberId);
-    //
-    // checkForMemberAchievementsAjax.abort().getData({
-    //   type: 'GET',
-    //   url: _this.settings.uri.gatewayDomain + url,
-    //   headers: {
-    //     'X-API-KEY': _this.settings.apiKey
-    //   },
-    //   success: function (response, dataObj, xhr) {
-    //     if (xhr.status === 200) {
-    //       var json = JSON.parse(response);
-    //
-    //       _this.settings.partialFunctions.issuedAchievementsDataResponseParser(json, function (issuedAchievementsData) {
-    //         var idList = [];
-    //
-    //         if (typeof issuedAchievementsData.aggregations !== 'undefined' && issuedAchievementsData.aggregations.length > 0) {
-    //           mapObject(issuedAchievementsData.aggregations[0].items, function (item) {
-    //             idList.push(item.value);
-    //           });
-    //         }
-    //
-    //         if (typeof callback === 'function') callback(idList);
-    //       });
-    //     } else {
-    //       _this.log('failed to checkForMemberAchievementsIssued ' + response);
-    //     }
-    //   }
-    // });
-  };
+  this.checkForMemberAchievementsProgression = async function (idList, callback) {
+    const statuses = await this.getMemberAchievementsOptInStatuses(idList);
+    const issued = [];
+    const progression = [];
 
-  var checkForMemberAchievementsProgressionAjax = new cLabs.Ajax();
-  this.checkForMemberAchievementsProgression = function (idList, callback) {
-    var _this = this;
-    var url = _this.settings.uri.achievementsProgression.replace(':space', _this.settings.spaceName).replace(':id', _this.settings.memberId);
-
-    checkForMemberAchievementsProgressionAjax.abort().getData({
-      type: 'GET',
-      url: _this.settings.uri.gatewayDomain + url + (idList.length > 0 ? ('?id=' + idList.join(',')) : ''),
-      headers: {
-        'X-API-KEY': _this.settings.apiKey
-      },
-      success: function (response, dataObj, xhr) {
-        if (xhr.status === 200) {
-          var json = JSON.parse(response);
-
-          if (typeof callback === 'function') {
-            _this.settings.partialFunctions.memberAchievementsProgressionDataResponseParser(json.data, function (memberAchievementsProgressionData) {
-              callback(memberAchievementsProgressionData);
-            });
-          }
-        } else {
-          _this.log('failed to checkForMemberAchievementsProgression ' + response);
-        }
+    statuses.forEach(s => {
+      if (s.status === 'Completed') {
+        issued.push(s);
+      } else {
+        progression.push(s);
       }
     });
+
+    if (typeof callback === 'function') {
+      callback(issued, progression);
+    }
   };
 
   this.checkForAvailableAwards = async function (callback, pageNumber = 1, claimedPageNumber = 1) {
