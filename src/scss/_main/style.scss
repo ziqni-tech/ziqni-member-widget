@@ -3059,25 +3059,23 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header {
-  float: left;
-  width: 100%;
-  height: 30px;
-  background: var(--lb3-rewards-header-bg-color);
-  border-radius: 5px 5px 0 0;
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  height: 84px;
   position: relative;
   z-index: 2;
+  padding-right: 60px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-label {
-  float: left;
-  width: 60%;
+  width: 100%;
   text-align: center;
   line-height: 30px;
-  color: var(--light-font-color);
-  text-transform: uppercase;
-  font-size: 14px;
-  font-weight: 500;
-  margin: 0 0 0 20%;
+  color: var(--lb3-tournament-header-label-color);
+  font-family: "Syne",sans-serif;
+  font-size: 24px;
+  font-weight: 700;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-date {
@@ -3103,7 +3101,6 @@
   height: 50px;
   right: -18px;
   top: -18px;
-  border-bottom: var(--lb3-rewards-header-border-bottom);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-details {
@@ -3118,14 +3115,13 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list {
   position: absolute;
-  left: 0;
-  top: 0;
+  height: calc(100% - 149px);
+  background: #0f1921;
+  top: 76px;
   width: 100%;
-  height: 100%;
-  z-index: 1;
-  padding: 36px 0 22px 0;
-  background: var(--lb3-rewards-bg-color);
-  border-radius: 5px;
+  z-index: 10;
+  transition: all .3s ease;
+  left: -1px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-reward-list {
   padding-bottom: 5px;
@@ -3133,16 +3129,15 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body {
   position: relative;
-  float: left;
   width: 100%;
-  z-index: 1;
-  overflow: auto;
   height: 100%;
+  z-index: 1;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res {
-  float: left;
   width: 100%;
+  height: 100%;
+  padding-right: 44px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-footer {
@@ -3150,11 +3145,8 @@
   width: 100%;
   height: 22px;
   position: absolute;
-  bottom: 0;
+  bottom: 20px;
   left: 0;
-  background: var(--lb3-rewards-footer-bg-color);
-  border-top: var(--lb3-rewards-footer-top-border);
-  border-radius: 0 0 5px 5px;
   z-index: 2;
 }
 
@@ -3162,19 +3154,20 @@
   float: left;
   width: 100%;
   line-height: 22px;
-  color: var(--lb3-rewards-footer-text-color);
+  color: var(--lb3-messages-footer-text-color);
   font-size: 11px;
   text-align: center;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-item {
-  float: left;
+  display: flex;
+  justify-content: center;
   width: 100%;
-  padding: 10px 30px 15px 30px;
-  margin: 0;
-  border-bottom: 1px solid var(--lb3-rewards-divider-color);
-  transition: background-color 0.3s ease;
-  cursor: pointer;
+  max-width: 228px;
+  background: #141E28;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 10px 34px 13px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-item:hover {
@@ -3242,6 +3235,10 @@
   border: 1px solid #406A8C;
   box-shadow: 0 2px 12px rgba(64, 106, 140, 0.5);
   border-radius: 6px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-main-accordion-container-menu-item.instantWins {
+  display: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion {
@@ -3341,6 +3338,17 @@
   border-radius: 10px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body .cl-main-accordion-container .cl-shown .cl-accordion-list-container {
+  border: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-accordion-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0 0 0 24px;
+}
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-main-accordion-container .cl-accordion-label {
   background: var(--lb3-tournament-list-accordion-label-back);
@@ -4205,10 +4213,12 @@
       display: flex;
     }
     .paginator-claimed {
-      display: block;
+      padding-right: 0;
+      display: flex;
     }
     .paginator-available {
-      display: block;
+      padding-right: 0;
+      display: flex;
     }
   }
 }
@@ -4607,8 +4617,8 @@
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-close {
     width: 40px;
     height: 40px;
-    right: 0px;
-    top: 0px;
+    right: 0;
+    top: 0;
   }
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list {
     padding-top: 42px;

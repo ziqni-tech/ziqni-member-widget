@@ -2123,7 +2123,7 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-accordion-label')) {
       _this.settings.mainWidget.accordionNavigation(el);
     } else if (hasClass(el, 'cl-main-accordion-container-menu-item')) {
-      _this.settings.mainWidget.tournamentsNavigation(el);
+      _this.settings.mainWidget.listsNavigation(el);
     }
   };
 
