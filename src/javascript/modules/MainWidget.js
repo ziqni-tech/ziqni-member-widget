@@ -138,32 +138,68 @@ export const MainWidget = function (options) {
    * @param data { Array }
    * @param onLayout { Function }
    */
-  this.accordionStyle = function (data, onLayout) {
-    var _this = this;
-    var accordionWrapper = document.createElement('div');
+  this.awardsList = function (data, onLayout) {
+    const _this = this;
+    const accordionWrapper = document.createElement('div');
 
     accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
 
+    const statusMenu = document.createElement('div');
+    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
+
+    const availableTitle = document.createElement('div');
+    const claimedTitle = document.createElement('div');
+    const instantWinsTitle = document.createElement('div');
+
+    availableTitle.setAttribute('class', 'cl-main-accordion-container-menu-item availableAwards');
+    claimedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item claimedAwards');
+    instantWinsTitle.setAttribute('class', 'cl-main-accordion-container-menu-item instantWins');
+
+    const idx = data.findIndex(d => d.show === true);
+    if (idx !== -1) {
+      switch (data[idx].type) {
+        case 'availableAwards':
+          availableTitle.classList.add('active');
+          break;
+        case 'claimedAwards':
+          claimedTitle.classList.add('active');
+          break;
+        case 'instantWins':
+          instantWinsTitle.classList.add('active');
+          break;
+      }
+    }
+
+    availableTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.availableRewards;
+    claimedTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.claimed;
+    instantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.instantWins;
+
+    statusMenu.appendChild(availableTitle);
+    statusMenu.appendChild(claimedTitle);
+    statusMenu.appendChild(instantWinsTitle);
+
+    accordionWrapper.appendChild(statusMenu);
+
     mapObject(data, function (entry) {
-      var accordionSection = document.createElement('div');
-      var accordionLabel = document.createElement('div');
-      var topShownEntry = document.createElement('div');
-      var accordionListContainer = document.createElement('div');
-      var accordionList = document.createElement('div');
+      const accordionSection = document.createElement('div');
+      // const accordionLabel = document.createElement('div');
+      const topShownEntry = document.createElement('div');
+      const accordionListContainer = document.createElement('div');
+      const accordionList = document.createElement('div');
 
       accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      accordionLabel.setAttribute('class', 'cl-accordion-label');
+      // accordionLabel.setAttribute('class', 'cl-accordion-label');
       topShownEntry.setAttribute('class', 'cl-accordion-entry');
       accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
       accordionList.setAttribute('class', 'cl-accordion-list');
 
-      if (typeof _this.settings.lbWidget.settings.translation.rewards[entry.type] !== 'undefined') {
-        accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards[entry.type];
-      } else if (typeof _this.settings.lbWidget.settings.translation.tournaments[entry.type] !== 'undefined') {
-        accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments[entry.type];
-      } else {
-        accordionLabel.innerHTML = entry.label;
-      }
+      // if (typeof _this.settings.lbWidget.settings.translation.rewards[entry.type] !== 'undefined') {
+      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards[entry.type];
+      // } else if (typeof _this.settings.lbWidget.settings.translation.tournaments[entry.type] !== 'undefined') {
+      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments[entry.type];
+      // } else {
+      //   accordionLabel.innerHTML = entry.label;
+      // }
 
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
@@ -171,8 +207,8 @@ export const MainWidget = function (options) {
 
       accordionListContainer.appendChild(accordionList);
 
-      accordionSection.appendChild(accordionLabel);
-      accordionSection.appendChild(topShownEntry);
+      // accordionSection.appendChild(accordionLabel);
+      // accordionSection.appendChild(topShownEntry);
       accordionSection.appendChild(accordionListContainer);
 
       accordionWrapper.appendChild(accordionSection);
@@ -248,14 +284,6 @@ export const MainWidget = function (options) {
       headerDate.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.date;
       headerPrize.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.prize;
 
-      // if (typeof _this.settings.lbWidget.settings.translation.rewards[entry.type] !== 'undefined') {
-      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards[entry.type];
-      // } else if (typeof _this.settings.lbWidget.settings.translation.tournaments[entry.type] !== 'undefined') {
-      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments[entry.type];
-      // } else {
-      //   accordionLabel.innerHTML = entry.label;
-      // }
-
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
       }
@@ -277,7 +305,7 @@ export const MainWidget = function (options) {
     return accordionWrapper;
   };
 
-  this.tournamentsNavigation = function (element) {
+  this.listsNavigation = function (element) {
     const menuItems = element.parentNode.querySelectorAll('.cl-main-accordion-container-menu-item');
     const container = element.closest('.cl-main-accordion-container');
     const sections = container.querySelectorAll('.cl-accordion');
@@ -299,16 +327,14 @@ export const MainWidget = function (options) {
       const readyContainer = container.querySelector('.readyCompetitions');
       readyContainer.classList.add('cl-shown');
     }
-
-    // if (hasClass(parentEl, 'cl-shown')) {
-    //   removeClass(parentEl, 'cl-shown');
-    // } else {
-    //   objectIterator(query(closest(parentEl, '.cl-main-accordion-container'), '.cl-shown'), function (obj) {
-    //     removeClass(obj, 'cl-shown');
-    //   });
-    //
-    //   addClass(parentEl, 'cl-shown');
-    // }
+    if (element.classList.contains('availableAwards')) {
+      const availableContainer = container.querySelector('.cl-accordion.availableAwards');
+      availableContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('claimedAwards')) {
+      const claimedContainer = container.querySelector('.cl-accordion.claimedAwards');
+      claimedContainer.classList.add('cl-shown');
+    }
   };
 
   this.accordionNavigation = function (element) {
@@ -2967,7 +2993,7 @@ export const MainWidget = function (options) {
       });
     }
 
-    const accordionObj = _this.accordionStyle(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
+    const accordionObj = _this.awardsList(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
       const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
 
       if (typeof rewardData !== 'undefined') {
@@ -3002,7 +3028,8 @@ export const MainWidget = function (options) {
 
       const availableRewards = query(rewardList, '.cl-accordion.availableAwards');
       if (availableRewards) {
-        availableRewards.appendChild(paginator);
+        const container = query(availableRewards, '.cl-accordion-list-container');
+        container.appendChild(paginator);
       }
     }
 
@@ -3016,7 +3043,8 @@ export const MainWidget = function (options) {
       });
       const claimedRewards = query(rewardList, '.cl-accordion.claimedAwards');
       if (claimedRewards) {
-        claimedRewards.appendChild(paginatorClaimed);
+        const container = query(claimedRewards, '.cl-accordion-list-container');
+        container.appendChild(paginatorClaimed);
       }
     }
   };
