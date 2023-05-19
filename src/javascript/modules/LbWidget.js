@@ -978,8 +978,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 20,
-        limit: 20
+        skip: (pageNumber - 1) * 6,
+        limit: 6
       },
       currencyKey: this.settings.currency
     });
@@ -994,8 +994,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (claimedPageNumber - 1) * 20,
-        limit: 20
+        skip: (claimedPageNumber - 1) * 6,
+        limit: 6
       },
       currencyKey: this.settings.currency
     });
@@ -2010,6 +2010,23 @@ export const LbWidget = function (options) {
       // mission details back button
     } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
       _this.settings.mainWidget.hideMissionDetails(function () {
+      });
+
+      // load rewards details
+    } else if (hasClass(el, 'cl-rew-list-details-claim')) {
+      const awardId = closest(el, '.cl-rew-list-item').dataset.id;
+      const preLoader = _this.settings.mainWidget.preloader();
+      preLoader.show(async function () {
+        await _this.claimAward(awardId, function () {
+          setTimeout(function () {
+            _this.settings.mainWidget.loadAwards(
+              function () {
+                preLoader.hide();
+              },
+              1
+            );
+          }, 2000);
+        });
       });
 
       // load rewards details
