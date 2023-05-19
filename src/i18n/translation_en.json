@@ -52,7 +52,7 @@
   },
   "rewards": {
     "label": "Awards",
-    "claim": "Claim Now",
+    "claim": "Claim",
     "claimed": "Claimed",
     "availableRewards": "Available",
     "instantWins": "Instant Wins",

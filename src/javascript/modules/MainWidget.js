@@ -2803,35 +2803,42 @@ export const MainWidget = function (options) {
   };
 
   this.rewardItem = function (rew) {
-    const _this = this;
     const listItem = document.createElement('div');
     const detailsContainer = document.createElement('div');
     const detailsWrapper = document.createElement('div');
+    const expires = document.createElement('div');
+    const icon = document.createElement('div');
     const label = document.createElement('div');
-    const description = document.createElement('div');
+    const type = document.createElement('div');
+    const prize = document.createElement('div');
+    const claimBtn = document.createElement('div');
 
     listItem.setAttribute('class', 'cl-rew-list-item cl-rew-' + rew.id);
     detailsContainer.setAttribute('class', 'cl-rew-list-details-cont');
     detailsWrapper.setAttribute('class', 'cl-rew-list-details-wrap');
     label.setAttribute('class', 'cl-rew-list-details-label');
-    description.setAttribute('class', 'cl-rew-list-details-description');
+    expires.setAttribute('class', 'cl-rew-list-details-expires');
+    icon.setAttribute('class', 'cl-rew-list-details-icon');
+    type.setAttribute('class', 'cl-rew-list-details-type');
+    prize.setAttribute('class', 'cl-rew-list-details-prize');
+    claimBtn.setAttribute('class', 'cl-rew-list-details-claim');
 
     listItem.dataset.id = rew.id;
 
-    let labelText = stripHtml(rew.name);
-    let descriptionText = stripHtml(rew.description);
-
-    if (typeof rew.prize !== 'undefined') {
-      listItem.dataset.rewardId = rew.prize.id;
-      labelText = stripHtml(rew.subject + ' - ' + rew.prize.reward.rewardName + ' (' + _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.prize.reward) + ')');
-      descriptionText = stripHtml((typeof rew.prize.reward.description !== 'undefined' && rew.prize.reward.description.length > 0) ? rew.prize.reward.description : rew.body);
-    }
-
+    const labelText = stripHtml(rew.name);
     label.innerHTML = (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText;
-    description.innerHTML = (descriptionText.length > 200) ? (descriptionText.substr(0, 200) + '...') : descriptionText;
+    claimBtn.innerHTML = this.settings.lbWidget.settings.translation.rewards.claim;
+    type.innerHTML = rew.rewardType.key;
+    prize.innerHTML = rew.rewardValue;
 
+    detailsWrapper.appendChild(expires);
+    detailsWrapper.appendChild(icon);
     detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(description);
+    detailsWrapper.appendChild(type);
+    detailsWrapper.appendChild(prize);
+    if (!rew.claimed) {
+      detailsWrapper.appendChild(claimBtn);
+    }
     detailsContainer.appendChild(detailsWrapper);
     listItem.appendChild(detailsContainer);
 
@@ -2941,7 +2948,7 @@ export const MainWidget = function (options) {
     const rewardList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
     const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
-    const itemsPerPage = 20;
+    const itemsPerPage = 6;
     let paginator = query(rewardList, '.paginator-available');
 
     if (!paginator && totalCount > itemsPerPage) {
