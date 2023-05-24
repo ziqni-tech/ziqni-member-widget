@@ -2762,7 +2762,7 @@ export const MainWidget = function (options) {
       var perc = 0;
       mapObject(progression, function (pr) {
         if (pr.entityId === id) {
-          perc = parseFloat(pr.percentageComplete).toFixed(1);
+          perc = parseInt(pr.percentageComplete);
         }
       });
 
@@ -3203,9 +3203,7 @@ export const MainWidget = function (options) {
 
           objectIterator(query(_this.settings.container, '.cl-main-widget-section-container .cl-main-active-section'), function (obj) {
             removeClass(obj, 'cl-main-active-section');
-            setTimeout(function () {
-              obj.style.display = 'none';
-            }, 150);
+            obj.style.display = 'none';
           });
 
           changeContainerInterval = setTimeout(function () {
