@@ -37,6 +37,8 @@ export const MainWidget = function (options) {
     tournamentListContainer: null,
     headerDate: null,
     labelDate: null,
+    labelDateHeaders: null,
+    detailsDateHeaders: null,
     descriptionDate: null,
     preLoader: {
       preLoaderActive: false,
@@ -1607,6 +1609,8 @@ export const MainWidget = function (options) {
       _this.settings.labelDate.innerHTML = '';
       _this.settings.descriptionDate.innerHTML = '';
       _this.settings.detailsContainerDate.innerHTML = '';
+      _this.settings.labelDateHeaders.innerHTML = '';
+      _this.settings.detailsDateHeaders.innerHTML = '';
     } else {
       let diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledStartDate).diff(moment());
       let date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
@@ -1621,10 +1625,14 @@ export const MainWidget = function (options) {
         date = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
         labelDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
         descriptionDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
+        _this.settings.labelDateHeaders.innerHTML = '';
+        _this.settings.detailsDateHeaders.innerHTML = '';
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 20) {
         date = _this.settings.lbWidget.settings.translation.tournaments.starting;
         labelDate = _this.settings.lbWidget.settings.translation.tournaments.starting;
         descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.starting;
+        _this.settings.labelDateHeaders.innerHTML = '';
+        _this.settings.detailsDateHeaders.innerHTML = '';
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 25) {
         diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledEndDate).diff(moment());
         date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
@@ -1635,15 +1643,21 @@ export const MainWidget = function (options) {
           date = _this.settings.lbWidget.settings.translation.tournaments.finishing;
           labelDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
           descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
+          _this.settings.labelDateHeaders.innerHTML = '';
+          _this.settings.detailsDateHeaders.innerHTML = '';
         }
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 30) {
         date = _this.settings.lbWidget.settings.translation.tournaments.finishing;
         labelDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
         descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.finishing;
+        _this.settings.labelDateHeaders.innerHTML = '';
+        _this.settings.detailsDateHeaders.innerHTML = '';
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode >= 35) {
         date = _this.settings.lbWidget.settings.translation.tournaments.finished;
         labelDate = _this.settings.lbWidget.settings.translation.tournaments.finished;
         descriptionDate = _this.settings.lbWidget.settings.translation.tournaments.finished;
+        _this.settings.labelDateHeaders.innerHTML = '';
+        _this.settings.detailsDateHeaders.innerHTML = '';
       }
 
       _this.settings.headerDate.innerHTML = date;
@@ -1662,7 +1676,7 @@ export const MainWidget = function (options) {
       this.settings.lbWidget.settings.competition.activeContest.name
     )
       ? this.settings.lbWidget.settings.competition.activeContest.name
-      : '';
+      : this.settings.lbWidget.settings.translation.tournaments.noAvailableCompetitions;
   };
 
   this.getActiveCompetitionDescription = function () {
@@ -1898,6 +1912,8 @@ export const MainWidget = function (options) {
       _this.settings.detailsContainerDate = query(_this.settings.container, '.cl-main-widget-lb-details-header-date');
       _this.settings.headerDate = query(_this.settings.container, '.cl-main-widget-lb-header-date');
       _this.settings.labelDate = query(_this.settings.container, '.cl-main-widget-lb-details-content-date');
+      _this.settings.labelDateHeaders = query(_this.settings.container, '.cl-main-widget-lb-details-content-date-headers');
+      _this.settings.detailsDateHeaders = query(_this.settings.container, '.cl-main-widget-lb-details-description-date-headers');
       _this.settings.achievement.container = query(_this.settings.container, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass);
       _this.settings.achievement.detailsContainer = query(_this.settings.container, '.cl-main-widget-ach-details-container');
       _this.settings.reward.container = query(_this.settings.container, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass);
@@ -1919,6 +1935,9 @@ export const MainWidget = function (options) {
 
     if (_this.settings.lbWidget.settings.competition.activeContest !== null) {
       _this.updateLeaderboardTime();
+    } else {
+      _this.settings.labelDateHeaders.innerHTML = '';
+      _this.settings.detailsDateHeaders.innerHTML = '';
     }
 
     if (typeof callback === 'function') {
