@@ -16,6 +16,8 @@ import closest from '../utils/closest';
 import isMobileTablet from '../utils/isMobileTablet';
 import camelToKebabCase from '../utils/camelToKebabCase';
 
+import competitionStatusMap from '../helpers/competitionStatuses';
+
 import cLabs from './cLabs';
 import './Ajax';
 
@@ -324,6 +326,10 @@ export const LbWidget = function (options) {
       notClaimedRewardsDataResponseParser: function (notClaimedRewardsData, callback) { callback(notClaimedRewardsData); },
       expiredRewardsDataResponseParser: function (expiredRewardsData, callback) { callback(expiredRewardsData); },
       availableMessagesDataResponseParser: function (availableMessagesData, callback) { callback(availableMessagesData); }
+    },
+    callbacks: {
+      onContestStatusChanged: function (contestId, currentState, previousState) {},
+      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {}
     },
     callback: null
   };
@@ -2256,11 +2262,25 @@ export const LbWidget = function (options) {
           _this.checkForAvailableCompetitions(async function () {
             _this.updateLeaderboardNavigationCounts();
           });
+          if (headers.callback && headers.callback === 'entityStateChanged') {
+            if (typeof this.settings.callbacks.onContestStatusChanged === 'function') {
+              const currentState = competitionStatusMap[json.currentState] ?? json.currentState;
+              const previousState = competitionStatusMap[json.previousState] ?? json.previousState;
+              this.settings.callbacks.onContestStatusChanged(json.entityId, currentState, previousState);
+            }
+          }
         }
         if (json && json.entityType === 'Competition') {
           _this.checkForAvailableCompetitions(async function () {
             _this.updateLeaderboardNavigationCounts();
           });
+          if (headers.callback && headers.callback === 'entityStateChanged') {
+            if (typeof this.settings.callbacks.onCompetitionStatusChanged === 'function') {
+              const currentState = competitionStatusMap[json.currentState] ?? json.currentState;
+              const previousState = competitionStatusMap[json.previousState] ?? json.previousState;
+              this.settings.callbacks.onCompetitionStatusChanged(json.entityId, currentState, previousState);
+            }
+          }
         }
         if (json && json.entityType === 'Achievement') {
           _this.settings.mainWidget.loadAchievements();

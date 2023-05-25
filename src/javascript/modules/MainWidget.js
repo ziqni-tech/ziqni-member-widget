@@ -2429,7 +2429,7 @@ export const MainWidget = function (options) {
       var perc = 0;
       mapObject(progression, function (pr) {
         if (pr.entityId === id) {
-          perc = parseFloat(pr.percentageComplete).toFixed(1);
+          perc = parseInt(pr.percentageComplete);
         }
       });
 
