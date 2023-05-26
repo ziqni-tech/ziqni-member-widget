@@ -2899,22 +2899,51 @@ export const MainWidget = function (options) {
     const listItem = document.createElement('div');
     const detailsContainer = document.createElement('div');
     const detailsWrapper = document.createElement('div');
+    const image = document.createElement('div');
+    const date = document.createElement('div');
     const label = document.createElement('div');
-    const description = document.createElement('div');
-    const content = stripHtml(mission.description);
+    const progress = document.createElement('div');
+    const progressCont = document.createElement('div');
+    const progressBar = document.createElement('div');
+    const progressLabel = document.createElement('div');
+    const actions = document.createElement('div');
+    const actionsReward = document.createElement('div');
+    const actionsBtn = document.createElement('div');
 
     listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
     detailsContainer.setAttribute('class', 'cl-missions-list-details-cont');
     detailsWrapper.setAttribute('class', 'cl-missions-list-details-wrap');
+    image.setAttribute('class', 'cl-missions-list-details-img');
+    date.setAttribute('class', 'cl-missions-list-details-date');
     label.setAttribute('class', 'cl-missions-list-details-label');
-    description.setAttribute('class', 'cl-missions-list-details-description');
+    progress.setAttribute('class', 'cl-missions-list-details-progress');
+    progressCont.setAttribute('class', 'cl-missions-list-details-progress-cont');
+    progressBar.setAttribute('class', 'cl-missions-list-details-progress-bar');
+    progressLabel.setAttribute('class', 'cl-missions-list-details-progress-label');
+    actions.setAttribute('class', 'cl-missions-list-details-actions');
+    actionsReward.setAttribute('class', 'cl-missions-list-details-actions-reward');
+    actionsBtn.setAttribute('class', 'cl-missions-list-details-actions-btn');
 
     listItem.dataset.id = mission.id;
     label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
-    description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
 
+    progressLabel.innerHTML = '0/100';
+
+    progressCont.appendChild(progressBar);
+    progressCont.appendChild(progressBar);
+    progress.appendChild(progressCont);
+    progress.appendChild(progressLabel);
+
+    actionsBtn.innerHTML = this.settings.lbWidget.settings.translation.missions.btn;
+
+    actions.appendChild(actionsReward);
+    actions.appendChild(actionsBtn);
+
+    image.appendChild(date);
+    detailsWrapper.appendChild(image);
     detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(description);
+    detailsWrapper.appendChild(progress);
+    detailsWrapper.appendChild(actions);
     detailsContainer.appendChild(detailsWrapper);
     listItem.appendChild(detailsContainer);
 

@@ -63,7 +63,8 @@
     "label": "Messages"
   },
   "missions": {
-    "label": "Missions"
+    "label": "Missions",
+    "btn": "Go"
   },
   "global": {
     "copy": "Powered By Ziqni"

@@ -4062,7 +4062,7 @@
   width: 100%;
   height: calc(100% - 144px);
   z-index: 1;
-  padding-right: 55px;
+  padding-right: 45px;
   padding-left: 40px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-missions-list {
@@ -4089,7 +4089,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res {
   width: 100%;
-  padding: 0 10px 0 0;
+  padding: 0 20px 0 0;
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
@@ -4101,7 +4101,6 @@
   background: #141e28;
   border-radius: 10px;
   margin-bottom: 20px;
-  padding: 14px 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-cont {
@@ -4114,13 +4113,124 @@
   width: 100%;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-img {
+  height: 215px;
+  background: $lb3-missions-def-img;
+  background-size: cover;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-date {
+  position: absolute;
+  top: 18px;
+  right: -10px;
+  width: 118px;
+  height: 32px;
+  background: #8D0C71;
+  border-radius: 6px;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-label {
-  float: left;
-  width: 100%;
-  color: var(--lb3-messages-item-label-color);
-  text-transform: uppercase;
+  font-family: 'Syne', serif;
+  font-style: normal;
+  font-weight: 700;
   font-size: 14px;
+  line-height: 17px;
+  color: var(--lb3-messages-item-label-color);
+  padding: 14px 12px 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress {
+  padding: 12px 12px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-cont {
+  height: 4px;
+  border-radius: 5px;
+  background: #223241;
+  width: 148px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-bar {
+  float: left;
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+  border-radius: 5px;
+  transition: all .3s ease;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: right;
+  text-transform: uppercase;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-label {
+  font-family: "Syne",sans-serif;
+  font-style: normal;
   font-weight: 500;
+  font-size: 12px;
+  line-height: 13px;
+  text-align: right;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 12px 12px 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions-reward {
+  display: flex;
+  align-items: center;
+  text-align: left;
+  width: 88px;
+  height: 36px;
+  padding-left: 28px;
+  padding-right: 12px;
+  background: #0f1921;
+  border-radius: 10px;
+  color: var(--lb3-rewards-item-label-color);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions-reward::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  left: 9px;
+  top: 11px;
+  background: url(../../images/award-icon.svg) no-repeat center;
+  background-size: contain;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 88px;
+  height: 36px;
+  background: #ee3ec8;
+  border-radius: 10px;
+  color: var(--lb3-rewards-item-label-color);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-description {
