@@ -884,6 +884,7 @@ export const MainWidget = function (options) {
     var sectionRewardsDetailsInfo = document.createElement('div');
     var sectionRewardsDetailsInfoIcon = document.createElement('div');
     var sectionRewardsDetailsContentContainer = document.createElement('div');
+    const sectionRewardsDetailsContentWrapper = document.createElement('div');
     var sectionRewardsDetailsContentContainerLabel = document.createElement('div');
     var sectionRewardsDetailsContentContainerDate = document.createElement('div');
 
@@ -902,6 +903,7 @@ export const MainWidget = function (options) {
     var sectionRewardsDetailsBodyContainer = document.createElement('div');
     var sectionRewardsDetailsBodyImageContainer = document.createElement('div');
     var sectionRewardsDetailsBody = document.createElement('div');
+    const sectionRewardsDetailsDescription = document.createElement('div');
     var sectionRewardsWinningsContainer = document.createElement('div');
     var sectionRewardsWinningsIcon = document.createElement('div');
     var sectionRewardsWinningsValue = document.createElement('div');
@@ -918,6 +920,7 @@ export const MainWidget = function (options) {
     sectionRewardsDetailsInfo.setAttribute('class', 'cl-main-widget-reward-details-info');
     sectionRewardsDetailsInfoIcon.setAttribute('class', 'cl-main-widget-reward-details-info-icon');
     sectionRewardsDetailsContentContainer.setAttribute('class', 'cl-main-widget-reward-details-content');
+    sectionRewardsDetailsContentWrapper.setAttribute('class', 'cl-main-widget-reward-details-wrapper');
     sectionRewardsDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-reward-details-content-label');
     sectionRewardsDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-reward-details-content-date');
 
@@ -939,6 +942,7 @@ export const MainWidget = function (options) {
     sectionRewardsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-reward-details-body-container');
     sectionRewardsDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-reward-details-body-image-cont');
     sectionRewardsDetailsBody.setAttribute('class', 'cl-main-widget-reward-details-body');
+    sectionRewardsDetailsDescription.setAttribute('class', 'cl-main-widget-reward-details-description');
     sectionRewardsWinningsContainer.setAttribute('class', 'cl-main-widget-reward-winnings-container');
     sectionRewardsWinningsIcon.setAttribute('class', 'cl-main-widget-reward-winnings-icon');
     sectionRewardsWinningsValue.setAttribute('class', 'cl-main-widget-reward-winnings-value');
@@ -953,15 +957,25 @@ export const MainWidget = function (options) {
     sectionRewardsWinningsContainer.appendChild(sectionRewardsWinningsValue);
     sectionRewardsClaimContainer.appendChild(sectionRewardsClaimBtn);
 
+    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsBackBtn);
     sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsHeaderLabel);
     sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsHeaderDate);
-    sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsHeader);
-    sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsBackBtn);
+
+    sectionRewardsDetailsBody.appendChild(sectionRewardsWinningsContainer);
+    sectionRewardsDetailsBody.appendChild(sectionRewardsDetailsDescription);
+
+    // sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsHeader);
+    // sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsBackBtn);
     sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBodyImageContainer);
     sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBody);
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsWinningsContainer);
-    sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsBodyContainer);
-    sectionRewardsDetailsContainer.appendChild(sectionRewardsClaimContainer);
+    // sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsWinningsContainer);
+    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsClaimContainer);
+
+    sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsHeader);
+    sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsBodyContainer);
+
+    sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsContentWrapper);
+    // sectionRewardsDetailsContainer.appendChild(sectionRewardsClaimContainer);
 
     sectionRewardsHeader.appendChild(sectionRewardsHeaderLabel);
     sectionRewardsHeader.appendChild(sectionRewardsHeaderDate);
@@ -2571,8 +2585,9 @@ export const MainWidget = function (options) {
   this.loadRewardDetails = function (data, callback) {
     var _this = this;
     var label = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-header-label');
-    var body = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-body');
+    var body = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-description');
     var image = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-body-image-cont');
+    var iconWrapp = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-icon');
     var claimBtn = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-claim-btn');
     var icon = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-icon');
     var value = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-value');
@@ -2594,8 +2609,9 @@ export const MainWidget = function (options) {
       icon.innerHTML = '';
 
       var _image = new Image();
-      var imageIconWrapper = document.createElement('div');
-      imageIconWrapper.setAttribute('class', 'cl-reward-list-item-img-wrapper');
+      // var imageIconWrapper = document.createElement('div');
+      // imageIconWrapper.setAttribute('class', 'cl-reward-list-item-img-wrapper');
+      iconWrapp.style.background = 'none';
       _image.setAttribute('class', 'cl-reward-list-item-img');
 
       _image.src = data.icon;
@@ -2603,7 +2619,8 @@ export const MainWidget = function (options) {
 
       icon.appendChild(_image);
     } else {
-      icon.innerHTML = "<span class='cl-place-holder-reward-image'></span>";
+      icon.innerHTML = '';
+      iconWrapp.style.background = null;
     }
 
     objectIterator(query(body, 'img'), function (img, key, count) {
@@ -3297,7 +3314,7 @@ export const MainWidget = function (options) {
                 function () {
                   const rewardsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.rewards.containerClass);
 
-                  rewardsContainer.style.display = 'block';
+                  rewardsContainer.style.display = 'flex';
                   changeInterval = setTimeout(function () {
                     addClass(rewardsContainer, 'cl-main-active-section');
                   }, 30);
