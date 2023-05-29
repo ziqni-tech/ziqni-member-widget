@@ -1198,7 +1198,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 15,
         limit: 15,
-        constraints: ['hasNoDependancies']
+        constraints: ['mission']
       }
     }, null);
 
