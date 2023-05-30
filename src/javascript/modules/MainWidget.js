@@ -1124,10 +1124,12 @@ export const MainWidget = function (options) {
     const sectionMissionsFooterContent = document.createElement('div');
 
     const sectionMissionsDetailsContainer = document.createElement('div');
+    const sectionMissionsDetailsWrapper = document.createElement('div');
     const sectionMissionsDetailsHeader = document.createElement('div');
     const sectionMissionsDetailsHeaderLabel = document.createElement('div');
     const sectionMissionsDetailsHeaderDate = document.createElement('div');
     const sectionMissionsDetailsBackBtn = document.createElement('a');
+    const sectionMissionsDetailsInfoBtn = document.createElement('a');
     const sectionMissionsDetailsBodyContainer = document.createElement('div');
     const sectionMissionsDetailsBody = document.createElement('div');
 
@@ -1163,15 +1165,18 @@ export const MainWidget = function (options) {
 
     // details section
     sectionMissionsDetailsContainer.setAttribute('class', 'cl-main-widget-missions-details-container');
+    sectionMissionsDetailsWrapper.setAttribute('class', 'cl-main-widget-missions-details-wrapper');
     sectionMissionsDetailsHeader.setAttribute('class', 'cl-main-widget-missions-details-header');
     sectionMissionsDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-details-header-label');
     sectionMissionsDetailsHeaderDate.setAttribute('class', 'cl-main-widget-missions-details-header-date');
     sectionMissionsDetailsBackBtn.setAttribute('class', 'cl-main-widget-missions-details-back-btn');
+    sectionMissionsDetailsInfoBtn.setAttribute('class', 'cl-main-widget-missions-details-info-btn');
     sectionMissionsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-missions-details-body-container');
     sectionMissionsDetailsBody.setAttribute('class', 'cl-main-widget-missions-details-body');
 
     sectionMissionsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.label;
     sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
+    sectionMissionsDetailsInfoBtn.innerHTML = 'i';
 
     sectionMissionsHeader.appendChild(sectionMissionsHeaderLabel);
     sectionMissionsHeader.appendChild(sectionMissionsHeaderDate);
@@ -1186,14 +1191,20 @@ export const MainWidget = function (options) {
     sectionMissionsListBody.appendChild(sectionMissionsListBodyResults);
     sectionMissionsList.appendChild(sectionMissionsListBody);
 
+    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsBackBtn);
     sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderLabel);
-    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderDate);
-    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsHeader);
-    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsBackBtn);
+    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsInfoBtn);
+    // sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderDate);
+
+    // sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsHeader);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
     sectionMissionsDetailsBodyContainer.appendChild(graphImage);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsGraph);
-    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsBodyContainer);
+
+    sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsHeader);
+    sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsBodyContainer);
+
+    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsWrapper);
 
     sectionMissionsFooter.appendChild(sectionMissionsFooterContent);
 
@@ -3347,7 +3358,7 @@ export const MainWidget = function (options) {
               _this.loadMissions(1, function () {
                 const missionsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.missions.containerClass);
 
-                missionsContainer.style.display = 'block';
+                missionsContainer.style.display = 'flex';
                 changeInterval = setTimeout(function () {
                   addClass(missionsContainer, 'cl-main-active-section');
                 }, 30);
