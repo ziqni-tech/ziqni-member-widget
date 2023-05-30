@@ -414,6 +414,7 @@ export const LbWidget = function (options) {
     finishedPageNumber = 1
   ) {
     const readyCompetitionRequest = CompetitionRequest.constructFromObject({
+      languageKey: this.settings.language,
       competitionFilter: {
         statusCode: {
           moreThan: 10,
@@ -429,6 +430,7 @@ export const LbWidget = function (options) {
     }, null);
 
     const activeCompetitionRequest = CompetitionRequest.constructFromObject({
+      languageKey: this.settings.language,
       competitionFilter: {
         statusCode: {
           moreThan: 20,
@@ -444,6 +446,7 @@ export const LbWidget = function (options) {
     }, null);
 
     const finishedCompetitionRequest = CompetitionRequest.constructFromObject({
+      languageKey: this.settings.language,
       competitionFilter: {
         statusCode: {
           moreThan: 30,
@@ -575,6 +578,7 @@ export const LbWidget = function (options) {
     this.settings.competition.activeContestId = null;
 
     const contestRequest = ContestRequest.constructFromObject({
+      languageKey: this.settings.language,
       contestFilter: {
         productIds: [],
         tags: [],
@@ -742,6 +746,7 @@ export const LbWidget = function (options) {
     }
 
     const achievementRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
       achievementFilter: {
         productTags: [],
         tags: [],
@@ -807,6 +812,7 @@ export const LbWidget = function (options) {
     if (idx !== -1) {
       awardData = awards[idx];
       const rewardRequest = {
+        languageKey: this.settings.language,
         entityFilter: [{
           entityType: 'Reward',
           entityIds: [awardData.rewardId]
@@ -898,6 +904,7 @@ export const LbWidget = function (options) {
       });
     } else {
       const messageRequest = MessageRequest.constructFromObject({
+        languageKey: this.settings.language,
         messageFilter: {
           ids: [messageId],
           messageType: 'InboxItem', // NotificationInboxItem Achievement Ticket Reward Text Notification InboxItem
@@ -961,6 +968,7 @@ export const LbWidget = function (options) {
     this.settings.awards.rewards = [];
 
     const availableAwardRequest = AwardRequest.constructFromObject({
+      languageKey: this.settings.language,
       awardFilter: {
         statusCode: {
           moreThan: 14,
@@ -977,6 +985,7 @@ export const LbWidget = function (options) {
     });
 
     const claimedAwardRequest = AwardRequest.constructFromObject({
+      languageKey: this.settings.language,
       awardFilter: {
         statusCode: {
           moreThan: 34,
@@ -1131,6 +1140,7 @@ export const LbWidget = function (options) {
 
   this.checkForAvailableMessages = async function (pageNumber, callback) {
     const messageRequest = MessageRequest.constructFromObject({
+      languageKey: this.settings.language,
       messageFilter: {
         messageType: 'InboxItem', // NotificationInboxItem Achievement Ticket Reward Text Notification InboxItem
         sortBy: [{
@@ -1172,6 +1182,7 @@ export const LbWidget = function (options) {
     }
 
     const missionsRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
       achievementFilter: {
         ids: [],
         statusCode: {
@@ -1202,6 +1213,7 @@ export const LbWidget = function (options) {
     }
 
     const achievementRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
       achievementFilter: {
         ids: [id],
         skip: 0,
@@ -2283,7 +2295,11 @@ export const LbWidget = function (options) {
           }
         }
         if (json && json.entityType === 'Achievement') {
-          _this.settings.mainWidget.loadAchievements();
+          if (headers.callback === 'optinStatus') {
+            _this.settings.mainWidget.achievementItemUpdateProgression(json.entityId, json.percentageComplete);
+          } else {
+            _this.settings.mainWidget.loadAchievements();
+          }
         }
       });
     }
