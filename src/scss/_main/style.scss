@@ -2067,6 +2067,9 @@
   width: 100%;
   max-width: 205px;
   padding-left: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-growth-col {
@@ -4013,12 +4016,14 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container {
-  width: 100%;
-  height: 500px;
-  margin: 0;
+  height: 360px;
   padding: 0;
-  border: 1px solid #ccc;
+  border: 1px solid #223241;
+  border-radius: 10px;
   position: relative;
+  margin-top: 20px;
+  overflow: hidden;
+  display: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container canvas {
@@ -4283,16 +4288,31 @@
   transition: all .3s ease;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container-wrapper {
+  padding-right: 8px;
+  margin-right: 8px;
+  height: 100%;
+  overflow: auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container-wrapper::-webkit-scrollbar {
+  width: 4px;
+  background: #141E28;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #304F69;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-missions-details-container {
   height: calc(100% - 30px);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-wrapper{
   width: 100%;
-  max-width: 748px;
   background: #141e28;
   border-radius: 10px;
-  box-shadow: 0px -5px #141e28;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container.cl-show {
@@ -4304,7 +4324,7 @@
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header {
   width: 100%;
   min-height: 60px;
-  padding: 26px 16px;
+  padding: 26px 16px 0;
   display: flex;
   align-items: center;
   font-family: "Syne",sans-serif;
@@ -4312,13 +4332,24 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header-label {
-  text-align: center;
+  text-align: left;
   color: var(--lb3-messages-details-title-color);
   font-weight: 700;
   font-size: 20px;
   line-height: 24px;
-  padding: 0 20px;
-  margin-left: -30px;
+  padding-bottom: 12px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-description-label {
+  text-align: left;
+  color: var(--lb3-messages-details-title-color);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 15px;
+  padding-bottom: 14px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
@@ -4365,25 +4396,99 @@
   box-shadow: #0d980e 10px 10px 10px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-container {
-  width: 100%;
-  overflow: auto;
-  padding: 0 74px 33px 74px;
-  max-height: 570px;
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-wrapper {
+  display: flex;
+  padding-bottom: 26px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body {
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  margin-left: 66px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: url(../../images/awardPreview.svg) no-repeat center;
+  background-size: 70%;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image::before {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(50% 50% at 50% 50%, #38ACCF 0%, rgba(56, 172, 207, 0) 100%);
+  opacity: .4;
+  filter: blur(12.5px);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image::after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: url(../../images/ellipse.svg) no-repeat;
+  background-size: contain;
+  background-position-y: bottom;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-container {
+  width: 100%;
+  padding: 0 65px 0 30px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-description {
   width: 100%;
   color: var(--lb3-messages-details-text-color);
   margin: 0;
-  padding: 0 0 30px 0;
+  padding: 0 0 14px 0;
   font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
-  line-height: 14px;
+  line-height: 16px;
+  border-bottom: solid 1px #223241;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize {
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  line-height: 15px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  background: url(../../images/trophy.svg) no-repeat center;
+  margin-left: 14px;
+}
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-footer {
   width: 100%;

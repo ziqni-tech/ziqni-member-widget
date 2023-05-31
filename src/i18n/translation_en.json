@@ -64,7 +64,9 @@
   },
   "missions": {
     "label": "Missions",
-    "btn": "Go"
+    "btn": "Go",
+    "descriptionLabel": "Description",
+    "prizeLabel": "Prize"
   },
   "global": {
     "copy": "Powered By Ziqni"

@@ -60,7 +60,8 @@ export const MainWidget = function (options) {
     },
     missions: {
       container: null,
-      detailsContainer: null
+      detailsContainer: null,
+      mission: null
     },
     leaderboard: {
       defaultEmptyList: 20,
@@ -1124,6 +1125,7 @@ export const MainWidget = function (options) {
     const sectionMissionsFooterContent = document.createElement('div');
 
     const sectionMissionsDetailsContainer = document.createElement('div');
+    const sectionMissionsDetailsContainerWrapper = document.createElement('div');
     const sectionMissionsDetailsWrapper = document.createElement('div');
     const sectionMissionsDetailsHeader = document.createElement('div');
     const sectionMissionsDetailsHeaderLabel = document.createElement('div');
@@ -1131,7 +1133,13 @@ export const MainWidget = function (options) {
     const sectionMissionsDetailsBackBtn = document.createElement('a');
     const sectionMissionsDetailsInfoBtn = document.createElement('a');
     const sectionMissionsDetailsBodyContainer = document.createElement('div');
+    const sectionMissionsDetailsBodyWrapper = document.createElement('div');
+    const sectionMissionsDetailsBodyImage = document.createElement('div');
+    const sectionMissionsDetailsDescriptionLabel = document.createElement('div');
     const sectionMissionsDetailsBody = document.createElement('div');
+    const sectionMissionsDetailsPrize = document.createElement('div');
+    const sectionMissionsDetailsPrizeLabel = document.createElement('div');
+    const sectionMissionsDetailsPrizeValue = document.createElement('div');
 
     const sectionMissionsGraph = document.createElement('div');
     const graphImage = document.createElement('div');
@@ -1165,6 +1173,7 @@ export const MainWidget = function (options) {
 
     // details section
     sectionMissionsDetailsContainer.setAttribute('class', 'cl-main-widget-missions-details-container');
+    sectionMissionsDetailsContainerWrapper.setAttribute('class', 'cl-main-widget-missions-details-container-wrapper');
     sectionMissionsDetailsWrapper.setAttribute('class', 'cl-main-widget-missions-details-wrapper');
     sectionMissionsDetailsHeader.setAttribute('class', 'cl-main-widget-missions-details-header');
     sectionMissionsDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-details-header-label');
@@ -1172,15 +1181,26 @@ export const MainWidget = function (options) {
     sectionMissionsDetailsBackBtn.setAttribute('class', 'cl-main-widget-missions-details-back-btn');
     sectionMissionsDetailsInfoBtn.setAttribute('class', 'cl-main-widget-missions-details-info-btn');
     sectionMissionsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-missions-details-body-container');
-    sectionMissionsDetailsBody.setAttribute('class', 'cl-main-widget-missions-details-body');
+    sectionMissionsDetailsBodyWrapper.setAttribute('class', 'cl-main-widget-missions-details-body-wrapper');
+    sectionMissionsDetailsBodyImage.setAttribute('class', 'cl-main-widget-missions-details-body-image');
+    sectionMissionsDetailsDescriptionLabel.setAttribute('class', 'cl-main-widget-missions-details-description-label');
+    sectionMissionsDetailsBody.setAttribute('class', 'cl-main-widget-missions-details-description');
+    sectionMissionsDetailsPrize.setAttribute('class', 'cl-main-widget-missions-details-prize');
+    sectionMissionsDetailsPrizeLabel.setAttribute('class', 'cl-main-widget-missions-details-prize-label');
+    sectionMissionsDetailsPrizeValue.setAttribute('class', 'cl-main-widget-missions-details-prize-value');
 
     sectionMissionsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.label;
     sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
     sectionMissionsDetailsInfoBtn.innerHTML = 'i';
+    sectionMissionsDetailsDescriptionLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.descriptionLabel;
+    sectionMissionsDetailsPrizeLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.prizeLabel + ':';
 
     sectionMissionsHeader.appendChild(sectionMissionsHeaderLabel);
     sectionMissionsHeader.appendChild(sectionMissionsHeaderDate);
     sectionMissionsHeader.appendChild(sectionMissionsHeaderClose);
+
+    sectionMissionsDetailsPrize.appendChild(sectionMissionsDetailsPrizeLabel);
+    sectionMissionsDetailsPrize.appendChild(sectionMissionsDetailsPrizeValue);
 
     sectionMissionsDetailsInfo.appendChild(sectionMissionsDetailsInfoIcon);
     sectionMissionsDetailsContentContainer.appendChild(sectionMissionsDetailsContentContainerLabel);
@@ -1192,19 +1212,29 @@ export const MainWidget = function (options) {
     sectionMissionsList.appendChild(sectionMissionsListBody);
 
     sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsBackBtn);
-    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderLabel);
+    // sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderLabel);
     sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsInfoBtn);
     // sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderDate);
 
     // sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsHeader);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsHeaderLabel);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsDescriptionLabel);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsPrize);
+
+    sectionMissionsDetailsBodyWrapper.appendChild(sectionMissionsDetailsBodyImage);
+    sectionMissionsDetailsBodyWrapper.appendChild(sectionMissionsDetailsBodyContainer);
+
     sectionMissionsDetailsBodyContainer.appendChild(graphImage);
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsGraph);
+    // sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsGraph);
 
     sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsHeader);
-    sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsBodyContainer);
+    sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsBodyWrapper);
 
-    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsWrapper);
+    sectionMissionsDetailsContainerWrapper.appendChild(sectionMissionsDetailsWrapper);
+    sectionMissionsDetailsContainerWrapper.appendChild(sectionMissionsGraph);
+
+    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsContainerWrapper);
 
     sectionMissionsFooter.appendChild(sectionMissionsFooterContent);
 
@@ -2676,12 +2706,13 @@ export const MainWidget = function (options) {
     }, 50);
   };
 
-  this.loadMissonDetails = function (mission, callback) {
+  this.loadMissionDetails = function (mission, callback) {
+    this.settings.missions.mission = mission;
     const _this = this;
     const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
-    const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-body');
-
+    const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
     if (!mission.data || !mission.data.name) {
+      if (typeof callback === 'function') callback();
       return;
     }
 
@@ -2695,14 +2726,26 @@ export const MainWidget = function (options) {
       if (typeof callback === 'function') callback();
     }, 50);
 
+    const graphContainer = document.getElementById('graph-container');
+    graphContainer.style.display = 'none';
+  };
+
+  this.loadMissionDetailsGraph = function () {
     const container = document.getElementById('graph-container');
+
+    if (container.style.display === 'block') {
+      container.style.display = 'none';
+      return;
+    }
+
+    container.style.display = 'block';
     container.innerHTML = '';
 
     const graph = new Graph();
-    mission.graph.nodes.forEach((n) => {
-      let color = '#017dfb';
-      if (n.entityId === mission.data.id) {
-        color = '#ff7400';
+    this.settings.missions.mission.graph.nodes.forEach((n) => {
+      let color = '#2F0426';
+      if (n.entityId === this.settings.missions.mission.data.id) {
+        color = '#2F0426';
       }
       graph.addNode(n.entityId, { size: 20, label: n.name, color: color });
     });
@@ -2711,7 +2754,7 @@ export const MainWidget = function (options) {
     const SHOULD_COLOR = '#f48f3b';
     const MUST_COLOR = '#3bb54c';
 
-    mission.graph.graphs[0].edges.forEach(e => {
+    this.settings.missions.mission.graph.graphs[0].edges.forEach(e => {
       if (e.graphEdgeType !== 'ROOT') {
         let color = 'black';
         switch (e.graphEdgeType) {
@@ -2760,6 +2803,7 @@ export const MainWidget = function (options) {
       minCameraRatio: null, // 1.3
       maxCameraRatio: null, // 1.3
       labelFont: 'Gotham',
+      labelColor: { color: '#fff' },
       edgeLabelFont: 'Gotham',
       edgeLabelWeight: 'bold'
     });
