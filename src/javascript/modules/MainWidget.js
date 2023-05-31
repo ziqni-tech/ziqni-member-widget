@@ -2727,9 +2727,21 @@ export const MainWidget = function (options) {
     const _this = this;
     const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
     const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
+    const prizeValue = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-prize-value');
+
     if (!mission.data || !mission.data.name) {
       if (typeof callback === 'function') callback();
       return;
+    }
+
+    if (mission.data.reward && mission.data.reward.rewardValue) {
+      let symbol = '';
+
+      if (mission.data.reward.rewardType && mission.data.reward.rewardType.uomSymbol) {
+        symbol = ' ' + mission.data.reward.rewardType.uomSymbol;
+      }
+
+      prizeValue.innerHTML = mission.data.reward.rewardValue + symbol;
     }
 
     label.innerHTML = mission.data.name;
