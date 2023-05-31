@@ -1221,7 +1221,7 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.getMission = function (id, callback) {
+  this.getMission = async function (id, callback) {
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
     }
@@ -1235,8 +1235,23 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, (json) => {
+    this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, async (json) => {
       const mainData = json.data[0];
+
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Achievement',
+          entityIds: [mainData.id]
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+
+      const rewardRaw = await this.getRewardsApi(rewardRequest);
+      if (rewardRaw && rewardRaw.data && rewardRaw.data.length) {
+        mainData.reward = rewardRaw.data[0];
+      }
 
       const tempGraphRequest = EntityGraphRequest.constructFromObject({
         ids: [id]

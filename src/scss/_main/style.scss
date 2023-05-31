@@ -4478,7 +4478,9 @@
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value {
   font-family: 'Syne', sans-serif;
   font-weight: 700;
-  line-height: 15px;
+  line-height: 14px;
+  display: flex;
+  align-items: center;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value::before {
@@ -4488,6 +4490,7 @@
   height: 18px;
   background: url(../../images/trophy.svg) no-repeat center;
   margin-left: 14px;
+  margin-right: 6px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-footer {
