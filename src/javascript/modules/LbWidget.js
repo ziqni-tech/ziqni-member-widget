@@ -2018,6 +2018,10 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hideMissionDetails(function () {
       });
 
+      // mission details info button
+    } else if (hasClass(el, 'cl-main-widget-missions-details-info-btn')) {
+      _this.settings.mainWidget.loadMissionDetailsGraph();
+
       // load rewards details
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {
       const awardId = closest(el, '.cl-rew-list-item').dataset.id;
@@ -2057,7 +2061,7 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(function () {
         _this.getMission(missionId, function (data) {
-          _this.settings.mainWidget.loadMissonDetails(data, function () {
+          _this.settings.mainWidget.loadMissionDetails(data, function () {
             preLoader.hide();
           });
         });

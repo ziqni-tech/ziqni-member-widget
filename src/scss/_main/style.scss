@@ -2067,6 +2067,9 @@
   width: 100%;
   max-width: 205px;
   padding-left: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-growth-col {
@@ -3683,7 +3686,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-reward-details-container .cl-main-widget-reward-winnings-icon .cl-reward-list-item-img{
-  float: right;
+  z-index: 1;
   width: 100%;
   max-width: 92px;
 }
@@ -4013,12 +4016,19 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container {
-  float: left;
-  width: 100%;
-  height: 100%;
-  margin: 0;
+  height: 360px;
   padding: 0;
-  border: 1px solid #ccc;
+  border: 1px solid #223241;
+  border-radius: 10px;
+  position: relative;
+  margin-top: 20px;
+  overflow: hidden;
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container canvas {
+  top: 0;
+  left: 0;
 }
 
 .cl-main-widget-missions-graph-image {
@@ -4033,6 +4043,7 @@
   height: 84px;
   position: relative;
   z-index: 2;
+  padding-right: 60px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header .cl-main-widget-missions-header-label {
@@ -4266,68 +4277,117 @@
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container {
   position: absolute;
-  height: calc(100% - 52px);
-  background: var(--lb3-messages-details-bg-color);
-  top: 30px;
+  height: calc(100% - 134px);
+  background: var(--lb3-achievements-details-bg-color);
+  top: 76px;
   left: -200px;
   width: 100%;
   z-index: 10;
   opacity: 0;
   display: none;
-  transition: all 0.3s ease;
+  transition: all .3s ease;
 }
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container-wrapper {
+  padding-right: 8px;
+  margin-right: 8px;
+  height: 100%;
+  overflow: auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container-wrapper::-webkit-scrollbar {
+  width: 4px;
+  background: #141E28;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container-wrapper::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #304F69;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-missions-details-container {
   height: calc(100% - 30px);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-wrapper{
+  width: 100%;
+  background: #141e28;
+  border-radius: 10px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container.cl-show {
   left: 0;
   opacity: 1;
+  padding-left: 44px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header {
-  float: left;
   width: 100%;
   min-height: 60px;
-  padding: 10px 60px;
+  padding: 26px 16px 0;
+  display: flex;
+  align-items: center;
+  font-family: "Syne",sans-serif;
+  justify-content: space-between;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header-label {
-  float: left;
-  width: 100%;
-  text-align: center;
+  text-align: left;
   color: var(--lb3-messages-details-title-color);
-  height: 30px;
-  line-height: 30px;
-  font-size: 24px;
-  font-weight: 400;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  padding-bottom: 12px;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
-  padding: 0 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-description-label {
+  text-align: left;
+  color: var(--lb3-messages-details-title-color);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 15px;
+  padding-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header-date {
-  float: left;
-  width: 100%;
   text-align: center;
-  color: var(--lb3-messages-details-date-color);
-  height: 30px;
-  line-height: 30px;
-  font-size: 18px;
-  font-weight: 300;
+  color: var(--lb3-rewards-details-date-color);
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-back-btn {
-  position: absolute;
-  left: 20px;
-  top: 16px;
-  width: 30px;
-  height: 26px;
-  background-image: $prev-btn-icon-bg;
+  display: block;
+  background-image: url(../../images/small-left-arrow.svg);
   background-repeat: no-repeat;
+  width: 30px;
+  height: 30px;
   background-size: 100%;
   cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-info-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  font-family: "Syne",sans-serif;
+  color: #fff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
 }
 
 .graph-node {
@@ -4336,25 +4396,99 @@
   box-shadow: #0d980e 10px 10px 10px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-container {
-  float: left;
-  width: 100%;
-  padding: 5px 40px 25px 40px;
-  position: absolute;
-  top: 80px;
-  height: calc(100% - 130px);
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-wrapper {
+  display: flex;
+  padding-bottom: 26px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body {
-  float: left;
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image {
+  display: flex;
+  flex-shrink: 0;
+  justify-content: center;
+  align-items: center;
+  width: 150px;
+  height: 150px;
+  margin-left: 66px;
+  margin-top: -10px;
+  border-radius: 50%;
+  background: url(../../images/awardPreview.svg) no-repeat center;
+  background-size: 70%;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image::before {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 150px;
+  background: radial-gradient(50% 50% at 50% 50%, #38ACCF 0%, rgba(56, 172, 207, 0) 100%);
+  opacity: .4;
+  filter: blur(12.5px);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image::after {
+  content: "";
+  display: block;
+  width: 150px;
+  height: 150px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: url(../../images/ellipse.svg) no-repeat;
+  background-size: contain;
+  background-position-y: bottom;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-container {
+  width: 100%;
+  padding: 0 65px 0 30px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-description {
   width: 100%;
   color: var(--lb3-messages-details-text-color);
-  font-size: 14px;
-  line-height: 20px;
   margin: 0;
-  padding: 0 0 30px 0;
+  padding: 0 0 14px 0;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  border-bottom: solid 1px #223241;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize {
+  display: flex;
+  align-items: center;
+  padding-top: 20px;
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-label {
+  font-family: 'Syne', sans-serif;
+  font-weight: 500;
+  line-height: 15px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value {
+  font-family: 'Syne', sans-serif;
+  font-weight: 700;
+  line-height: 15px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value::before {
+  content: '';
+  display: block;
+  width: 18px;
+  height: 18px;
+  background: url(../../images/trophy.svg) no-repeat center;
+  margin-left: 14px;
+}
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-footer {
   width: 100%;
