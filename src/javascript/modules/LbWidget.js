@@ -806,6 +806,30 @@ export const LbWidget = function (options) {
         }
       }
 
+      if (_this.settings.achievements.list.length) {
+        const ids = _this.settings.achievements.list.map(a => a.id);
+        const rewardRequest = {
+          entityFilter: [{
+            entityType: 'Achievement',
+            entityIds: ids
+          }],
+          currencyKey: this.settings.currency,
+          skip: 0,
+          limit: 20
+        };
+        const rewards = await this.getRewardsApi(rewardRequest);
+        const rewardsData = rewards.data;
+
+        _this.settings.achievements.list = _this.settings.achievements.list.map(achievement => {
+          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
+          if (idx !== -1) {
+            achievement.reward = rewardsData[idx];
+          }
+
+          return achievement;
+        });
+      }
+
       if (typeof callback === 'function') callback(_this.settings.achievements.list);
     });
   };
@@ -2038,8 +2062,9 @@ export const LbWidget = function (options) {
       }
 
       // load achievement details
-    } else if (hasClass(el, 'cl-ach-list-more')) {
-      _this.getAchievement(el.dataset.id, function (data) {
+    } else if (hasClass(el, 'cl-ach-list-more') || closest(el, '.cl-ach-list-details-cont') !== null) {
+      const id = closest(el, '.cl-ach-list-item').dataset.id;
+      _this.getAchievement(id, function (data) {
         _this.settings.achievements.activeAchievementId = data.id;
         _this.settings.mainWidget.loadAchievementDetails(data, function () {
         });

@@ -2413,6 +2413,7 @@ export const MainWidget = function (options) {
     const progressionBar = document.createElement('div');
     const progressionLabel = document.createElement('div');
     const actionsWrapper = document.createElement('div');
+    const actionsReward = document.createElement('div');
     const moreButton = document.createElement('a');
     const enterButton = document.createElement('a');
     const leaveButton = document.createElement('a');
@@ -2430,6 +2431,7 @@ export const MainWidget = function (options) {
     progressionBar.setAttribute('class', 'cl-ach-list-progression-bar');
     progressionLabel.setAttribute('class', 'cl-ach-list-progression-label');
     actionsWrapper.setAttribute('class', 'cl-ach-list-actions');
+    actionsReward.setAttribute('class', 'cl-ach-list-actions-reward');
     moreButton.setAttribute('class', 'cl-ach-list-more');
     enterButton.setAttribute('class', 'cl-ach-list-enter');
     leaveButton.setAttribute('class', 'cl-ach-list-leave');
@@ -2454,6 +2456,10 @@ export const MainWidget = function (options) {
     listItem.dataset.id = ach.id;
 
     label.innerHTML = ach.name;
+
+    if (ach.reward) {
+      actionsReward.innerHTML = ach.reward.rewardValue;
+    }
 
     // detailsWrapper.appendChild(description);
 
@@ -2484,7 +2490,7 @@ export const MainWidget = function (options) {
     detailsWrapper.appendChild(label);
     detailsWrapper.appendChild(progressionWrapper);
 
-    actionsWrapper.appendChild(moreButton);
+    actionsWrapper.appendChild(actionsReward);
 
     if (Array.isArray(ach.constraints) && ach.constraints.includes('optinRequiredForEntrants')) {
       if (ach.optInStatus && ach.optInStatus >= 15 && ach.optInStatus <= 35) {
@@ -2495,6 +2501,8 @@ export const MainWidget = function (options) {
         actionsWrapper.appendChild(enterButton);
       }
       addClass(listItem, 'cl-ach-list-item--notentered');
+    } else {
+      actionsWrapper.appendChild(moreButton);
     }
 
     listItem.appendChild(detailsContainer);
@@ -2510,7 +2518,7 @@ export const MainWidget = function (options) {
     );
     if (!achList) return;
 
-    const ach = achList.querySelector('[data-id = ' + id + ']');
+    const ach = achList.querySelector('[data-id="' + id + '"]');
     if (!ach) return;
 
     const bar = query(ach, '.cl-ach-list-progression-bar');

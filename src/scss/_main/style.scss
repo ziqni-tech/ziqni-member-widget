@@ -2829,6 +2829,7 @@
   z-index: 1;
   padding-bottom: 14px;
   border-bottom: solid 1px #223241;
+  cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-icon {
@@ -2869,7 +2870,38 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-actions {
   display: flex;
   padding-top: 14px;
-  justify-content: flex-end;
+  justify-content: space-between;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-actions-reward {
+  display: inline-block;
+  text-align: left;
+  width: 88px;
+  height: 36px;
+  padding-left: 28px;
+  padding-right: 12px;
+  background: #0f1921;
+  border-radius: 10px;
+  color: var(--lb3-rewards-item-label-color);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 36px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-actions-reward::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  left: 9px;
+  top: 11px;
+  background: url(../../images/award-icon.svg) no-repeat center;
+  background-size: contain;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-details-wrap {
