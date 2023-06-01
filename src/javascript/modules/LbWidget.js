@@ -1217,6 +1217,30 @@ export const LbWidget = function (options) {
       this.settings.missions.missions = json.data ?? [];
       this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
 
+      if (this.settings.missions.missions.length) {
+        const ids = this.settings.missions.missions.map(m => m.id);
+        const rewardRequest = {
+          entityFilter: [{
+            entityType: 'Achievement',
+            entityIds: ids
+          }],
+          currencyKey: this.settings.currency,
+          skip: 0,
+          limit: 20
+        };
+        const rewards = await this.getRewardsApi(rewardRequest);
+        const rewardsData = rewards.data;
+
+        this.settings.missions.missions = this.settings.missions.missions.map(mission => {
+          const idx = rewardsData.findIndex(r => r.entityId === mission.id);
+          if (idx !== -1) {
+            mission.reward = rewardsData[idx];
+          }
+
+          return mission;
+        });
+      }
+
       if (typeof callback === 'function') callback(this.settings.missions.missions);
     });
   };
