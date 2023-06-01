@@ -2105,7 +2105,7 @@ export const MainWidget = function (options) {
     );
     if (!achList) return;
 
-    const ach = achList.querySelector('[data-id = ' + id + ']');
+    const ach = achList.querySelector('[data-id="' + id + '"]');
     if (!ach) return;
 
     const bar = query(ach, '.cl-ach-list-progression-bar');
