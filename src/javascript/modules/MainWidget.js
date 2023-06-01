@@ -3027,6 +3027,10 @@ export const MainWidget = function (options) {
     listItem.dataset.id = mission.id;
     label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
 
+    if (mission.reward) {
+      actionsReward.innerHTML = mission.reward.rewardValue;
+    }
+
     progressLabel.innerHTML = '0/100';
 
     progressCont.appendChild(progressBar);
