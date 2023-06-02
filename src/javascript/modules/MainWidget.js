@@ -411,6 +411,9 @@ export const MainWidget = function (options) {
     const navigationContainer = document.createElement('div');
     const navigationItems = document.createElement('div');
     const navigationLogo = document.createElement('div');
+    const navigationDarkModeToggle = document.createElement('div');
+    const navigationDarkModeToggleInput = document.createElement('input');
+    const navigationDarkModeToggleLabel = document.createElement('label');
 
     const mainSectionContainer = document.createElement('div');
 
@@ -443,6 +446,14 @@ export const MainWidget = function (options) {
     navigationItems.setAttribute('class', 'cl-main-widget-navigation-items');
     navigationLogo.setAttribute('class', 'cl-main-widget-navigation-logo');
 
+    navigationDarkModeToggle.setAttribute('class', 'cl-main-widget-navigation-darkMode-toggle');
+    navigationDarkModeToggleInput.setAttribute('type', 'checkbox');
+    navigationDarkModeToggleInput.setAttribute('id', 'darkmode-toggle');
+    navigationDarkModeToggleLabel.setAttribute('for', 'darkmode-toggle');
+
+    navigationDarkModeToggle.appendChild(navigationDarkModeToggleInput);
+    navigationDarkModeToggle.appendChild(navigationDarkModeToggleLabel);
+
     mainSectionContainer.setAttribute('class', 'cl-main-widget-section-container' + (_this.settings.lbWidget.settings.showCopyright ? '' : ' cl-hidden-copyright'));
 
     preLoaderContainer.setAttribute('class', 'cl-main-widget-pre-loader');
@@ -458,6 +469,7 @@ export const MainWidget = function (options) {
 
     navigationContainer.appendChild(navigationLogo);
     navigationContainer.appendChild(navigationItems);
+    navigationContainer.appendChild(navigationDarkModeToggle);
 
     mainSectionContainer.appendChild(sectionLB);
     mainSectionContainer.appendChild(sectionACH);
@@ -2136,6 +2148,16 @@ export const MainWidget = function (options) {
         }
       };
     }
+
+    const darkModeToggle = document.querySelector('input[id=darkmode-toggle]');
+    const mainContainer = document.querySelector('.cl-main-widget-wrapper');
+    darkModeToggle.addEventListener('change', function () {
+      if (this.checked) {
+        mainContainer.classList.add('lightTheme');
+      } else {
+        mainContainer.classList.remove('lightTheme');
+      }
+    });
   };
 
   // this.checkLeaderboardScrollContainer = function(){

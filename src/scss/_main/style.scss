@@ -1091,6 +1091,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container {
   display: flex;
+  position: relative;
   flex-direction: column;
   align-items: center;
   padding-top: 20px;
@@ -1133,6 +1134,53 @@
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items .cl-main-widget-navigation-item.cl-active-nav {
   background: #EE3EC8;
   border-radius: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle {
+  position: absolute;
+  bottom: 45px;
+  left: 54px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle label {
+  width: 40px;
+  height: 73px;
+  position: relative;
+  display: block;
+  background: #304F69 url(../../images/sun-dark.svg) no-repeat center 13%;
+  border-radius: 30px;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle label::after {
+  content: "";
+  width: 40px;
+  height: 40px;
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  background: #EE3EC8 url(../../images/moon.svg) no-repeat center center;
+  border-radius: 50%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle input {
+  width: 0;
+  height: 0;
+  visibility: hidden;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle input:checked + label {
+  background: #DCE6EF url(../../images/moon-light.svg) no-repeat center 86%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle input:checked + label:after {
+  transform: translateY(-34px);
+  background: #EE3EC8 url(../../images/sun.svg) no-repeat center center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle label,
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle label:after {
+  transition: 0.3s
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-navigation-item {
