@@ -480,7 +480,6 @@ export const LbWidget = function (options) {
     this.settings.tournaments.readyTotalCount = readyCompetitions.meta.totalRecordsFound;
 
     const activeCompetitions = await this.getCompetitionsApi(activeCompetitionRequest);
-    console.log('activeCompetitions:', activeCompetitions);
     this.settings.tournaments.activeCompetitions = activeCompetitions.data;
     this.settings.tournaments.totalCount = activeCompetitions.meta.totalRecordsFound;
 
