@@ -1078,6 +1078,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inner-wrapper {
+  transition: background 0.3s;
   position: relative;
   display: flex;
   max-width: 997px;
@@ -4869,6 +4870,17 @@
   top: 0;
 }
 
+/**
+ * *************************************
+ * ********** Light theme ***********
+ * *************************************
+ */
+
+.cl-main-widget-wrapper.lightTheme {
+  .cl-main-widget-inner-wrapper {
+    background: #EDF3F7;
+  }
+}
 
 /**
  * *************************************
