@@ -459,8 +459,6 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    console.log('activeCompetitionRequest:', activeCompetitionRequest);
-
     const finishedCompetitionRequest = CompetitionRequest.constructFromObject({
       languageKey: this.settings.language,
       competitionFilter: {
