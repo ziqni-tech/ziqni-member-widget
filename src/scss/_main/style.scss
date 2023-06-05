@@ -4877,8 +4877,51 @@
  */
 
 .cl-main-widget-wrapper.lightTheme {
+  * {
+    color: var(--lightTheme-font-color);
+  }
   .cl-main-widget-inner-wrapper {
     background: #EDF3F7;
+    .cl-main-widget-navigation-container {
+      .cl-main-widget-navigation-logo {
+        background-image: url(../../images/ziqni-logo-nav-dark.svg);
+      }
+      .cl-main-widget-navigation-lb-icon {
+        background-image: $lb3-tournament-icon-black;
+      }
+      .cl-main-widget-navigation-ach-icon {
+        background-image: $lb3-achievements-icon-black;
+      }
+      .cl-main-widget-navigation-rewards-icon {
+        background-image: $lb3-rewards-icon-black;
+      }
+      .cl-main-widget-navigation-inbox-icon {
+        background-image: $lb3-messages-icon-black;
+      }
+      .cl-main-widget-navigation-missions-icon {
+        background-image: $lb3-missions-icon-black;
+      }
+      .cl-active-nav {
+        .cl-main-navigation-item-title {
+          color: #ffffff;
+        }
+        .cl-main-widget-navigation-lb-icon {
+          background-image: $lb3-tournament-icon;
+        }
+        .cl-main-widget-navigation-ach-icon {
+          background-image: $lb3-achievements-icon;
+        }
+        .cl-main-widget-navigation-rewards-icon {
+          background-image: $lb3-rewards-icon;
+        }
+        .cl-main-widget-navigation-inbox-icon {
+          background-image: $lb3-messages-icon;
+        }
+        .cl-main-widget-navigation-missions-icon {
+          background-image: $lb3-missions-icon;
+        }
+      }
+    }
   }
 }
 
