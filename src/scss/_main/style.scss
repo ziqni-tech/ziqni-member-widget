@@ -5004,6 +5004,25 @@
         }
       }
     }
+    .cl-main-widget-reward-details-container {
+      background: #edf3f7;
+      .cl-main-widget-reward-details-wrapper {
+        background: #DCE6EF;
+        box-shadow: none;
+      }
+      .cl-main-widget-reward-details-back-btn {
+        background-image: url(../../images/small-left-arrow-black.svg);
+      }
+      .cl-main-widget-reward-details-header-label {
+        color: #080D12;
+      }
+      .cl-main-widget-reward-winnings-value {
+        color: #080D12;
+      }
+      .cl-main-widget-reward-claim-btn {
+        color: #080D12;
+      }
+    }
     .cl-main-widget-reward-list-body-res {
       .cl-rew-list-item {
         background: #DCE6EF;
