@@ -4973,6 +4973,20 @@
         color: #170213;
       }
     }
+    .cl-main-widget-ach-details-container {
+      background: #edf3f7;
+      .cl-main-widget-ach-details-wrapper {
+        background: #DCE6EF;
+        .cl-main-widget-ach-details-header {
+          .cl-main-widget-ach-details-back-btn {
+            background-image: url(../../images/small-left-arrow-black.svg);
+          }
+          .cl-main-widget-ach-details-header-label {
+            color: #080D12;
+          }
+        }
+      }
+    }
   }
   .cl-main-widget-inner-wrapper {
     background: #EDF3F7;
