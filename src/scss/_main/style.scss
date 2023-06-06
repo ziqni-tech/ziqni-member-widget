@@ -4880,6 +4880,30 @@
   * {
     color: var(--lightTheme-font-color);
   }
+  .paginator-item {
+    border: 1px solid #cccccc;
+    color: #080D12;
+    &.active {
+      background: #BEE9F3;
+      border: 1px solid #F7A1E4;
+      box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+    }
+    &.prev {
+      background: url(../../images/arrow-left-dark.svg) no-repeat center;
+    }
+    &.next {
+      background: url(../../images/arrow-right-dark.svg) no-repeat center;
+    }
+  }
+  .cl-main-widget-tournaments-list {
+    background: #EDF3F7;
+    .cl-tour-list-item:nth-child(odd) {
+      background: #DCE6EF;
+    }
+    .cl-tour-list-details-label {
+      color: #141E28;
+    }
+  }
   .cl-main-widget-section-container {
     &.cl-main-active-embedded-description {
       .cl-main-widget-lb-details-description-container {
@@ -4892,6 +4916,27 @@
     .cl-main-widget-lb-header {
       .cl-main-widget-lb-header-back-icon {
         background-image: $lb3-tournament-header-back-image-black;
+      }
+      .cl-main-widget-lb-header-close {
+        background-image: $lb3-tournament-header-close-light-image;
+      }
+    }
+    .cl-main-widget-lb-footer-content {
+      color: #141E28;
+    }
+    .cl-main-accordion-container {
+      .cl-main-accordion-container-menu {
+        background: #DCE6EF;
+        .cl-main-accordion-container-menu-item.active {
+          background: #BEE9F3;
+          border: 1px solid #F7A1E4;
+          box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+        }
+      }
+      .cl-shown {
+        .cl-accordion-list-container {
+          border: 1px solid #B9CEDF;
+        }
       }
     }
   }
