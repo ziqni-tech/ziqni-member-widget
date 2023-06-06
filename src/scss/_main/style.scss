@@ -4922,7 +4922,8 @@
       }
     }
     .cl-main-widget-lb-footer-content,
-    .cl-main-widget-ach-footer-content {
+    .cl-main-widget-ach-footer-content,
+    .cl-main-widget-reward-footer-content {
       color: #141E28;
     }
     .cl-main-accordion-container {
@@ -4985,6 +4986,45 @@
             color: #080D12;
           }
         }
+      }
+    }
+    .cl-main-widget-reward-list {
+      background: #edf3f7;
+      .cl-main-accordion-container {
+        .cl-shown {
+          .cl-accordion-list-container {
+            border: none;
+            &::-webkit-scrollbar {
+              background: #DCE6EF;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: #96B5CF;
+            }
+          }
+        }
+      }
+    }
+    .cl-main-widget-reward-list-body-res {
+      .cl-rew-list-item {
+        background: #DCE6EF;
+      }
+      .cl-rew-list-details-label {
+        color: #080D12;
+      }
+      .cl-rew-list-details-type {
+        color: #080D12;
+      }
+      .cl-rew-list-details-prize {
+        background: #EDF3F7;
+        color: #141E28;
+        &::before {
+          background: url(../../images/award-icon-dark.svg) no-repeat center;
+        }
+      }
+    }
+    .cl-main-widget-reward-header {
+      .cl-main-widget-reward-header-label {
+        color: #080D12;
       }
     }
   }
