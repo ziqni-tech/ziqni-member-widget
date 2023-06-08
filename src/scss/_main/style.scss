@@ -5193,6 +5193,23 @@
           color: #141E28;
         }
       }
+      .cl-main-widget-inbox-details-container {
+        background: #edf3f7;
+        .cl-main-widget-inbox-details-wrapper {
+          background: #DCE6EF;
+        }
+        .cl-main-widget-inbox-details-header {
+          .cl-main-widget-inbox-details-back-btn {
+            background-image: url(../../images/small-left-arrow-black.svg);
+          }
+          .cl-main-widget-inbox-details-header-label {
+            color: #080D12;
+          }
+          .cl-main-widget-inbox-details-header-date {
+            color: #141E28;
+          }
+        }
+      }
     }
   }
 }
