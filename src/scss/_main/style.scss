@@ -2348,13 +2348,13 @@
   position: absolute;
   right: 0;
   top: 0;
-  width: calc(100% - 73px);
+  width: calc(100% - 148px);
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
   opacity: 0;
   display: none;
   z-index: 10;
-  border-radius: 5px;
+  border-radius: 30px;
   transition: all 0.2s ease;
 }
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-pre-loader{
@@ -4875,6 +4875,73 @@
  * ********** Light theme ***********
  * *************************************
  */
+
+.cl-widget-ms-wrapper.lightTheme {
+  * {
+    color: #141E28;
+  }
+  .cl-widget-ms-information-close-wrapper {
+    background: #B9CEDF;
+    border: 1px solid #FFFFFF;
+    .cl-widget-ms-information-close {
+      background: none;
+    }
+  }
+  .cl-widget-ms-icon-wrapper {
+    .cl-widget-ms-icon {
+      background-image: url(../../images/ziqni-logo-light.svg);
+    }
+  }
+  .cl-widget-ms-information-wrapper {
+    background: #EDF3F7;
+    border: 1px solid #B9CEDF;
+    color: #141E28;
+  }
+  .cl-widget-ms-default-mem-entry:nth-child(odd) {
+    background: #DCE6EF;
+  }
+  .cl-widget-ms-default-wrapper {
+    color: #223241;
+    .cl-widget-ms-default-results-headers {
+      .cl-widget-ms-default-results-header-rank {
+        color: #223241;
+      }
+      .cl-widget-ms-default-results-header-points {
+        color: #223241;
+      }
+    }
+  }
+  .cl-widget-ms-default-wrapper.cl-inverse {
+    .cl-widget-ms-default-date-only {
+      .cl-widget-ms-default-date-label {
+        color: #223241;
+      }
+      .cl-widget-ms-default-date {
+        color: #223241;
+        .time-ind {
+          color: #223241;
+        }
+      }
+    }
+  }
+  .cl-widget-ms-information-top-wrapper {
+    .cl-widget-ms-information-wrapper {
+      .cl-widget-ms-default-wrapper {
+        .cl-widget-ms-default-results-wrapper {
+          .cl-widget-ms-default-results-list {
+            .cl-widget-ms-default-mem-entry {
+              &.cl-widget-ms-default-mem-self {
+                background: #BEE9F3;
+                border: 1px solid #F7A1E4;
+                box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
 
 .cl-main-widget-wrapper.lightTheme {
   * {
