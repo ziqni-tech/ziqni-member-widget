@@ -4979,6 +4979,27 @@
         color: #170213;
       }
     }
+    .cl-main-widget-missions-details-container {
+      background: #edf3f7;
+      .cl-main-widget-missions-details-wrapper {
+        background: #DCE6EF;
+      }
+      .cl-main-widget-missions-details-header {
+        .cl-main-widget-missions-details-back-btn {
+          background-image: url(../../images/small-left-arrow-black.svg);
+        }
+        .cl-main-widget-missions-details-info-btn {
+          color: #0D0D0D;
+          border: 1px solid #cccccc;
+        }
+      }
+      .cl-main-widget-missions-details-header-label {
+        color: #0D0D0D;
+      }
+      .cl-main-widget-missions-details-description-label {
+        color: #0D0D0D;
+      }
+    }
     .cl-main-widget-ach-details-container {
       background: #edf3f7;
       .cl-main-widget-ach-details-wrapper {
@@ -5092,6 +5113,12 @@
           background: url(../../images/award-icon-dark.svg) no-repeat center;
           background-size: contain;
         }
+      }
+      .cl-missions-list-details-progress-cont {
+        background: #ffffff;
+      }
+      .cl-missions-list-details-progress-bar {
+        background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
       }
     }
   }
