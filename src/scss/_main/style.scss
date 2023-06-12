@@ -5192,6 +5192,19 @@
           background: url(../../images/award-icon-dark.svg) no-repeat center;
         }
       }
+      .wheel-item, .scratchcards-item {
+        background: #DCE6EF;
+      }
+      .wheel-label, .scratchcards-label {
+        color: #080D12;
+      }
+      .wheel-image, .scratchcards-image {
+        background-color: #ffffff;
+      }
+      .scratchcards-image {
+        background-image: url(../../images/scratchcards-light.svg);
+        background-position: 64px 7px;
+      }
     }
     .cl-main-widget-reward-header {
       .cl-main-widget-reward-header-label {
