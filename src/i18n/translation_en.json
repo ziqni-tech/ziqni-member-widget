@@ -57,7 +57,11 @@
     "availableRewards": "Available",
     "instantWins": "Instant Wins",
     "rewards": "Claimed Awards",
-    "expiredRewards": "Expired Awards"
+    "expiredRewards": "Expired Awards",
+    "wheelLabel": "The Single Wheel",
+    "scratchcardsLabel": "Scratchcards",
+    "wheelButton": "Play",
+    "scratchcardsButton": "Play"
   },
   "messages": {
     "label": "Messages"

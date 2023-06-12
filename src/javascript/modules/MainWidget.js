@@ -108,6 +108,12 @@ export const MainWidget = function (options) {
           type: 'claimedAwards',
           show: false,
           showTopResults: 1
+        },
+        {
+          label: 'Instant Wins',
+          type: 'instantWins',
+          show: false,
+          showTopResults: 1
         }
         // {
         //   label: 'Expired Rewards',
@@ -337,6 +343,10 @@ export const MainWidget = function (options) {
     if (element.classList.contains('claimedAwards')) {
       const claimedContainer = container.querySelector('.cl-accordion.claimedAwards');
       claimedContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('instantWins')) {
+      const instantWinsContainer = container.querySelector('.cl-accordion.instantWins');
+      instantWinsContainer.classList.add('cl-shown');
     }
   };
 
@@ -3338,10 +3348,53 @@ export const MainWidget = function (options) {
         if (typeof callback === 'function') {
           callback();
         }
+
+        _this.loadInstantWins();
       },
       pageNumber,
       claimedPageNumber
     );
+  };
+
+  this.loadInstantWins = function () {
+    const instantWinsContainer = document.querySelector('.cl-accordion.instantWins');
+    const list = instantWinsContainer.querySelector('.cl-accordion-list');
+
+    const wheel = document.createElement('div');
+    const wheelLabel = document.createElement('div');
+    const wheelImage = document.createElement('div');
+    const wheelButton = document.createElement('div');
+
+    const scratchcards = document.createElement('div');
+    const scratchcardsLabel = document.createElement('div');
+    const scratchcardsImage = document.createElement('div');
+    const scratchcardsButton = document.createElement('div');
+
+    wheel.classList.add('wheel-item');
+    wheelLabel.classList.add('wheel-label');
+    wheelImage.classList.add('wheel-image');
+    wheelButton.classList.add('wheel-button');
+
+    scratchcards.classList.add('scratchcards-item');
+    scratchcardsLabel.classList.add('scratchcards-label');
+    scratchcardsImage.classList.add('scratchcards-image');
+    scratchcardsButton.classList.add('scratchcards-button');
+
+    wheelLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelLabel;
+    scratchcardsLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
+    wheelButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelButton;
+    scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
+
+    wheel.appendChild(wheelLabel);
+    wheel.appendChild(wheelImage);
+    wheel.appendChild(wheelButton);
+
+    scratchcards.appendChild(scratchcardsLabel);
+    scratchcards.appendChild(scratchcardsImage);
+    scratchcards.appendChild(scratchcardsButton);
+
+    list.appendChild(wheel);
+    list.appendChild(scratchcards);
   };
 
   this.loadMessages = function (pageNumber, callback) {
