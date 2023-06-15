@@ -3162,6 +3162,20 @@
   font-weight: 700;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-back {
+  display: none;
+  background-image: url(../../images/left-arrow.svg);
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  background-size: 100%;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-date {
   float: left;
   width: auto;
@@ -3452,6 +3466,181 @@
   background-color: #0F1921;
   border-radius: 10px;
   margin-bottom: 28px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel {
+  display: none;
+  position: absolute;
+  height: 100%;
+  background: var(--lb3-achievements-details-bg-color);
+  top: -9px;
+  left: -200px;
+  width: 100%;
+  z-index: 10;
+  opacity: 0;
+  transition: all .3s ease;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel.cl-show {
+  display: block;
+  left: 0;
+  opacity: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #223241;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  max-width: 833px;
+  max-height: 608px;
+  margin-top: 16px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-wrapper.blur {
+  filter: blur(1px);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-label {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 20px;
+  color: #FFFFFF;
+  padding-top: 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-description {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  color: #E6E6E6;
+  padding-top: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-canvas {
+  height: 300px;
+  width: 300px;
+  margin-top: 70px;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-canvas::after {
+  content: '';
+  display: block;
+  height: 331px;
+  width: 331px;
+  border-radius: 50%;
+  position: absolute;
+  left: -16px;
+  top: -16px;
+  background-color: #2F0426;
+  border: 1px solid #406A8C;
+  box-shadow: 0 2px 17px rgba(64, 106, 140, 0.82);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-canvas::before {
+  content: '';
+  display: block;
+  position: absolute;
+  z-index: 2;
+  background: #EE3EC8;
+  width: 24px;
+  height: 24px;
+  border: 4px solid #2F0426;
+  border-radius: 50%;
+  left: 134px;
+  top: 134px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-pointer {
+  position: absolute;
+  z-index: 2;
+  background-image: url(../../images/polygon.svg);
+  width: 52px;
+  height: 37px;
+  top: -30px;
+  left: 124px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  width: 148px;
+  height: 36px;
+  background: #EE3EC8;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 70px;
+  cursor: pointer;
+}
+
+#wheelOfFortune {
+  display: inline-flex;
+  position: relative;
+}
+
+#wheel {
+  display: block;
+  z-index: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-popup {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 260px;
+  background: #141E28;
+  border: 1px solid #406A8C;
+  box-shadow: 0 2px 12px rgba(64, 106, 140, 0.5);
+  border-radius: 10px;
+  font-family: 'Syne', sans-serif;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  padding: 26px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-popup-label {
+  color: #BEE9F3;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  padding-top: 6px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-popup-description {
+  color: #E6E6E6;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  padding-top: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-popup-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Syne', sans-serif;
+  width: 148px;
+  height: 36px;
+  background: #EE3EC8;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 20px;
+  cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container {

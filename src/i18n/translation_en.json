@@ -61,7 +61,10 @@
     "wheelLabel": "The Single Wheel",
     "scratchcardsLabel": "Scratchcards",
     "wheelButton": "Play",
-    "scratchcardsButton": "Play"
+    "scratchcardsButton": "Play",
+    "singleWheelWinLabel": "Congratulations!",
+    "singleWheelWinDescription": "You won",
+    "singleWheelWinButton": "Claim"
   },
   "messages": {
     "label": "Messages"
