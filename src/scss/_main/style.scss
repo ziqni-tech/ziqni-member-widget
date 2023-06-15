@@ -5394,10 +5394,47 @@
         background-image: url(../../images/scratchcards-light.svg);
         background-position: 64px 7px;
       }
+      .single-wheel-wrapper {
+        border: 1px solid #B9CEDF;
+      }
+      .single-wheel {
+        background: #edf3f7;
+      }
+      .single-wheel-label {
+        color: #080D12;
+      }
+      .single-wheel-description {
+        color: #141E28;
+      }
+      .single-wheel-button {
+        color: #ffffff;
+      }
+      .single-wheel-canvas::after {
+        background-color: #BEE9F3;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .single-wheel-popup {
+        background: #FFFFFF;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .single-wheel-popup-label {
+        color: #304F69;
+      }
+      .single-wheel-popup-description {
+        color: #141E28;
+      }
+      .single-wheel-popup-button {
+        color: #ffffff;
+      }
     }
     .cl-main-widget-reward-header {
       .cl-main-widget-reward-header-label {
         color: #080D12;
+      }
+      .cl-main-widget-reward-header-back {
+        background-image: url(../../images/left-arrow-black.svg);
       }
       .cl-main-widget-reward-header-close {
         background-image: $lb3-tournament-header-close-light-image;
