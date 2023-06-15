@@ -2098,6 +2098,10 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-main-widget-missions-details-info-btn')) {
       _this.settings.mainWidget.loadMissionDetailsGraph();
 
+      // Single Wheel
+    } else if (hasClass(el, 'wheel-button')) {
+      _this.settings.mainWidget.loadSingleWheel();
+
       // load rewards details
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {
       const awardId = closest(el, '.cl-rew-list-item').dataset.id;
@@ -2217,6 +2221,10 @@ export const LbWidget = function (options) {
       // hide competition list view
     } else if (hasClass(el, 'cl-main-widget-tournaments-back-btn') || hasClass(el, 'cl-main-widget-lb-header-back-icon')) {
       _this.settings.mainWidget.hideCompetitionList();
+
+      // hide Instant Wins
+    } else if (hasClass(el, 'cl-main-widget-reward-header-back')) {
+      _this.settings.mainWidget.hideInstantWins();
 
       // mini scoreboard action to open primary widget
     } else if ((hasClass(el, 'cl-widget-ms-icon-wrapper') || closest(el, '.cl-widget-ms-icon-wrapper') !== null) || (hasClass(el, 'cl-widget-ms-information-wrapper') || closest(el, '.cl-widget-ms-information-wrapper') !== null)) {

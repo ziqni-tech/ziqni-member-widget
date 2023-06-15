@@ -899,6 +899,7 @@ export const MainWidget = function (options) {
     var sectionRewards = document.createElement('div');
 
     var sectionRewardsHeader = document.createElement('div');
+    const sectionRewardsHeaderBack = document.createElement('div');
     var sectionRewardsHeaderLabel = document.createElement('div');
     var sectionRewardsHeaderDate = document.createElement('div');
     var sectionRewardsHeaderClose = document.createElement('div');
@@ -935,6 +936,7 @@ export const MainWidget = function (options) {
 
     sectionRewards.setAttribute('class', _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' cl-main-section-item');
     sectionRewardsHeader.setAttribute('class', 'cl-main-widget-reward-header');
+    sectionRewardsHeaderBack.setAttribute('class', 'cl-main-widget-reward-header-back');
     sectionRewardsHeaderLabel.setAttribute('class', 'cl-main-widget-reward-header-label');
     sectionRewardsHeaderDate.setAttribute('class', 'cl-main-widget-reward-header-date');
     sectionRewardsHeaderClose.setAttribute('class', 'cl-main-widget-reward-header-close');
@@ -1000,6 +1002,7 @@ export const MainWidget = function (options) {
     sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsContentWrapper);
     // sectionRewardsDetailsContainer.appendChild(sectionRewardsClaimContainer);
 
+    sectionRewardsHeader.appendChild(sectionRewardsHeaderBack);
     sectionRewardsHeader.appendChild(sectionRewardsHeaderLabel);
     sectionRewardsHeader.appendChild(sectionRewardsHeaderDate);
     sectionRewardsHeader.appendChild(sectionRewardsHeaderClose);
@@ -3370,6 +3373,19 @@ export const MainWidget = function (options) {
     const scratchcardsImage = document.createElement('div');
     const scratchcardsButton = document.createElement('div');
 
+    const singleWheel = document.createElement('div');
+    const singleWheelWrapper = document.createElement('div');
+    const singleWheelLabel = document.createElement('div');
+    const singleWheelDescription = document.createElement('div');
+    const singleWheelCanvas = document.createElement('div');
+    const singleWheelPointer = document.createElement('div');
+    const canvas = document.createElement('canvas');
+    const singleWheelButton = document.createElement('div');
+    const singleWheelPopup = document.createElement('div');
+    const singleWheelPopupLabel = document.createElement('div');
+    const singleWheelPopupDescription = document.createElement('div');
+    const singleWheelPopupButton = document.createElement('div');
+
     wheel.classList.add('wheel-item');
     wheelLabel.classList.add('wheel-label');
     wheelImage.classList.add('wheel-image');
@@ -3380,10 +3396,51 @@ export const MainWidget = function (options) {
     scratchcardsImage.classList.add('scratchcards-image');
     scratchcardsButton.classList.add('scratchcards-button');
 
+    singleWheel.classList.add('single-wheel');
+    singleWheelWrapper.classList.add('single-wheel-wrapper');
+    singleWheelLabel.classList.add('single-wheel-label');
+    singleWheelDescription.classList.add('single-wheel-description');
+    singleWheelCanvas.classList.add('single-wheel-canvas');
+    singleWheelPointer.classList.add('single-wheel-pointer');
+    singleWheelCanvas.setAttribute('id', 'wheelOfFortune');
+    canvas.setAttribute('id', 'wheel');
+    canvas.setAttribute('width', '300');
+    canvas.setAttribute('height', '300');
+    singleWheelButton.classList.add('single-wheel-button');
+    singleWheelButton.setAttribute('id', 'spin');
+
+    singleWheelPopup.classList.add('single-wheel-popup');
+    singleWheelPopupLabel.classList.add('single-wheel-popup-label');
+    singleWheelPopupDescription.classList.add('single-wheel-popup-description');
+    singleWheelPopupButton.classList.add('single-wheel-popup-button');
+
     wheelLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelLabel;
     scratchcardsLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
     wheelButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelButton;
     scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
+
+    singleWheelPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
+    // singleWheelPopupDescription.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription;
+    singleWheelPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
+
+    singleWheelLabel.innerHTML = 'The Single Wheel';
+    singleWheelDescription.innerHTML = 'Ready to test your luck? Take a spin and find out!';
+    singleWheelButton.innerHTML = 'Spin';
+
+    singleWheelCanvas.appendChild(singleWheelPointer);
+    singleWheelCanvas.appendChild(canvas);
+
+    singleWheelPopup.appendChild(singleWheelPopupLabel);
+    singleWheelPopup.appendChild(singleWheelPopupDescription);
+    singleWheelPopup.appendChild(singleWheelPopupButton);
+
+    singleWheelWrapper.appendChild(singleWheelLabel);
+    singleWheelWrapper.appendChild(singleWheelDescription);
+    singleWheelWrapper.appendChild(singleWheelCanvas);
+    singleWheelWrapper.appendChild(singleWheelButton);
+
+    singleWheel.appendChild(singleWheelWrapper);
+    singleWheel.appendChild(singleWheelPopup);
 
     wheel.appendChild(wheelLabel);
     wheel.appendChild(wheelImage);
@@ -3395,6 +3452,121 @@ export const MainWidget = function (options) {
 
     list.appendChild(wheel);
     list.appendChild(scratchcards);
+    list.appendChild(singleWheel);
+  };
+
+  this.loadSingleWheel = function () {
+    const singleWheel = document.querySelector('.single-wheel');
+    const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
+    const _this = this;
+
+    singleWheel.classList.add('cl-show');
+    backBtn.style.display = 'block';
+
+    const sectors = [
+      { color: '#14114e', label: '50$ bonus' },
+      { color: '#204040', label: 'Free spins' },
+      { color: '#190879', label: 'Next time' },
+      { color: '#2d2f4a', label: '50$ bonus' },
+      { color: '#111a3a', label: 'Free spins' },
+      { color: '#140538', label: 'Next time' }
+    ];
+
+    const rand = (m, M) => Math.random() * (M - m) + m;
+    const tot = sectors.length;
+    const spinEl = document.querySelector('#spin');
+    const climeBtn = document.querySelector('.single-wheel-popup-button');
+    const ctx = document.querySelector('#wheel').getContext('2d');
+    const dia = ctx.canvas.width;
+    const rad = dia / 2;
+    const PI = Math.PI;
+    const TAU = 2 * PI;
+    const arc = TAU / sectors.length;
+
+    const friction = 0.991; // 0.995=soft, 0.99=mid, 0.98=hard
+    let angVel = 0; // Angular velocity
+    let ang = 0; // Angle in radians
+
+    const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
+
+    function drawSector (sector, i) {
+      const ang = arc * i;
+      ctx.save();
+      // COLOR
+      ctx.beginPath();
+      ctx.fillStyle = sector.color;
+      ctx.strokeStyle = '#8D0C71';
+      ctx.moveTo(rad, rad);
+      ctx.arc(rad, rad, rad, ang, ang + arc);
+      ctx.lineTo(rad, rad);
+      ctx.fill();
+      ctx.stroke();
+      // TEXT
+      ctx.translate(rad, rad);
+      ctx.rotate(ang + arc / 2);
+      ctx.textAlign = 'right';
+      ctx.fillStyle = '#fff';
+      ctx.font = 'bold 15px sans-serif';
+      ctx.fillText(sector.label, rad - 15, 10);
+
+      ctx.restore();
+    }
+
+    function rotate () {
+      ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
+    }
+
+    function frame () {
+      if (!angVel) return;
+      angVel *= friction; // Decrement velocity by friction
+      if (angVel < 0.002) {
+        angVel = 0;
+        const sector = sectors[getIndex()];
+
+        const popup = document.querySelector('.single-wheel-popup');
+        popup.style.display = 'flex';
+
+        const wrapp = document.querySelector('.single-wheel-wrapper');
+        wrapp.classList.add('blur');
+
+        const description = document.querySelector('.single-wheel-popup-description');
+        description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + sector.label;
+      } // Bring to stop
+      ang += angVel; // Update angle
+      ang %= TAU; // Normalize angle
+      rotate();
+    }
+
+    function engine () {
+      frame();
+      requestAnimationFrame(engine);
+    }
+
+    function init () {
+      sectors.forEach(drawSector);
+      rotate(); // Initial rotation
+      engine(); // Start engine
+      spinEl.addEventListener('click', () => {
+        if (!angVel) angVel = rand(0.25, 0.45);
+      });
+      climeBtn.addEventListener('click', () => {
+        const popup = document.querySelector('.single-wheel-popup');
+        popup.style.display = 'none';
+
+        const wrapp = document.querySelector('.single-wheel-wrapper');
+        wrapp.classList.remove('blur');
+      });
+    }
+
+    init();
+  };
+
+  this.hideInstantWins = function () {
+    const singleWheel = document.querySelector('.single-wheel');
+    const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
+
+    singleWheel.classList.remove('cl-show');
+    backBtn.style.display = 'none';
   };
 
   this.loadMessages = function (pageNumber, callback) {
@@ -3428,6 +3600,9 @@ export const MainWidget = function (options) {
   this.navigationSwitch = function (target, callback) {
     var _this = this;
     var preLoader = _this.preloader();
+
+    const instantWinsBackIcon = query(_this.settings.container, '.cl-main-widget-reward-header-back');
+    instantWinsBackIcon.style.display = 'none';
 
     if (_this.settings.navigationSwitchInProgress && _this.settings.navigationSwitchLastAtempt + 3000 < new Date().getTime()) {
       _this.settings.navigationSwitchInProgress = false;
