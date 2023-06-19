@@ -751,7 +751,6 @@ export const LbWidget = function (options) {
     }
   };
 
-  // var checkAchievementsAjax = new cLabs.Ajax();
   this.checkForAvailableAchievements = function (pageNumber, callback) {
     const _this = this;
 
@@ -2101,6 +2100,10 @@ export const LbWidget = function (options) {
       // Single Wheel
     } else if (hasClass(el, 'wheel-button')) {
       _this.settings.mainWidget.loadSingleWheel();
+
+      // Single Wheel
+    } else if (hasClass(el, 'scratchcards-button')) {
+      _this.settings.mainWidget.loadScratchCards();
 
       // load rewards details
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {

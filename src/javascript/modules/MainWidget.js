@@ -3373,6 +3373,29 @@ export const MainWidget = function (options) {
     const scratchcardsImage = document.createElement('div');
     const scratchcardsButton = document.createElement('div');
 
+    const scratchcardsGame = document.createElement('div');
+    const scratchcardsGameWrapper = document.createElement('div');
+    const scratchcardsGameLabel = document.createElement('div');
+    const scratchcardsGameContainer = document.createElement('div');
+    const scratchcardsGameCardWrapper = document.createElement('div');
+    const scratchcardsGameCardBlock = document.createElement('div');
+    const scratchcardsGameCanvas = document.createElement('canvas');
+    const scratchcardsGamePrize = document.createElement('div');
+    const scratchcardsGamePrizeLabel = document.createElement('div');
+    const scratchcardsGamePrizePrizes = document.createElement('div');
+    const scratchcardsGamePrizePrizesPrize1 = document.createElement('div');
+    const scratchcardsGamePrizePrizesPrize2 = document.createElement('div');
+    const scratchcardsGamePrizePrizesPrize3 = document.createElement('div');
+    const scratchcardsGamePrizePrizesPrize1Label = document.createElement('div');
+    const scratchcardsGamePrizePrizesPrize2Label = document.createElement('div');
+    const scratchcardsGamePrizePrizesPrize3Label = document.createElement('div');
+    const scratchcardsGamePrizeButton = document.createElement('div');
+
+    const scratchcardsPopup = document.createElement('div');
+    const scratchcardsPopupLabel = document.createElement('div');
+    const scratchcardsPopupDescription = document.createElement('div');
+    const scratchcardsPopupButton = document.createElement('div');
+
     const singleWheel = document.createElement('div');
     const singleWheelWrapper = document.createElement('div');
     const singleWheelLabel = document.createElement('div');
@@ -3414,18 +3437,82 @@ export const MainWidget = function (options) {
     singleWheelPopupDescription.classList.add('single-wheel-popup-description');
     singleWheelPopupButton.classList.add('single-wheel-popup-button');
 
+    scratchcardsGame.classList.add('scratchcards-game');
+    scratchcardsGameWrapper.classList.add('scratchcards-game-wrapper');
+    scratchcardsGameLabel.classList.add('scratchcards-game-label');
+
+    scratchcardsGameContainer.classList.add('scratchcards-game-container');
+    scratchcardsGamePrize.classList.add('scratchcards-game-prize');
+    scratchcardsGamePrizeLabel.classList.add('scratchcards-game-prize-label');
+    scratchcardsGamePrizePrizes.classList.add('scratchcards-game-prize-prizes');
+    scratchcardsGamePrizePrizesPrize1.classList.add('scratchcards-game-prize-prizes-first');
+    scratchcardsGamePrizePrizesPrize2.classList.add('scratchcards-game-prize-prizes-second');
+    scratchcardsGamePrizePrizesPrize3.classList.add('scratchcards-game-prize-prizes-third');
+    scratchcardsGamePrizePrizesPrize1Label.classList.add('scratchcards-game-prize-prizes-label');
+    scratchcardsGamePrizePrizesPrize2Label.classList.add('scratchcards-game-prize-prizes-label');
+    scratchcardsGamePrizePrizesPrize3Label.classList.add('scratchcards-game-prize-prizes-label');
+    scratchcardsGamePrizeButton.classList.add('scratchcards-game-prize-button');
+    scratchcardsGameCardWrapper.classList.add('scratchcards-game-cardWrapper');
+    scratchcardsGameCardBlock.classList.add('scratchcards-game-card-block');
+
+    scratchcardsGameCanvas.classList.add('scratchcards-game-canvas');
+    scratchcardsGameCanvas.setAttribute('width', '300');
+    scratchcardsGameCanvas.setAttribute('height', '300');
+
+    scratchcardsPopup.classList.add('scratchcards-popup');
+    scratchcardsPopupLabel.classList.add('scratchcards-popup-label');
+    scratchcardsPopupDescription.classList.add('scratchcards-popup-description');
+    scratchcardsPopupButton.classList.add('scratchcards-popup-button');
+
     wheelLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelLabel;
     scratchcardsLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
     wheelButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelButton;
     scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
 
     singleWheelPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
-    // singleWheelPopupDescription.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription;
     singleWheelPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
+
+    scratchcardsPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
+    scratchcardsPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
+
+    scratchcardsGameLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
+    scratchcardsGamePrizeLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.prizeLabel;
+    scratchcardsGamePrizeButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.prizeButton;
 
     singleWheelLabel.innerHTML = 'The Single Wheel';
     singleWheelDescription.innerHTML = 'Ready to test your luck? Take a spin and find out!';
     singleWheelButton.innerHTML = 'Spin';
+
+    scratchcardsGamePrizePrizesPrize1Label.innerHTML = 'First prize';
+    scratchcardsGamePrizePrizesPrize2Label.innerHTML = 'Second prize';
+    scratchcardsGamePrizePrizesPrize3Label.innerHTML = 'Third prize';
+
+    scratchcardsPopup.appendChild(scratchcardsPopupLabel);
+    scratchcardsPopup.appendChild(scratchcardsPopupDescription);
+    scratchcardsPopup.appendChild(scratchcardsPopupButton);
+
+    scratchcardsGamePrizePrizesPrize1.appendChild(scratchcardsGamePrizePrizesPrize1Label);
+    scratchcardsGamePrizePrizesPrize2.appendChild(scratchcardsGamePrizePrizesPrize2Label);
+    scratchcardsGamePrizePrizesPrize3.appendChild(scratchcardsGamePrizePrizesPrize3Label);
+
+    scratchcardsGamePrizePrizes.appendChild(scratchcardsGamePrizePrizesPrize1);
+    scratchcardsGamePrizePrizes.appendChild(scratchcardsGamePrizePrizesPrize2);
+    scratchcardsGamePrizePrizes.appendChild(scratchcardsGamePrizePrizesPrize3);
+
+    scratchcardsGamePrize.appendChild(scratchcardsGamePrizeLabel);
+    scratchcardsGamePrize.appendChild(scratchcardsGamePrizePrizes);
+    scratchcardsGamePrize.appendChild(scratchcardsGamePrizeButton);
+
+    scratchcardsGameCardWrapper.appendChild(scratchcardsGameCanvas);
+    scratchcardsGameCardWrapper.appendChild(scratchcardsGameCardBlock);
+
+    scratchcardsGameContainer.appendChild(scratchcardsGameCardWrapper);
+    scratchcardsGameContainer.appendChild(scratchcardsGamePrize);
+
+    scratchcardsGameWrapper.appendChild(scratchcardsGameLabel);
+    scratchcardsGameWrapper.appendChild(scratchcardsGameContainer);
+    scratchcardsGame.appendChild(scratchcardsGameWrapper);
+    scratchcardsGame.appendChild(scratchcardsPopup);
 
     singleWheelCanvas.appendChild(singleWheelPointer);
     singleWheelCanvas.appendChild(canvas);
@@ -3453,6 +3540,221 @@ export const MainWidget = function (options) {
     list.appendChild(wheel);
     list.appendChild(scratchcards);
     list.appendChild(singleWheel);
+    list.appendChild(scratchcardsGame);
+  };
+
+  this.loadScratchCards = function () {
+    const _this = this;
+    const scratchcardsGame = document.querySelector('.scratchcards-game');
+    const backBtn = document.querySelector('.cl-main-widget-reward-header-back');
+    const scratchAllBtn = document.querySelector('.scratchcards-game-prize-button');
+    const cardBlock = document.querySelector('.scratchcards-game-card-block');
+
+    cardBlock.innerHtml = '';
+    while (cardBlock.firstChild) {
+      cardBlock.removeChild(cardBlock.lastChild);
+    }
+
+    const prizeClasses = ['prize-1', 'prize-2', 'prize-3'];
+
+    for (let i = 0; i < 9; i++) {
+      const cell = document.createElement('div');
+      cell.classList.add('scratchcards-game-card-cell');
+      const randNum = Math.floor(Math.random() * 3);
+      cell.classList.add(prizeClasses[randNum]);
+      cardBlock.appendChild(cell);
+    }
+
+    scratchcardsGame.classList.add('cl-show');
+    backBtn.style.display = 'block';
+
+    const grid = [];
+    for (let i = 0; i < 3; i++) {
+      const row = [];
+      for (let j = 0; j < 3; j++) {
+        row.push({ image: getRandomImage(), scratched: false });
+      }
+      grid.push(row);
+    }
+
+    function getRandomImage () {
+      return 'https://first-space.cdn.ziqni.com/member-home-page/img/second_prize.39d8d773.png';
+    }
+
+    const canvas = document.querySelector('.scratchcards-game-canvas');
+    const ctx = canvas.getContext('2d', { willReadFrequently: true });
+    const cellSize = 80;
+    const spacing = 20;
+    const borderRadius = 10;
+
+    ctx.clearRect(0, 0, 300, 300);
+
+    for (let i = 0; i < 3; i++) {
+      for (let j = 0; j < 3; j++) {
+        const cell = grid[i][j];
+        const x = j * (cellSize + spacing) + 10;
+        const y = i * (cellSize + spacing) + 10;
+
+        if (cell.scratched) {
+          const image = new Image();
+          image.src = cell.image;
+          image.onload = () => {
+            ctx.save();
+            ctx.beginPath();
+            ctx.moveTo(x + borderRadius, y);
+            ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
+            ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
+            ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
+            ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+            ctx.closePath();
+            ctx.clip();
+
+            ctx.drawImage(image, x, y, cellSize, cellSize);
+
+            ctx.restore();
+          };
+        } else {
+          ctx.save();
+          ctx.beginPath();
+          ctx.moveTo(x + borderRadius, y);
+          ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
+          ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
+          ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
+          ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+          ctx.closePath();
+          ctx.shadowColor = 'rgba(64, 106, 140, 0.5)';
+          ctx.shadowBlur = 12;
+          ctx.fillStyle = '#1A202C';
+          ctx.fill();
+          ctx.strokeStyle = '#406A8C';
+          ctx.stroke();
+          ctx.clip();
+
+          ctx.fillStyle = '#BEE9F3';
+          ctx.font = '40px Syne';
+
+          const textWidth = ctx.measureText('?').width;
+          const textX = x + (cellSize - textWidth) / 2;
+          const textY = y + cellSize / 2 + 15;
+
+          ctx.fillText('?', textX, textY);
+
+          ctx.restore();
+        }
+      }
+    }
+
+    let isDrag = false;
+
+    canvas.addEventListener('mousedown', function (event) {
+      isDrag = true;
+      clearArc(event.offsetX, event.offsetY);
+      judgeVisible();
+    }, false);
+
+    canvas.addEventListener('mousemove', function (event) {
+      if (!isDrag) {
+        return;
+      }
+      clearArc(event.offsetX, event.offsetY);
+      judgeVisible();
+    }, false);
+
+    canvas.addEventListener('mouseup', function (event) {
+      isDrag = false;
+    }, false);
+
+    canvas.addEventListener('mouseleave', function (event) {
+      isDrag = false;
+    }, false);
+
+    canvas.addEventListener('touchstart', function (event) {
+      if (event.targetTouches.length !== 1) {
+        return;
+      }
+
+      event.preventDefault();
+
+      isDrag = true;
+
+      clearArc(event.touches[0].offsetX, event.touches[0].offsetY);
+      judgeVisible();
+    }, false);
+
+    canvas.addEventListener('touchmove', function (event) {
+      if (!isDrag || event.targetTouches.length !== 1) {
+        return;
+      }
+      event.preventDefault();
+      clearArc(event.touches[0].offsetX, event.touches[0].offsetY);
+      judgeVisible();
+    }, false);
+
+    canvas.addEventListener('touchend', function (event) {
+      isDrag = false;
+    }, false);
+
+    function clearArc (x, y) {
+      ctx.globalCompositeOperation = 'destination-out';
+      ctx.beginPath();
+      ctx.arc(x, y, 30, 0, Math.PI * 2, false);
+      ctx.fill();
+    }
+
+    function judgeVisible () {
+      const imageData = ctx.getImageData(0, 0, 300, 300);
+      const pixels = imageData.data;
+      const result = {};
+      let i;
+      let len;
+
+      for (i = 3, len = pixels.length; i < len; i += 4) {
+        result[pixels[i]] || (result[pixels[i]] = 0);
+        result[pixels[i]]++;
+      }
+
+      let n = 0;
+      for (let i = 0; i < pixels.length; i += 100) {
+        if (pixels[i + 3] < 128) {
+          n += 100;
+        }
+      }
+
+      if (n >= pixels.length * 0.85) {
+        ctx.globalCompositeOperation = 'destination-over';
+        clearCanvas();
+      }
+    }
+
+    function clearCanvas () {
+      const context = canvas.getContext('2d');
+      context.clearRect(0, 0, canvas.width, canvas.height);
+      showPopup();
+    }
+
+    function showPopup () {
+      const popup = document.querySelector('.scratchcards-popup');
+      popup.style.display = 'flex';
+
+      const wrapp = document.querySelector('.scratchcards-game-wrapper');
+      wrapp.classList.add('blur');
+
+      const description = document.querySelector('.scratchcards-popup-description');
+      description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
+      description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
+
+      const climeBtn = document.querySelector('.scratchcards-popup-button');
+      climeBtn.addEventListener('click', () => {
+        const popup = document.querySelector('.scratchcards-popup');
+        const wrapp = document.querySelector('.scratchcards-game-wrapper');
+
+        popup.style.display = 'none';
+        wrapp.classList.remove('blur');
+      });
+    }
+
+    scratchAllBtn.addEventListener('click', clearCanvas, false);
+    document.addEventListener('DOMContentLoaded', judgeVisible, false);
   };
 
   this.loadSingleWheel = function () {
@@ -3563,9 +3865,11 @@ export const MainWidget = function (options) {
 
   this.hideInstantWins = function () {
     const singleWheel = document.querySelector('.single-wheel');
+    const scratchcardsGame = document.querySelector('.scratchcards-game');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
 
     singleWheel.classList.remove('cl-show');
+    scratchcardsGame.classList.remove('cl-show');
     backBtn.style.display = 'none';
   };
 
