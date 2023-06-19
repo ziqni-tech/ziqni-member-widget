@@ -61,7 +61,8 @@ export const MainWidget = function (options) {
     missions: {
       container: null,
       detailsContainer: null,
-      mission: null
+      mission: null,
+      timerInterval: null
     },
     leaderboard: {
       defaultEmptyList: 20,
@@ -3339,6 +3340,30 @@ export const MainWidget = function (options) {
 
       missionsList.appendChild(paginator);
     }
+
+    this.updateMissionsTime();
+  };
+
+  this.updateMissionsTime = function () {
+    const _this = this;
+
+    if (_this.settings.missions.timerInterval) {
+      clearTimeout(_this.settings.missions.timerInterval);
+    }
+
+    this.settings.lbWidget.settings.missions.missions.forEach(mission => {
+      if (mission.scheduling.endDate) {
+        const diff = moment(mission.scheduling.endDate).diff(moment());
+        const date = _this.settings.lbWidget.formatMissionDateTime(moment.duration(diff));
+        const el = document.querySelector(`[data-id="${mission.id}"]`);
+        const dateEl = el.querySelector('.cl-missions-list-details-date');
+        dateEl.innerHTML = date;
+      }
+    });
+
+    this.settings.missions.timerInterval = setTimeout(function () {
+      _this.updateMissionsTime();
+    }, 1000);
   };
 
   this.loadAwards = function (callback, pageNumber, claimedPageNumber) {
