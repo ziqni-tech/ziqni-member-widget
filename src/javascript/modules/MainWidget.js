@@ -3599,7 +3599,7 @@ export const MainWidget = function (options) {
           const image = new Image();
           image.src = cell.image;
           image.onload = () => {
-            ctx.save(); // Сохраняем контекст
+            ctx.save();
             ctx.beginPath();
             ctx.moveTo(x + borderRadius, y);
             ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
