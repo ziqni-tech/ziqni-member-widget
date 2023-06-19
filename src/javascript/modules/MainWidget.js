@@ -3549,6 +3549,9 @@ export const MainWidget = function (options) {
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back');
     const scratchAllBtn = document.querySelector('.scratchcards-game-prize-button');
     const cardBlock = document.querySelector('.scratchcards-game-card-block');
+    const themeWrapper = document.querySelector('.cl-widget-ms-wrapper');
+
+    const isLightTheme = themeWrapper.classList.contains('lightTheme');
 
     cardBlock.innerHtml = '';
     while (cardBlock.firstChild) {
@@ -3622,11 +3625,11 @@ export const MainWidget = function (options) {
           ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
           ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
           ctx.closePath();
-          ctx.shadowColor = 'rgba(64, 106, 140, 0.5)';
+          ctx.shadowColor = isLightTheme ? 'rgba(238, 62, 200, 0.4)' : 'rgba(64, 106, 140, 0.5)';
           ctx.shadowBlur = 12;
-          ctx.fillStyle = '#1A202C';
+          ctx.fillStyle = isLightTheme ? '#ffffff' : '#1A202C';
           ctx.fill();
-          ctx.strokeStyle = '#406A8C';
+          ctx.strokeStyle = isLightTheme ? '#F7A1E4' : '#406A8C';
           ctx.stroke();
           ctx.clip();
 
