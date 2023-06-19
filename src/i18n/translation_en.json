@@ -64,7 +64,9 @@
     "scratchcardsButton": "Play",
     "singleWheelWinLabel": "Congratulations!",
     "singleWheelWinDescription": "You won",
-    "singleWheelWinButton": "Claim"
+    "singleWheelWinButton": "Claim",
+    "prizeLabel": "Uncover your prize by scratching away!",
+    "prizeButton": "Scratch all"
   },
   "messages": {
     "label": "Messages"

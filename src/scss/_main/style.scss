@@ -3468,6 +3468,269 @@
   margin-bottom: 28px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game {
+  display: none;
+  position: absolute;
+  height: 100%;
+  background: var(--lb3-achievements-details-bg-color);
+  top: -9px;
+  left: -200px;
+  width: 100%;
+  z-index: 10;
+  opacity: 0;
+  transition: all .3s ease;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game.cl-show {
+  display: block;
+  left: 0;
+  opacity: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-wrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border: 1px solid #223241;
+  border-radius: 10px;
+  width: 100%;
+  height: 100%;
+  max-width: 833px;
+  max-height: 608px;
+  margin-top: 16px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-wrapper.blur {
+  filter: blur(1px);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-label {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 20px;
+  color: #FFFFFF;
+  padding-top: 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-container {
+  display: flex;
+  width: 100%;
+  padding: 52px 30px 0;
+  justify-content: space-around;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-cardWrapper {
+  width: 300px;
+  height: 300px;
+  flex-shrink: 0;
+  cursor: url(../../images/coin.svg), auto;
+  position: relative;
+}
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-canvas {
+  position: relative;
+  z-index: 2;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-card-block {
+  width: 280px;
+  height: 280px;
+  position: absolute;
+  top: 10px;
+  left: 10px;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-start;
+  justify-content: space-between;
+  z-index: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-card-cell {
+  width: 80px;
+  height: 80px;
+  border: 1px solid #406A8C;
+  box-shadow: 0 2px 12px rgba(64, 106, 140, 0.5);
+  border-radius: 10px;
+  background-position: center center;
+  background-repeat: no-repeat;
+  background-color: #2F0426;
+  margin-bottom: 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .prize-1 {
+  background-image: url(../../images/prize-1.png);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .prize-2 {
+  background-image: url(../../images/prize-2.png);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .prize-3 {
+  background-image: url(../../images/prize-3.png);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize {
+  width: 100%;
+  max-width: 364px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-label {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  text-align: center;
+  color: #E6E6E6;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes {
+  margin-top: 40px;
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-label {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  line-height: 17px;
+  color: #BEE9F3;
+  width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  bottom: -30px;
+  text-align: center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-first,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-second,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-third {
+  position: relative;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  margin-bottom: 6px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-first {
+  background: url(../../images/prize-1.png) no-repeat center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-second {
+  background: url(../../images/prize-2.png) no-repeat center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-third {
+  background: url(../../images/prize-3.png) no-repeat center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-first::before,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-second::before,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-third::before {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(50% 50% at 50% 50%, #38ACCF 0%, rgba(56, 172, 207, 0) 100%);
+  opacity: .4;
+  filter: blur(12.5px);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-first::after,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-second::after,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-third::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: url(../../images/ellipse.svg) no-repeat;
+  background-size: contain;
+  background-position-y: bottom;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #ffffff;
+  height: 37px;
+  background: #EE3EC8;
+  border-radius: 10px;
+  padding: 0 40px;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 17px;
+  margin-top: 60px;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-popup {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  width: 260px;
+  background: #141e28;
+  border: 1px solid #406a8c;
+  box-shadow: 0 2px 12px rgba(64,106,140,.5);
+  border-radius: 10px;
+  font-family: "Syne",sans-serif;
+  position: absolute;
+  left: 50%;
+  top: 50%;
+  z-index: 2;
+  transform: translate(-50%, -50%);
+  padding: 26px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-popup-label {
+  color: #bee9f3;
+  font-weight: 700;
+  font-size: 20px;
+  line-height: 24px;
+  padding-top: 6px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-popup-description {
+  color: #e6e6e6;
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 17px;
+  padding-top: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-popup-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Syne",sans-serif;
+  width: 148px;
+  height: 36px;
+  background: #ee3ec8;
+  border-radius: 10px;
+  font-weight: 700;
+  font-size: 14px;
+  margin-top: 20px;
+  cursor: pointer;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel {
   display: none;
   position: absolute;
