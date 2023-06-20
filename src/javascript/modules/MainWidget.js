@@ -3356,7 +3356,9 @@ export const MainWidget = function (options) {
         const diff = moment(mission.scheduling.endDate).diff(moment());
         const date = _this.settings.lbWidget.formatMissionDateTime(moment.duration(diff));
         const el = document.querySelector(`[data-id="${mission.id}"]`);
+        if (!el) return;
         const dateEl = el.querySelector('.cl-missions-list-details-date');
+        if (!dateEl) return;
         dateEl.innerHTML = date;
       }
     });
