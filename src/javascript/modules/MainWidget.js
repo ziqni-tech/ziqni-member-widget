@@ -3340,8 +3340,9 @@ export const MainWidget = function (options) {
 
       missionsList.appendChild(paginator);
     }
-
-    this.updateMissionsTime();
+    setTimeout(function () {
+      _this.updateMissionsTime();
+    }, 1000);
   };
 
   this.updateMissionsTime = function () {
