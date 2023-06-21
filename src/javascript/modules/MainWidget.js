@@ -401,10 +401,6 @@ export const MainWidget = function (options) {
 
     sectionLBMissingMember.setAttribute('class', 'cl-main-widget-lb-missing-member');
 
-    // footer
-    sectionLBFooter.setAttribute('class', 'cl-main-widget-lb-footer');
-    sectionLBFooterContent.setAttribute('class', 'cl-main-widget-lb-footer-content');
-
     // details section
     sectionTournamentDetailsContainer.setAttribute('class', 'cl-main-widget-lb-details-container');
     sectionTournamentDetailsHeader.setAttribute('class', 'cl-main-widget-lb-details-header');
