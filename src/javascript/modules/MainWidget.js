@@ -421,7 +421,7 @@ export const MainWidget = function (options) {
     sectionLBOptInContainer.setAttribute('class', 'cl-main-widget-lb-optin-container');
     sectionLBOptInAction.setAttribute('class', 'cl-main-widget-lb-optin-action');
 
-    sectionLBHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
+    // sectionLBHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
     sectionLBFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
     sectionTournamentDetailsOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
     sectionTournamentDetailsOptInAction.href = 'javascript:void(0);';
@@ -1005,7 +1005,7 @@ export const MainWidget = function (options) {
     var rewardCel = document.createElement('div');
     var rewardEnabled = (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
     rewardCel.setAttribute('class', 'cl-reward-col cl-col' + (rewardEnabled ? ' cl-col-reward-enabled' : ''));
-    rewardCel.innerHTML = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
+    rewardCel.innerHTML = (typeof reward !== 'undefined' && reward !== null && reward !== '') ? reward : 0;
 
     addClass(cellWrapper, 'cl-reward-enabled');
 
@@ -1376,7 +1376,7 @@ export const MainWidget = function (options) {
         date = _this.settings.lbWidget.settings.translation.tournaments.finished;
       }
 
-      _this.settings.headerDate.innerHTML = date;
+      // _this.settings.headerDate.innerHTML = date;
       _this.settings.labelDate.innerHTML = date;
       _this.settings.detailsContainerDate.innerHTML = date;
     }
@@ -1451,7 +1451,8 @@ export const MainWidget = function (options) {
 
   this.leaderboardDetailsUpdate = function () {
     var _this = this;
-    var mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
+    // var mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
+    var mainLabel = query(_this.settings.section, '.cl-main-widget-lb-header-label');
     var body = null;
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
@@ -1999,7 +2000,7 @@ export const MainWidget = function (options) {
     removeClass(_this.settings.detailsContainer, 'cl-show');
     setTimeout(function () {
       _this.settings.detailsContainer.style.display = 'none';
-      _this.settings.headerDate.style.display = 'block';
+      // _this.settings.headerDate.style.display = 'block';
 
       if (typeof callback === 'function') callback();
     }, 200);

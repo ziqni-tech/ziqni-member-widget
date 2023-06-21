@@ -1851,7 +1851,11 @@ export const LbWidget = function (options) {
       });
 
       // load embedded competition details
-    } else if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage && (hasClass(el, 'cl-main-widget-lb-details-content-label') || closest(el, '.cl-main-widget-lb-details-content-label') !== null)) {
+    } else if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage && (
+      hasClass(el, 'cl-main-widget-lb-details-content-label') ||
+      (closest(el, '.cl-main-widget-lb-details-content-label') !== null) ||
+      hasClass(el, '.cl-main-widget-lb-header-label')
+    )) {
       _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
 
       // hide embedded competition details
