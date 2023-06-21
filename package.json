@@ -65,12 +65,12 @@
     "style-loader": "^1.2.1",
     "svg-url-loader": "^6.0.0",
     "url-loader": "^4.1.0",
-    "webpack": "^4.43.0",
-    "webpack-bundle-analyzer": "^3.8.0",
+    "webpack": "^4.44.2",
     "webpack-cli": "^3.3.12",
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@babel/plugin-proposal-object-rest-spread": "^7.20.7",
     "@ziqni-tech/member-api-client": "^1.0.13",
     "css-vars-ponyfill": "^2.3.2",
     "fs": "^0.0.1-security",

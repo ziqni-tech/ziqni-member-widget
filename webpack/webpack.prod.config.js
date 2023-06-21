@@ -1,7 +1,6 @@
 const webpack = require('webpack');
 const path = require('path');
 const CopyPlugin = require('copy-webpack-plugin');
-const { BundleAnalyzerPlugin } = require('webpack-bundle-analyzer');
 const fs = require('fs');
 
 const scssLoader = INLINE_CSS
@@ -94,7 +93,6 @@ module.exports = {
       'process.env.INLINE_CSS': INLINE_CSS,
       'process.env.THEME': JSON.stringify(_THEME)
     }),
-    new BundleAnalyzerPlugin(),
     new webpack.IgnorePlugin({
       resourceRegExp: /^\.\/locale$/,
       contextRegExp: /moment$/
