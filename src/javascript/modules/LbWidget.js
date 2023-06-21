@@ -73,14 +73,12 @@ export const LbWidget = function (options) {
     debug: false,
     bindContainer: document.body,
     autoStart: true,
-    sseMessaging: null,
     notifications: null,
     miniScoreBoard: null,
     canvasAnimation: null,
     enableNotifications: false,
     mainWidget: null,
     globalAjax: new cLabs.Ajax(),
-    checkAjax: new cLabs.Ajax(),
     language: process.env.LANG,
     currency: '',
     spaceName: '',
@@ -405,7 +403,6 @@ export const LbWidget = function (options) {
    * get a list of available competition filtered by provided global criteria
    * @param callback {Function}
    */
-  // const competitionCheckAjax = new cLabs.Ajax();
 
   this.checkForAvailableCompetitions = async function (
     callback,

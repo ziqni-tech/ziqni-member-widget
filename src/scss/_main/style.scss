@@ -999,7 +999,6 @@
   width: 100%;
   height: 100%;
   background: transparent;
-  padding: 10px 20px;
   font-family: var(--lb3-widget-font);
   font-weight: 300;
   margin: 0;
@@ -1293,8 +1292,7 @@
   left: 0;
   top: 0;
   background: var(--primary-color);
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
+  border-radius: 35px 35px 0 0;
   overflow: hidden;
 }
 
@@ -1302,11 +1300,9 @@
   float: left;
   width: 100%;
   height: 30px;
-  background: var(--lb3-tournament-header-back);
-  border-radius: 5px 5px 0 0;
+  border-radius: 32px 32px 0 0;
   position: relative;
   z-index: 2;
-  border-bottom: var(--lb3-tournament-header-border-bottom);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list {
@@ -1332,7 +1328,7 @@
   width: 60%;
   text-align: center;
   line-height: 30px;
-  color: var(--lb3-tournament-header-label-color);
+  color: #000;
   text-transform: uppercase;
   font-size: 14px;
   font-weight: 500;
@@ -1358,18 +1354,17 @@
   background-image: $lb3-tournament-header-close-back-image;
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
+  background-size: 100%;
+  width: 40px;
+  height: 40px;
+  right: 16px;
+  top: 16px;
   cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details {
   float: left;
   width: 100%;
-  background: var(--lb3-tournament-details-bg-color);
   position: relative;
   z-index: 2;
 }
@@ -1697,15 +1692,14 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-res-container {
   float: left;
+  overflow: auto;
   width: 100%;
   height: calc(100% - 17px);
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-top-res {
   float: left;
   width: 100%;
-  background: var(--lb3-tournament-top-results-bg-color);
   padding: 0 30px;
-  box-shadow: var(--lb3-tournament-top-results-bg-box-shadow);
   border-radius: 0 0 5px 5px;
 }
 
@@ -1719,7 +1713,6 @@
   float: left;
   width: 100%;
   z-index: 1;
-  overflow: auto;
   height: calc(100% - 92px);
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-lb-leaderboard-body {
@@ -1757,56 +1750,29 @@
   text-align: center;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-top-res .cl-rank-col-value {
-  float: left;
-  min-width: 20px;
-  background: #ffe500;
-  border: 1px solid #e2d45f;
-  border-radius: 100%;
-  color: var(--lb3-tournament-lb-place-font-color);
-  background-image: $lb3-tournament-lb-top-res-back;
-  text-align: center;
-  font-size: 11px;
-  font-weight: 400;
-  line-height: 18px;
-  padding: 0;
-  min-height: 20px;
-  margin: 3px 0 0 0;
-  box-shadow: var(--lb3-tournament-lb-top-results-place-box-shadow);
-}
-
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-1 .cl-rank-col-value {
-  background-position: var(--lb3-tournament-lb-first-place-back-position);
-  background-size: var(--lb3-tournament-lb-first-place-back-size);
-  background-repeat: no-repeat;
-  background-color: var(--lb3-tournament-lb-first-place-color);
-  border: var(--lb3-tournament-lb-first-place-border);
-  height: 23px;
-  width: 23px;
+  height: 32px;
+  width: 32px;
+  background-color: #FFDC88;
+  border-radius: 50%;
   font-size: 13px;
   line-height: 24px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-2 .cl-rank-col-value {
-  background-position: var(--lb3-tournament-lb-second-place-back-position);
-  background-size: var(--lb3-tournament-lb-second-place-back-size);
-  background-repeat: no-repeat;
-  background-color: var(--lb3-tournament-lb-second-place-color);
-  border: var(--lb3-tournament-lb-second-place-border);
-  height: 23px;
-  width: 23px;
+  height: 32px;
+  width: 32px;
+  background-color: #D9D9D9;
+  border-radius: 50%;
   font-size: 13px;
   line-height: 24px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-3 .cl-rank-col-value {
-  background-position: var(--lb3-tournament-lb-third-place-back-position);
-  background-size: var(--lb3-tournament-lb-third-place-back-size);
-  background-repeat: no-repeat;
-  background-color: var(--lb3-tournament-lb-third-place-color);
-  border: var(--lb3-tournament-lb-third-place-border);
-  height: 23px;
-  width: 23px;
+  height: 32px;
+  width: 32px;
+  background-color: #FEAA85;
+  border-radius: 50%;
   font-size: 13px;
   line-height: 24px;
 }
@@ -4078,12 +4044,6 @@
  */
 /* Portrait and Landscape [@media only screen and (min-device-width: 375px) and (max-device-width: 812px)] */
 @media (max-width: 1000px) {
-  .cl-main-widget-wrapper {
-    left: 0;
-    max-width: unset;
-    transform: unset;
-  }
-
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-name-col {
     max-width: 200px;
   }
@@ -4110,18 +4070,9 @@
 }
 
 @media (max-width: 812px) {
-  .cl-main-widget-wrapper {
-    padding: 5px 12px 10px 12px;
-  }
   .cl-main-widget-tournaments-list {
     height: calc(100% - 62px);
     top: 40px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-close {
-    width: 40px;
-    height: 40px;
-    right: 0px;
-    top: 0px;
   }
   .cl-main-widget-wrapper .cl-main-widget-navigation-container {
     width: 91%;
@@ -4211,6 +4162,7 @@
     width: 35px;
     height: 35px;
     margin: 3px 0 0 10px;
+    box-shadow: 1px 1px 1px #ccc;
   }
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-date {
     line-height: 42px;
