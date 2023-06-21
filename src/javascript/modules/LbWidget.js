@@ -196,7 +196,7 @@ export const LbWidget = function (options) {
         order: 2
       },
       rewards: {
-        enable: true,
+        enable: false,
         navigationClass: 'cl-main-widget-navigation-rewards',
         navigationClassIcon: 'cl-main-widget-navigation-rewards-icon',
         containerClass: 'cl-main-widget-section-reward',
