@@ -739,8 +739,8 @@ export const MainWidget = function (options) {
     var sectionInboxListBody = document.createElement('div');
     var sectionInboxListBodyResults = document.createElement('div');
 
-    var sectionInboxFooter = document.createElement('div');
-    var sectionInboxFooterContent = document.createElement('div');
+    // var sectionInboxFooter = document.createElement('div');
+    // var sectionInboxFooterContent = document.createElement('div');
 
     var sectionInboxDetailsContainer = document.createElement('div');
     var sectionInboxDetailsHeader = document.createElement('div');
@@ -769,8 +769,8 @@ export const MainWidget = function (options) {
     sectionInboxListBodyResults.setAttribute('class', 'cl-main-widget-inbox-list-body-res');
 
     // footer
-    sectionInboxFooter.setAttribute('class', 'cl-main-widget-inbox-footer');
-    sectionInboxFooterContent.setAttribute('class', 'cl-main-widget-inbox-footer-content');
+    // sectionInboxFooter.setAttribute('class', 'cl-main-widget-inbox-footer');
+    // sectionInboxFooterContent.setAttribute('class', 'cl-main-widget-inbox-footer-content');
 
     // details section
     sectionInboxDetailsContainer.setAttribute('class', 'cl-main-widget-inbox-details-container');
@@ -782,7 +782,7 @@ export const MainWidget = function (options) {
     sectionInboxDetailsBody.setAttribute('class', 'cl-main-widget-inbox-details-body');
 
     sectionInboxHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.messages.label;
-    sectionInboxFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
+    // sectionInboxFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
 
     sectionInboxHeader.appendChild(sectionInboxHeaderLabel);
     sectionInboxHeader.appendChild(sectionInboxHeaderDate);
@@ -804,12 +804,12 @@ export const MainWidget = function (options) {
     sectionInboxDetailsBodyContainer.appendChild(sectionInboxDetailsBody);
     sectionInboxDetailsContainer.appendChild(sectionInboxDetailsBodyContainer);
 
-    sectionInboxFooter.appendChild(sectionInboxFooterContent);
+    // sectionInboxFooter.appendChild(sectionInboxFooterContent);
 
     sectionInbox.appendChild(sectionInboxHeader);
     sectionInbox.appendChild(sectionInboxDetails);
     sectionInbox.appendChild(sectionInboxList);
-    sectionInbox.appendChild(sectionInboxFooter);
+    // sectionInbox.appendChild(sectionInboxFooter);
     sectionInbox.appendChild(sectionInboxDetailsContainer);
 
     return sectionInbox;
