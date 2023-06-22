@@ -740,9 +740,9 @@ export const MainWidget = function (options) {
     var sectionInboxListBodyResults = document.createElement('div');
 
     var sectionInboxDetailsContainer = document.createElement('div');
-    var sectionInboxDetailsHeader = document.createElement('div');
-    var sectionInboxDetailsHeaderLabel = document.createElement('div');
-    var sectionInboxDetailsHeaderDate = document.createElement('div');
+    // var sectionInboxDetailsHeader = document.createElement('div');
+    // var sectionInboxDetailsHeaderLabel = document.createElement('div');
+    // var sectionInboxDetailsHeaderDate = document.createElement('div');
     var sectionInboxDetailsBackBtn = document.createElement('a');
     var sectionInboxDetailsBodyContainer = document.createElement('div');
     var sectionInboxDetailsBody = document.createElement('div');
@@ -767,14 +767,12 @@ export const MainWidget = function (options) {
 
     // details section
     sectionInboxDetailsContainer.setAttribute('class', 'cl-main-widget-inbox-details-container');
-    sectionInboxDetailsHeader.setAttribute('class', 'cl-main-widget-inbox-details-header');
-    sectionInboxDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-details-header-label');
-    sectionInboxDetailsHeaderDate.setAttribute('class', 'cl-main-widget-inbox-details-header-date');
+    // sectionInboxDetailsHeader.setAttribute('class', 'cl-main-widget-inbox-details-header');
+    // sectionInboxDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-details-header-label');
+    // sectionInboxDetailsHeaderDate.setAttribute('class', 'cl-main-widget-inbox-details-header-date');
     sectionInboxDetailsBackBtn.setAttribute('class', 'cl-main-widget-inbox-details-back-btn');
     sectionInboxDetailsBodyContainer.setAttribute('class', 'cl-main-widget-inbox-details-body-container');
     sectionInboxDetailsBody.setAttribute('class', 'cl-main-widget-inbox-details-body');
-
-    sectionInboxHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.messages.label;
 
     sectionInboxHeader.appendChild(sectionInboxHeaderLabel);
     sectionInboxHeader.appendChild(sectionInboxHeaderDate);
@@ -789,9 +787,9 @@ export const MainWidget = function (options) {
     sectionInboxListBody.appendChild(sectionInboxListBodyResults);
     sectionInboxList.appendChild(sectionInboxListBody);
 
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderLabel);
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderDate);
-    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsHeader);
+    // sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderLabel);
+    // sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderDate);
+    // sectionInboxDetailsContainer.appendChild(sectionInboxDetailsHeader);
     sectionInboxDetailsContainer.appendChild(sectionInboxDetailsBackBtn);
     sectionInboxDetailsBodyContainer.appendChild(sectionInboxDetailsBody);
     sectionInboxDetailsContainer.appendChild(sectionInboxDetailsBodyContainer);
@@ -2278,14 +2276,15 @@ export const MainWidget = function (options) {
 
   this.loadMessageDetails = function (data, callback) {
     const _this = this;
-    const label = query(_this.settings.messages.detailsContainer, '.cl-main-widget-inbox-details-header-label');
+    const label = document.querySelector('.cl-main-widget-inbox-header-label');
     const body = query(_this.settings.messages.detailsContainer, '.cl-main-widget-inbox-details-body');
+    const created = new Date(data.created).toLocaleDateString();
 
     if (!data || !data.subject) {
       return;
     }
 
-    label.innerHTML = data.subject;
+    label.innerHTML = data.subject + ' - ' + created;
     let bodyHtml = data.body;
     bodyHtml = bodyHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     body.innerHTML = bodyHtml;
@@ -2400,6 +2399,9 @@ export const MainWidget = function (options) {
 
   this.hideMessageDetails = function (callback) {
     var _this = this;
+    const label = document.querySelector('.cl-main-widget-inbox-header-label');
+
+    label.innerHTML = '';
 
     removeClass(_this.settings.messages.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -2514,6 +2516,8 @@ export const MainWidget = function (options) {
     var label = document.createElement('div');
     var description = document.createElement('div');
     var content = stripHtml(inbox.body);
+    const created = new Date(inbox.created).toLocaleDateString();
+    const subject = inbox.subject + ' - ' + created;
 
     listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
     detailsContainer.setAttribute('class', 'cl-inbox-list-details-cont');
@@ -2522,7 +2526,7 @@ export const MainWidget = function (options) {
     description.setAttribute('class', 'cl-inbox-list-details-description');
 
     listItem.dataset.id = inbox.id;
-    label.innerHTML = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
+    label.innerHTML = (subject > 36) ? subject.substr(0, 36) + '...' : subject;
     description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
 
     detailsWrapper.appendChild(label);
