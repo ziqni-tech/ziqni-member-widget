@@ -3219,20 +3219,18 @@
   z-index: 1;
   left: 0;
   top: 0;
-  background: var(--lb3-messages-header-bg-color);
-  border-radius: 5px;
-  box-shadow: 0 3px 4px rgba(0, 0, 0, 0.6);
+  border-radius: 35px 35px 0 0;
   overflow: hidden;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header {
-  float: left;
+  display: flex;
+  align-items: center;
   width: 100%;
-  height: 30px;
-  background: var(--lb3-messages-header-bg-color);
-  border-radius: 5px 5px 0 0;
+  border-radius: 32px 32px 0 0;
   position: relative;
   z-index: 2;
+  height: 72px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header .cl-main-widget-inbox-header-label {
@@ -3257,20 +3255,21 @@
   color: var(--lb3-messages-header-date-color);
   font-size: 11px;
   min-width: 125px;
+  display: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header .cl-main-widget-inbox-header-close {
   position: absolute;
   display: block;
-  background-image: $lb3-messages-header-close-image;
+  background-image: url(../../images/close-icon.svg);
   background-repeat: no-repeat;
   background-position: 50% 50%;
-  background-size: 70%;
-  width: 30px;
-  height: 30px;
-  right: 3px;
-  top: 0;
-  border-bottom: var(--lb3-messages-header-border-bottom);
+  background-size: 100%;
+  width: 40px;
+  height: 40px;
+  right: 16px;
+  top: 16px;
+  cursor: pointer;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-details {
@@ -3290,9 +3289,8 @@
   width: 100%;
   height: 100%;
   z-index: 1;
-  padding: 30px 0 22px 0;
+  padding: 80px 0 22px 0;
   background: var(--lb3-messages-item-bg-color);
-  border-radius: 5px;
 }
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-inbox-list {
   padding-bottom: 5px;
@@ -3308,9 +3306,10 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res {
-  float: left;
+  display: flex;
+  flex-direction: column;
   width: 100%;
-  padding: 0;
+  padding: 0 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .paginator {
@@ -3319,11 +3318,11 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-inbox-list-item {
-  float: left;
   width: 100%;
-  padding: 10px 30px 15px 30px;
-  margin: 0;
-  border-bottom: 1px solid var(--lb3-messages-item-divider-color);
+  padding: 16px;
+  border-radius: 8px;
+  background: rgba(19, 19, 19, 0.04);
+  margin-bottom: 8px;
   transition: background-color 0.3s ease;
   cursor: pointer;
 }
@@ -3343,21 +3342,21 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-label {
-  float: left;
   width: 100%;
-  color: var(--lb3-messages-item-label-color);
+  color: #000000;
   text-transform: uppercase;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  padding-left: 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-description {
-  float: left;
   width: 100%;
   font-size: 11px;
   max-height: 40px;
   line-height: 16px;
-  color: var(--lb3-messages-item-text-color);
+  color: rgba(19, 19, 19, 0.72);
+  padding-left: 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container {
@@ -4178,19 +4177,6 @@
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-label {
     line-height: 42px;
     font-size: 16px;
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header {
-    height:42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header .cl-main-widget-inbox-header-close {
-    width: 40px;
-    height: 40px;
-    right: 0px;
-    top: 0px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list {
-    padding-top: 42px;
   }
   .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-inbox-details-container {
     height: calc(100% - 42px);
