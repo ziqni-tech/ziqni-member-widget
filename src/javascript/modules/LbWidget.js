@@ -1,6 +1,4 @@
 import 'regenerator-runtime/runtime';
-import Identicon from 'identicon.js';
-import jsSHA from 'jssha';
 import cssVars from 'css-vars-ponyfill';
 
 import mergeObjects from '../utils/mergeObjects';
@@ -398,35 +396,6 @@ export const LbWidget = function (options) {
     const secondsElem = '<div class="banner-seconds"><div class="banner-date-cell">' + seconds[0] + '</div><div class="banner-date-cell">' + seconds[1] + '</div></div>';
 
     return '<div class="banner-date">' + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
-  };
-
-  this.populateIdenticonBase64Image = function (str) {
-    if (str && str.length > 0) {
-      /* eslint new-cap: "off" */
-      var shaObj = new jsSHA('SHA-512', 'TEXT');
-      shaObj.update(str);
-      var hash = shaObj.getHash('HEX', 1);
-
-      /**
-       * for IE 11 comment out the lines above and use this code with the jsSHA library inside utils
-       * import jsSHA from '../utils/jsSHA';
-       var shaObj = new jsSHA(str, 'TEXT');
-       var hash = shaObj.getHash('SHA-512', 'HEX', 1);
-       */
-
-      var data = new Identicon(hash, {
-        background: [255, 255, 255, 255], // rgba white
-        margin: 0.1, // 20% margin
-        size: 22, // 420px square
-        format: 'svg' // use SVG instead of PNG
-      }).toString();
-
-      var icon = 'data:image/svg+xml;base64,' + data;
-
-      return icon;
-    } else {
-      return '';
-    }
   };
 
   /**

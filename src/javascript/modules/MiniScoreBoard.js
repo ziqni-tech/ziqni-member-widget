@@ -343,11 +343,6 @@ export const MiniScoreBoard = function (options) {
 
   this.layoutDefaultOrEmptySingleRow = function (lbEntry) {
     var _this = this;
-    // let memberId = '';
-    // if (lbEntry.members.length) {
-    //   memberId = lbEntry.members[0].memberId;
-    // }
-    // var icon = _this.settings.lbWidget.populateIdenticonBase64Image(memberId);
     var lbWrapper = _this.layoutDefaultOrEmptyEntry();
     // var img = query(lbWrapper, '.cl-widget-ms-default-mem-img');
     const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
@@ -471,7 +466,6 @@ export const MiniScoreBoard = function (options) {
 
   this.layoutFirstToOrEmptySingleRow = function (lbEntry, strategy) {
     const _this = this;
-    // const icon = _this.settings.lbWidget.populateIdenticonBase64Image(lbEntry.members[0].memberId);
     const lbWrapper = _this.layoutFirstToOrEmptyEntry();
     // const img = query(lbWrapper, '.cl-widget-ms-first-to-mem-img');
     const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;

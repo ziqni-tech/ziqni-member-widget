@@ -2889,6 +2889,7 @@
   background-image: $lb3-achievements-default-icon;
   background-repeat: no-repeat;
   background-position: 50% 50%;
+  background-size: 40px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-icon::before {
@@ -5598,6 +5599,9 @@
           .cl-main-widget-ach-details-header-label {
             color: #080D12;
           }
+        }
+        .cl-main-widget-ach-details-optin-action {
+          color: #080D12;
         }
       }
     }

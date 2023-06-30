@@ -2503,24 +2503,13 @@ export const MainWidget = function (options) {
 
     label.innerHTML = ach.name;
 
+    if (ach.iconLink) {
+      icon.setAttribute('style', 'background-image: url(' + ach.iconLink + ')');
+    }
+
     if (ach.reward) {
       actionsReward.innerHTML = ach.reward.rewardValue;
     }
-
-    // detailsWrapper.appendChild(description);
-
-    // if (cpomntainsImage) {
-    //   var image = new Image();
-    //   var imageIconWrapper = document.createElement('div');
-    //   imageIconWrapper.setAttribute('class', 'cl-ach-list-item-img-wrapper');
-    //   image.setAttribute('class', 'cl-ach-list-item-img');
-    //
-    //   image.src = _this.settings.lbWidget.settings.uri.gatewayDomain + _this.settings.lbWidget.settings.uri.assets.replace(':attachmentId', ach.icon);
-    //   image.alt = ach.name;
-    //
-    //   imageIconWrapper.appendChild(image);
-    //   detailsContainer.appendChild(imageIconWrapper);
-    // }
 
     detailsContainer.appendChild(icon);
 
