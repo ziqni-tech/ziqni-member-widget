@@ -1095,6 +1095,7 @@
   position: relative;
   flex-direction: column;
   align-items: center;
+  flex-shrink: 0;
   padding-top: 20px;
   width: 148px;
   height: 100%;
@@ -6114,6 +6115,64 @@
         .cl-main-widget-lb-details-description-container {
           height: calc(100% - 12px);
         }
+      }
+      .cl-main-accordion-container {
+        padding-right: 0;
+        .cl-accordion-list-container-header {
+          height: 36px;
+          font-size: 10px;
+          padding: 0 10px;
+          .cl-accordion-list-container-header-label {
+            padding-left: 12px;
+            max-width: 170px;
+          }
+          .cl-accordion-list-container-header-date {
+            max-width: 100px;
+          }
+          .cl-accordion-list-container-header-prize {
+            flex-grow: 1;
+            text-align: right;
+            padding-right: 6px;
+          }
+        }
+      }
+      .cl-main-widget-tournaments-list {
+        .paginator.accordion {
+          padding: 16px 12px 0 12px;
+        }
+        .paginator-item {
+          flex-shrink: 0;
+        }
+        .cl-accordion-list {
+          padding: 0 10px;
+          font-size: 10px;
+        }
+        .cl-tour-list-details-cont {
+          font-size: 10px;
+          .cl-tour-list-details-label-icon {
+            margin-left: 12px;
+          }
+          .cl-tour-list-details-label {
+            max-width: 130px;
+          }
+          .cl-tour-list-details-period {
+            max-width: 100px;
+            padding-left: 6px;
+            line-height: 12px;
+          }
+          .cl-tour-list-details-prize {
+            flex-grow: 1;
+            text-align: right;
+            padding-right: 6px;
+          }
+        }
+      }
+      .cl-main-widget-tournaments-list.cl-show {
+        left: 0;
+        top: 70px;
+      }
+      .cl-main-widget-tournaments-list {
+        height: calc(100% - 86px);
       }
     }
   }
