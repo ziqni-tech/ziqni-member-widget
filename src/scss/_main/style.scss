@@ -1110,10 +1110,12 @@
   height: 68px;
   background-image: $lb3-widget-icon-nav;
   background-size: 100%;
+  flex-shrink: 0;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items {
   padding: 46px 0 0 0;
+  flex-grow: 1;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items .cl-main-widget-navigation-item {
@@ -1138,9 +1140,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle {
-  position: absolute;
-  bottom: 45px;
-  left: 54px;
+  padding-bottom: 45px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle label {
@@ -1379,7 +1379,8 @@
 
 
 .cl-main-widget-wrapper .cl-main-widget-section-container {
-  flex: 1;
+  display: flex;
+  flex-grow: 1;
   height: 100%;
 }
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-section-container {
@@ -1398,6 +1399,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header {
   display: flex;
+  flex-shrink: 0;
   align-items: center;
   justify-content: center;
   width: 100%;
@@ -1913,7 +1915,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard {
   position: relative;
-  height: 463px;
+  height: calc(100% - 350px);
   border: 1px solid #223241;
   border-radius: 10px;
   display: flex;
@@ -1999,6 +2001,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-reward-col {
   width: 12%;
+  min-width: 50px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-res-container {
@@ -4009,13 +4012,13 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion-list-container-header-label {
-  max-width: 280px;
+  max-width: 300px;
   width: 100%;
   padding-left: 24px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion-list-container-header-label {
-  max-width: 300px;
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion-list-container-header-date {
+  max-width: 260px;
   width: 100%;
 }
 
@@ -4116,9 +4119,15 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-label {
   color: var(--primary-font-color);
-  max-width: 280px;
+  max-width: 252px;
   width: 100%;
   padding-left: 6px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-period {
+  color: var(--primary-font-color);
+  max-width: 260px;
+  width: 100%;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-description {
@@ -5945,388 +5954,167 @@
  * ********** Mobile Devices ***********
  * *************************************
  */
-/* Portrait and Landscape [@media only screen and (min-device-width: 375px) and (max-device-width: 812px)] */
-@media (max-width: 1000px) {
+@media screen and (max-width: 768px) {
   .cl-main-widget-wrapper {
-    left: 0;
-    max-width: unset;
-    transform: unset;
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-name-col {
-    max-width: 200px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-growth-col {
-    max-width: 55px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-points-col {
-    max-width: 220px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-section-image-banner-active .cl-main-widget-lb-leaderboard {
-    top: 213px;
-    height: calc(100% - 210px);
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-section-image-banner-active .cl-main-widget-lb-leaderboard {
-    height: calc(100% - 200px);
-    top: 212px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description.cl-hidden-copyright .cl-main-section-image-banner-active .cl-main-widget-lb-details-description-container {
-    height: calc(100% - 190px);
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-tournaments-list {
-    height: calc(100% - 30px);
-  }
-}
-
-@media (max-width: 812px) {
-  .cl-main-widget-wrapper {
-    padding: 5px 12px 10px 12px;
-  }
-  .cl-main-widget-tournaments-list {
-    height: calc(100% - 62px);
-    top: 40px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-close {
-    width: 40px;
-    height: 40px;
-    right: 0px;
-    top: 0px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container {
-    width: 91%;
-    height: 88px;
-    left: 25px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items {
     padding: 0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb {
-    float: left;
-    margin: 0px -5px 0 -3px;
-    width: 76px;
-    height: 76px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 88px;
-    height: 88px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach {
-    float: left;
-    margin: 0px -5px 0 1px;
-    width: 76px;
-    height: 76px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 88px;
-    height: 88px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards {
-    float: left;
-    margin: 0px -5px 0 1px;
-    width: 76px;
-    height: 76px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 88px;
-    height: 88px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox {
-    float: left;
-    margin: 0px -5px 0 1px;
-    width: 76px;
-    height: 76px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 88px;
-    height: 88px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
-    float: left;
-    margin: 0px -5px 0 1px;
-    width: 76px;
-    height: 76px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 88px;
-    height: 88px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container {
-    padding: 82px 0 0 0;
-  }
-  .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-section-container {
-    padding: 0 0 0 0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-pre-loader {
-    opacity: 1;
-    top: 81px;
-    height: calc(100% - 80px);
-    width: 100%;
-  }
-  .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-pre-loader{
-    height: 100%;
-    width: 100%;
-    top:0;
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header {
-    height: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list-icon {
-    width: 35px;
-    height: 35px;
-    margin: 3px 0 0 10px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-date {
-    line-height: 42px;
-    font-size: 14px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-label {
-    line-height: 42px;
-    font-size: 16px;
-  }
-  .cl-widget-ms-wrapper .cl-main-widget-lb-header-date .time-ind {
-    font-size: 7px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard {
-    padding: 92px 0 22px 0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-lb-details-container {
-    height: calc(100% - 64px);
-    top: 42px;
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-section-image-banner-active .cl-main-widget-lb-leaderboard {
-    top: 220px;
-    height: calc(100% - 216px);
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-section-image-banner-active .cl-main-widget-lb-leaderboard {
-    height: calc(100% - 204px);
-    top: 220px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-section-image-banner-active .cl-main-widget-lb-details-description-container {
-    height: calc(100% - 295px);
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description.cl-hidden-copyright .cl-main-section-image-banner-active .cl-main-widget-lb-details-description-container {
-    height: calc(100% - 200px);
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description-container {
-    height: calc(100% - 89px);
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header {
-    height:42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header .cl-main-widget-ach-header-close {
-    width: 40px;
-    height: 40px;
-    right: 0px;
-    top: 0px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list {
-      padding-top: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-ach-details-container {
-    height: calc(100% - 42px);
-    top: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-header .cl-main-widget-ach-header-label {
-    line-height: 42px;
-    font-size: 16px;
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header {
-    height:42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-close {
-    width: 40px;
-    height: 40px;
-    right: 0;
-    top: 0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list {
-    padding-top: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-reward-details-container {
-    height: calc(100% - 42px);
-    top: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-label {
-    line-height: 42px;
-    font-size: 16px;
-  }
-
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header {
-    height:42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header .cl-main-widget-inbox-header-close {
-    width: 40px;
-    height: 40px;
-    right: 0px;
-    top: 0px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list {
-    padding-top: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container.cl-hidden-copyright .cl-main-widget-inbox-details-container {
-    height: calc(100% - 42px);
-    top: 42px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header .cl-main-widget-inbox-header-label {
-    line-height: 42px;
-    font-size: 16px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body {
-    height: 100%;
+    .cl-main-widget-inner-wrapper {
+      flex-direction: column-reverse;
+      justify-content: flex-end;
+      border-radius: 20px 20px 0 0 !important;
+      position: absolute;
+      bottom: 0;
+      top: auto;
+      max-height: unset;
+      height: 90%;
+      padding: 0 12px;
+    }
+    .cl-main-widget-navigation-container {
+      flex-direction: row;
+      width: 100%;
+      height: unset;
+      align-items: unset;
+      padding: 0;
+      .cl-main-widget-navigation-items {
+        display: flex;
+        padding: 0;
+        justify-content: space-around;
+        height: 50px;
+        .cl-main-widget-navigation-item {
+          height: 50px;
+          min-height: unset;
+          width: unset;
+          justify-content: center;
+          padding: 0 6px;
+          .cl-main-navigation-item-title {
+            display: none;
+          }
+          &.cl-active-nav {
+            .cl-main-navigation-item-title {
+              display: block;
+              font-size: 9px;
+            }
+          }
+        }
+        .cl-main-widget-navigation-ach-icon,
+        .cl-main-widget-navigation-rewards-icon,
+        .cl-main-widget-navigation-inbox-icon,
+        .cl-main-widget-navigation-missions-icon,
+        .cl-main-widget-navigation-lb-icon {
+          width: 22px;
+          height: 22px;
+          margin-top: 0;
+        }
+      }
+      .cl-main-widget-navigation-logo {
+        display: none;
+      }
+      .cl-main-widget-navigation-darkMode-toggle {
+        display: none;
+      }
+    }
+    .cl-main-widget-section-container {
+      height: calc(100% - 90px);
+      .cl-main-widget-lb-footer {
+        display: none;
+      }
+      .cl-main-widget-lb-header {
+        height: 72px;
+        .cl-main-widget-lb-header-list-icon {
+          width: 32px;
+          height: 32px;
+          left: 0;
+        }
+        .cl-main-widget-lb-header-close {
+          width: 32px;
+          height: 32px;
+          right: -11px;
+          top: -16px;
+        }
+        .cl-main-widget-lb-header-back-icon {
+          width: 32px;
+          height: 32px;
+        }
+        .cl-main-widget-lb-header-label {
+          font-size: 16px;
+        }
+      }
+      .cl-main-widget-lb-details {
+        margin-right: 0;
+        height: 120px;
+      }
+      .cl-main-widget-lb-leaderboard {
+        margin-right: 0;
+        margin-top: 12px;
+        height: calc(100% - 220px);
+        .cl-main-widget-lb-leaderboard-header-top-res {
+          padding: 0 12px;
+        }
+        .cl-main-widget-lb-leaderboard-body {
+          padding: 0 12px;
+        }
+      }
+      .cl-main-widget-lb-details-content {
+        height: 120px;
+        .cl-main-widget-lb-details-content-label {
+          padding-top: 16px;
+        }
+        .cl-main-widget-lb-details-content-date {
+          margin-top: 2px;
+        }
+        .cl-main-widget-lb-details-content-label-text {
+          font-size: 14px;
+        }
+        .cl-main-widget-lb-details-content-date-headers-item {
+          font-size: 12px;
+          width: 68px;
+        }
+        .banner-date {
+          .banner-date-cell{
+            font-size: 20px;
+            width: 24px;
+            height: 36px;
+          }
+          .banner-minutes,
+          .banner-seconds,
+          .banner-hours {
+            padding-left: 16px;
+          }
+        }
+      }
+      .cl-main-widget-lb-details-description-label-text {
+        font-size: 14px;
+        line-height: 14px;
+        padding-top: 16px;
+      }
+      .cl-main-widget-lb-details-description-date-headers-item {
+        font-size: 12px;
+        width: 68px;
+      }
+      .cl-main-widget-lb-details-description-date {
+        .banner-date {
+          .banner-date-cell{
+            font-size: 20px;
+            width: 24px;
+            height: 36px;
+          }
+          .banner-minutes,
+          .banner-seconds,
+          .banner-hours {
+            padding-left: 16px;
+          }
+        }
+      }
+      &.cl-main-active-embedded-description {
+        .cl-main-widget-lb-details-description-banner {
+          height: 120px;
+        }
+        .cl-main-widget-lb-details-description-header-title {
+          font-size: 14px;
+        }
+        .cl-main-widget-lb-details-description-container {
+          height: calc(100% - 12px);
+        }
+      }
+    }
   }
 }
-
-@media (max-height: 520px) and (max-width: 812px) {
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header {
-    height: 34px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-list-icon {
-    width: 31px;
-    height: 31px;
-    margin: 3px 0 0 10px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-header .cl-main-widget-lb-header-date {
-    line-height: 34px;
-    font-size: 13px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details {
-    height: 38px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content {
-    padding: 2px 0 0 0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard {
-    padding: 70px 0 22px 0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-pre-loader {
-    top: 61px;
-    height: calc(100% - 60px);
-  }
-  .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-pre-loader{
-    height: 100%;
-    width: 100%;
-    top:0;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container {
-    height: 66px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb {
-    float: left;
-    margin: 0px -5px 0 -3px;
-    width: 58px;
-    height: 58px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb.cl-active-nav:hover {
-    margin: 0 -6px 0 1px;
-    width: 68px;
-    height: 68px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach {
-    float: left;
-    margin: 0px -5px 0 3px;
-    width: 58px;
-    height: 58px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach.cl-active-nav:hover {
-    margin: 0 -6px 0 1px;
-    width: 68px;
-    height: 68px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards {
-    float: left;
-    margin: 0px -5px 0 3px;
-    width: 58px;
-    height: 58px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards.cl-active-nav:hover {
-    margin: 0 -6px 0 1px;
-    width: 68px;
-    height: 68px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox {
-    float: left;
-    margin: 0px -5px 0 3px;
-    width: 58px;
-    height: 58px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 68px;
-    height: 68px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
-    float: left;
-    margin: 0px -5px 0 3px;
-    width: 58px;
-    height: 58px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav, .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions.cl-active-nav:hover {
-    margin: 0 -6px 0 -3px;
-    width: 68px;
-    height: 68px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container {
-    padding: 60px 0 0 0;
-  }
-  .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-section-container {
-    padding: 0 0 0 0;
-  }
-}
-
-/**
- * for retina resolution
- */
-@media only screen and (min--moz-device-pixel-ratio: 2),
-only screen and (-o-min-device-pixel-ratio: 2/1),
-only screen and (-webkit-min-device-pixel-ratio: 2),
-only screen and (min-device-pixel-ratio: 2) {
-
-  .cl-widget-ms-wrapper .cl-widget-ms-icon-wrapper .cl-widget-ms-icon {
-    background-image: $lb3-widget-icon-2x;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-ach {
-    background-image: $lb3-achievements-icon-bg-image-2x;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb {
-    background-image: $lb3-tournament-icon-bg-image-2x;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-rewards {
-    background-image: $lb3-rewards-icon-bg-image-2x;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-inbox {
-    background-image: $lb3-messages-icon-bg-image-2x;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-missions {
-    background-image: $lb3-missions-icon-bg-image-2x;
-  }
-  .cl-widget-notif-wrapper .cl-widget-notif-icon-wrapper .cl-widget-notif-icon {
-    background-image: $lb3-achievements-icon-bg-image-2x;
-  }
-}
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-

@@ -3098,41 +3098,60 @@ export const MainWidget = function (options) {
   };
 
   this.tournamentItem = function (tournament) {
-    // var _this = this;
     const listItem = document.createElement('div');
     const detailsContainer = document.createElement('div');
-    // const detailsWrapper = document.createElement('div');
     const label = document.createElement('div');
     const labelIcon = document.createElement('div');
     const period = document.createElement('div');
+    const prize = document.createElement('div');
 
     let startDate = new Date(tournament.actualStartDate ?? tournament.scheduledStartDate);
     let endDate = new Date(tournament.actualEndDate ?? tournament.scheduledEndDate);
     startDate = startDate.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
     endDate = endDate.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
 
-    // var description = document.createElement('div');
-    // var descriptionContent = stripHtml(tournament.description);
-
     listItem.setAttribute('class', 'cl-tour-list-item cl-tour-' + tournament.id);
     detailsContainer.setAttribute('class', 'cl-tour-list-details-cont');
-    // detailsWrapper.setAttribute('class', 'cl-tour-list-details-wrap');
     label.setAttribute('class', 'cl-tour-list-details-label');
     labelIcon.setAttribute('class', 'cl-tour-list-details-label-icon');
     period.setAttribute('class', 'cl-tour-list-details-period');
-    // description.setAttribute('class', 'cl-tour-list-details-description');
+    prize.setAttribute('class', 'cl-tour-list-details-prize');
 
     listItem.dataset.id = tournament.id;
     label.innerHTML = tournament.name ?? '';
     period.innerHTML = startDate + ' - ' + endDate;
-    /// description.innerHTML = (descriptionContent.length > 100) ? descriptionContent.substr(0, 100) + '...' : descriptionContent;
 
-    // detailsWrapper.appendChild(label);
-    // detailsWrapper.appendChild(period);
-    // detailsWrapper.appendChild(description);
+    if (tournament.rewards && tournament.rewards.length) {
+      const idx = tournament.rewards.findIndex(reward => {
+        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+          const rewardRankArr = reward.rewardRank.split(',');
+          rewardRankArr.forEach(r => {
+            const idx = r.indexOf('-');
+            if (idx !== -1) {
+              const start = parseInt(r);
+              if (start === 1) {
+                return true;
+              }
+            } else if (parseInt(r) === 1) {
+              return true;
+            }
+            return false;
+          });
+        } else if (parseInt(reward.rewardRank) === 1) {
+          return true;
+        }
+        return false;
+      });
+
+      if (idx !== -1) {
+        prize.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(tournament.rewards[idx]);
+      }
+    }
+
     detailsContainer.appendChild(labelIcon);
     detailsContainer.appendChild(label);
     detailsContainer.appendChild(period);
+    detailsContainer.appendChild(prize);
     listItem.appendChild(detailsContainer);
 
     return listItem;
@@ -3956,7 +3975,7 @@ export const MainWidget = function (options) {
               _this.loadLeaderboard(function () {
                 var lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);
 
-                lbContainer.style.display = 'block';
+                lbContainer.style.display = 'flex';
                 changeInterval = setTimeout(function () {
                   addClass(lbContainer, 'cl-main-active-section');
                 }, 30);
