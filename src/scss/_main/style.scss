@@ -2692,7 +2692,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 130px);
   z-index: 1;
   padding-right: 77px;
   padding-left: 60px;
@@ -6015,6 +6015,7 @@
     }
     .cl-main-widget-section-container {
       height: calc(100% - 90px);
+      .cl-main-widget-ach-footer,
       .cl-main-widget-lb-footer {
         display: none;
       }
@@ -6173,6 +6174,53 @@
       }
       .cl-main-widget-tournaments-list {
         height: calc(100% - 86px);
+      }
+
+      .cl-main-widget-ach-header {
+        .cl-main-widget-ach-header-close {
+          width: 32px;
+          height: 32px;
+          right: -11px;
+          top: -16px;
+        }
+      }
+      .cl-main-widget-ach-list {
+        padding: 0;
+        .cl-main-widget-ach-list-body-res {
+          justify-content: center;
+        }
+      }
+      .cl-main-widget-section-ach {
+        .cl-ach-list-icon {
+          width: 45px;
+          height: 45px;
+          background-size: 30px;
+          &::before {
+            width: 45px;
+            height: 45px;
+          }
+          &::after {
+            width: 45px;
+            height: 22px;
+            background-size: cover;
+          }
+        }
+        .cl-ach-list-details-label {
+          font-size: 12px;
+          line-height: 12px;
+          padding-bottom: 10px;
+        }
+        .cl-ach-list-item {
+          padding: 10px 12px;
+          height: unset;
+        }
+      }
+      .cl-main-widget-ach-details-container {
+        &.cl-show {
+          padding: 0;
+          top: 24px;
+          height: calc(100% - 26px);
+        }
       }
     }
   }
