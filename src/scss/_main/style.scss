@@ -5159,6 +5159,7 @@
       line-height: 26px;
       text-align: center;
       margin-left: 6px;
+      flex-shrink: 0;
       &.active {
         background: #2F0426;
         border: 1px solid #406A8C;
@@ -6015,6 +6016,9 @@
     }
     .cl-main-widget-section-container {
       height: calc(100% - 90px);
+      .cl-main-widget-missions-footer,
+      .cl-main-widget-inbox-footer-content,
+      .cl-main-widget-reward-footer-content,
       .cl-main-widget-ach-footer,
       .cl-main-widget-lb-footer {
         display: none;
@@ -6183,6 +6187,9 @@
           right: -11px;
           top: -16px;
         }
+        .cl-main-widget-ach-header-label {
+          font-size: 16px;
+        }
       }
       .cl-main-widget-ach-list {
         padding: 0;
@@ -6213,6 +6220,7 @@
         .cl-ach-list-item {
           padding: 10px 12px;
           height: unset;
+          width: 100%;
         }
       }
       .cl-main-widget-ach-details-container {
@@ -6220,6 +6228,153 @@
           padding: 0;
           top: 24px;
           height: calc(100% - 26px);
+        }
+      }
+
+      .cl-main-widget-reward-header {
+        padding-right: 0;
+        .cl-main-widget-reward-header-close {
+          width: 32px;
+          height: 32px;
+          right: -11px;
+          top: -16px;
+        }
+        .cl-main-widget-reward-header-back {
+          width: 32px;
+          height: 32px;
+        }
+        .cl-main-widget-reward-header-label {
+          font-size: 16px;
+        }
+      }
+      .cl-main-widget-reward-list {
+        height: calc(100% - 82px);
+        left: unset;
+        .cl-main-widget-reward-list-body-res {
+          padding: 0;
+          .cl-accordion-list {
+            padding: 0;
+            justify-content: space-around;
+          }
+          .cl-rew-list-item {
+            max-width: 144px;
+            padding: 10px 6px;
+            margin-bottom: 10px;
+          }
+          .cl-rew-list-details-label {
+            padding: 0 6px;
+            font-size: 12px;
+          }
+          .cl-rew-list-details-type {
+            padding: 0 6px;
+            font-size: 12px;
+          }
+          .cl-rew-list-details-icon {
+            width: 100px;
+            height: 100px;
+            background-size: 70px;
+            &::before {
+              width: 100px;
+              height: 100px;
+            }
+            &::after {
+              width: 100px;
+              height: 100px;
+            }
+          }
+          .wheel-label, .scratchcards-label {
+            font-size: 12px;
+            line-height: 38px;
+          }
+          .wheel-item, .scratchcards-item {
+            width: 144px;
+            height: 180px;
+          }
+          .wheel-image, .scratchcards-image {
+            width: 130px;
+            height: 80px;
+            background-size: contain;
+            margin-bottom: 18px;
+            background-repeat: no-repeat;
+            background-position: center;
+          }
+          .wheel-button, .scratchcards-button {
+            font-size: 12px;
+            width: 132px;
+            height: 26px;
+          }
+          .scratchcards-game-label, .single-wheel-label {
+            font-size: 14px;
+          }
+          .scratchcards-game-container {
+            flex-direction: column;
+            padding: 10px 0 0;
+            align-items: center;
+          }
+          .scratchcards-game-prize-prizes {
+            margin-top: 10px;
+            justify-content: space-around;
+          }
+          .scratchcards-game-prize-prizes-first,
+          .scratchcards-game-prize-prizes-second,
+          .scratchcards-game-prize-prizes-third {
+            width: 50px;
+            height: 50px;
+            background-size: 28px;
+            &::before {
+              width: 50px;
+              height: 50px;
+            }
+            &::after {
+              width: 50px;
+              height: 50px;
+            }
+          }
+          .scratchcards-game-prize-label {
+            margin-top: 30px;
+          }
+          .scratchcards-game-prize-prizes-label {
+            font-size: 12px;
+            width: 82px;
+            left: -15px;
+          }
+        }
+        .cl-main-accordion-container {
+          .cl-accordion {
+            &.cl-shown {
+              height: calc(100% - 34px);
+            }
+          }
+          .cl-main-accordion-container-menu {
+            height: 30px;
+            padding: 0 4px;
+          }
+          .cl-main-accordion-container-menu-item {
+            font-size: 10px;
+            padding: 4px 14px;
+          }
+          .cl-shown {
+            .cl-accordion-list-container {
+              padding: 0;
+            }
+          }
+        }
+      }
+      .cl-main-widget-reward-details-container {
+        &.cl-show {
+          padding-left: 0;
+          height: calc(100% - 80px);
+          top: 72px;
+        }
+        .cl-main-widget-reward-details-header-label {
+          font-size: 14px;
+        }
+        .cl-main-widget-reward-details-wrapper {
+          border: 1px solid #223241;
+        }
+        .cl-main-widget-reward-details-header {
+          padding: 8px;
+          min-height: 46px;
         }
       }
     }
