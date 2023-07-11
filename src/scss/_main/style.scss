@@ -5959,6 +5959,9 @@
 @media screen and (max-width: 768px) {
   .cl-main-widget-wrapper {
     padding: 0;
+    .cl-main-widget-pre-loader {
+      width: 100%;
+    }
     .cl-main-widget-inner-wrapper {
       flex-direction: column-reverse;
       justify-content: flex-end;
