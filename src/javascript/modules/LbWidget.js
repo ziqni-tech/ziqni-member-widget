@@ -2346,8 +2346,8 @@ export const LbWidget = function (options) {
       if (!this.settings.memberRefId) {
         console.warn('memberRefId not set!');
       } else {
+        console.log('Reconnecting...');
         setTimeout(function () {
-          console.log('Reconnecting...');
           _this.init();
         }, 2000);
       }
