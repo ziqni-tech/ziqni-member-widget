@@ -2328,7 +2328,7 @@ export const LbWidget = function (options) {
     if (body.data && body.data.jwtToken) {
       this.settings.authToken = body.data.jwtToken;
     } else {
-      console.error('Member Token Error');
+      console.warn('Member Token Error');
     }
   };
 
@@ -2339,46 +2339,58 @@ export const LbWidget = function (options) {
    * @return {undefined}
    */
   this.init = async function () {
+    const _this = this;
     await this.initApiClientStomp();
 
-    setInterval(async () => {
-      await this.initApiClientStomp();
-    }, this.settings.expires);
+    if (!this.settings.authToken) {
+      if (!this.settings.memberRefId) {
+        console.warn('memberRefId not set!');
+      } else {
+        setTimeout(function () {
+          console.log('Reconnecting...');
+          _this.init();
+        }, 2000);
+      }
+    } else {
+      setInterval(async () => {
+        await this.initApiClientStomp();
+      }, this.settings.expires);
 
-    this.loadStylesheet(() => {
-      this.applyAppearance();
+      this.loadStylesheet(() => {
+        this.applyAppearance();
 
-      this.loadMember((member) => {
-        this.loadWidgetTranslations(() => {
-          if (this.settings.miniScoreBoard === null) {
-            this.settings.canvasAnimation = new CanvasAnimation();
-            this.settings.notifications = new Notifications({
-              canvasInstance: this.settings.canvasAnimation
-            });
-            this.settings.miniScoreBoard = new MiniScoreBoard({
-              active: true
-            });
-            this.settings.mainWidget = new MainWidget();
-
-            this.settings.notifications.settings.lbWidget = this;
-            this.settings.miniScoreBoard.settings.lbWidget = this;
-            this.settings.mainWidget.settings.lbWidget = this;
-            this.settings.canvasAnimation.settings.lbWidget = this;
-
-            this.startup();
-            this.eventListeners();
-          } else {
-            this.settings.mainWidget.hide(() => {
-              this.deactivateCompetitionsAndLeaderboards(() => {
-                this.settings.miniScoreBoard.settings.active = true;
-                this.settings.miniScoreBoard.settings.container.style.display = 'block';
-                this.startup();
+        this.loadMember((member) => {
+          this.loadWidgetTranslations(() => {
+            if (this.settings.miniScoreBoard === null) {
+              this.settings.canvasAnimation = new CanvasAnimation();
+              this.settings.notifications = new Notifications({
+                canvasInstance: this.settings.canvasAnimation
               });
-            });
-          }
+              this.settings.miniScoreBoard = new MiniScoreBoard({
+                active: true
+              });
+              this.settings.mainWidget = new MainWidget();
+
+              this.settings.notifications.settings.lbWidget = this;
+              this.settings.miniScoreBoard.settings.lbWidget = this;
+              this.settings.mainWidget.settings.lbWidget = this;
+              this.settings.canvasAnimation.settings.lbWidget = this;
+
+              this.startup();
+              this.eventListeners();
+            } else {
+              this.settings.mainWidget.hide(() => {
+                this.deactivateCompetitionsAndLeaderboards(() => {
+                  this.settings.miniScoreBoard.settings.active = true;
+                  this.settings.miniScoreBoard.settings.container.style.display = 'block';
+                  this.startup();
+                });
+              });
+            }
+          });
         });
       });
-    });
+    }
   };
 
   if (this.settings.autoStart) {
