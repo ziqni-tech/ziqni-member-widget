@@ -4367,6 +4367,7 @@
   height: 84px;
   position: relative;
   z-index: 2;
+  flex-shrink: 0;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-header .cl-main-widget-inbox-header-label {
@@ -6023,6 +6024,7 @@
       .cl-main-widget-inbox-footer-content,
       .cl-main-widget-reward-footer-content,
       .cl-main-widget-ach-footer,
+      .cl-main-widget-inbox-footer,
       .cl-main-widget-lb-footer {
         display: none;
       }
@@ -6184,6 +6186,7 @@
       }
 
       .cl-main-widget-ach-header {
+        height: 72px;
         .cl-main-widget-ach-header-close {
           width: 32px;
           height: 32px;
@@ -6195,6 +6198,7 @@
         }
       }
       .cl-main-widget-ach-list {
+        height: calc(100% - 92px);
         padding: 0;
         .cl-main-widget-ach-list-body-res {
           justify-content: center;
@@ -6236,6 +6240,7 @@
 
       .cl-main-widget-reward-header {
         padding-right: 0;
+        height: 72px;
         .cl-main-widget-reward-header-close {
           width: 32px;
           height: 32px;
@@ -6378,6 +6383,52 @@
         .cl-main-widget-reward-details-header {
           padding: 8px;
           min-height: 46px;
+        }
+      }
+
+      .cl-main-widget-section-inbox {
+        .cl-main-widget-inbox-header {
+          height: 72px;
+          .cl-main-widget-inbox-header-close {
+            width: 32px;
+            height: 32px;
+            right: -11px;
+            top: -16px;
+          }
+          .cl-main-widget-inbox-header-label {
+            font-size: 16px;
+          }
+        }
+        .cl-main-widget-inbox-list {
+          padding: 0;
+        }
+        .cl-inbox-list-details-label {
+          font-size: 12px;
+        }
+        .cl-inbox-list-details-description {
+          font-size: 10px;
+        }
+        .cl-inbox-list-details-date {
+          font-size: 10px;
+        }
+        .cl-main-widget-inbox-list {
+          height: calc(100% - 92px);
+        }
+        .cl-main-widget-inbox-details-container {
+          &.cl-show {
+            padding: 0;
+            top: 72px;
+            height: calc(100% - 80px);
+          }
+          .cl-main-widget-inbox-details-header-label {
+            font-size: 14px;
+          }
+          .cl-main-widget-inbox-details-header-date {
+            font-size: 10px;
+          }
+          .cl-main-widget-inbox-details-body {
+            font-size: 12px;
+          }
         }
       }
     }
