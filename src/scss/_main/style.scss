@@ -5974,6 +5974,7 @@
       height: 90%;
       padding: 0 12px;
     }
+
     .cl-main-widget-navigation-container {
       flex-direction: row;
       width: 100%;
@@ -5990,7 +5991,7 @@
           min-height: unset;
           width: unset;
           justify-content: center;
-          padding: 0 6px;
+          padding: 0 8px;
           .cl-main-navigation-item-title {
             display: none;
           }
@@ -6009,6 +6010,7 @@
           width: 22px;
           height: 22px;
           margin-top: 0;
+          margin-bottom: 2px;
         }
       }
       .cl-main-widget-navigation-logo {
@@ -6018,6 +6020,7 @@
         display: none;
       }
     }
+
     .cl-main-widget-section-container {
       height: calc(100% - 90px);
       .cl-main-widget-missions-footer,
@@ -6428,6 +6431,118 @@
           }
           .cl-main-widget-inbox-details-body {
             font-size: 12px;
+          }
+        }
+      }
+
+      .cl-main-widget-section-missions {
+        .cl-main-widget-missions-header {
+          padding-right: 0;
+          height: 72px;
+          .cl-main-widget-missions-header-label {
+            font-size: 16px;
+          }
+          .cl-main-widget-missions-header-close {
+            width: 32px;
+            height: 32px;
+            right: -11px;
+            top: -16px;
+          }
+        }
+        .cl-main-widget-missions-list {
+          height: calc(100% - 82px);
+          padding: 0;
+        }
+        .cl-main-widget-missions-list-body-res {
+          padding: 0;
+          justify-content: space-around;
+          .cl-missions-list-details-date {
+            right: 0;
+            font-size: 10px;
+          }
+          .cl-missions-list-item {
+            width: 144px;
+            height: 256px;
+          }
+          .cl-missions-list-details-img {
+            height: 135px;
+          }
+          .cl-missions-list-details-label {
+            font-size: 12px;
+            line-height: 12px;
+          }
+          .cl-missions-list-details-progress-label {
+            font-size: 10px;
+          }
+          .cl-missions-list-details-actions {
+            flex-direction: column;
+            padding: 8px 8px 0;
+          }
+          .cl-missions-list-details-actions-reward {
+            height: 26px;
+            font-size: 16px;
+            line-height: 26px;
+            margin-bottom: 6px;
+            width: 100%;
+            &::before {
+              top: 7px;
+            }
+          }
+          .cl-missions-list-details-actions-btn {
+            height: 26px;
+            font-size: 12px;
+            width: 100%;
+          }
+          .cl-missions-list-details-progress {
+            padding: 8px 12px 0;
+          }
+        }
+        .cl-main-widget-missions-details-container {
+          padding-left: 0;
+          top: 72px;
+          height: calc(100% - 80px);
+          .cl-main-widget-missions-details-container-wrapper {
+            padding-right: 0;
+            margin-right: 0;
+            .cl-main-widget-missions-details-body-wrapper {
+              flex-direction: column;
+              align-items: center;
+            }
+            .cl-main-widget-missions-details-header {
+              padding: 8px 8px 0;
+            }
+            .cl-main-widget-missions-details-body-container {
+              padding: 0 20px 0 20px;
+            }
+            .cl-main-widget-missions-details-header-label {
+              text-align: center;
+              font-size: 14px;
+              padding-top: 10px;
+            }
+            .cl-main-widget-missions-details-description-label {
+              font-size: 10px;
+              font-weight: 700;
+            }
+            .cl-main-widget-missions-details-description {
+              font-size: 10px;
+            }
+            .cl-main-widget-missions-graph-container {
+              height: 256px;
+            }
+            .cl-main-widget-missions-details-body-image {
+              margin-left: 0;
+              width: 100px;
+              height: 100px;
+              margin-top: -46px;
+              &::before {
+                width: 100px;
+                height: 100px;
+              }
+              &::after {
+                width: 100px;
+                height: 100px;
+              }
+            }
           }
         }
       }
