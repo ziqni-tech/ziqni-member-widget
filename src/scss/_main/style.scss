@@ -67,6 +67,10 @@
   overscroll-behavior-y: contain;
 }
 
+.cl-mobile-theme-switcher {
+  display: none;
+}
+
 .cl-widget-ms-wrapper *, .cl-main-widget-wrapper *, .cl-widget-notif-wrapper * {
   box-sizing: border-box;
   line-height: 20px;
@@ -5962,6 +5966,17 @@
     padding: 0;
     .cl-main-widget-pre-loader {
       width: 100%;
+      border-radius: 20px 20px 0 0;
+    }
+    .cl-mobile-theme-switcher {
+      display: block;
+      width: 32px;
+      height: 32px;
+      position: absolute;
+      top: 26px;
+      right: 12px;
+      background: url(../../images/theme-switcher.svg) no-repeat center;
+      z-index: 10;
     }
     .cl-main-widget-inner-wrapper {
       flex-direction: column-reverse;
@@ -6037,6 +6052,8 @@
           width: 32px;
           height: 32px;
           left: 0;
+          transform: unset;
+          top: 26px;
         }
         .cl-main-widget-lb-header-close {
           width: 32px;
@@ -6047,9 +6064,12 @@
         .cl-main-widget-lb-header-back-icon {
           width: 32px;
           height: 32px;
+          transform: unset;
+          top: 26px;
         }
         .cl-main-widget-lb-header-label {
           font-size: 16px;
+          padding-top: 16px;
         }
       }
       .cl-main-widget-lb-details {
@@ -6198,6 +6218,7 @@
         }
         .cl-main-widget-ach-header-label {
           font-size: 16px;
+          padding-top: 16px;
         }
       }
       .cl-main-widget-ach-list {
@@ -6256,6 +6277,7 @@
         }
         .cl-main-widget-reward-header-label {
           font-size: 16px;
+          padding-top: 16px;
         }
       }
       .cl-main-widget-reward-list {
@@ -6400,6 +6422,7 @@
           }
           .cl-main-widget-inbox-header-label {
             font-size: 16px;
+            padding-top: 16px;
           }
         }
         .cl-main-widget-inbox-list {
@@ -6441,6 +6464,7 @@
           height: 72px;
           .cl-main-widget-missions-header-label {
             font-size: 16px;
+            padding-top: 16px;
           }
           .cl-main-widget-missions-header-close {
             width: 32px;
@@ -6456,6 +6480,9 @@
         .cl-main-widget-missions-list-body-res {
           padding: 0;
           justify-content: space-around;
+          .cl-missions-list-details-progress-cont {
+            width: 88px;
+          }
           .cl-missions-list-details-date {
             right: 0;
             font-size: 10px;

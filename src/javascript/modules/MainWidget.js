@@ -440,6 +440,10 @@ export const MainWidget = function (options) {
     const sectionInbox = _this.inboxAreaLayout();
     const sectionMissions = _this.missionsAreaLayout();
 
+    const mobileThemeSwitcher = document.createElement('div');
+
+    mobileThemeSwitcher.setAttribute('class', 'cl-mobile-theme-switcher');
+
     const navigationItemList = [];
     mapObject(_this.settings.lbWidget.settings.navigation, function (val, key) {
       navigationItemList.push({
@@ -482,6 +486,7 @@ export const MainWidget = function (options) {
     navigationContainer.appendChild(navigationItems);
     navigationContainer.appendChild(navigationDarkModeToggle);
 
+    mainSectionContainer.appendChild(mobileThemeSwitcher);
     mainSectionContainer.appendChild(sectionLB);
     mainSectionContainer.appendChild(sectionACH);
     mainSectionContainer.appendChild(sectionRewards);
@@ -2173,6 +2178,7 @@ export const MainWidget = function (options) {
     const darkModeToggle = document.querySelector('input[id=darkmode-toggle]');
     const mainContainer = document.querySelector('.cl-main-widget-wrapper');
     const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+
     darkModeToggle.addEventListener('change', function () {
       if (this.checked) {
         mainContainer.classList.add('lightTheme');

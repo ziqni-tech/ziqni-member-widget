@@ -2284,6 +2284,18 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.accordionNavigation(el);
     } else if (hasClass(el, 'cl-main-accordion-container-menu-item')) {
       _this.settings.mainWidget.listsNavigation(el);
+
+      // mobile theme switcher
+    } else if (hasClass(el, 'cl-mobile-theme-switcher')) {
+      const mainContainer = document.querySelector('.cl-main-widget-wrapper');
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (mainContainer.classList.contains('lightTheme')) {
+        mainContainer.classList.remove('lightTheme');
+        msContainer.classList.remove('lightTheme');
+      } else {
+        mainContainer.classList.add('lightTheme');
+        msContainer.classList.add('lightTheme');
+      }
     }
   };
 
