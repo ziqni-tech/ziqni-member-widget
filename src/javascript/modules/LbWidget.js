@@ -180,41 +180,48 @@ export const LbWidget = function (options) {
       }
     },
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
+      dashboard: {
+        enable: true,
+        navigationClass: 'cl-main-widget-navigation-dashboard',
+        navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
+        containerClass: 'cl-main-widget-section-dashboard',
+        order: 1
+      },
       tournaments: {
         enable: true,
         showFinishedTournaments: true,
         navigationClass: 'cl-main-widget-navigation-lb',
         navigationClassIcon: 'cl-main-widget-navigation-lb-icon',
         containerClass: 'cl-main-widget-lb',
-        order: 1
+        order: 2
       },
       achievements: {
         enable: true,
         navigationClass: 'cl-main-widget-navigation-ach',
         navigationClassIcon: 'cl-main-widget-navigation-ach-icon',
         containerClass: 'cl-main-widget-section-ach',
-        order: 2
+        order: 3
       },
       rewards: {
         enable: true,
         navigationClass: 'cl-main-widget-navigation-rewards',
         navigationClassIcon: 'cl-main-widget-navigation-rewards-icon',
         containerClass: 'cl-main-widget-section-reward',
-        order: 3
+        order: 4
       },
       inbox: {
         enable: true,
         navigationClass: 'cl-main-widget-navigation-inbox',
         navigationClassIcon: 'cl-main-widget-navigation-inbox-icon',
         containerClass: 'cl-main-widget-section-inbox',
-        order: 4
+        order: 5
       },
       missions: {
         enable: false,
         navigationClass: 'cl-main-widget-navigation-missions',
         navigationClassIcon: 'cl-main-widget-navigation-missions-icon',
         containerClass: 'cl-main-widget-section-missions',
-        order: 5
+        order: 6
       }
     },
     apiWs: {

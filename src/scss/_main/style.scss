@@ -1218,6 +1218,18 @@
 //  height: var(--lb3-widget-navigation-icon-height);
 //}
 
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-dashboard-icon {
+  display: block;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
+  background-image: $lb3-dashboard-icon;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  opacity: 0.7;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb-icon {
   display: block;
   height: 32px;
@@ -1390,6 +1402,63 @@
 }
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-section-container {
   padding: 0 0 0 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-dashboard {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  left: 0;
+  top: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 84px;
+  position: relative;
+  z-index: 2;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-header .cl-main-widget-dashboard-header-label {
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+  color: var(--lb3-tournament-header-label-color);
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-header .cl-main-widget-dashboard-header-close {
+  position: absolute;
+  display: block;
+  background-image: $lb3-tournament-header-close-back-image;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body {
+
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
+  color: #ffffff;
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb {

@@ -439,6 +439,7 @@ export const MainWidget = function (options) {
     const sectionRewards = _this.rewardsAreaLayout();
     const sectionInbox = _this.inboxAreaLayout();
     const sectionMissions = _this.missionsAreaLayout();
+    const sectionDashboard = _this.dashboardAreaLayout();
 
     const mobileThemeSwitcher = document.createElement('div');
 
@@ -492,6 +493,7 @@ export const MainWidget = function (options) {
     mainSectionContainer.appendChild(sectionRewards);
     mainSectionContainer.appendChild(sectionInbox);
     mainSectionContainer.appendChild(sectionMissions);
+    mainSectionContainer.appendChild(sectionDashboard);
     mainSectionContainer.appendChild(preLoaderContainer);
 
     innerWrapper.appendChild(navigationContainer);
@@ -1276,6 +1278,57 @@ export const MainWidget = function (options) {
     sectionMissions.appendChild(sectionMissionsDetailsContainer);
 
     return sectionMissions;
+  };
+
+  this.dashboardAreaLayout = function () {
+    const _this = this;
+    const sectionDashboard = document.createElement('div');
+
+    const sectionDashboardHeader = document.createElement('div');
+    const sectionDashboardHeaderLabel = document.createElement('div');
+    const sectionDashboardHeaderClose = document.createElement('div');
+
+    const sectionDashboardBody = document.createElement('div');
+
+    const sectionDashboardInstantWins = document.createElement('div');
+    const sectionDashboardInstantWinsTitle = document.createElement('div');
+
+    const sectionDashboardAchievements = document.createElement('div');
+    const sectionDashboardAchievementsTitle = document.createElement('div');
+
+    sectionDashboard.setAttribute('class', _this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
+    sectionDashboardHeader.setAttribute('class', 'cl-main-widget-dashboard-header');
+    sectionDashboardHeaderLabel.setAttribute('class', 'cl-main-widget-dashboard-header-label');
+    sectionDashboardHeaderClose.setAttribute('class', 'cl-main-widget-dashboard-header-close');
+
+    sectionDashboardBody.setAttribute('class', 'cl-main-widget-dashboard-body');
+
+    sectionDashboardInstantWins.setAttribute('class', 'cl-main-widget-dashboard-instant-wins');
+    sectionDashboardInstantWinsTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-title');
+
+    sectionDashboardInstantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle;
+
+    sectionDashboardInstantWins.appendChild(sectionDashboardInstantWinsTitle);
+
+    sectionDashboardAchievements.setAttribute('class', 'cl-main-widget-dashboard-achievements');
+    sectionDashboardAchievementsTitle.setAttribute('class', 'cl-main-widget-dashboard-achievements-title');
+
+    sectionDashboardAchievementsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.achievementsTitle;
+
+    sectionDashboardAchievements.appendChild(sectionDashboardAchievementsTitle);
+
+    sectionDashboardHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.label;
+
+    sectionDashboardBody.appendChild(sectionDashboardInstantWins);
+    sectionDashboardBody.appendChild(sectionDashboardAchievements);
+
+    sectionDashboardHeader.appendChild(sectionDashboardHeaderLabel);
+    sectionDashboardHeader.appendChild(sectionDashboardHeaderClose);
+
+    sectionDashboard.appendChild(sectionDashboardHeader);
+    sectionDashboard.appendChild(sectionDashboardBody);
+
+    return sectionDashboard;
   };
 
   this.leaderboardHeader = function () {
@@ -3976,7 +4029,18 @@ export const MainWidget = function (options) {
           });
 
           changeContainerInterval = setTimeout(function () {
-            if (hasClass(target, 'cl-main-widget-navigation-lb-icon')) {
+            if (hasClass(target, 'cl-main-widget-navigation-dashboard-icon')) {
+              const dashboardContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.dashboard.containerClass);
+
+              dashboardContainer.style.display = 'flex';
+              changeInterval = setTimeout(function () {
+                addClass(dashboardContainer, 'cl-main-active-section');
+              }, 30);
+
+              preLoader.hide();
+
+              _this.settings.navigationSwitchInProgress = false;
+            } else if (hasClass(target, 'cl-main-widget-navigation-lb-icon')) {
               _this.settings.lbWidget.checkForAvailableRewards(1);
               _this.loadLeaderboard(function () {
                 var lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);

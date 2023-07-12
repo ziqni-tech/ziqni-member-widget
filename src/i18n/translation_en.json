@@ -71,6 +71,11 @@
   "messages": {
     "label": "Messages"
   },
+  "dashboard": {
+    "label": "Dashboard",
+    "instantWinsTitle": "Instant wins",
+    "achievementsTitle": "Daily achievements"
+  },
   "missions": {
     "label": "Missions",
     "btn": "Go",
