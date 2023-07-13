@@ -71,6 +71,17 @@
   "messages": {
     "label": "Messages"
   },
+  "dashboard": {
+    "label": "Dashboard",
+    "instantWinsTitle": "Instant wins",
+    "achievementsTitle": "Daily achievements",
+    "singleWheelTitle": "The Single Wheel",
+    "singleWheelDescription": "Short description about this instant wins",
+    "singleWheelButton": "Play",
+    "scratchcardsTitle": "Scratchcards",
+    "scratchcardsDescription": "Short description about this instant wins",
+    "scratchcardsButton": "Play"
+  },
   "missions": {
     "label": "Missions",
     "btn": "Go",

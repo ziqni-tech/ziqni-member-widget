@@ -1218,6 +1218,18 @@
 //  height: var(--lb3-widget-navigation-icon-height);
 //}
 
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-dashboard-icon {
+  display: block;
+  height: 32px;
+  width: 32px;
+  margin-top: 6px;
+  margin-bottom: 5px;
+  background-image: $lb3-dashboard-icon;
+  background-repeat: no-repeat;
+  background-size: 100%;
+  opacity: 0.7;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-lb-icon {
   display: block;
   height: 32px;
@@ -1390,6 +1402,383 @@
 }
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-section-container {
   padding: 0 0 0 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-dashboard {
+  display: none;
+  position: relative;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  left: 0;
+  top: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-header {
+  display: flex;
+  flex-shrink: 0;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 84px;
+  position: relative;
+  z-index: 2;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-header .cl-main-widget-dashboard-header-label {
+  width: 100%;
+  text-align: center;
+  line-height: 30px;
+  color: var(--lb3-tournament-header-label-color);
+  font-family: 'Syne', sans-serif;
+  font-size: 24px;
+  font-weight: 700;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-header .cl-main-widget-dashboard-header-close {
+  position: absolute;
+  display: block;
+  background-image: $lb3-tournament-header-close-back-image;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 100%;
+  width: 50px;
+  height: 50px;
+  right: -18px;
+  top: -18px;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body {
+  padding: 0 77px 0 60px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
+  color: #ffffff;
+  font-family: 'Syne', sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
+  padding-top: 40px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins {}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp {
+  display: flex;
+  justify-content: space-between;
+  padding-top: 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel{
+  display: flex;
+  background: #141E28;
+  border-radius: 10px;
+  padding: 10px;
+  width: 340px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-image {
+  width: 163px;
+  height: 142px;
+  background-color: #0f1921;
+  background-image: url(../../images/single-wheel.png);
+  background-size: cover;
+  background-position: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-body {
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-description {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 400;
+  color: #ffffff;
+  padding-top: 10px;
+  flex-grow: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 124px;
+  height: 36px;
+  background: #ee3ec8;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards {
+  display: flex;
+  background: #141E28;
+  border-radius: 10px;
+  padding: 10px;
+  width: 340px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-image {
+  width: 163px;
+  height: 142px;
+  background-color: #0f1921;
+  background-image: url(../../images/scratchcards.svg);
+  background-size: 126px;
+  background-repeat: no-repeat;
+  background-position: center;
+  border-radius: 10px;
+  flex-shrink: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-body {
+  padding-left: 16px;
+  display: flex;
+  flex-direction: column;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-title {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  color: #ffffff;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-description {
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  line-height: 14px;
+  font-weight: 400;
+  color: #ffffff;
+  padding-top: 10px;
+  flex-grow: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-button {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 124px;
+  height: 36px;
+  background: #ee3ec8;
+  border-radius: 10px;
+  color: #ffffff;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  margin: 0 auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list {
+  padding-top: 20px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-item {
+  width: 340px;
+  height: 164px;
+  background: #141E28;
+  border-radius: 10px;
+  margin-bottom: 20px;
+  padding: 14px 16px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-item:last-child {
+  border-bottom: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-details-cont {
+  display: flex;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  padding-bottom: 14px;
+  border-bottom: solid 1px #223241;
+  cursor: pointer;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-icon {
+  flex-shrink: 0;
+  width: 74px;
+  height: 74px;
+  position: relative;
+  background-image: $lb3-achievements-default-icon;
+  background-repeat: no-repeat;
+  background-position: 50% 50%;
+  background-size: 40px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-icon::before {
+  content: '';
+  display: block;
+  width: 74px;
+  height: 74px;
+  background: radial-gradient(50% 50% at 50% 50%, #38ACCF 0%, rgba(56, 172, 207, 0) 100%);
+  opacity: 0.4;
+  filter: blur(12.5px);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-icon::after {
+  content: '';
+  display: block;
+  width: 74px;
+  height: 37px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: $lb3-achievements-default-icon-border no-repeat;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-actions {
+  display: flex;
+  padding-top: 14px;
+  justify-content: space-between;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-actions-reward {
+  display: inline-block;
+  text-align: left;
+  width: 88px;
+  height: 36px;
+  padding-left: 28px;
+  padding-right: 12px;
+  background: #0f1921;
+  border-radius: 10px;
+  color: var(--lb3-rewards-item-label-color);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 36px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-actions-reward::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  left: 9px;
+  top: 11px;
+  background: url(../../images/award-icon.svg) no-repeat center;
+  background-size: contain;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-details-wrap {
+  width: 100%;
+  padding-left: 24px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-more {
+  text-align: center;
+  color: var(--light-font-color);
+  background: #ee3ec8;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 10px 28px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-details-label {
+  width: 100%;
+  max-width: 204px;
+  color: var(--lb3-achievements-item-label-color);
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  padding-top: 9px;
+  padding-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-progression {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-progression-cont {
+  width: 100%;
+  background: var(--lb3-achievements-progress-bg-color);
+  height: 4px;
+  border-radius: 5px;
+  background: #223241;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-progression-label {
+  width: 56px;
+  flex-shrink: 0;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-progression-bar {
+  float: left;
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: right;
+  color: var(--lb3-achievements-progress-text-color);
+  text-transform: uppercase;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-progression-bar.cl-ach-complete {
+  width: 100%;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb {

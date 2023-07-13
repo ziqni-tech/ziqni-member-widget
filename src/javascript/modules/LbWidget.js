@@ -180,41 +180,48 @@ export const LbWidget = function (options) {
       }
     },
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
+      dashboard: {
+        enable: true,
+        navigationClass: 'cl-main-widget-navigation-dashboard',
+        navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
+        containerClass: 'cl-main-widget-section-dashboard',
+        order: 1
+      },
       tournaments: {
         enable: true,
         showFinishedTournaments: true,
         navigationClass: 'cl-main-widget-navigation-lb',
         navigationClassIcon: 'cl-main-widget-navigation-lb-icon',
         containerClass: 'cl-main-widget-lb',
-        order: 1
+        order: 2
       },
       achievements: {
         enable: true,
         navigationClass: 'cl-main-widget-navigation-ach',
         navigationClassIcon: 'cl-main-widget-navigation-ach-icon',
         containerClass: 'cl-main-widget-section-ach',
-        order: 2
+        order: 3
       },
       rewards: {
         enable: true,
         navigationClass: 'cl-main-widget-navigation-rewards',
         navigationClassIcon: 'cl-main-widget-navigation-rewards-icon',
         containerClass: 'cl-main-widget-section-reward',
-        order: 3
+        order: 4
       },
       inbox: {
         enable: true,
         navigationClass: 'cl-main-widget-navigation-inbox',
         navigationClassIcon: 'cl-main-widget-navigation-inbox-icon',
         containerClass: 'cl-main-widget-section-inbox',
-        order: 4
+        order: 5
       },
       missions: {
         enable: false,
         navigationClass: 'cl-main-widget-navigation-missions',
         navigationClassIcon: 'cl-main-widget-navigation-missions-icon',
         containerClass: 'cl-main-widget-section-missions',
-        order: 5
+        order: 6
       }
     },
     apiWs: {
@@ -2109,11 +2116,111 @@ export const LbWidget = function (options) {
       // load achievement details
     } else if (hasClass(el, 'cl-ach-list-more') || closest(el, '.cl-ach-list-details-cont') !== null) {
       const id = closest(el, '.cl-ach-list-item').dataset.id;
-      _this.getAchievement(id, function (data) {
-        _this.settings.achievements.activeAchievementId = data.id;
-        _this.settings.mainWidget.loadAchievementDetails(data, function () {
+
+      if (closest(el, '.cl-main-widget-dashboard-achievements-list')) {
+        const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+        const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+        const achIcon = document.querySelector('.cl-main-widget-navigation-ach');
+
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+        achIcon.classList.add('cl-active-nav');
+
+        _this.settings.mainWidget.loadAchievements(1, function () {
+          const achContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.achievements.containerClass);
+
+          _this.settings.mainWidget.settings.achievement.detailsContainer.style.display = 'none';
+
+          achContainer.style.display = 'flex';
+          setTimeout(function () {
+            addClass(achContainer, 'cl-main-active-section');
+
+            _this.getAchievement(id, function (data) {
+              _this.settings.achievements.activeAchievementId = data.id;
+              _this.settings.mainWidget.loadAchievementDetails(data, function () {
+              });
+            });
+          }, 30);
+
+          _this.settings.navigationSwitchInProgress = false;
         });
-      });
+      } else {
+        _this.getAchievement(id, function (data) {
+          _this.settings.achievements.activeAchievementId = data.id;
+          _this.settings.mainWidget.loadAchievementDetails(data, function () {
+          });
+        });
+      }
+
+      // dashboard wheel button
+    } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-wheel-button')) {
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
+
+      dashboard.style.display = 'none';
+      dashboardIcon.classList.remove('cl-active-nav');
+      awardsIcon.classList.add('cl-active-nav');
+
+      _this.settings.mainWidget.loadAwards(
+        function () {
+          const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+
+          rewardsContainer.style.display = 'flex';
+          addClass(rewardsContainer, 'cl-main-active-section');
+          const container = document.querySelector('.cl-main-widget-reward-list-body-res');
+          const sections = container.querySelectorAll('.cl-accordion');
+          const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
+          const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
+          const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+
+          menuItems.forEach(i => i.classList.remove('active'));
+          instantMenuItem.classList.add('active');
+          sections.forEach(s => s.classList.remove('cl-shown'));
+          instantWinsSection.classList.add('cl-shown');
+
+          setTimeout(function () {
+            _this.settings.mainWidget.loadSingleWheel();
+          }, 30);
+        },
+        1,
+        1
+      );
+
+      // dashboard scratchcards button
+    } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-cards-button')) {
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
+
+      dashboard.style.display = 'none';
+      dashboardIcon.classList.remove('cl-active-nav');
+      awardsIcon.classList.add('cl-active-nav');
+
+      _this.settings.mainWidget.loadAwards(
+        function () {
+          const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+
+          rewardsContainer.style.display = 'flex';
+          addClass(rewardsContainer, 'cl-main-active-section');
+          const container = document.querySelector('.cl-main-widget-reward-list-body-res');
+          const sections = container.querySelectorAll('.cl-accordion');
+          const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
+          const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
+          const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+
+          menuItems.forEach(i => i.classList.remove('active'));
+          instantMenuItem.classList.add('active');
+          sections.forEach(s => s.classList.remove('cl-shown'));
+          instantWinsSection.classList.add('cl-shown');
+
+          setTimeout(function () {
+            _this.settings.mainWidget.loadScratchCards();
+          }, 30);
+        },
+        1,
+        1
+      );
 
       // leaderboard details back button
     } else if (hasClass(el, 'cl-main-widget-lb-details-back-btn')) {
