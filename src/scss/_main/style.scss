@@ -1511,6 +1511,13 @@
 .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
 .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
   display: none;
+  color: #ffffff;
+  text-align: center;
+  font-family: 'Syne', sans-serif;
+  font-size: 12px;
+  line-height: 12px;
+  font-weight: 700;
+  padding-bottom: 10px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-description {
@@ -6198,12 +6205,64 @@
         background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
       }
     }
+
+    .cl-main-widget-section-dashboard {
+      .cl-main-widget-dashboard-header-label {
+        color: #0d0d0d;
+      }
+      .cl-main-widget-dashboard-header-close {
+        background-image: url(../../images/close-icon-light.svg);
+      }
+      .cl-main-widget-dashboard-achievements-title,
+      .cl-main-widget-dashboard-instant-wins-title {
+        color: #080D12;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel,
+      .cl-main-widget-dashboard-instant-wins-cards,
+      .cl-ach-list-item {
+        background-color: #DCE6EF;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel-image,
+      .cl-main-widget-dashboard-instant-wins-cards-image {
+        background-color: #ffffff;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel-title,
+      .cl-main-widget-dashboard-instant-wins-cards-title,
+      .cl-ach-list-details-label {
+        color: #080D12;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel-description,
+      .cl-main-widget-dashboard-instant-wins-cards-description {
+        color: #141E28;
+      }
+      .cl-ach-list-actions-reward {
+        background: #edf3f7;
+        color: #223241;
+        &::before {
+          background: url(../../images/award-icon-dark.svg) no-repeat center;
+          background-size: contain;
+        }
+      }
+      .cl-ach-list-progression-cont {
+        background: #fff;
+        .cl-ach-list-progression-bar {
+          background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+        }
+      }
+      .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
+      .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
+        color: #080D12;
+      }
+    }
   }
   .cl-main-widget-inner-wrapper {
     background: #EDF3F7;
     .cl-main-widget-navigation-container {
       .cl-main-widget-navigation-logo {
         background-image: url(../../images/ziqni-logo-nav-dark.svg);
+      }
+      .cl-main-widget-navigation-dashboard-icon {
+        background-image: $lb3-dashboard-icon-black;
       }
       .cl-main-widget-navigation-lb-icon {
         background-image: $lb3-tournament-icon-black;
@@ -6223,6 +6282,9 @@
       .cl-active-nav {
         .cl-main-navigation-item-title {
           color: #ffffff;
+        }
+        .cl-main-widget-navigation-dashboard-icon {
+          background-image: $lb3-dashboard-icon;
         }
         .cl-main-widget-navigation-lb-icon {
           background-image: $lb3-tournament-icon;
@@ -6998,13 +7060,6 @@
         .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
         .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
           display: block;
-          color: #ffffff;
-          text-align: center;
-          font-family: 'Syne', sans-serif;
-          font-size: 12px;
-          line-height: 12px;
-          font-weight: 700;
-          padding-bottom: 10px;
         }
         .cl-main-widget-dashboard-achievements-title,
         .cl-main-widget-dashboard-instant-wins-title {
@@ -7097,6 +7152,11 @@
           }
         }
       }
+    }
+  }
+  .lightTheme {
+    .cl-main-widget-dashboard-achievements-list .cl-ach-list-more {
+      color: #170213 !important;
     }
   }
 }
