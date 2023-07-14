@@ -1451,6 +1451,8 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body {
   padding: 0 77px 0 60px;
+  height: calc(100% - 144px);
+  overflow: auto;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
@@ -1469,6 +1471,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp {
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
   padding-top: 20px;
 }
@@ -1503,6 +1506,11 @@
   font-size: 14px;
   font-weight: 700;
   color: #ffffff;
+}
+
+.cl-main-widget-dashboard-instant-wins-cards-title-mobile,
+.cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
+  display: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-description {
@@ -1599,6 +1607,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list {
   padding-top: 20px;
   display: flex;
+  flex-wrap: wrap;
   justify-content: space-between;
 }
 
@@ -6406,6 +6415,7 @@
             }
           }
         }
+        .cl-main-widget-navigation-dashboard-icon,
         .cl-main-widget-navigation-ach-icon,
         .cl-main-widget-navigation-rewards-icon,
         .cl-main-widget-navigation-inbox-icon,
@@ -6958,6 +6968,131 @@
                 width: 100px;
                 height: 100px;
               }
+            }
+          }
+        }
+      }
+
+      .cl-main-widget-section-dashboard {
+        .cl-main-widget-dashboard-header {
+          height: 72px;
+          .cl-main-widget-dashboard-header-close {
+            width: 32px;
+            height: 32px;
+            right: -11px;
+            top: -16px;
+          }
+          .cl-main-widget-dashboard-header-label {
+            font-size: 16px;
+            padding-top: 16px;
+          }
+        }
+        .cl-main-widget-dashboard-body {
+          padding: 0;
+          height: calc(100% - 90px);
+        }
+        .cl-main-widget-dashboard-instant-wins-wheel-title,
+        .cl-main-widget-dashboard-instant-wins-cards-title {
+          display: none;
+        }
+        .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
+        .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
+          display: block;
+          color: #ffffff;
+          text-align: center;
+          font-family: 'Syne', sans-serif;
+          font-size: 12px;
+          line-height: 12px;
+          font-weight: 700;
+          padding-bottom: 10px;
+        }
+        .cl-main-widget-dashboard-achievements-title,
+        .cl-main-widget-dashboard-instant-wins-title {
+          font-size: 14px;
+        }
+        .cl-main-widget-dashboard-achievements-title {
+          padding-top: 20px;
+        }
+        .cl-main-widget-dashboard-achievements-list {
+          padding-top: 10px;
+        }
+        .cl-main-widget-dashboard-instant-wins-wrapp {
+          justify-content: space-around;
+          padding-top: 10px;
+        }
+        .cl-main-widget-dashboard-instant-wins-wheel-image {
+          width: 132px;
+          height: 84px;
+        }
+        .cl-main-widget-dashboard-instant-wins-cards-image {
+          width: 132px;
+          height: 84px;
+          background-size: 78px;
+        }
+        .cl-main-widget-dashboard-instant-wins-wheel {
+          flex-direction: column;
+          width: 144px;
+          padding: 10px 6px;
+        }
+        .cl-main-widget-dashboard-instant-wins-cards {
+          flex-direction: column;
+          width: 144px;
+          padding: 10px 6px;
+        }
+        .cl-main-widget-dashboard-instant-wins-wheel-description,
+        .cl-main-widget-dashboard-instant-wins-cards-description {
+          display: none;
+        }
+        .cl-main-widget-dashboard-instant-wins-wheel-body {
+          padding: 0;
+        }
+        .cl-main-widget-dashboard-instant-wins-cards-body {
+          padding: 0;
+        }
+        .cl-main-widget-dashboard-instant-wins-wheel-button,
+        .cl-main-widget-dashboard-instant-wins-cards-button {
+          height: 26px;
+          font-size: 12px;
+          margin-top: 20px;
+        }
+        .cl-main-widget-dashboard-achievements-list {
+          .cl-ach-list-item {
+            padding: 10px 12px;
+            height: unset;
+            width: 100%;
+            .cl-ach-list-icon {
+              width: 45px;
+              height: 45px;
+              &::before {
+                width: 45px;
+                height: 45px;
+              }
+              &::after {
+                width: 45px;
+                height: 22px;
+                background-size: cover;
+              }
+            }
+            .cl-ach-list-details-label {
+              font-size: 12px;
+              line-height: 12px;
+              padding-bottom: 10px;
+            }
+            .cl-ach-list-more {
+              text-align: center;
+              color: var(--light-font-color);
+              border: 1px solid #ee3ec8;
+              text-decoration: none;
+              border-radius: 10px;
+              padding: 10px 28px;
+              cursor: pointer;
+              transition: all .3s ease;
+              font-family: "Syne",sans-serif;
+              font-style: normal;
+              font-weight: 700;
+              font-size: 14px;
+              line-height: 14px;
+              background: unset;
             }
           }
         }
