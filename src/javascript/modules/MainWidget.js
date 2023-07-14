@@ -1298,6 +1298,7 @@ export const MainWidget = function (options) {
     const sectionDashboardInstantWinsWheelImage = document.createElement('div');
     const sectionDashboardInstantWinsWheelBody = document.createElement('div');
     const sectionDashboardInstantWinsWheelTitle = document.createElement('div');
+    const sectionDashboardInstantWinsWheelTitleMobile = document.createElement('div');
     const sectionDashboardInstantWinsWheelDescription = document.createElement('div');
     const sectionDashboardInstantWinsWheelButton = document.createElement('div');
 
@@ -1305,6 +1306,7 @@ export const MainWidget = function (options) {
     const sectionDashboardInstantWinsCardsImage = document.createElement('div');
     const sectionDashboardInstantWinsCardsBody = document.createElement('div');
     const sectionDashboardInstantWinsCardsTitle = document.createElement('div');
+    const sectionDashboardInstantWinsCardsTitleMobile = document.createElement('div');
     const sectionDashboardInstantWinsCardsDescription = document.createElement('div');
     const sectionDashboardInstantWinsCardsButton = document.createElement('div');
 
@@ -1328,6 +1330,7 @@ export const MainWidget = function (options) {
     sectionDashboardInstantWinsWheelImage.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-image');
     sectionDashboardInstantWinsWheelBody.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-body');
     sectionDashboardInstantWinsWheelTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-title');
+    sectionDashboardInstantWinsWheelTitleMobile.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-title-mobile');
     sectionDashboardInstantWinsWheelDescription.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-description');
     sectionDashboardInstantWinsWheelButton.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-button');
 
@@ -1335,16 +1338,19 @@ export const MainWidget = function (options) {
     sectionDashboardInstantWinsCardsImage.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-image');
     sectionDashboardInstantWinsCardsBody.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-body');
     sectionDashboardInstantWinsCardsTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-title');
+    sectionDashboardInstantWinsCardsTitleMobile.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-title-mobile');
     sectionDashboardInstantWinsCardsDescription.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-description');
     sectionDashboardInstantWinsCardsButton.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-button');
 
     sectionDashboardInstantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle;
 
     sectionDashboardInstantWinsWheelTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
+    sectionDashboardInstantWinsWheelTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
     sectionDashboardInstantWinsWheelDescription.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelDescription;
     sectionDashboardInstantWinsWheelButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelButton;
 
     sectionDashboardInstantWinsCardsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
+    sectionDashboardInstantWinsCardsTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
     sectionDashboardInstantWinsCardsDescription.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsDescription;
     sectionDashboardInstantWinsCardsButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton;
 
@@ -1352,6 +1358,7 @@ export const MainWidget = function (options) {
     sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelDescription);
     sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelButton);
 
+    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelTitleMobile);
     sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelImage);
     sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelBody);
 
@@ -1359,6 +1366,7 @@ export const MainWidget = function (options) {
     sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsDescription);
     sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsButton);
 
+    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsTitleMobile);
     sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsImage);
     sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsBody);
 
