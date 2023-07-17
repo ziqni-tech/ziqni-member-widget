@@ -72,8 +72,7 @@
   padding: 0;
   border: 0;
   font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+  vertical-align: middle;
   background: none;
 }
 
@@ -2538,8 +2537,7 @@
   padding: 0;
   border: 0;
   font-size: 100%;
-  font: inherit;
-  vertical-align: baseline;
+  vertical-align: middle;
   background: none;
 }
 
@@ -2547,19 +2545,10 @@
   max-width: 100%;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body p {
-  position: unset;
-  transform: none;
-  text-align: left;
-  font-size: 12px;
-  float: none;
-}
-
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body a {
   position: unset;
   transform: none;
   text-align: left;
-  font-size: 12px;
   float: none;
   color: var(--lb3-achievements-details-link-color);
 }

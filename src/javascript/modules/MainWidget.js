@@ -1390,7 +1390,7 @@ export const MainWidget = function (options) {
   };
 
   this.getActiveCompetitionDescription = function () {
-    return (this.settings.lbWidget.settings.competition.activeContest !== null &&
+    const description = (this.settings.lbWidget.settings.competition.activeContest !== null &&
         this.settings.lbWidget.settings.competition.activeContest.description &&
         this.settings.lbWidget.settings.competition.activeContest.description.length > 0)
       ? this.settings.lbWidget.settings.competition.activeContest.description
@@ -1398,6 +1398,8 @@ export const MainWidget = function (options) {
             this.settings.lbWidget.settings.competition.activeCompetition.description &&
             this.settings.lbWidget.settings.competition.activeCompetition.description.length > 0)
         ? this.settings.lbWidget.settings.competition.activeCompetition.description : '');
+
+    return description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
   };
 
   this.extractImage = function (body, imageContainer, isBodyVirtualOpt) {
@@ -1793,8 +1795,14 @@ export const MainWidget = function (options) {
 
     image.innerHTML = '';
     label.innerHTML = (_this.settings.lbWidget.settings.competition.activeContest.label.length > 0) ? _this.settings.lbWidget.settings.competition.activeContest.label : _this.settings.lbWidget.settings.competition.activeCompetition.label;
-    body.innerHTML = (_this.settings.lbWidget.settings.competition.activeContest.description.length > 0) ? _this.settings.lbWidget.settings.competition.activeContest.description : _this.settings.lbWidget.settings.competition.activeCompetition.description;
+    let bodyHtml = (_this.settings.lbWidget.settings.competition.activeContest.description.length > 0)
+      ? _this.settings.lbWidget.settings.competition.activeContest.description
+      : _this.settings.lbWidget.settings.competition.activeCompetition.description;
     _this.competitionDetailsOptInButtonState();
+
+    bodyHtml = bodyHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    console.log('bodyHtml:', bodyHtml);
+    body.innerHTML = bodyHtml;
 
     _this.settings.detailsContainer.style.display = 'block';
     _this.settings.headerDate.style.display = 'none';
@@ -2201,7 +2209,7 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = data.name;
-    body.innerHTML = data.description;
+    body.innerHTML = data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
     if (_this.settings.lbWidget.settings.achievements.extractImageHeader) {
       var imageLookup = query(body, 'img');
@@ -2244,7 +2252,7 @@ export const MainWidget = function (options) {
     var value = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-value');
 
     label.innerHTML = data.name;
-    body.innerHTML = data.description;
+    body.innerHTML = data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.awardFormatter(data);
     claimBtn.dataset.id = data.id;
 
@@ -2322,7 +2330,7 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = mission.data.name;
-    body.innerHTML = mission.data.description;
+    body.innerHTML = mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
