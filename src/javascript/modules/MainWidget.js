@@ -9,11 +9,8 @@ import addClass from '../utils/addClass';
 import remove from '../utils/remove';
 import appendNext from '../utils/appendNext';
 import stripHtml from '../utils/stripHtml';
-import Graph from 'graphology';
-import Sigma from 'sigma';
-import circular from 'graphology-layout/circular';
-import rotation from 'graphology-layout/rotation';
-import forceAtlas2 from 'graphology-layout-forceatlas2';
+import cytoscape from 'cytoscape';
+import dagre from 'cytoscape-dagre';
 
 /**
  * MainWidget
@@ -1174,13 +1171,13 @@ export const MainWidget = function (options) {
     const sectionMissionsDetailsPrizeLabel = document.createElement('div');
     const sectionMissionsDetailsPrizeValue = document.createElement('div');
 
-    const sectionMissionsGraph = document.createElement('div');
     const graphImage = document.createElement('div');
+
+    const cytoscapeContainer = document.createElement('div');
 
     graphImage.setAttribute('class', 'cl-main-widget-missions-graph-image');
 
-    sectionMissionsGraph.setAttribute('id', 'graph-container');
-    sectionMissionsGraph.setAttribute('class', 'cl-main-widget-missions-graph-container');
+    cytoscapeContainer.setAttribute('id', 'cy');
 
     sectionMissions.setAttribute('class', _this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
     sectionMissionsHeader.setAttribute('class', 'cl-main-widget-missions-header');
@@ -1259,13 +1256,12 @@ export const MainWidget = function (options) {
     sectionMissionsDetailsBodyWrapper.appendChild(sectionMissionsDetailsBodyContainer);
 
     sectionMissionsDetailsBodyContainer.appendChild(graphImage);
-    // sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsGraph);
 
     sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsHeader);
     sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsBodyWrapper);
 
     sectionMissionsDetailsContainerWrapper.appendChild(sectionMissionsDetailsWrapper);
-    sectionMissionsDetailsContainerWrapper.appendChild(sectionMissionsGraph);
+    sectionMissionsDetailsContainerWrapper.appendChild(cytoscapeContainer);
 
     sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsContainerWrapper);
 
@@ -2931,8 +2927,8 @@ export const MainWidget = function (options) {
     graphContainer.style.display = 'none';
   };
 
-  this.loadMissionDetailsGraph = function () {
-    const container = document.getElementById('graph-container');
+  this.loadMissionDetailsCyGraph = function () {
+    const container = document.getElementById('cy');
 
     if (container.style.display === 'block') {
       container.style.display = 'none';
@@ -2942,71 +2938,136 @@ export const MainWidget = function (options) {
     container.style.display = 'block';
     container.innerHTML = '';
 
-    const graph = new Graph();
-    this.settings.missions.mission.graph.nodes.forEach((n) => {
-      let color = '#2F0426';
-      if (n.entityId === this.settings.missions.mission.data.id) {
-        color = '#2F0426';
-      }
-      graph.addNode(n.entityId, { size: 20, label: n.name, color: color });
-    });
+    cytoscape.use(dagre);
 
-    const MUST_NOT_COLOR = '#e74a39';
-    const SHOULD_COLOR = '#f48f3b';
-    const MUST_COLOR = '#3bb54c';
+    const nodes = [];
+    const edges = [];
+
+    this.settings.missions.mission.graph.nodes.forEach(n => {
+      nodes.push({ data: { id: n.entityId, label: n.name } });
+    });
 
     this.settings.missions.mission.graph.graphs[0].edges.forEach(e => {
-      if (e.graphEdgeType !== 'ROOT') {
-        let color = 'black';
-        switch (e.graphEdgeType) {
-          case 'MUST NOT':
-            color = MUST_NOT_COLOR;
-            break;
-          case 'SHOULD':
-            color = SHOULD_COLOR;
-            break;
-          case 'MUST':
-            color = MUST_COLOR;
-            break;
+      if (e.graphEdgeType === 'ROOT') return;
+      let classes = '';
+      switch (e.graphEdgeType) {
+        case 'MUST':
+          classes = 'green';
+          break;
+        case 'SHOULD':
+          classes = 'red';
+          break;
+        case 'MUSTNOT':
+          classes = 'red';
+          break;
+      }
+      edges.push({ data: { source: e.headEntityId, target: e.tailEntityId, label: e.graphEdgeType.toLowerCase() }, classes: classes });
+    });
+
+    // eslint-disable-next-line
+    const cy = cytoscape({
+      container: document.getElementById('cy'),
+
+      boxSelectionEnabled: false,
+      autounselectify: true,
+
+      style: [
+        {
+          selector: 'node',
+          style: {
+            height: '48px',
+            width: '48px',
+            'border-color': '#406A8C',
+            'background-color': '#2F0426',
+            'border-width': 1,
+            label: 'data(label)',
+            color: '#ffffff',
+            'font-size': '12px'
+          }
+        },
+        {
+          selector: 'edge',
+          style: {
+            'curve-style': 'taxi',
+            width: 1,
+            'target-arrow-shape': 'triangle',
+            'line-color': '#6FCF97',
+            'target-arrow-color': '#6FCF97',
+            'line-style': 'dashed',
+            label: 'data(label)',
+            color: '#6FCF97'
+          }
+        },
+        {
+          selector: 'node[label]',
+          css: {
+            'text-margin-y': '-5px'
+          }
+        },
+        {
+          selector: 'edge[label]',
+          css: {
+            label: 'data(label)',
+            'text-rotation': 'autorotate',
+            'text-margin-x': '-10px',
+            'text-margin-y': '-10px',
+            'font-size': '12px'
+          }
+        },
+        {
+          selector: '.red',
+          css: {
+            'curve-style': 'taxi',
+            width: 1,
+            'target-arrow-shape': 'triangle',
+            'line-color': '#EB5757',
+            'target-arrow-color': '#EB5757',
+            'line-style': 'dashed'
+          }
+        },
+        {
+          selector: '.yellow',
+          css: {
+            'curve-style': 'taxi',
+            width: 1,
+            'target-arrow-shape': 'triangle',
+            'line-color': '#F2994A',
+            'target-arrow-color': '#F2994A',
+            'line-style': 'dashed'
+          }
+        },
+        {
+          selector: '.red[label]',
+          css: {
+            color: '#EB5757'
+          }
+        },
+        {
+          selector: '.yellow[label]',
+          css: {
+            color: '#F2994A'
+          }
         }
-        graph.addEdge(
-          e.headEntityId,
-          e.tailEntityId,
-          { weight: 1, type: 'arrow', label: e.graphEdgeType, size: 5, color: color, labelColor: 'red' }
-        );
+      ],
+
+      elements: {
+        nodes: nodes,
+        edges: edges
+      },
+
+      layout: {
+        name: 'dagre',
+        directed: true,
+        rankDir: 'LR',
+        padding: 30,
+        fit: true,
+        spacingFactor: 1.5
       }
     });
 
-    circular.assign(graph);
-    rotation.assign(graph, 10);
-
-    const settings = {
-      linLogMode: false,
-      outboundAttractionDistribution: false,
-      adjustSizes: false,
-      edgeWeightInfluence: 1,
-      scalingRatio: 10,
-      strongGravityMode: true,
-      gravity: 1,
-      slowDown: 3.7,
-      barnesHutOptimize: false,
-      barnesHutTheta: 0.5
-    };
-
-    forceAtlas2.assign(graph, { settings, iterations: 600 });
-
-    // eslint-disable-next-line
-    const renderer = new Sigma(graph, container, {
-      renderLabels: true,
-      renderEdgeLabels: true,
-      enableEdgeWheelEvents: false,
-      allowInvalidContainer: true,
-      minCameraRatio: null, // 1.3
-      maxCameraRatio: null, // 1.3
-      labelFont: 'Gotham',
-      labelColor: { color: '#fff' },
-      edgeLabelFont: 'Gotham',
-      edgeLabelWeight: 'bold'
+    cy.on('tap', 'node', function (evt) {
+      const node = evt.target;
+      console.log('node.id: ' + node.id());
     });
   };
 
@@ -3034,6 +3095,10 @@ export const MainWidget = function (options) {
 
   this.hideMissionDetails = function (callback) {
     const _this = this;
+
+    const cyContainer = document.getElementById('cy');
+    cyContainer.style.display = 'none';
+    cyContainer.innerHTML = '';
 
     removeClass(_this.settings.missions.detailsContainer, 'cl-show');
     setTimeout(function () {
