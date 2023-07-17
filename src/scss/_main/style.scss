@@ -1,5 +1,16 @@
 @import url('https://fonts.googleapis.com/css2?family=Syne:wght@500&display=swap');
 
+#cy {
+  width: 100%;
+  height: 360px;
+  border: 1px solid #223241;
+  border-radius: 10px;
+  position: relative;
+  margin-top: 20px;
+  overflow: hidden;
+  display: none;
+}
+
 .cl-widget-ms-wrapper, .cl-widget-notif-wrapper {
   float: left;
   width: 100%;
@@ -5026,22 +5037,6 @@
   z-index: 1;
   left: 0;
   top: 0;
-}
-
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container {
-  height: 360px;
-  padding: 0;
-  border: 1px solid #223241;
-  border-radius: 10px;
-  position: relative;
-  margin-top: 20px;
-  overflow: hidden;
-  display: none;
-}
-
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-graph-container canvas {
-  top: 0;
-  left: 0;
 }
 
 .cl-main-widget-missions-graph-image {

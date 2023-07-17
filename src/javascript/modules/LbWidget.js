@@ -2248,7 +2248,7 @@ export const LbWidget = function (options) {
 
       // mission details info button
     } else if (hasClass(el, 'cl-main-widget-missions-details-info-btn')) {
-      _this.settings.mainWidget.loadMissionDetailsGraph();
+      _this.settings.mainWidget.loadMissionDetailsCyGraph();
 
       // Single Wheel
     } else if (hasClass(el, 'wheel-button')) {
