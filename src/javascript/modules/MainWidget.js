@@ -2929,6 +2929,16 @@ export const MainWidget = function (options) {
 
   this.loadMissionDetailsCyGraph = function () {
     const container = document.getElementById('cy');
+    const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
+    const isLightTheme = mainWrapper.classList.contains('lightTheme');
+
+    const nodeColor = isLightTheme ? '#BEE9F3' : '#2F0426';
+    const nodeBorderColor = isLightTheme ? '#F7A1E4' : '#406A8C';
+    const nodeLabelColor = isLightTheme ? '#141E28' : '#ffffff';
+
+    const greenClassColor = isLightTheme ? '#219653' : '#6FCF97';
+    const redClassColor = isLightTheme ? '#EB5757' : '#EB5757';
+    const yellowClassColor = isLightTheme ? '#F2994A' : '#F2994A';
 
     if (container.style.display === 'block') {
       container.style.display = 'none';
@@ -2955,7 +2965,7 @@ export const MainWidget = function (options) {
           classes = 'green';
           break;
         case 'SHOULD':
-          classes = 'red';
+          classes = 'yellow';
           break;
         case 'MUSTNOT':
           classes = 'red';
@@ -2977,11 +2987,11 @@ export const MainWidget = function (options) {
           style: {
             height: '48px',
             width: '48px',
-            'border-color': '#406A8C',
-            'background-color': '#2F0426',
+            'border-color': nodeBorderColor,
+            'background-color': nodeColor,
             'border-width': 1,
             label: 'data(label)',
-            color: '#ffffff',
+            color: nodeLabelColor,
             'font-size': '12px'
           }
         },
@@ -2991,11 +3001,11 @@ export const MainWidget = function (options) {
             'curve-style': 'taxi',
             width: 1,
             'target-arrow-shape': 'triangle',
-            'line-color': '#6FCF97',
-            'target-arrow-color': '#6FCF97',
+            'line-color': greenClassColor,
+            'target-arrow-color': greenClassColor,
             'line-style': 'dashed',
             label: 'data(label)',
-            color: '#6FCF97'
+            color: greenClassColor
           }
         },
         {
@@ -3020,8 +3030,8 @@ export const MainWidget = function (options) {
             'curve-style': 'taxi',
             width: 1,
             'target-arrow-shape': 'triangle',
-            'line-color': '#EB5757',
-            'target-arrow-color': '#EB5757',
+            'line-color': redClassColor,
+            'target-arrow-color': redClassColor,
             'line-style': 'dashed'
           }
         },
@@ -3031,21 +3041,21 @@ export const MainWidget = function (options) {
             'curve-style': 'taxi',
             width: 1,
             'target-arrow-shape': 'triangle',
-            'line-color': '#F2994A',
-            'target-arrow-color': '#F2994A',
+            'line-color': yellowClassColor,
+            'target-arrow-color': yellowClassColor,
             'line-style': 'dashed'
           }
         },
         {
           selector: '.red[label]',
           css: {
-            color: '#EB5757'
+            color: redClassColor
           }
         },
         {
           selector: '.yellow[label]',
           css: {
-            color: '#F2994A'
+            color: yellowClassColor
           }
         }
       ],
@@ -3067,7 +3077,7 @@ export const MainWidget = function (options) {
 
     cy.on('tap', 'node', function (evt) {
       const node = evt.target;
-      console.log('node.id: ' + node.id());
+      console.log('id: ' + node.id());
     });
   };
 
