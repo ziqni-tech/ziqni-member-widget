@@ -2840,7 +2840,7 @@
  */
 .cl-main-widget-tournaments-list {
   position: absolute;
-  height: calc(100% - 149px);
+  height: calc(100% - 145px);
   background: #0f1921;
   top: 76px;
   left: -200px;
@@ -6244,6 +6244,9 @@
       .cl-main-widget-missions-header-close {
         background-image: $lb3-tournament-header-close-light-image;
       }
+      .cl-main-widget-mission-header-back-icon {
+        background-image: url(../../images/left-arrow-black.svg);
+      }
     }
     .cl-missions-list-item {
       background: #DCE6EF;
@@ -6255,6 +6258,9 @@
       &::-webkit-scrollbar-thumb {
         background: #96B5CF;
       }
+    }
+    .cl-main-widget-missions-map-container {
+      background: #EDF3F7;
     }
     .cl-main-widget-missions-list-body-res {
       .cl-missions-list-details-label {

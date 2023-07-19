@@ -3133,6 +3133,9 @@ export const MainWidget = function (options) {
   this.loadMissionMapGraph = async () => {
     const _this = this;
     const container = document.getElementById('cy-map');
+    const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
+    const isLightTheme = mainWrapper.classList.contains('lightTheme');
+
     const itemBgEl = document.querySelector('.cl-main-widget-missions-map-graph-item-bg');
     const style = window.getComputedStyle(itemBgEl, false);
 
@@ -3207,6 +3210,10 @@ export const MainWidget = function (options) {
       edges.push({ data: { source: e.headEntityId, target: e.tailEntityId, label: e.graphEdgeType.toLowerCase() }, classes: classes });
     });
 
+    const backgroundColor = isLightTheme ? '#EDF3F7' : '#0f1921';
+    const nodeLabelColor = isLightTheme ? '#223241' : '#ffffff';
+    const edgeLineColor = isLightTheme ? '#B9CEDF' : '#304F69';
+
     const cy = cytoscape({
       container: document.getElementById('cy-map'),
 
@@ -3220,7 +3227,7 @@ export const MainWidget = function (options) {
           style: {
             height: '90px',
             width: '90px',
-            'background-color': '#0f1921',
+            'background-color': backgroundColor,
             'background-image': 'data(images)',
             'background-fit': 'none cover none none',
             'background-clip': 'none node none none',
@@ -3228,7 +3235,7 @@ export const MainWidget = function (options) {
             'background-image-containment': 'over over over over',
             'background-repeat': 'no-repeat',
             label: 'data(label)',
-            color: '#fff',
+            color: nodeLabelColor,
             'font-size': '12px',
             'text-valign': 'bottom',
             'text-halign': 'center'
@@ -3239,7 +3246,7 @@ export const MainWidget = function (options) {
           style: {
             'curve-style': 'unbundled-bezier',
             width: 5,
-            'line-color': '#304F69',
+            'line-color': edgeLineColor,
             'line-style': 'dashed',
             'line-dash-pattern': [0, 14],
             'line-cap': 'round'
