@@ -6498,6 +6498,9 @@
  * *************************************
  */
 @media screen and (max-width: 768px) {
+  #cy {
+    height: 300px;
+  }
   .cl-main-widget-wrapper {
     padding: 0;
     .cl-main-widget-pre-loader {
@@ -7009,6 +7012,19 @@
             right: -11px;
             top: -16px;
           }
+          .cl-main-widget-mission-header-back-icon {
+            width: 32px;
+            height: 32px;
+            transform: unset;
+            top: 26px;
+          }
+        }
+        .cl-main-widget-missions-map-container {
+          top: 72px;
+          height: calc(100% - 82px);
+        }
+        .cl-main-widget-missions-map-wrapper {
+          margin-right: 0;
         }
         .cl-main-widget-missions-list {
           height: calc(100% - 82px);

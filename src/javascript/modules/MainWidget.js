@@ -3135,6 +3135,7 @@ export const MainWidget = function (options) {
     const container = document.getElementById('cy-map');
     const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
     const isLightTheme = mainWrapper.classList.contains('lightTheme');
+    const isMobile = window.screen.availWidth < 768;
 
     const itemBgEl = document.querySelector('.cl-main-widget-missions-map-graph-item-bg');
     const style = window.getComputedStyle(itemBgEl, false);
@@ -3213,6 +3214,7 @@ export const MainWidget = function (options) {
     const backgroundColor = isLightTheme ? '#EDF3F7' : '#0f1921';
     const nodeLabelColor = isLightTheme ? '#223241' : '#ffffff';
     const edgeLineColor = isLightTheme ? '#B9CEDF' : '#304F69';
+    const graphDir = isMobile ? 'TB' : 'LR';
 
     const cy = cytoscape({
       container: document.getElementById('cy-map'),
@@ -3268,7 +3270,7 @@ export const MainWidget = function (options) {
       layout: {
         name: 'dagre',
         directed: true,
-        rankDir: 'LR',
+        rankDir: graphDir,
         padding: 20,
         fit: true,
         spacingFactor: 1.3
