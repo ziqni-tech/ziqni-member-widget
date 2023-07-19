@@ -59,7 +59,8 @@ export const MainWidget = function (options) {
       container: null,
       detailsContainer: null,
       mission: null,
-      timerInterval: null
+      timerInterval: null,
+      mapContainer: null
     },
     leaderboard: {
       defaultEmptyList: 20,
@@ -1139,6 +1140,7 @@ export const MainWidget = function (options) {
     const sectionMissionsHeaderLabel = document.createElement('div');
     const sectionMissionsHeaderDate = document.createElement('div');
     const sectionMissionsHeaderClose = document.createElement('div');
+    const sectionMissionsHeaderBack = document.createElement('div');
 
     const sectionMissionsDetails = document.createElement('div');
     const sectionMissionsDetailsInfo = document.createElement('div');
@@ -1171,6 +1173,15 @@ export const MainWidget = function (options) {
     const sectionMissionsDetailsPrizeLabel = document.createElement('div');
     const sectionMissionsDetailsPrizeValue = document.createElement('div');
 
+    const sectionMissionsMapContainer = document.createElement('div');
+    const sectionMissionsMapContainerWrapper = document.createElement('div');
+    const sectionMissionsMapHeader = document.createElement('div');
+    const sectionMissionsMapGraph = document.createElement('div');
+    const sectionMissionsMapGraphItemBg = document.createElement('div');
+    const sectionMissionsMapGraphItemStar3 = document.createElement('div');
+    const sectionMissionsMapGraphItemStar2 = document.createElement('div');
+    const sectionMissionsMapGraphItemStar1 = document.createElement('div');
+
     const graphImage = document.createElement('div');
 
     const cytoscapeContainer = document.createElement('div');
@@ -1181,6 +1192,7 @@ export const MainWidget = function (options) {
 
     sectionMissions.setAttribute('class', _this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
     sectionMissionsHeader.setAttribute('class', 'cl-main-widget-missions-header');
+    sectionMissionsHeaderBack.setAttribute('class', 'cl-main-widget-mission-header-back-icon');
     sectionMissionsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-header-label');
     sectionMissionsHeaderDate.setAttribute('class', 'cl-main-widget-missions-header-date');
     sectionMissionsHeaderClose.setAttribute('class', 'cl-main-widget-missions-header-close');
@@ -1219,12 +1231,25 @@ export const MainWidget = function (options) {
     sectionMissionsDetailsPrizeLabel.setAttribute('class', 'cl-main-widget-missions-details-prize-label');
     sectionMissionsDetailsPrizeValue.setAttribute('class', 'cl-main-widget-missions-details-prize-value');
 
+    // map section
+    sectionMissionsMapContainer.setAttribute('class', 'cl-main-widget-missions-map-container');
+    sectionMissionsMapContainerWrapper.setAttribute('class', 'cl-main-widget-missions-map-wrapper');
+    sectionMissionsMapHeader.setAttribute('class', 'cl-main-widget-missions-map-header');
+    sectionMissionsMapGraph.setAttribute('class', 'cl-main-widget-missions-map-graph');
+    sectionMissionsMapGraph.setAttribute('id', 'cy-map');
+    sectionMissionsMapGraphItemBg.setAttribute('class', 'cl-main-widget-missions-map-graph-item-bg');
+    sectionMissionsMapGraphItemStar3.setAttribute('class', 'cl-main-widget-missions-map-graph-item-star-3');
+    sectionMissionsMapGraphItemStar2.setAttribute('class', 'cl-main-widget-missions-map-graph-item-star-2');
+    sectionMissionsMapGraphItemStar1.setAttribute('class', 'cl-main-widget-missions-map-graph-item-star-1');
+
     sectionMissionsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.label;
     sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
     sectionMissionsDetailsInfoBtn.innerHTML = 'i';
     sectionMissionsDetailsDescriptionLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.descriptionLabel;
     sectionMissionsDetailsPrizeLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.prizeLabel + ':';
+    sectionMissionsMapHeader.innerHTML = _this.settings.lbWidget.settings.translation.missions.mapLabel;
 
+    sectionMissionsHeader.appendChild(sectionMissionsHeaderBack);
     sectionMissionsHeader.appendChild(sectionMissionsHeaderLabel);
     sectionMissionsHeader.appendChild(sectionMissionsHeaderDate);
     sectionMissionsHeader.appendChild(sectionMissionsHeaderClose);
@@ -1265,6 +1290,14 @@ export const MainWidget = function (options) {
 
     sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsContainerWrapper);
 
+    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapHeader);
+    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemBg);
+    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemStar3);
+    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemStar2);
+    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemStar1);
+    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraph);
+    sectionMissionsMapContainer.appendChild(sectionMissionsMapContainerWrapper);
+
     sectionMissionsFooter.appendChild(sectionMissionsFooterContent);
 
     sectionMissions.appendChild(sectionMissionsHeader);
@@ -1272,6 +1305,7 @@ export const MainWidget = function (options) {
     sectionMissions.appendChild(sectionMissionsList);
     sectionMissions.appendChild(sectionMissionsFooter);
     sectionMissions.appendChild(sectionMissionsDetailsContainer);
+    sectionMissions.appendChild(sectionMissionsMapContainer);
 
     return sectionMissions;
   };
@@ -2128,6 +2162,7 @@ export const MainWidget = function (options) {
       _this.settings.messages.detailsContainer = query(_this.settings.container, '.cl-main-widget-inbox-details-container');
       _this.settings.missions.container = query(_this.settings.container, '.' + _this.settings.lbWidget.settings.navigation.missions.containerClass);
       _this.settings.missions.detailsContainer = query(_this.settings.container, '.cl-main-widget-missions-details-container');
+      _this.settings.missions.mapContainer = query(_this.settings.container, '.cl-main-widget-missions-map-container');
 
       _this.mainNavigationCheck();
       _this.leaderboardHeader();
@@ -2919,12 +2954,10 @@ export const MainWidget = function (options) {
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
       addClass(_this.settings.missions.detailsContainer, 'cl-show');
+      _this.hideMissionMap();
 
       if (typeof callback === 'function') callback();
     }, 50);
-
-    const graphContainer = document.getElementById('graph-container');
-    graphContainer.style.display = 'none';
   };
 
   this.loadMissionDetailsCyGraph = function () {
@@ -3079,6 +3112,175 @@ export const MainWidget = function (options) {
       const node = evt.target;
       console.log('id: ' + node.id());
     });
+  };
+
+  this.loadMissionMap = (mission, callback) => {
+    this.settings.missions.mission = mission;
+    const _this = this;
+    const backBtn = document.querySelector('.cl-main-widget-mission-header-back-icon');
+
+    backBtn.style.display = 'block';
+
+    _this.settings.missions.mapContainer.style.display = 'block';
+
+    setTimeout(function () {
+      addClass(_this.settings.missions.mapContainer, 'cl-show');
+      _this.loadMissionMapGraph();
+      if (typeof callback === 'function') callback();
+    }, 50);
+  };
+
+  this.loadMissionMapGraph = async () => {
+    const _this = this;
+    const container = document.getElementById('cy-map');
+    const itemBgEl = document.querySelector('.cl-main-widget-missions-map-graph-item-bg');
+    const style = window.getComputedStyle(itemBgEl, false);
+
+    const starEl3 = document.querySelector('.cl-main-widget-missions-map-graph-item-star-3');
+    const starEl2 = document.querySelector('.cl-main-widget-missions-map-graph-item-star-2');
+    const starEl1 = document.querySelector('.cl-main-widget-missions-map-graph-item-star-1');
+
+    let itemBgSrc = style.backgroundImage.slice(4, -1).replace(/"/g, '');
+    if (!itemBgSrc || itemBgSrc[0] === 'f') {
+      itemBgSrc = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bg.png';
+    }
+    console.log('itemBgSrc:', itemBgSrc);
+
+    let starEl3Src = window.getComputedStyle(starEl3, false).backgroundImage.slice(4, -1).replace(/"/g, '');
+    let starEl2Src = window.getComputedStyle(starEl2, false).backgroundImage.slice(4, -1).replace(/"/g, '');
+    let starEl1Src = window.getComputedStyle(starEl1, false).backgroundImage.slice(4, -1).replace(/"/g, '');
+
+    if (starEl3Src[0] === 'f') {
+      starEl3Src = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/rate3.svg';
+      starEl2Src = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/rate2.svg';
+      starEl1Src = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/rate1.svg';
+    }
+
+    const achIds = this.settings.missions.mission.graph.nodes.map(n => n.entityId);
+    const achievements = await this.settings.lbWidget.getAchievementsByIds(achIds);
+    const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
+    // statuses[1].percentageComplete = 50;
+    // statuses[4].percentageComplete = 100;
+    // statuses[3].percentageComplete = 70;
+
+    container.innerHTML = '';
+
+    cytoscape.use(dagre);
+
+    const nodes = [];
+    const edges = [];
+
+    this.settings.missions.mission.graph.nodes.forEach((n) => {
+      let src = 'none';
+      const idx = achievements.findIndex(a => a.id === n.entityId);
+      if (idx !== -1) {
+        if (achievements[idx].iconLink) {
+          src = achievements[idx].iconLink;
+        }
+      }
+
+      let starSrc = 'none';
+      const statusIdx = statuses.findIndex(a => a.entityId === n.entityId);
+      if (statusIdx !== -1) {
+        if (statuses[statusIdx].percentageComplete >= 33 && statuses[statusIdx].percentageComplete < 66) starSrc = starEl1Src;
+        if (statuses[statusIdx].percentageComplete >= 66 && statuses[statusIdx].percentageComplete < 100) starSrc = starEl2Src;
+        if (statuses[statusIdx].percentageComplete === 100) starSrc = starEl3Src;
+      }
+
+      nodes.push({ data: { id: n.entityId, label: n.name, images: [itemBgSrc, src, starSrc, 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bottom.svg'] } });
+    });
+
+    this.settings.missions.mission.graph.graphs[0].edges.forEach(e => {
+      if (e.graphEdgeType === 'ROOT') return;
+      let classes = '';
+      switch (e.graphEdgeType) {
+        case 'MUST':
+          classes = 'green';
+          break;
+        case 'SHOULD':
+          classes = 'yellow';
+          break;
+        case 'MUSTNOT':
+          classes = 'red';
+          break;
+      }
+      edges.push({ data: { source: e.headEntityId, target: e.tailEntityId, label: e.graphEdgeType.toLowerCase() }, classes: classes });
+    });
+
+    const cy = cytoscape({
+      container: document.getElementById('cy-map'),
+
+      boxSelectionEnabled: false,
+      autounselectify: true,
+      zoom: 1,
+
+      style: [
+        {
+          selector: 'node',
+          style: {
+            height: '90px',
+            width: '90px',
+            'background-color': '#0f1921',
+            'background-image': 'data(images)',
+            'background-fit': 'none cover none none',
+            'background-clip': 'none node none none',
+            'bounds-expansion': 60,
+            'background-image-containment': 'over over over over',
+            'background-repeat': 'no-repeat',
+            label: 'data(label)',
+            color: '#fff',
+            'font-size': '12px',
+            'text-valign': 'bottom',
+            'text-halign': 'center'
+          }
+        },
+        {
+          selector: 'edge',
+          style: {
+            'curve-style': 'unbundled-bezier',
+            width: 5,
+            'line-color': '#304F69',
+            'line-style': 'dashed',
+            'line-dash-pattern': [0, 14],
+            'line-cap': 'round'
+          }
+        },
+        {
+          selector: 'node[label]',
+          css: {
+            'text-margin-y': '25px'
+          }
+        }
+      ],
+
+      elements: {
+        nodes: nodes,
+        edges: edges
+      },
+
+      layout: {
+        name: 'dagre',
+        directed: true,
+        rankDir: 'LR',
+        padding: 20,
+        fit: true,
+        spacingFactor: 1.3
+      }
+    });
+
+    cy.on('tap', 'node', function () {
+      _this.loadMissionDetails(_this.settings.missions.mission, null);
+    });
+  };
+
+  this.hideMissionMap = () => {
+    const backBtn = document.querySelector('.cl-main-widget-mission-header-back-icon');
+    const container = document.getElementById('cy-map');
+
+    backBtn.style.display = 'none';
+    container.innerHTML = '';
+
+    this.settings.missions.mapContainer.style.display = 'none';
   };
 
   this.hideRewardDetails = function (callback) {
@@ -4308,6 +4510,7 @@ export const MainWidget = function (options) {
     var _this = this;
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
+    const missionBackIcon = query(_this.settings.container, '.cl-main-widget-mission-header-back-icon');
 
     objectIterator(query(_this.settings.container, '.cl-main-widget-navigation-items .cl-active-nav'), function (obj) {
       removeClass(obj, 'cl-active-nav');
@@ -4328,6 +4531,7 @@ export const MainWidget = function (options) {
 
     listIcon.style.display = 'block';
     backIcon.style.display = 'none';
+    missionBackIcon.style.display = 'none';
     _this.hideEmbeddedCompetitionDetailsContent();
     _this.hideCompetitionList();
 
