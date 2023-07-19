@@ -86,7 +86,8 @@
     "label": "Missions",
     "btn": "Go",
     "descriptionLabel": "Description",
-    "prizeLabel": "Prize"
+    "prizeLabel": "Prize",
+    "mapLabel": "Mission map"
   },
   "global": {
     "copy": "Powered By Ziqni"

@@ -5064,6 +5064,20 @@
   font-weight: 700;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header .cl-main-widget-mission-header-back-icon {
+  display: none;
+  background-image: url(../../images/left-arrow.svg);
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  background-size: 100%;
+  cursor: pointer;
+  position: absolute;
+  left: 0;
+  top: 50%;
+  transform: translate(0, -50%);
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-header .cl-main-widget-missions-header-date {
   float: left;
   width: auto;
@@ -5289,6 +5303,66 @@
   max-height: 40px;
   line-height: 16px;
   color: var(--lb3-messages-item-text-color);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-container {
+  position: absolute;
+  height: calc(100% - 134px);
+  background: var(--lb3-achievements-details-bg-color);
+  top: 76px;
+  left: -200px;
+  width: 100%;
+  z-index: 10;
+  opacity: 0;
+  display: none;
+  transition: all .3s ease;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-wrapper {
+  margin-right: 16px;
+  height: 100%;
+  overflow: auto;
+  border-radius: 10px;
+  border: 1px solid #223241;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-container.cl-show {
+  left: 0;
+  opacity: 1;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-header {
+  color: #ffffff;
+  text-align: center;
+  font-family: Syne, sans-serif;
+  font-size: 20px;
+  font-weight: 700;
+  padding-top: 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-graph {
+  height: calc(100% - 70px);
+  padding: 40px 20px 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-graph-item-bg {
+  display: none;
+  background-image: url(../../images/map-item-bg.png);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-graph-item-star-3 {
+  display: none;
+  background-image: url(../../images/rate3.svg);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-graph-item-star-2 {
+  display: none;
+  background-image: url(../../images/rate2.svg);
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-map-graph-item-star-1 {
+  display: none;
+  background-image: url(../../images/rate1.svg);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container {

@@ -895,6 +895,26 @@ export const LbWidget = function (options) {
     }
   };
 
+  this.getAchievementsByIds = async function (achievementIds) {
+    if (!this.settings.apiWs.achievementsApiWsClient) {
+      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
+    }
+
+    const request = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        ids: achievementIds,
+        limit: achievementIds.length
+      }
+    }, null);
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.achievementsApiWsClient.getAchievements(request, (json) => {
+        resolve(json.data);
+      });
+    });
+  };
+
   this.getAward = async function (awardId, callback) {
     let awardData = null;
     const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards];
@@ -1998,6 +2018,10 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
       _this.settings.mainWidget.hideCompetitionList();
 
+      // hide mission map
+    } else if (hasClass(el, 'cl-main-widget-mission-header-back-icon')) {
+      _this.settings.mainWidget.hideMissionMap();
+
       // load competition details
     } else if (hasClass(el, 'cl-main-widget-lb-details-content-label') || closest(el, '.cl-main-widget-lb-details-content-label') !== null) {
       if (_this.settings.competition.activeContest !== null) {
@@ -2297,9 +2321,12 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(function () {
         _this.getMission(missionId, function (data) {
-          _this.settings.mainWidget.loadMissionDetails(data, function () {
+          _this.settings.mainWidget.loadMissionMap(data, function () {
             preLoader.hide();
           });
+          // _this.settings.mainWidget.loadMissionDetails(data, function () {
+          //   preLoader.hide();
+          // });
         });
       });
 
