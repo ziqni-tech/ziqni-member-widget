@@ -2954,6 +2954,7 @@ export const MainWidget = function (options) {
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
       addClass(_this.settings.missions.detailsContainer, 'cl-show');
+      _this.hideMissionMap();
 
       if (typeof callback === 'function') callback();
     }, 50);
@@ -3130,6 +3131,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadMissionMapGraph = async () => {
+    const _this = this;
     const container = document.getElementById('cy-map');
     const itemBgEl = document.querySelector('.cl-main-widget-missions-map-graph-item-bg');
     const style = window.getComputedStyle(itemBgEl, false);
@@ -3266,9 +3268,8 @@ export const MainWidget = function (options) {
       }
     });
 
-    cy.on('tap', 'node', function (evt) {
-      const node = evt.target;
-      console.log('id: ' + node.id());
+    cy.on('tap', 'node', function () {
+      _this.loadMissionDetails(_this.settings.missions.mission, null);
     });
   };
 
