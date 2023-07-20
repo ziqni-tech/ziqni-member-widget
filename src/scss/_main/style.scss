@@ -5960,6 +5960,12 @@
   * {
     color: var(--lightTheme-font-color);
   }
+  #cy {
+    border: 1px solid #B9CEDF;
+  }
+  .cl-main-widget-missions-map-wrapper {
+    border: 1px solid #B9CEDF;
+  }
   .paginator-item {
     border: 1px solid #cccccc;
     color: #080D12;
@@ -5980,6 +5986,8 @@
     .cl-tour-list-item:nth-child(odd) {
       background: #DCE6EF;
     }
+    .cl-tour-list-details-prize,
+    .cl-tour-list-details-period,
     .cl-tour-list-details-label {
       color: #141E28;
     }
