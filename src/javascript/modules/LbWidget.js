@@ -1112,8 +1112,33 @@ export const LbWidget = function (options) {
     });
 
     this.getAwardsApi(claimedAwardRequest)
-      .then(json => {
+      .then(async json => {
         this.settings.awards.claimedAwards = json.data;
+        const rewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
+        if (rewardIds.length) {
+          const rewardRequest = {
+            entityFilter: [{
+              entityType: 'Reward',
+              entityIds: rewardIds
+            }],
+            currencyKey: this.settings.currency,
+            skip: 0,
+            limit: 20
+          };
+
+          const rewards = await this.getRewardsApi(rewardRequest);
+          const rewardsData = rewards.data;
+
+          this.settings.awards.claimedAwards = this.settings.awards.claimedAwards.map(award => {
+            const idx = rewardsData.findIndex(r => r.id === award.rewardId);
+            if (idx !== -1) {
+              award.rewardData = rewardsData[idx];
+            }
+
+            return award;
+          });
+        }
+
         this.settings.awards.claimedTotalCount = (json.meta && json.meta.totalRecordsFound)
           ? json.meta.totalRecordsFound
           : 0;
@@ -1127,8 +1152,34 @@ export const LbWidget = function (options) {
       });
 
     this.getAwardsApi(availableAwardRequest)
-      .then(json => {
+      .then(async json => {
         this.settings.awards.availableAwards = json.data;
+
+        const rewardIds = this.settings.awards.availableAwards.map(c => c.rewardId);
+        if (rewardIds.length) {
+          const rewardRequest = {
+            entityFilter: [{
+              entityType: 'Reward',
+              entityIds: rewardIds
+            }],
+            currencyKey: this.settings.currency,
+            skip: 0,
+            limit: 20
+          };
+
+          const rewards = await this.getRewardsApi(rewardRequest);
+          const rewardsData = rewards.data;
+
+          this.settings.awards.availableAwards = this.settings.awards.availableAwards.map(award => {
+            const idx = rewardsData.findIndex(r => r.id === award.rewardId);
+            if (idx !== -1) {
+              award.rewardData = rewardsData[idx];
+            }
+
+            return award;
+          });
+        }
+
         this.settings.awards.totalCount = (json.meta && json.meta.totalRecordsFound)
           ? json.meta.totalRecordsFound
           : 0;
