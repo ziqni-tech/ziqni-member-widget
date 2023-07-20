@@ -3418,6 +3418,10 @@ export const MainWidget = function (options) {
     prize.setAttribute('class', 'cl-rew-list-details-prize');
     claimBtn.setAttribute('class', 'cl-rew-list-details-claim');
 
+    if (rew.rewardData && rew.rewardData.iconLink) {
+      icon.setAttribute('style', `background-image: url(${rew.rewardData.iconLink})`);
+    }
+
     listItem.dataset.id = rew.id;
 
     const labelText = stripHtml(rew.name);
