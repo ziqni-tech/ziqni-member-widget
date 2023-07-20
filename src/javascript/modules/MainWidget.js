@@ -1399,7 +1399,7 @@ export const MainWidget = function (options) {
             this.settings.lbWidget.settings.competition.activeCompetition.description.length > 0)
         ? this.settings.lbWidget.settings.competition.activeCompetition.description : '');
 
-    return description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    return description ? description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
   };
 
   this.extractImage = function (body, imageContainer, isBodyVirtualOpt) {
@@ -2209,7 +2209,7 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = data.name;
-    body.innerHTML = data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    body.innerHTML = data.description ? data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
 
     if (_this.settings.lbWidget.settings.achievements.extractImageHeader) {
       var imageLookup = query(body, 'img');
@@ -2252,7 +2252,7 @@ export const MainWidget = function (options) {
     var value = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-value');
 
     label.innerHTML = data.name;
-    body.innerHTML = data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    body.innerHTML = data.description ? data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
     value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.awardFormatter(data);
     claimBtn.dataset.id = data.id;
 
@@ -2330,7 +2330,7 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = mission.data.name;
-    body.innerHTML = mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    body.innerHTML = mission.data.description ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
