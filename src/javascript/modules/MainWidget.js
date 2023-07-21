@@ -4420,6 +4420,8 @@ export const MainWidget = function (options) {
                 addClass(dashboardContainer, 'cl-main-active-section');
               }, 30);
 
+              _this.loadAwards();
+
               preLoader.hide();
 
               _this.settings.navigationSwitchInProgress = false;
