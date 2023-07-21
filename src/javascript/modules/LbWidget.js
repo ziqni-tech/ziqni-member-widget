@@ -2196,26 +2196,25 @@ export const LbWidget = function (options) {
         const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
         const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
         const achIcon = document.querySelector('.cl-main-widget-navigation-ach');
+        const detailsContainer = document.querySelector('.cl-main-widget-ach-details-container');
 
         dashboard.style.display = 'none';
         dashboardIcon.classList.remove('cl-active-nav');
         achIcon.classList.add('cl-active-nav');
+        detailsContainer.classList.add('cl-show');
+        detailsContainer.style.display = 'block';
 
         _this.settings.mainWidget.loadAchievements(1, function () {
           const achContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.achievements.containerClass);
 
-          _this.settings.mainWidget.settings.achievement.detailsContainer.style.display = 'none';
-
           achContainer.style.display = 'flex';
-          setTimeout(function () {
-            addClass(achContainer, 'cl-main-active-section');
+          addClass(achContainer, 'cl-main-active-section');
 
-            _this.getAchievement(id, function (data) {
-              _this.settings.achievements.activeAchievementId = data.id;
-              _this.settings.mainWidget.loadAchievementDetails(data, function () {
-              });
+          _this.getAchievement(id, function (data) {
+            _this.settings.achievements.activeAchievementId = data.id;
+            _this.settings.mainWidget.loadAchievementDetails(data, function () {
             });
-          }, 30);
+          });
 
           _this.settings.navigationSwitchInProgress = false;
         });
@@ -2237,30 +2236,22 @@ export const LbWidget = function (options) {
       dashboardIcon.classList.remove('cl-active-nav');
       awardsIcon.classList.add('cl-active-nav');
 
-      _this.settings.mainWidget.loadAwards(
-        function () {
-          const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+      const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+      rewardsContainer.style.display = 'flex';
+      addClass(rewardsContainer, 'cl-main-active-section');
 
-          rewardsContainer.style.display = 'flex';
-          addClass(rewardsContainer, 'cl-main-active-section');
-          const container = document.querySelector('.cl-main-widget-reward-list-body-res');
-          const sections = container.querySelectorAll('.cl-accordion');
-          const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
-          const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
-          const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+      const container = document.querySelector('.cl-main-widget-reward-list-body-res');
+      const sections = container.querySelectorAll('.cl-accordion');
+      const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
+      const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
+      const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
 
-          menuItems.forEach(i => i.classList.remove('active'));
-          instantMenuItem.classList.add('active');
-          sections.forEach(s => s.classList.remove('cl-shown'));
-          instantWinsSection.classList.add('cl-shown');
+      menuItems.forEach(i => i.classList.remove('active'));
+      instantMenuItem.classList.add('active');
+      sections.forEach(s => s.classList.remove('cl-shown'));
+      instantWinsSection.classList.add('cl-shown');
 
-          setTimeout(function () {
-            _this.settings.mainWidget.loadSingleWheel();
-          }, 30);
-        },
-        1,
-        1
-      );
+      _this.settings.mainWidget.loadSingleWheel();
 
       // dashboard scratchcards button
     } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-cards-button')) {
@@ -2272,30 +2263,22 @@ export const LbWidget = function (options) {
       dashboardIcon.classList.remove('cl-active-nav');
       awardsIcon.classList.add('cl-active-nav');
 
-      _this.settings.mainWidget.loadAwards(
-        function () {
-          const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+      const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+      rewardsContainer.style.display = 'flex';
+      addClass(rewardsContainer, 'cl-main-active-section');
 
-          rewardsContainer.style.display = 'flex';
-          addClass(rewardsContainer, 'cl-main-active-section');
-          const container = document.querySelector('.cl-main-widget-reward-list-body-res');
-          const sections = container.querySelectorAll('.cl-accordion');
-          const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
-          const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
-          const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+      const container = document.querySelector('.cl-main-widget-reward-list-body-res');
+      const sections = container.querySelectorAll('.cl-accordion');
+      const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
+      const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
+      const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
 
-          menuItems.forEach(i => i.classList.remove('active'));
-          instantMenuItem.classList.add('active');
-          sections.forEach(s => s.classList.remove('cl-shown'));
-          instantWinsSection.classList.add('cl-shown');
+      menuItems.forEach(i => i.classList.remove('active'));
+      instantMenuItem.classList.add('active');
+      sections.forEach(s => s.classList.remove('cl-shown'));
+      instantWinsSection.classList.add('cl-shown');
 
-          setTimeout(function () {
-            _this.settings.mainWidget.loadScratchCards();
-          }, 30);
-        },
-        1,
-        1
-      );
+      _this.settings.mainWidget.loadScratchCards();
 
       // leaderboard details back button
     } else if (hasClass(el, 'cl-main-widget-lb-details-back-btn')) {
