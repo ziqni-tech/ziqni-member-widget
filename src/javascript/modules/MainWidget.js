@@ -2723,14 +2723,30 @@ export const MainWidget = function (options) {
     barLabel.innerHTML = percentageComplete + '/100';
   };
 
-  this.achievementListLayout = function (pageNumber, achievementData) {
+  this.achievementListLayout = function (pageNumber, achievementData, paginationArr = null) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
     const itemsPerPage = _this.settings.lbWidget.settings.itemsPerPage;
     let paginator = query(achList, '.paginator');
 
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
+
     achList.innerHTML = '';
+
+    if (paginationArr && paginationArr.length) {
+      let page = '';
+      for (const i in paginationArr) {
+        page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+      }
+      paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
+    }
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / 6);
@@ -2738,11 +2754,28 @@ export const MainWidget = function (options) {
       paginator.setAttribute('class', 'paginator');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     mapObject(achievementData, function (ach) {
@@ -3361,12 +3394,12 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.loadAchievements = function (pageNumber, callback) {
+  this.loadAchievements = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableAchievements(pageNumber, function (achievementData) {
       // _this.settings.lbWidget.updateAchievementNavigationCounts();
-      _this.achievementListLayout(pageNumber, achievementData);
+      _this.achievementListLayout(pageNumber, achievementData, paginationArr);
 
       const idList = _this.settings.lbWidget.settings.achievements.list.map(a => a.id);
 

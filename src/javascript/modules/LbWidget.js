@@ -13,6 +13,7 @@ import removeClass from '../utils/removeClass';
 import closest from '../utils/closest';
 import isMobileTablet from '../utils/isMobileTablet';
 import camelToKebabCase from '../utils/camelToKebabCase';
+import pagination from '../utils/paginator';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -2084,7 +2085,35 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'paginator-item')) {
       const preLoader = _this.settings.mainWidget.preloader();
       if (el.closest('.cl-main-widget-ach-list-body-res')) {
-        _this.settings.mainWidget.loadAchievements(el.dataset.page);
+        preLoader.show(async function () {
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
+
+          if (el.classList.contains('prev')) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              pageNumber = 1;
+            }
+          } else if (el.classList.contains('next')) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              pageNumber = pagesCount;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
+          _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr);
+        });
       }
       if (el.closest('.cl-main-widget-reward-list-body-res')) {
         if (el.closest('.paginator-claimed')) {
