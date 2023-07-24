@@ -2129,7 +2129,33 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.cl-main-widget-inbox-list-body-res')) {
         preLoader.show(async function () {
-          _this.settings.mainWidget.loadMessages(el.dataset.page, preLoader.hide());
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.messages.totalCount / 9);
+
+          if (el.classList.contains('prev')) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              pageNumber = 1;
+            }
+          } else if (el.classList.contains('next')) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              pageNumber = pagesCount;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
+          _this.settings.mainWidget.loadMessages(pageNumber, preLoader.hide(), paginationArr);
         });
       }
       if (el.closest('.cl-main-widget-missions-list-body-res')) {
