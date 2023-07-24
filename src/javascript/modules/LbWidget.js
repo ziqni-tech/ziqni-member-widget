@@ -1355,8 +1355,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 15,
-        limit: 15,
+        skip: (pageNumber - 1) * 6,
+        limit: 6,
         constraints: ['mission']
       }
     }, null);
@@ -2209,7 +2209,33 @@ export const LbWidget = function (options) {
         });
       }
       if (el.closest('.cl-main-widget-missions-list-body-res')) {
-        _this.settings.mainWidget.loadMissions(el.dataset.page);
+        let pageNumber;
+        const pagesCount = Math.ceil(_this.settings.missions.totalCount / 6);
+
+        if (el.classList.contains('prev')) {
+          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+          if (activePage > 1) {
+            pageNumber = activePage - 1;
+          } else {
+            pageNumber = 1;
+          }
+        } else if (el.classList.contains('next')) {
+          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+          if (activePage < pagesCount) {
+            pageNumber = activePage + 1;
+          } else {
+            pageNumber = pagesCount;
+          }
+        } else {
+          pageNumber = Number(el.dataset.page);
+        }
+
+        let paginationArr = null;
+        if (pagesCount > 7) {
+          paginationArr = pagination(6, pageNumber, pagesCount);
+        }
+
+        _this.settings.mainWidget.loadMissions(pageNumber, null, paginationArr);
       }
       if (el.closest('.paginator-finished')) {
         preLoader.show(async function () {

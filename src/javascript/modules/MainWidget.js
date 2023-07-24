@@ -3877,12 +3877,28 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.missionsListLayout = function (pageNumber) {
+  this.missionsListLayout = function (pageNumber, paginationArr = null) {
     const _this = this;
     const missionsList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.missions.containerClass + ' .cl-main-widget-missions-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.missions.totalCount;
-    const itemsPerPage = 15;
+    const itemsPerPage = 6;
     let paginator = query(missionsList, '.paginator');
+
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
+
+    if (paginationArr && paginationArr.length) {
+      let page = '';
+      for (const i in paginationArr) {
+        page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+      }
+      paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
+    }
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
@@ -3890,11 +3906,28 @@ export const MainWidget = function (options) {
       paginator.setAttribute('class', 'paginator');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     missionsList.innerHTML = '';
@@ -4492,11 +4525,11 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.loadMissions = function (pageNumber, callback) {
+  this.loadMissions = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableMissions(pageNumber, function () {
-      _this.missionsListLayout(pageNumber);
+      _this.missionsListLayout(pageNumber, paginationArr);
       // _this.settings.lbWidget.updateMissionsNavigationCounts();
 
       if (typeof callback === 'function') {
