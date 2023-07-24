@@ -3627,13 +3627,18 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
-  this.rewardsListLayout = function (pageNumber = 1, claimedPageNumber = 1, rewards, availableRewards, expiredRewards) {
+  this.rewardsListLayout = function (pageNumber = 1, claimedPageNumber = 1, rewards, availableRewards, expiredRewards, paginationArr = null, isClaimed = false) {
     const _this = this;
     const rewardList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
     const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
     const itemsPerPage = 6;
     let paginator = query(rewardList, '.paginator-available');
+
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
@@ -3643,11 +3648,33 @@ export const MainWidget = function (options) {
       addClass(paginator, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     let paginatorClaimed = query(rewardList, '.paginator-claimed');
@@ -3659,17 +3686,44 @@ export const MainWidget = function (options) {
       addClass(paginatorClaimed, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginatorClaimed.innerHTML = page;
+
+      paginatorClaimed.prepend(prev);
+      paginatorClaimed.appendChild(next);
     }
 
-    if (claimedPageNumber > 1) {
+    if (isClaimed) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
         if (t.type === 'claimedAwards') {
           t.show = true;
+          if (paginationArr && paginationArr.length) {
+            let page = '';
+            for (const i in paginationArr) {
+              page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+            }
+            paginatorClaimed.innerHTML = page;
+
+            paginatorClaimed.prepend(prev);
+            paginatorClaimed.appendChild(next);
+          }
         } else {
           t.show = false;
         }
@@ -3678,6 +3732,16 @@ export const MainWidget = function (options) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
         if (t.type === 'availableAwards') {
           t.show = true;
+          if (paginationArr && paginationArr.length) {
+            let page = '';
+            for (const i in paginationArr) {
+              page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+            }
+            paginator.innerHTML = page;
+
+            paginator.prepend(prev);
+            paginator.appendChild(next);
+          }
         } else {
           t.show = false;
         }
@@ -3880,12 +3944,12 @@ export const MainWidget = function (options) {
     }, 1000);
   };
 
-  this.loadAwards = function (callback, pageNumber, claimedPageNumber) {
+  this.loadAwards = function (callback, pageNumber, claimedPageNumber, paginationArr = null, isClaimed = false) {
     const _this = this;
     _this.settings.lbWidget.checkForAvailableAwards(
       function (rewards, availableRewards, expiredRewards) {
         // _this.settings.lbWidget.updateRewardsNavigationCounts();
-        _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards);
+        _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards, paginationArr, isClaimed);
 
         if (typeof callback === 'function') {
           callback();
