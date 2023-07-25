@@ -430,7 +430,7 @@ export const LbWidget = function (options) {
           order: 'Desc'
         }],
         limit: 12,
-        skip: (readyPageNumber - 1) * 20
+        skip: (readyPageNumber - 1) * 12
       }
     }, null);
 
@@ -2240,6 +2240,7 @@ export const LbWidget = function (options) {
       if (el.closest('.paginator-finished')) {
         preLoader.show(async function () {
           let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
 
           if (el.classList.contains('prev')) {
             const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
@@ -2260,13 +2261,19 @@ export const LbWidget = function (options) {
             pageNumber = Number(el.dataset.page);
           }
 
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
           await _this.checkForAvailableCompetitions(null, 1, 1, pageNumber);
-          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, 1, pageNumber);
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, 1, pageNumber, paginationArr, false, false, true);
         });
       }
       if (el.closest('.paginator-ready')) {
         preLoader.show(async function () {
           let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
 
           if (el.classList.contains('prev')) {
             const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
@@ -2287,12 +2294,18 @@ export const LbWidget = function (options) {
             pageNumber = Number(el.dataset.page);
           }
 
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
           await _this.checkForAvailableCompetitions(null, pageNumber, 1, 1);
-          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), Number(el.dataset.page), 1, 1);
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), pageNumber, 1, 1, paginationArr, true, false, false);
         });
       }
       if (el.closest('.paginator-active')) {
         let pageNumber;
+        const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
 
         if (el.classList.contains('prev')) {
           const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
@@ -2313,9 +2326,14 @@ export const LbWidget = function (options) {
           pageNumber = Number(el.dataset.page);
         }
 
+        let paginationArr = null;
+        if (pagesCount > 7) {
+          paginationArr = pagination(6, pageNumber, pagesCount);
+        }
+
         preLoader.show(async function () {
           await _this.checkForAvailableCompetitions(null, 1, pageNumber, 1);
-          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, Number(el.dataset.page), 1);
+          _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, pageNumber, 1, paginationArr, false, true, false);
         });
       }
 
