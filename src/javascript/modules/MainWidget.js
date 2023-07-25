@@ -2407,7 +2407,11 @@ export const MainWidget = function (options) {
     callback,
     readyPageNumber = 1,
     activePageNumber = 1,
-    finishedPageNumber = 1
+    finishedPageNumber = 1,
+    paginationArr = null,
+    isReady = false,
+    isActive = true,
+    isFinished = false
   ) {
     const _this = this;
     const listResContainer = query(_this.settings.tournamentListContainer, '.cl-main-widget-tournaments-list-body-res');
@@ -2420,6 +2424,11 @@ export const MainWidget = function (options) {
     const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
     const itemsPerPage = 12;
 
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
+
     let paginator = query(listResContainer, '.paginator-active');
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
@@ -2429,11 +2438,33 @@ export const MainWidget = function (options) {
       addClass(paginator, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     let readyPaginator = query(listResContainer, '.paginator-ready');
@@ -2445,11 +2476,33 @@ export const MainWidget = function (options) {
       addClass(readyPaginator, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       readyPaginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      readyPaginator.prepend(prev);
+      readyPaginator.appendChild(next);
     }
 
     let finishedPaginator = query(listResContainer, '.paginator-finished');
@@ -2461,10 +2514,24 @@ export const MainWidget = function (options) {
       addClass(finishedPaginator, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       finishedPaginator.innerHTML = page;
 
       const prev = document.createElement('span');
@@ -2476,18 +2543,48 @@ export const MainWidget = function (options) {
       finishedPaginator.appendChild(next);
     }
 
-    if (readyPageNumber > 1) {
+    if (isReady) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'readyCompetitions';
       });
-    } else if (finishedPageNumber > 1) {
+      if (paginationArr && paginationArr.length) {
+        let page = '';
+        for (const i in paginationArr) {
+          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+        }
+        readyPaginator.innerHTML = page;
+
+        readyPaginator.prepend(prev);
+        readyPaginator.appendChild(next);
+      }
+    } else if (isFinished) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'finishedCompetitions';
       });
+      if (paginationArr && paginationArr.length) {
+        let page = '';
+        for (const i in paginationArr) {
+          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+        }
+        finishedPaginator.innerHTML = page;
+
+        finishedPaginator.prepend(prev);
+        finishedPaginator.appendChild(next);
+      }
     } else {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'activeCompetitions';
       });
+      if (paginationArr && paginationArr.length) {
+        let page = '';
+        for (const i in paginationArr) {
+          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+        }
+        paginator.innerHTML = page;
+
+        paginator.prepend(prev);
+        paginator.appendChild(next);
+      }
     }
 
     preLoader.show(function () {
@@ -2723,14 +2820,30 @@ export const MainWidget = function (options) {
     barLabel.innerHTML = percentageComplete + '/100';
   };
 
-  this.achievementListLayout = function (pageNumber, achievementData) {
+  this.achievementListLayout = function (pageNumber, achievementData, paginationArr = null) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
     const itemsPerPage = _this.settings.lbWidget.settings.itemsPerPage;
     let paginator = query(achList, '.paginator');
 
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
+
     achList.innerHTML = '';
+
+    if (paginationArr && paginationArr.length) {
+      let page = '';
+      for (const i in paginationArr) {
+        page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+      }
+      paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
+    }
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / 6);
@@ -2738,11 +2851,28 @@ export const MainWidget = function (options) {
       paginator.setAttribute('class', 'paginator');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     mapObject(achievementData, function (ach) {
@@ -3361,12 +3491,12 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.loadAchievements = function (pageNumber, callback) {
+  this.loadAchievements = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableAchievements(pageNumber, function (achievementData) {
       // _this.settings.lbWidget.updateAchievementNavigationCounts();
-      _this.achievementListLayout(pageNumber, achievementData);
+      _this.achievementListLayout(pageNumber, achievementData, paginationArr);
 
       const idList = _this.settings.lbWidget.settings.achievements.list.map(a => a.id);
 
@@ -3594,13 +3724,18 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
-  this.rewardsListLayout = function (pageNumber = 1, claimedPageNumber = 1, rewards, availableRewards, expiredRewards) {
+  this.rewardsListLayout = function (pageNumber = 1, claimedPageNumber = 1, rewards, availableRewards, expiredRewards, paginationArr = null, isClaimed = false) {
     const _this = this;
     const rewardList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
     const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
     const itemsPerPage = 6;
     let paginator = query(rewardList, '.paginator-available');
+
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
@@ -3610,11 +3745,33 @@ export const MainWidget = function (options) {
       addClass(paginator, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     let paginatorClaimed = query(rewardList, '.paginator-claimed');
@@ -3626,17 +3783,44 @@ export const MainWidget = function (options) {
       addClass(paginatorClaimed, 'accordion');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginatorClaimed.innerHTML = page;
+
+      paginatorClaimed.prepend(prev);
+      paginatorClaimed.appendChild(next);
     }
 
-    if (claimedPageNumber > 1) {
+    if (isClaimed) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
         if (t.type === 'claimedAwards') {
           t.show = true;
+          if (paginationArr && paginationArr.length) {
+            let page = '';
+            for (const i in paginationArr) {
+              page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+            }
+            paginatorClaimed.innerHTML = page;
+
+            paginatorClaimed.prepend(prev);
+            paginatorClaimed.appendChild(next);
+          }
         } else {
           t.show = false;
         }
@@ -3645,6 +3829,16 @@ export const MainWidget = function (options) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
         if (t.type === 'availableAwards') {
           t.show = true;
+          if (paginationArr && paginationArr.length) {
+            let page = '';
+            for (const i in paginationArr) {
+              page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+            }
+            paginator.innerHTML = page;
+
+            paginator.prepend(prev);
+            paginator.appendChild(next);
+          }
         } else {
           t.show = false;
         }
@@ -3707,12 +3901,28 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.messagesListLayout = function (pageNumber) {
+  this.messagesListLayout = function (pageNumber, paginationArr) {
     const _this = this;
     const messageList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.inbox.containerClass + ' .cl-main-widget-inbox-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.messages.totalCount;
     const itemsPerPage = 9;
     let paginator = query(messageList, '.paginator');
+
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
+
+    if (paginationArr && paginationArr.length) {
+      let page = '';
+      for (const i in paginationArr) {
+        page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+      }
+      paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
+    }
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
@@ -3720,11 +3930,28 @@ export const MainWidget = function (options) {
       paginator.setAttribute('class', 'paginator');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     messageList.innerHTML = '';
@@ -3747,12 +3974,28 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.missionsListLayout = function (pageNumber) {
+  this.missionsListLayout = function (pageNumber, paginationArr = null) {
     const _this = this;
     const missionsList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.missions.containerClass + ' .cl-main-widget-missions-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.missions.totalCount;
-    const itemsPerPage = 15;
+    const itemsPerPage = 6;
     let paginator = query(missionsList, '.paginator');
+
+    const prev = document.createElement('span');
+    prev.setAttribute('class', 'paginator-item prev');
+    const next = document.createElement('span');
+    next.setAttribute('class', 'paginator-item next');
+
+    if (paginationArr && paginationArr.length) {
+      let page = '';
+      for (const i in paginationArr) {
+        page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
+      }
+      paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
+    }
 
     if (!paginator && totalCount > itemsPerPage) {
       const pagesCount = Math.ceil(totalCount / itemsPerPage);
@@ -3760,11 +4003,28 @@ export const MainWidget = function (options) {
       paginator.setAttribute('class', 'paginator');
 
       let page = '';
+      const isEllipsis = pagesCount > 7;
 
-      for (let i = 0; i < pagesCount; i++) {
-        page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
       }
+
       paginator.innerHTML = page;
+
+      paginator.prepend(prev);
+      paginator.appendChild(next);
     }
 
     missionsList.innerHTML = '';
@@ -3814,12 +4074,12 @@ export const MainWidget = function (options) {
     }, 1000);
   };
 
-  this.loadAwards = function (callback, pageNumber, claimedPageNumber) {
+  this.loadAwards = function (callback, pageNumber, claimedPageNumber, paginationArr = null, isClaimed = false) {
     const _this = this;
     _this.settings.lbWidget.checkForAvailableAwards(
       function (rewards, availableRewards, expiredRewards) {
         // _this.settings.lbWidget.updateRewardsNavigationCounts();
-        _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards);
+        _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards, paginationArr, isClaimed);
 
         if (typeof callback === 'function') {
           callback();
@@ -4349,11 +4609,11 @@ export const MainWidget = function (options) {
     backBtn.style.display = 'none';
   };
 
-  this.loadMessages = function (pageNumber, callback) {
+  this.loadMessages = function (pageNumber, callback, paginationArr = null) {
     var _this = this;
 
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
-      _this.messagesListLayout(pageNumber);
+      _this.messagesListLayout(pageNumber, paginationArr);
       // _this.settings.lbWidget.updateMessagesNavigationCounts();
 
       if (typeof callback === 'function') {
@@ -4362,11 +4622,11 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.loadMissions = function (pageNumber, callback) {
+  this.loadMissions = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableMissions(pageNumber, function () {
-      _this.missionsListLayout(pageNumber);
+      _this.missionsListLayout(pageNumber, paginationArr);
       // _this.settings.lbWidget.updateMissionsNavigationCounts();
 
       if (typeof callback === 'function') {
