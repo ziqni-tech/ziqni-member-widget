@@ -100,8 +100,7 @@ module.exports = {
     new CopyPlugin({
       patterns: [
         { from: 'src/i18n', to: '../i18n' },
-        { from: 'src/images', to: '../images' },
-        { from: 'src/cl-black-theme/images', to: '../cl-black-theme/images' }
+        { from: 'src/images', to: '../images' }
       ]
     }),
     {
