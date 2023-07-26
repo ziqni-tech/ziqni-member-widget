@@ -615,7 +615,7 @@ export const LbWidget = function (options) {
         _this.settings.competition.activeCompetition = activeCompetition;
         _this.settings.competition.activeCompetitionId = activeCompetitionId;
       }
-      this.loadActiveCompetition(async function (json) {
+      _this.loadActiveCompetition(async function (json) {
         await _this.setActiveCompetition(json, callback);
       });
     }
