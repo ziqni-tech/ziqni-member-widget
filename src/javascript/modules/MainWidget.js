@@ -4593,7 +4593,7 @@ export const MainWidget = function (options) {
           });
 
           changeContainerInterval = setTimeout(function () {
-            if (hasClass(target, 'cl-main-widget-navigation-dashboard-icon')) {
+            if (target.classList.contains('cl-main-widget-navigation-dashboard') || target.closest('.cl-main-widget-navigation-dashboard')) {
               const dashboardContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.dashboard.containerClass);
 
               dashboardContainer.style.display = 'flex';
@@ -4611,7 +4611,7 @@ export const MainWidget = function (options) {
               preLoader.hide();
 
               _this.settings.navigationSwitchInProgress = false;
-            } else if (hasClass(target, 'cl-main-widget-navigation-lb-icon')) {
+            } else if (target.classList.contains('cl-main-widget-navigation-lb') || target.closest('.cl-main-widget-navigation-lb')) {
               _this.settings.lbWidget.checkForAvailableRewards(1);
               _this.loadLeaderboard(function () {
                 var lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);
@@ -4629,7 +4629,7 @@ export const MainWidget = function (options) {
 
                 _this.settings.navigationSwitchInProgress = false;
               });
-            } else if (hasClass(target, 'cl-main-widget-navigation-ach-icon')) {
+            } else if (target.classList.contains('cl-main-widget-navigation-ach') || target.closest('.cl-main-widget-navigation-ach')) {
               _this.loadAchievements(1, function () {
                 var achContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.achievements.containerClass);
 
@@ -4648,7 +4648,7 @@ export const MainWidget = function (options) {
 
                 _this.settings.navigationSwitchInProgress = false;
               });
-            } else if (hasClass(target, 'cl-main-widget-navigation-rewards-icon')) {
+            } else if (target.classList.contains('cl-main-widget-navigation-rewards') || target.closest('.cl-main-widget-navigation-rewards')) {
               _this.loadAwards(
                 function () {
                   const rewardsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.rewards.containerClass);
@@ -4669,7 +4669,7 @@ export const MainWidget = function (options) {
                 1,
                 1
               );
-            } else if (hasClass(target, 'cl-main-widget-navigation-inbox-icon')) {
+            } else if (target.classList.contains('cl-main-widget-navigation-inbox') || target.closest('.cl-main-widget-navigation-inbox')) {
               _this.loadMessages(1, function () {
                 var inboxContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.inbox.containerClass);
 
@@ -4682,7 +4682,7 @@ export const MainWidget = function (options) {
 
                 _this.settings.navigationSwitchInProgress = false;
               });
-            } else if (hasClass(target, 'cl-main-widget-navigation-missions-icon')) {
+            } else if (target.classList.contains('cl-main-widget-navigation-missions') || target.closest('.cl-main-widget-navigation-missions')) {
               _this.loadMissions(1, function () {
                 const missionsContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.missions.containerClass);
 
@@ -4698,7 +4698,9 @@ export const MainWidget = function (options) {
             }
           }, 250);
 
-          addClass(target.parentNode, 'cl-active-nav');
+          const targetBtn = target.classList.contains('cl-main-widget-navigation-item') ? target : target.closest('.cl-main-widget-navigation-item');
+
+          addClass(targetBtn, 'cl-active-nav');
         });
       } else if (typeof callback === 'function') {
         _this.settings.navigationSwitchInProgress = false;
