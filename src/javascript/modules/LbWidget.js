@@ -79,7 +79,6 @@ export const LbWidget = function (options) {
     enableNotifications: false,
     mainWidget: null,
     globalAjax: new cLabs.Ajax(),
-    checkAjax: new cLabs.Ajax(),
     language: process.env.LANG,
     currency: '',
     spaceName: '',
@@ -409,9 +408,10 @@ export const LbWidget = function (options) {
   /**
    * get a list of available competition filtered by provided global criteria
    * @param callback {Function}
+   * @param readyPageNumber
+   * @param activePageNumber
+   * @param finishedPageNumber
    */
-  // const competitionCheckAjax = new cLabs.Ajax();
-
   this.checkForAvailableCompetitions = async function (
     callback,
     readyPageNumber = 1,
@@ -615,8 +615,7 @@ export const LbWidget = function (options) {
         _this.settings.competition.activeCompetition = activeCompetition;
         _this.settings.competition.activeCompetitionId = activeCompetitionId;
       }
-
-      _this.loadActiveCompetition(async function (json) {
+      this.loadActiveCompetition(async function (json) {
         await _this.setActiveCompetition(json, callback);
       });
     }
@@ -887,7 +886,6 @@ export const LbWidget = function (options) {
     });
   };
 
-  // var getAchievementsAjax = new cLabs.Ajax();
   this.getAchievement = function (achievementId, callback) {
     const achievementData = this.settings.achievements.list.filter(a => a.id === achievementId);
 
@@ -965,7 +963,6 @@ export const LbWidget = function (options) {
     });
   };
 
-  // var getRewardAjax = new cLabs.Ajax();
   this.getReward = function (rewardId, callback) {
     let rewardData = null;
     const idx = this.settings.rewards.rewards.findIndex(r => r.id === rewardId);
@@ -1018,7 +1015,7 @@ export const LbWidget = function (options) {
         languageKey: this.settings.language,
         messageFilter: {
           ids: [messageId],
-          messageType: 'InboxItem', // NotificationInboxItem Achievement Ticket Reward Text Notification InboxItem
+          messageType: 'InboxItem',
           skip: 0,
           limit: 15
         }
@@ -1038,7 +1035,6 @@ export const LbWidget = function (options) {
     }
   };
 
-  // var claimRewardAjax = new cLabs.Ajax();
   this.claimAward = async function (rewardId, callback) {
     if (!this.settings.apiWs.awardsApiWsClient) {
       this.settings.apiWs.awardsApiWsClient = new AwardsApiWs(this.apiClientStomp);
@@ -1304,7 +1300,7 @@ export const LbWidget = function (options) {
     const messageRequest = MessageRequest.constructFromObject({
       languageKey: this.settings.language,
       messageFilter: {
-        messageType: 'InboxItem', // NotificationInboxItem Achievement Ticket Reward Text Notification InboxItem
+        messageType: 'InboxItem',
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -2507,9 +2503,6 @@ export const LbWidget = function (options) {
           _this.settings.mainWidget.loadMissionMap(data, function () {
             preLoader.hide();
           });
-          // _this.settings.mainWidget.loadMissionDetails(data, function () {
-          //   preLoader.hide();
-          // });
         });
       });
 

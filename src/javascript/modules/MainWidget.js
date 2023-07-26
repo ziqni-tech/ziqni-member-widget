@@ -190,24 +190,14 @@ export const MainWidget = function (options) {
 
     mapObject(data, function (entry) {
       const accordionSection = document.createElement('div');
-      // const accordionLabel = document.createElement('div');
       const topShownEntry = document.createElement('div');
       const accordionListContainer = document.createElement('div');
       const accordionList = document.createElement('div');
 
       accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      // accordionLabel.setAttribute('class', 'cl-accordion-label');
       topShownEntry.setAttribute('class', 'cl-accordion-entry');
       accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
       accordionList.setAttribute('class', 'cl-accordion-list');
-
-      // if (typeof _this.settings.lbWidget.settings.translation.rewards[entry.type] !== 'undefined') {
-      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards[entry.type];
-      // } else if (typeof _this.settings.lbWidget.settings.translation.tournaments[entry.type] !== 'undefined') {
-      //   accordionLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments[entry.type];
-      // } else {
-      //   accordionLabel.innerHTML = entry.label;
-      // }
 
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
@@ -215,8 +205,6 @@ export const MainWidget = function (options) {
 
       accordionListContainer.appendChild(accordionList);
 
-      // accordionSection.appendChild(accordionLabel);
-      // accordionSection.appendChild(topShownEntry);
       accordionSection.appendChild(accordionListContainer);
 
       accordionWrapper.appendChild(accordionSection);
@@ -279,7 +267,6 @@ export const MainWidget = function (options) {
       const accordionList = document.createElement('div');
 
       accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      // accordionLabel.setAttribute('class', 'cl-accordion-label');
       topShownEntry.setAttribute('class', 'cl-accordion-entry');
       accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
       header.setAttribute('class', 'cl-accordion-list-container-header');
@@ -350,8 +337,7 @@ export const MainWidget = function (options) {
   };
 
   this.accordionNavigation = function (element) {
-    // var _this = this;
-    var parentEl = element.parentNode;
+    const parentEl = element.parentNode;
 
     if (hasClass(parentEl, 'cl-shown')) {
       removeClass(parentEl, 'cl-shown');
@@ -520,31 +506,31 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardAreaLayout = function () {
-    var _this = this;
-    var sectionLB = document.createElement('div');
+    const _this = this;
+    const sectionLB = document.createElement('div');
 
-    var sectionLBHeader = document.createElement('div');
-    var sectionLBHeaderList = document.createElement('div');
-    var sectionLBHeaderListIcon = document.createElement('div');
+    const sectionLBHeader = document.createElement('div');
+    const sectionLBHeaderList = document.createElement('div');
+    const sectionLBHeaderListIcon = document.createElement('div');
     const sectionLBHeaderBackIcon = document.createElement('div');
-    var sectionLBHeaderLabel = document.createElement('div');
-    var sectionLBHeaderDate = document.createElement('div');
-    var sectionLBHeaderClose = document.createElement('div');
+    const sectionLBHeaderLabel = document.createElement('div');
+    const sectionLBHeaderDate = document.createElement('div');
+    const sectionLBHeaderClose = document.createElement('div');
 
-    var sectionLBDetails = document.createElement('div');
-    var sectionLBDetailsInfo = document.createElement('div');
-    var sectionLBDetailsInfoIcon = document.createElement('div');
-    var sectionLBDetailsImageContainer = document.createElement('div');
-    var sectionLBDetailsContentContainer = document.createElement('div');
-    var sectionLBDetailsContentContainerLabel = document.createElement('div');
-    var sectionLBDetailsContentContainerLabelText = document.createElement('span');
-    var sectionLBDetailsContentContainerDate = document.createElement('span');
+    const sectionLBDetails = document.createElement('div');
+    const sectionLBDetailsInfo = document.createElement('div');
+    const sectionLBDetailsInfoIcon = document.createElement('div');
+    const sectionLBDetailsImageContainer = document.createElement('div');
+    const sectionLBDetailsContentContainer = document.createElement('div');
+    const sectionLBDetailsContentContainerLabel = document.createElement('div');
+    const sectionLBDetailsContentContainerLabelText = document.createElement('span');
+    const sectionLBDetailsContentContainerDate = document.createElement('span');
     const sectionLBDetailsContentContainerDateHeaders = document.createElement('div');
     const sectionLBDetailsContentContainerDateDays = document.createElement('div');
     const sectionLBDetailsContentContainerDateHours = document.createElement('div');
     const sectionLBDetailsContentContainerDateMinutes = document.createElement('div');
     const sectionLBDetailsContentContainerDateSeconds = document.createElement('div');
-    var sectionLBDetailsDescriptionContainer = document.createElement('div');
+    const sectionLBDetailsDescriptionContainer = document.createElement('div');
     const sectionLBDetailsDescriptionHeader = document.createElement('div');
     const sectionLBDetailsDescriptionHeaderTitle = document.createElement('div');
     const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
@@ -559,41 +545,40 @@ export const MainWidget = function (options) {
     const sectionLBDetailsDescriptionDateMinutes = document.createElement('div');
     const sectionLBDetailsDescriptionDateSeconds = document.createElement('div');
 
-    var sectionLBDetailsDescription = document.createElement('div');
-    var sectionLBDetailsDescriptionClose = document.createElement('span');
+    const sectionLBDetailsDescription = document.createElement('div');
+    const sectionLBDetailsDescriptionClose = document.createElement('span');
 
-    var sectionLBLeaderboard = document.createElement('div');
-    var sectionLBLeaderboardHeader = document.createElement('div');
-    var sectionLBLeaderboardHeaderLabels = document.createElement('div');
-    var sectionLBLeaderboardResultsContainer = document.createElement('div');
-    var sectionLBLeaderboardHeaderTopResults = document.createElement('div');
-    var sectionLBLeaderboardBody = document.createElement('div');
-    var sectionLBLeaderboardBodyResults = document.createElement('div');
+    const sectionLBLeaderboard = document.createElement('div');
+    const sectionLBLeaderboardHeader = document.createElement('div');
+    const sectionLBLeaderboardHeaderLabels = document.createElement('div');
+    const sectionLBLeaderboardResultsContainer = document.createElement('div');
+    const sectionLBLeaderboardHeaderTopResults = document.createElement('div');
+    const sectionLBLeaderboardBody = document.createElement('div');
+    const sectionLBLeaderboardBodyResults = document.createElement('div');
 
-    var sectionLBMissingMember = document.createElement('div');
-    var sectionLBMissingMemberDetails = document.createElement('div');
+    const sectionLBMissingMember = document.createElement('div');
+    const sectionLBMissingMemberDetails = document.createElement('div');
 
-    var sectionLBOptInContainer = document.createElement('div');
-    var sectionLBOptInAction = document.createElement('a');
+    const sectionLBOptInContainer = document.createElement('div');
+    const sectionLBOptInAction = document.createElement('a');
 
-    var sectionLBFooter = document.createElement('div');
-    var sectionLBFooterContent = document.createElement('div');
+    const sectionLBFooter = document.createElement('div');
+    const sectionLBFooterContent = document.createElement('div');
 
-    var sectionTournamentDetailsContainer = document.createElement('div');
-    var sectionTournamentDetailsHeader = document.createElement('div');
-    var sectionTournamentDetailsHeaderLabel = document.createElement('div');
-    var sectionTournamentDetailsHeaderDate = document.createElement('div');
-    var sectionTournamentDetailsBackBtn = document.createElement('a');
-    var sectionTournamentDetailsBodyContainer = document.createElement('div');
-    var sectionTournamentDetailsBodyImageContainer = document.createElement('div');
-    var sectionTournamentDetailsBody = document.createElement('div');
-    var sectionTournamentDetailsOptInContainer = document.createElement('div');
-    var sectionTournamentDetailsOptInAction = document.createElement('a');
+    const sectionTournamentDetailsContainer = document.createElement('div');
+    const sectionTournamentDetailsHeader = document.createElement('div');
+    const sectionTournamentDetailsHeaderLabel = document.createElement('div');
+    const sectionTournamentDetailsHeaderDate = document.createElement('div');
+    const sectionTournamentDetailsBackBtn = document.createElement('a');
+    const sectionTournamentDetailsBodyContainer = document.createElement('div');
+    const sectionTournamentDetailsBodyImageContainer = document.createElement('div');
+    const sectionTournamentDetailsBody = document.createElement('div');
+    const sectionTournamentDetailsOptInContainer = document.createElement('div');
+    const sectionTournamentDetailsOptInAction = document.createElement('a');
 
-    var sectionTournamentList = document.createElement('div');
-    var sectionTournamentListBody = document.createElement('div');
-    var sectionTournamentListBodyResults = document.createElement('div');
-    // var sectionTournamentBackAction = document.createElement('a');
+    const sectionTournamentList = document.createElement('div');
+    const sectionTournamentListBody = document.createElement('div');
+    const sectionTournamentListBodyResults = document.createElement('div');
 
     sectionLB.setAttribute('class', _this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section' + (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner ? ' cl-main-section-image-banner-active' : ''));
     sectionLBHeader.setAttribute('class', 'cl-main-widget-lb-header');
@@ -741,9 +726,6 @@ export const MainWidget = function (options) {
 
     sectionLBLeaderboardHeader.appendChild(sectionLBLeaderboardHeaderLabels);
     sectionLBLeaderboard.appendChild(sectionLBLeaderboardHeader);
-    // sectionLBLeaderboard.appendChild(sectionLBLeaderboardHeaderTopResults);
-    // sectionLBLeaderboardBody.appendChild(sectionLBLeaderboardBodyResults);
-    // sectionLBLeaderboard.appendChild(sectionLBLeaderboardBody);
 
     sectionLBLeaderboardResultsContainer.appendChild(sectionLBLeaderboardHeaderTopResults);
     sectionLBLeaderboardBody.appendChild(sectionLBLeaderboardBodyResults);
@@ -755,7 +737,6 @@ export const MainWidget = function (options) {
 
     sectionTournamentListBody.appendChild(sectionTournamentListBodyResults);
     sectionTournamentList.appendChild(sectionTournamentListBody);
-    // sectionTournamentList.appendChild(sectionTournamentBackAction);
 
     sectionTournamentDetailsHeader.appendChild(sectionTournamentDetailsHeaderLabel);
     sectionTournamentDetailsHeader.appendChild(sectionTournamentDetailsHeaderDate);
@@ -772,7 +753,6 @@ export const MainWidget = function (options) {
     sectionLB.appendChild(sectionLBHeader);
     sectionLB.appendChild(sectionLBDetails);
     sectionLB.appendChild(sectionLBLeaderboard);
-    // sectionLB.appendChild(sectionLBMissingMember);
     sectionLB.appendChild(sectionLBOptInContainer);
     sectionLB.appendChild(sectionLBFooter);
     sectionLB.appendChild(sectionTournamentDetailsContainer);
@@ -863,8 +843,6 @@ export const MainWidget = function (options) {
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsBackBtn);
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderLabel);
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderDate);
-    // sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsHeader);
-    // sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsBackBtn);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyImageContainer);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBody);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsOptInContainer);
@@ -883,8 +861,6 @@ export const MainWidget = function (options) {
     sectionACHDetailsContentContainer.appendChild(sectionACHDetailsContentContainerDate);
     sectionACHDetails.appendChild(sectionACHDetailsInfo);
     sectionACHDetails.appendChild(sectionACHDetailsContentContainer);
-
-    // sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsOptInContainer);
 
     sectionACHListBody.appendChild(sectionACHListBodyResults);
     sectionACHList.appendChild(sectionACHListBody);
@@ -995,18 +971,14 @@ export const MainWidget = function (options) {
     sectionRewardsDetailsBody.appendChild(sectionRewardsWinningsContainer);
     sectionRewardsDetailsBody.appendChild(sectionRewardsDetailsDescription);
 
-    // sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsHeader);
-    // sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsBackBtn);
     sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBodyImageContainer);
     sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBody);
-    // sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsWinningsContainer);
     sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsClaimContainer);
 
     sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsHeader);
     sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsBodyContainer);
 
     sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsContentWrapper);
-    // sectionRewardsDetailsContainer.appendChild(sectionRewardsClaimContainer);
 
     sectionRewardsHeader.appendChild(sectionRewardsHeaderBack);
     sectionRewardsHeader.appendChild(sectionRewardsHeaderLabel);
@@ -1034,41 +1006,39 @@ export const MainWidget = function (options) {
   };
 
   this.inboxAreaLayout = function () {
-    var _this = this;
-    var sectionInbox = document.createElement('div');
+    const _this = this;
+    const sectionInbox = document.createElement('div');
 
-    var sectionInboxHeader = document.createElement('div');
-    var sectionInboxHeaderLabel = document.createElement('div');
-    // var sectionInboxHeaderDate = document.createElement('div');
-    var sectionInboxHeaderClose = document.createElement('div');
+    const sectionInboxHeader = document.createElement('div');
+    const sectionInboxHeaderLabel = document.createElement('div');
+    const sectionInboxHeaderClose = document.createElement('div');
 
-    var sectionInboxDetails = document.createElement('div');
-    var sectionInboxDetailsInfo = document.createElement('div');
-    var sectionInboxDetailsInfoIcon = document.createElement('div');
-    var sectionInboxDetailsContentContainer = document.createElement('div');
-    var sectionInboxDetailsContentContainerLabel = document.createElement('div');
-    var sectionInboxDetailsContentContainerDate = document.createElement('div');
+    const sectionInboxDetails = document.createElement('div');
+    const sectionInboxDetailsInfo = document.createElement('div');
+    const sectionInboxDetailsInfoIcon = document.createElement('div');
+    const sectionInboxDetailsContentContainer = document.createElement('div');
+    const sectionInboxDetailsContentContainerLabel = document.createElement('div');
+    const sectionInboxDetailsContentContainerDate = document.createElement('div');
 
-    var sectionInboxList = document.createElement('div');
-    var sectionInboxListBody = document.createElement('div');
-    var sectionInboxListBodyResults = document.createElement('div');
+    const sectionInboxList = document.createElement('div');
+    const sectionInboxListBody = document.createElement('div');
+    const sectionInboxListBodyResults = document.createElement('div');
 
-    var sectionInboxFooter = document.createElement('div');
-    var sectionInboxFooterContent = document.createElement('div');
+    const sectionInboxFooter = document.createElement('div');
+    const sectionInboxFooterContent = document.createElement('div');
 
-    var sectionInboxDetailsContainer = document.createElement('div');
+    const sectionInboxDetailsContainer = document.createElement('div');
     const sectionInboxDetailsWrapper = document.createElement('div');
-    var sectionInboxDetailsHeader = document.createElement('div');
-    var sectionInboxDetailsHeaderLabel = document.createElement('div');
-    var sectionInboxDetailsHeaderDate = document.createElement('div');
-    var sectionInboxDetailsBackBtn = document.createElement('a');
-    var sectionInboxDetailsBodyContainer = document.createElement('div');
-    var sectionInboxDetailsBody = document.createElement('div');
+    const sectionInboxDetailsHeader = document.createElement('div');
+    const sectionInboxDetailsHeaderLabel = document.createElement('div');
+    const sectionInboxDetailsHeaderDate = document.createElement('div');
+    const sectionInboxDetailsBackBtn = document.createElement('a');
+    const sectionInboxDetailsBodyContainer = document.createElement('div');
+    const sectionInboxDetailsBody = document.createElement('div');
 
     sectionInbox.setAttribute('class', _this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
     sectionInboxHeader.setAttribute('class', 'cl-main-widget-inbox-header');
     sectionInboxHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-header-label');
-    // sectionInboxHeaderDate.setAttribute('class', 'cl-main-widget-inbox-header-date');
     sectionInboxHeaderClose.setAttribute('class', 'cl-main-widget-inbox-header-close');
 
     sectionInboxDetails.setAttribute('class', 'cl-main-widget-inbox-details');
@@ -1101,7 +1071,6 @@ export const MainWidget = function (options) {
     sectionInboxFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
 
     sectionInboxHeader.appendChild(sectionInboxHeaderLabel);
-    // sectionInboxHeader.appendChild(sectionInboxHeaderDate);
     sectionInboxHeader.appendChild(sectionInboxHeaderClose);
 
     sectionInboxDetailsInfo.appendChild(sectionInboxDetailsInfoIcon);
@@ -1267,11 +1236,8 @@ export const MainWidget = function (options) {
     sectionMissionsList.appendChild(sectionMissionsListBody);
 
     sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsBackBtn);
-    // sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderLabel);
     sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsInfoBtn);
-    // sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsHeaderDate);
 
-    // sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsHeader);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsHeaderLabel);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsDescriptionLabel);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
@@ -1635,17 +1601,16 @@ export const MainWidget = function (options) {
       } else {
         memberLbName = lb.name;
       }
-      var count = 0;
-      // const icon = memberLbName && memberLbName.length ? memberLbName[0] : '';
+      let count = 0;
       const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
 
-      var memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
-      var memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
-      var reward = clearPrize ? '' : _this.getReward(lb.rank);
-      var change = (typeof lb.change === 'undefined') ? 0 : lb.change;
-      var growthType = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-      var growthIcon = "<span class='cl-growth-icon cl-growth-" + growthType + "'></span>";
-      var formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
+      let memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
+      const memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
+      const reward = clearPrize ? '' : _this.getReward(lb.rank);
+      const change = (typeof lb.change === 'undefined') ? 0 : lb.change;
+      const growthType = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
+      const growthIcon = "<span class='cl-growth-icon cl-growth-" + growthType + "'></span>";
+      const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
 
       if (rankCheck.indexOf(lb.rank) !== -1) {
         for (var rc = 0; rc < rankCheck.length; rc++) {
@@ -1708,22 +1673,6 @@ export const MainWidget = function (options) {
         } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
           rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
         }
-
-        // if (rank !== 0 && reward.rewardRank.indexOf(rank) !== -1) {
-        //   rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-        // } else if (reward.rewardRank.indexOf('-') !== -1) {
-        //   const rewardRankArr = reward.rewardRank.split(',');
-        //   rewardRankArr.forEach(r => {
-        //     const idx = r.indexOf('-');
-        //     if (idx !== -1) {
-        //       const start = parseInt(r);
-        //       const end = parseInt(r.substring(idx + 1));
-        //       if (rank > start && rank < end) {
-        //         rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-        //       }
-        //     }
-        //   });
-        // }
       });
     }
 
@@ -1751,15 +1700,12 @@ export const MainWidget = function (options) {
     });
 
     mapObject(remainingResults, function (lb) {
-      // let memberId = '';
       let memberNames = '';
       let memberLbName = '';
       if (lb.members && lb.members.length) {
-        // memberId = lb.members[0].memberId;
         memberNames = lb.members.map((m) => m.name);
         memberLbName = memberNames.join();
       } else {
-        // memberId = lb.memberId;
         memberLbName = lb.name;
       }
       var count = 0;
@@ -2002,8 +1948,7 @@ export const MainWidget = function (options) {
     }
 
     if (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner) {
-      var imageContainer = query(_this.settings.section, '.cl-main-widget-lb-details-image-container');
-      // imageContainer.innerHTML = '';
+      const imageContainer = query(_this.settings.section, '.cl-main-widget-lb-details-image-container');
 
       if (body === null) {
         body = document.createElement('div');
@@ -2077,7 +2022,7 @@ export const MainWidget = function (options) {
 
   // cleanup/recover activity
   this.preLoaderRerun = function () {
-    var _this = this;
+    const _this = this;
 
     if (_this.settings.preLoader.preLoaderActive && _this.settings.preLoader.preloaderCallbackRecovery !== null &&
       _this.settings.preLoader.preLoaderlastAttempt !== null && typeof _this.settings.preLoader.preLoaderlastAttempt === 'number' &&
@@ -2087,9 +2032,8 @@ export const MainWidget = function (options) {
   };
 
   this.preloader = function () {
-    var _this = this;
-    var preLoader = query(_this.settings.section, '.cl-main-widget-pre-loader');
-    // var content = query(_this.settings.section, '.cl-main-widget-pre-loader-content');
+    const _this = this;
+    const preLoader = query(_this.settings.section, '.cl-main-widget-pre-loader');
 
     return {
       show: function (callback) {
@@ -2345,17 +2289,6 @@ export const MainWidget = function (options) {
     });
   };
 
-  // this.checkLeaderboardScrollContainer = function(){
-  //  var _this = this,
-  //    lbScrollContainer = query(_this.settings.leaderboard.container, ".cl-main-widget-lb-leaderboard-body");
-  //
-  //  if( scrollEnabled(lbScrollContainer) ){
-  //    addClass(lbScrollContainer, "cl-element-scrollable");
-  //  }else{
-  //    removeClass(lbScrollContainer, "cl-element-scrollable");
-  //  }
-  // };
-
   this.competitionDetailsOptInButtonState = function () {
     var _this = this;
     var optIn = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-optin-action');
@@ -2375,11 +2308,10 @@ export const MainWidget = function (options) {
   };
 
   this.loadCompetitionDetails = function (callback) {
-    var _this = this;
-    var label = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-header-label');
-    // var date = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-header-date');
-    var body = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-body');
-    var image = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-body-image-cont');
+    const _this = this;
+    const label = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-header-label');
+    const body = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-body');
+    const image = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-body-image-cont');
     const listIcon = query(this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const backIcon = query(this.settings.container, '.cl-main-widget-lb-header-back-icon');
 
@@ -2711,7 +2643,6 @@ export const MainWidget = function (options) {
     const detailsWrapper = document.createElement('div');
     const icon = document.createElement('div');
     const label = document.createElement('div');
-    // var description = document.createElement('div');
     const progressionWrapper = document.createElement('div');
     const progressionCont = document.createElement('div');
     const progressionBar = document.createElement('div');
@@ -2722,14 +2653,12 @@ export const MainWidget = function (options) {
     const enterButton = document.createElement('a');
     const leaveButton = document.createElement('a');
     const progressionButton = document.createElement('a');
-    // var cpomntainsImage = (typeof ach.icon !== 'undefined' && ach.icon.length > 0);
 
     listItem.setAttribute('class', 'cl-ach-list-item cl-ach-' + ach.id);
     detailsContainer.setAttribute('class', 'cl-ach-list-details-cont');
     icon.setAttribute('class', 'cl-ach-list-icon');
     detailsWrapper.setAttribute('class', 'cl-ach-list-details-wrap');
     label.setAttribute('class', 'cl-ach-list-details-label');
-    // description.setAttribute('class', 'cl-ach-list-details-description');
     progressionWrapper.setAttribute('class', 'cl-ach-list-progression');
     progressionCont.setAttribute('class', 'cl-ach-list-progression-cont');
     progressionBar.setAttribute('class', 'cl-ach-list-progression-bar');
@@ -3000,8 +2929,6 @@ export const MainWidget = function (options) {
       icon.innerHTML = '';
 
       var _image = new Image();
-      // var imageIconWrapper = document.createElement('div');
-      // imageIconWrapper.setAttribute('class', 'cl-reward-list-item-img-wrapper');
       iconWrapp.style.background = 'none';
       _image.setAttribute('class', 'cl-reward-list-item-img');
 
@@ -3575,7 +3502,6 @@ export const MainWidget = function (options) {
   };
 
   this.messageItem = function (inbox) {
-    // var _this = this;
     const listItem = document.createElement('div');
     const detailsContainer = document.createElement('div');
     const detailsWrapper = document.createElement('div');
@@ -4521,9 +4447,9 @@ export const MainWidget = function (options) {
     const TAU = 2 * PI;
     const arc = TAU / sectors.length;
 
-    const friction = 0.991; // 0.995=soft, 0.99=mid, 0.98=hard
-    let angVel = 0; // Angular velocity
-    let ang = 0; // Angle in radians
+    const friction = 0.991;
+    let angVel = 0;
+    let ang = 0;
 
     const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
 
@@ -4556,7 +4482,7 @@ export const MainWidget = function (options) {
 
     function frame () {
       if (!angVel) return;
-      angVel *= friction; // Decrement velocity by friction
+      angVel *= friction;
       if (angVel < 0.002) {
         angVel = 0;
         const sector = sectors[getIndex()];
@@ -4582,8 +4508,8 @@ export const MainWidget = function (options) {
 
     function init () {
       sectors.forEach(drawSector);
-      rotate(); // Initial rotation
-      engine(); // Start engine
+      rotate();
+      engine();
       spinEl.addEventListener('click', () => {
         if (!angVel) angVel = rand(0.25, 0.45);
       });
