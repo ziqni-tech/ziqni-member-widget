@@ -2550,7 +2550,7 @@ export const LbWidget = function (options) {
       });
 
       // primary widget navigation
-    } else if (hasClass(el, 'cl-main-navigation-item')) {
+    } else if (el.closest('.cl-main-widget-navigation-items')) {
       _this.settings.mainWidget.navigationSwitch(el);
 
       // competition list
