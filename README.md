@@ -99,55 +99,6 @@ You can generate documentation by running:
 npm run jsdoc
 ```
 
-
-## Different themes
-
-There are a few themes to choose from (or create your own):
-
-Build default theme:
-```shell script
-npm run dev
-```
-Build dark theme:
-```shell script
-npm run dev:dark-theme
-```
-Build blue theme:
-```shell script
-npm run dev:blue-theme
-```
-Build green theme:
-```shell script
-npm run dev:green-theme
-```
-Build grey theme:
-```shell script
-npm run dev:grey-theme
-```
-Build red theme:
-```shell script
-npm run dev:red-theme
-```
-Build orange theme:
-```shell script
-npm run dev:orange-theme
-```
-Build black theme:
-```shell script
-npm run dev:black-theme
-```
-Grey refresh theme:
-```shell script
-npm run dev:grey-theme-refresh
-```
-
-## Layouts
-Layouts is a new development helper view that has examples of all the different variations of the widget in a static format.
-This features is really helpful in creating new theme designs and testing different theme configuration structures.
-```shell script
-npm run dev:layouts -- --theme=grey-theme-refresh
-```
-
 #### Command parameters:
 <table>
     <tr>
@@ -170,22 +121,6 @@ npm run dev:layouts -- --theme=grey-theme-refresh
     </tr>
 </table>
 
-#### Themes:
-Style 1"
-* cl-style-1-default-theme
-* cl-style-1-light-theme
-* cl-style-1-dark-theme
-
-Style 2:
-* cl-style-2-default-theme
-* cl-style-2-dark-theme
-* cl-style-2-blue-theme
-* cl-style-2-green-theme
-* cl-style-2-grey-theme
-* cl-style-2-red-theme
-* cl-style-2-orange-theme
-* cl-style-2-black-theme
-
 ## Examples
 Running the project in dev mode will initialise with an example page.
 
@@ -205,33 +140,6 @@ Running the project in dev mode will initialise with an example page.
 
 
 ## Adding widget to your website
-```html
-<script type="text/javascript">
-	(function(w,d,s,u,o){
-        w[o] = {
-            apiKey: '<api_key>',
-            memberRefId: '<member_reference_id>',
-            language: "en",
-            leaderboard: {
-                fullLeaderboardSize: 50,
-                topResultSize: 3,
-                miniScoreBoard: {
-                  rankingsCount: 2
-                },
-            },
-            uri: {
-                translationPath: ""
-            },
-            resources: [
-                "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/cl-style-1-default-theme.css"
-            ]
-        };
-        var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
-        a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
-    })(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
-</script>
-```
-### Or
 ```js
 import MemberWidget from '@ziqni-tech/member-widget';
 
@@ -261,12 +169,88 @@ const instance = new MemberWidget({
       return Math.round(points)
     }
   },
+  callbacks: {
+    onContestStatusChanged: function (contestId, currentState, previousState) {
+      console.log('contestId:', contestId);
+      console.log('currentState:', currentState);
+      console.log('previousState:', previousState);
+    },
+    onCompetitionStatusChanged: function (competitionId, currentState, previousState) {
+      console.log('competitionId:', competitionId);
+      console.log('currentState:', currentState);
+      console.log('previousState:', previousState);
+    },
+  },
   resources: [
-    "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/cl-style-1-default-theme.css"
+    'node_modules/@ziqni-tech/member-widget/build/css/theme/default-theme.css'
   ]
 });
 
 instance.init();
+```
+### Or
+```html
+<script type="text/javascript">
+	(function(w,d,s,u,o){
+        w[o] = {
+            apiKey: '<api_key>',
+            memberRefId: '<member_reference_id>',
+            language: "en",
+            leaderboard: {
+                fullLeaderboardSize: 50,
+                topResultSize: 3,
+                miniScoreBoard: {
+                  rankingsCount: 2
+                },
+            },
+            uri: {
+                translationPath: ""
+            },
+            resources: [
+                "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/cl-style-1-default-theme.css"
+            ]
+        };
+        var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
+        a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
+    })(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
+</script>
+```
+### Or
+```html
+  <script type="text/javascript" src="https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/build/javascript/ziqni-member-widget-selfinit.js"></script>
+
+  <script type="text/javascript">
+    const widgetInstance = new window._clLeaderBoardV3SelfInit({
+      autoStart: false,
+      debug: false,
+      apiKey: '<api_key>',
+      memberRefId: '<member_reference_id>',
+      navigation: {
+        tournaments: {enable: true},
+        achievements: {enable: true},
+        rewards: {enable: true},
+        inbox: {enable: true},
+        missions: {enable: true},
+      },
+      leaderboard: {
+        fullLeaderboardSize: 50,
+        miniScoreBoard: {
+          rankingsCount: 2
+        },
+        pointsFormatter: function(points) {
+          if (isNaN(points)) {
+            return points;
+          }
+          return Math.round(points)
+        }
+      },
+      resources: [
+        "https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/build/css/theme/cl-style-1-default-theme.css"
+      ]
+    });
+
+    widgetInstance.init();
+  </script>
 ```
 
 ## Using the loader script
