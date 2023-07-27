@@ -148,7 +148,7 @@ const instance = new MemberWidget({
   debug: false,
   apiKey: '<api_key>',
   memberRefId: '<member_reference_id>',
-  loadTranslations: false,
+  loadCustomTranslations: true,
   enableNotifications: true,
   navigation: {
     tournaments: {enable: true},
@@ -168,6 +168,9 @@ const instance = new MemberWidget({
       }
       return Math.round(points)
     }
+  },
+  uri: {
+    translationPath: '<path to custom json translation file>'
   },
   callbacks: {
     onContestStatusChanged: function (contestId, currentState, previousState) {
@@ -225,6 +228,7 @@ instance.init();
       debug: false,
       apiKey: '<api_key>',
       memberRefId: '<member_reference_id>',
+      loadCustomTranslations: false,
       navigation: {
         tournaments: {enable: true},
         achievements: {enable: true},
