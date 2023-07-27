@@ -18,7 +18,6 @@ import pagination from '../utils/paginator';
 import competitionStatusMap from '../helpers/competitionStatuses';
 
 import cLabs from './cLabs';
-import './Ajax';
 
 import { Notifications } from './Notifications';
 import { MiniScoreBoard } from './MiniScoreBoard';
@@ -78,7 +77,6 @@ export const LbWidget = function (options) {
     canvasAnimation: null,
     enableNotifications: false,
     mainWidget: null,
-    globalAjax: new cLabs.Ajax(),
     language: process.env.LANG,
     currency: '',
     spaceName: '',
@@ -248,7 +246,7 @@ export const LbWidget = function (options) {
       memberCompetitionOptInCheck: '/api/v1/:space/members/reference/:id/competition/:competitionId/optin-check',
       translationPath: '' // ../i18n/translation_:language.json
     },
-    loadTranslations: true,
+    loadCustomTranslations: true,
     showCopyright: true,
     translation: translation,
     resources: [], // Example: ["http://example.com/style.css", "http://example.com/my-fonts.css"]
@@ -1698,31 +1696,21 @@ export const LbWidget = function (options) {
   };
 
   this.loadWidgetTranslations = function (callback) {
-    var _this = this;
+    const _this = this;
 
-    if (typeof _this.settings.uri.translationPath === 'string' && _this.settings.uri.translationPath.length > 0 && _this.settings.loadTranslations) {
-      var url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : _this.settings.uri.gatewayDomain + _this.settings.uri.translationPath.replace(':language', _this.settings.language);
+    if (typeof _this.settings.uri.translationPath === 'string' && _this.settings.uri.translationPath.length > 0 && _this.settings.loadCustomTranslations) {
+      const url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : _this.settings.uri.gatewayDomain + _this.settings.uri.translationPath.replace(':language', _this.settings.language);
 
-      _this.settings.globalAjax.abort().getData({
-        type: 'GET',
-        url: url,
-        headers: {
-          'X-API-KEY': _this.settings.apiKey
-        },
-        success: function (response, dataObj, xhr) {
-          if (xhr.status === 200) {
-            var json = JSON.parse(response);
-
-            _this.settings.translation = mergeObjects(_this.settings.translation, json);
-
-            callback();
-          } else {
-            _this.log('no translation foound ' + response);
-
-            callback();
-          }
-        }
-      });
+      fetch(url, { method: 'GET' })
+        .then(response => response.json())
+        .then(json => {
+          _this.settings.translation = mergeObjects(_this.settings.translation, json);
+          callback();
+        })
+        .catch(error => {
+          _this.log('no translation foound ' + error);
+          callback();
+        });
     } else {
       if (_this.settings.language) {
         const translation = require(`../../i18n/translation_${_this.settings.language}.json`);
@@ -2042,7 +2030,14 @@ export const LbWidget = function (options) {
       _this.settings.notifications.hideNotification();
 
       // close leaderboard window
-    } else if (hasClass(el, 'cl-main-widget-lb-header-close') || hasClass(el, 'cl-main-widget-ach-header-close') || hasClass(el, 'cl-main-widget-reward-header-close') || hasClass(el, 'cl-main-widget-inbox-header-close') || hasClass(el, 'cl-widget-main-widget-overlay-wrapper')) {
+    } else if (
+      hasClass(el, 'cl-main-widget-lb-header-close') ||
+      hasClass(el, 'cl-main-widget-ach-header-close') ||
+      hasClass(el, 'cl-main-widget-reward-header-close') ||
+      hasClass(el, 'cl-main-widget-inbox-header-close') ||
+      hasClass(el, 'cl-widget-main-widget-overlay-wrapper') ||
+      hasClass(el, 'cl-main-widget-dashboard-header-close')
+    ) {
       _this.settings.mainWidget.hide(function () {
         _this.settings.miniScoreBoard.settings.active = true;
         _this.settings.miniScoreBoard.settings.container.style.display = 'block';

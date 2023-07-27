@@ -1435,9 +1435,20 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body {
-  padding: 0 77px 0 60px;
+  padding: 0 57px 0 60px;
+  margin-right: 20px;
   height: calc(100% - 144px);
   overflow: auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body::-webkit-scrollbar {
+  width: 4px;
+  background: #141E28;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #304F69;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
@@ -3797,6 +3808,7 @@
   height: 332px;
   background: #141E28;
   border-radius: 10px;
+  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .wheel-label,
@@ -6457,6 +6469,21 @@
  * ********** Mobile Devices ***********
  * *************************************
  */
+@media screen and (max-width: 1005px) {
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp {
+    justify-content: center;
+  }
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel {
+    margin-bottom: 20px;
+  }
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list {
+    justify-content: center;
+  }
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res {
+    justify-content: center;
+  }
+}
+
 @media screen and (max-width: 768px) {
   #cy {
     height: 300px;
@@ -7103,6 +7130,7 @@
         }
         .cl-main-widget-dashboard-body {
           padding: 0;
+          margin: 0;
           height: calc(100% - 90px);
         }
         .cl-main-widget-dashboard-instant-wins-wheel-title,
@@ -7140,6 +7168,7 @@
           flex-direction: column;
           width: 144px;
           padding: 10px 6px;
+          margin: 0;
         }
         .cl-main-widget-dashboard-instant-wins-cards {
           flex-direction: column;
