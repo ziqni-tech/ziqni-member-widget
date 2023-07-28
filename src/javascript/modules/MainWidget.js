@@ -4021,6 +4021,8 @@ export const MainWidget = function (options) {
   };
 
   this.loadInstantWins = function () {
+    const isMobile = window.screen.availWidth <= 768;
+
     const instantWinsContainer = document.querySelector('.cl-accordion.instantWins');
     const list = instantWinsContainer.querySelector('.cl-accordion-list');
 
@@ -4088,8 +4090,12 @@ export const MainWidget = function (options) {
     singleWheelPointer.classList.add('single-wheel-pointer');
     singleWheelCanvas.setAttribute('id', 'wheelOfFortune');
     canvas.setAttribute('id', 'wheel');
-    canvas.setAttribute('width', '300');
-    canvas.setAttribute('height', '300');
+
+    const wheelSize = isMobile ? '192' : '300';
+
+    canvas.setAttribute('width', wheelSize);
+    canvas.setAttribute('height', wheelSize);
+
     singleWheelButton.classList.add('single-wheel-button');
     singleWheelButton.setAttribute('id', 'spin');
 
@@ -4116,9 +4122,11 @@ export const MainWidget = function (options) {
     scratchcardsGameCardWrapper.classList.add('scratchcards-game-cardWrapper');
     scratchcardsGameCardBlock.classList.add('scratchcards-game-card-block');
 
+    const wcardSize = isMobile ? '230' : '300';
+
     scratchcardsGameCanvas.classList.add('scratchcards-game-canvas');
-    scratchcardsGameCanvas.setAttribute('width', '300');
-    scratchcardsGameCanvas.setAttribute('height', '300');
+    scratchcardsGameCanvas.setAttribute('width', wcardSize);
+    scratchcardsGameCanvas.setAttribute('height', wcardSize);
 
     scratchcardsPopup.classList.add('scratchcards-popup');
     scratchcardsPopupLabel.classList.add('scratchcards-popup-label');
@@ -4205,6 +4213,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadScratchCards = function () {
+    const isMobile = window.screen.availWidth <= 768;
     const _this = this;
     const scratchcardsGame = document.querySelector('.scratchcards-game');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back');
@@ -4247,11 +4256,12 @@ export const MainWidget = function (options) {
 
     const canvas = document.querySelector('.scratchcards-game-canvas');
     const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    const cellSize = 80;
-    const spacing = 20;
+    const cellSize = isMobile ? 60 : 80;
+    const spacing = isMobile ? 15 : 20;
     const borderRadius = 10;
+    const cardSize = isMobile ? 212 : 300;
 
-    ctx.clearRect(0, 0, 300, 300);
+    ctx.clearRect(0, 0, cardSize, cardSize);
 
     for (let i = 0; i < 3; i++) {
       for (let j = 0; j < 3; j++) {
@@ -4337,11 +4347,15 @@ export const MainWidget = function (options) {
         return;
       }
 
+      const r = canvas.getBoundingClientRect();
+      const currX = event.touches[0].clientX - r.left;
+      const currY = event.touches[0].clientY - r.top;
+
       event.preventDefault();
 
       isDrag = true;
 
-      clearArc(event.touches[0].offsetX, event.touches[0].offsetY);
+      clearArc(currX, currY);
       judgeVisible();
     }, false);
 
@@ -4349,8 +4363,13 @@ export const MainWidget = function (options) {
       if (!isDrag || event.targetTouches.length !== 1) {
         return;
       }
+
+      const r = canvas.getBoundingClientRect();
+      const currX = event.touches[0].clientX - r.left;
+      const currY = event.touches[0].clientY - r.top;
+
       event.preventDefault();
-      clearArc(event.touches[0].offsetX, event.touches[0].offsetY);
+      clearArc(currX, currY);
       judgeVisible();
     }, false);
 
@@ -4422,6 +4441,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadSingleWheel = function () {
+    const isMobile = window.screen.availWidth <= 768;
     const singleWheel = document.querySelector('.single-wheel');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
     const _this = this;
@@ -4453,6 +4473,8 @@ export const MainWidget = function (options) {
     let angVel = 0;
     let ang = 0;
 
+    const wheelFont = isMobile ? '10px sans-serif' : 'bold 15px sans-serif';
+
     const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
 
     function drawSector (sector, i) {
@@ -4472,7 +4494,7 @@ export const MainWidget = function (options) {
       ctx.rotate(ang + arc / 2);
       ctx.textAlign = 'right';
       ctx.fillStyle = '#fff';
-      ctx.font = 'bold 15px sans-serif';
+      ctx.font = wheelFont;
       ctx.fillText(sector.label, rad - 15, 10);
 
       ctx.restore();

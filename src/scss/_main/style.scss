@@ -4509,6 +4509,9 @@
   max-width: 252px;
   width: 100%;
   padding-left: 6px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-period {
@@ -6514,6 +6517,7 @@
       max-height: unset;
       height: 90%;
       padding: 0 12px;
+      margin: 0;
     }
 
     .cl-main-widget-navigation-container {
@@ -6698,7 +6702,7 @@
       }
       .cl-main-widget-tournaments-list {
         .paginator.accordion {
-          padding: 16px 12px 0 12px;
+          padding: 16px 12px 20px 12px;
         }
         .paginator-item {
           flex-shrink: 0;
@@ -6726,13 +6730,16 @@
             padding-right: 6px;
           }
         }
+        .cl-accordion.cl-shown {
+          height: calc(100% - 25px);
+        }
       }
       .cl-main-widget-tournaments-list.cl-show {
         left: 0;
         top: 70px;
       }
       .cl-main-widget-tournaments-list {
-        height: calc(100% - 86px);
+        height: calc(100% - 79px);
       }
 
       .cl-main-widget-ach-header {
@@ -6897,6 +6904,51 @@
             font-size: 12px;
             width: 82px;
             left: -15px;
+          }
+          .single-wheel-canvas {
+            width: 192px;
+            height: 192px;
+            &::before {
+              width: 14px;
+              height: 14px;
+              left: 85px;
+              top: 85px;
+            }
+            &::after {
+              width: 205px;
+              height: 205px;
+              left: -8px;
+              top: -7px;
+            }
+          }
+          .single-wheel-pointer {
+            width: 25px;
+            height: 18px;
+            top: -12px;
+            left: 83px;
+            background-size: contain;
+          }
+          .single-wheel-button {
+            margin-top: 42px;
+          }
+          .single-wheel-wrapper {
+            height: calc(100% - 20px);
+          }
+          .scratchcards-game-wrapper {
+            height: calc(100% - 20px);
+          }
+          .scratchcards-game-cardWrapper {
+            width: 220px;
+            height: 220px;
+          }
+          .scratchcards-game-card-block {
+            width: 210px;
+            height: 210px;
+          }
+          .scratchcards-game-card-cell {
+            width: 60px;
+            height: 60px;
+            margin-bottom: 15px;
           }
         }
         .cl-main-accordion-container {

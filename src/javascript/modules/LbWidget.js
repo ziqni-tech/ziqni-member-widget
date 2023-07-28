@@ -1902,7 +1902,7 @@ export const LbWidget = function (options) {
   };
 
   this.eventHandlers = async function (el) {
-    var _this = this;
+    const _this = this;
 
     // mini scoreboard opt-in action
     if (hasClass(el, 'cl-widget-ms-optin-action') && !hasClass(el, 'checking')) {
@@ -2622,21 +2622,27 @@ export const LbWidget = function (options) {
       }
     });
 
-    if (_this.isMobile()) {
-      document.body.addEventListener('touchend', function (event) {
-        var el = event.target;
+    document.body.addEventListener('click', function (event) {
+      const el = event.target;
 
-        if (!_this.settings.miniScoreBoard.settings.dragging) {
-          _this.eventHandlers(el);
-        }
-      });
-    } else {
-      document.body.addEventListener('click', function (event) {
-        var el = event.target;
+      _this.eventHandlers(el).then(() => {});
+    });
 
-        _this.eventHandlers(el);
-      });
-    }
+    // if (_this.isMobile()) {
+    //   document.body.addEventListener('touchend', function (event) {
+    //     var el = event.target;
+    //
+    //     if (!_this.settings.miniScoreBoard.settings.dragging) {
+    //       _this.eventHandlers(el);
+    //     }
+    //   });
+    // } else {
+    //   document.body.addEventListener('click', function (event) {
+    //     var el = event.target;
+    //
+    //     _this.eventHandlers(el);
+    //   });
+    // }
   };
 
   this.getCompetitionOptInStatus = async function (competitionId) {
