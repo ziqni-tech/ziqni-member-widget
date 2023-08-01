@@ -533,7 +533,7 @@ export const MainWidget = function (options) {
     const sectionLBDetailsDescriptionContainer = document.createElement('div');
     const sectionLBDetailsDescriptionHeader = document.createElement('div');
     const sectionLBDetailsDescriptionHeaderTitle = document.createElement('div');
-    const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
+    // const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
     const sectionLBDetailsDescriptionBanner = document.createElement('div');
 
     const sectionLBDetailsDescriptionLabel = document.createElement('div');
@@ -608,7 +608,7 @@ export const MainWidget = function (options) {
     sectionLBDetailsDescription.setAttribute('class', 'cl-main-widget-lb-details-description');
     sectionLBDetailsDescriptionHeader.setAttribute('class', 'cl-main-widget-lb-details-description-header');
     sectionLBDetailsDescriptionHeaderTitle.setAttribute('class', 'cl-main-widget-lb-details-description-header-title');
-    sectionLBDetailsDescriptionHeaderBack.setAttribute('class', 'cl-main-widget-lb-details-description-header-back');
+    // sectionLBDetailsDescriptionHeaderBack.setAttribute('class', 'cl-main-widget-lb-details-description-header-back');
     sectionLBDetailsDescriptionBanner.setAttribute('class', 'cl-main-widget-lb-details-description-banner');
 
     sectionLBDetailsDescriptionLabel.setAttribute('class', 'cl-main-widget-lb-details-description-label');
@@ -697,7 +697,7 @@ export const MainWidget = function (options) {
     sectionLBDetails.appendChild(sectionLBDetailsContentContainer);
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-      sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderBack);
+      // sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderBack);
       sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderTitle);
 
       sectionLBDetailsDescriptionDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
