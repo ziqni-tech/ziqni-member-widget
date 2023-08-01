@@ -1137,7 +1137,9 @@ export const MainWidget = function (options) {
     const sectionMissionsDetailsBodyWrapper = document.createElement('div');
     const sectionMissionsDetailsBodyImage = document.createElement('div');
     const sectionMissionsDetailsDescriptionLabel = document.createElement('div');
+    const sectionMissionsDetailsTandCLabel = document.createElement('div');
     const sectionMissionsDetailsBody = document.createElement('div');
+    const sectionMissionsDetailsTCBody = document.createElement('div');
     const sectionMissionsDetailsPrize = document.createElement('div');
     const sectionMissionsDetailsPrizeLabel = document.createElement('div');
     const sectionMissionsDetailsPrizeValue = document.createElement('div');
@@ -1195,7 +1197,9 @@ export const MainWidget = function (options) {
     sectionMissionsDetailsBodyWrapper.setAttribute('class', 'cl-main-widget-missions-details-body-wrapper');
     sectionMissionsDetailsBodyImage.setAttribute('class', 'cl-main-widget-missions-details-body-image');
     sectionMissionsDetailsDescriptionLabel.setAttribute('class', 'cl-main-widget-missions-details-description-label');
+    sectionMissionsDetailsTandCLabel.setAttribute('class', 'cl-main-widget-missions-details-tc-label');
     sectionMissionsDetailsBody.setAttribute('class', 'cl-main-widget-missions-details-description');
+    sectionMissionsDetailsTCBody.setAttribute('class', 'cl-main-widget-missions-details-tc');
     sectionMissionsDetailsPrize.setAttribute('class', 'cl-main-widget-missions-details-prize');
     sectionMissionsDetailsPrizeLabel.setAttribute('class', 'cl-main-widget-missions-details-prize-label');
     sectionMissionsDetailsPrizeValue.setAttribute('class', 'cl-main-widget-missions-details-prize-value');
@@ -1215,6 +1219,7 @@ export const MainWidget = function (options) {
     sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
     sectionMissionsDetailsInfoBtn.innerHTML = 'i';
     sectionMissionsDetailsDescriptionLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.descriptionLabel;
+    sectionMissionsDetailsTandCLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.tAndCLabel;
     sectionMissionsDetailsPrizeLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.prizeLabel + ':';
     sectionMissionsMapHeader.innerHTML = _this.settings.lbWidget.settings.translation.missions.mapLabel;
 
@@ -1240,7 +1245,9 @@ export const MainWidget = function (options) {
 
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsHeaderLabel);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsDescriptionLabel);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsTandCLabel);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
+    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsTCBody);
     sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsPrize);
 
     sectionMissionsDetailsBodyWrapper.appendChild(sectionMissionsDetailsBodyImage);
@@ -2990,6 +2997,7 @@ export const MainWidget = function (options) {
     const _this = this;
     const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
     const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
+    const tc = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc');
     const prizeValue = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-prize-value');
 
     if (!mission.data || !mission.data.name) {
@@ -3009,6 +3017,9 @@ export const MainWidget = function (options) {
 
     label.innerHTML = mission.data.name;
     body.innerHTML = mission.data.description ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+    tc.innerHTML = mission.data.termsAndConditions
+      ? mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      : this.settings.lbWidget.settings.translation.missions.tAndCDefault;
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
@@ -3017,6 +3028,30 @@ export const MainWidget = function (options) {
 
       if (typeof callback === 'function') callback();
     }, 50);
+  };
+
+  this.showMissionTC = function () {
+    const body = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
+    const label = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description-label');
+    body.style.display = 'none';
+    label.style.display = 'none';
+
+    const tcBody = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc');
+    const tcLabel = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc-label');
+    tcBody.style.display = 'block';
+    tcLabel.style.display = 'block';
+  };
+
+  this.hideMissionTC = function () {
+    const body = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
+    const label = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description-label');
+    body.style.display = 'block';
+    label.style.display = 'block';
+
+    const tcBody = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc');
+    const tcLabel = query(this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc-label');
+    tcBody.style.display = 'none';
+    tcLabel.style.display = 'none';
   };
 
   this.loadMissionDetailsCyGraph = function () {
@@ -3034,8 +3069,12 @@ export const MainWidget = function (options) {
 
     if (container.style.display === 'block') {
       container.style.display = 'none';
+      this.hideMissionTC();
+
       return;
     }
+
+    this.showMissionTC();
 
     container.style.display = 'block';
     container.innerHTML = '';

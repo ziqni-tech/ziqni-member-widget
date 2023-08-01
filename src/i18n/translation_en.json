@@ -86,6 +86,8 @@
     "label": "Missions",
     "btn": "Go",
     "descriptionLabel": "Description",
+    "tAndCLabel": "Terms & Conditions",
+    "tAndCDefault": "No Terms and Conditions available",
     "prizeLabel": "Prize",
     "mapLabel": "Mission map"
   },

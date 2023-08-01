@@ -5421,6 +5421,19 @@
   text-overflow: ellipsis;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-tc-label {
+  display: none;
+  text-align: left;
+  color: var(--lb3-messages-details-title-color);
+  font-weight: 500;
+  font-size: 14px;
+  line-height: 15px;
+  padding-bottom: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-header-date {
   text-align: center;
   color: var(--lb3-rewards-details-date-color);
@@ -5515,6 +5528,20 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-description {
+  width: 100%;
+  color: var(--lb3-messages-details-text-color);
+  margin: 0;
+  padding: 0 0 14px 0;
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 16px;
+  border-bottom: solid 1px #223241;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-tc {
+  display: none;
   width: 100%;
   color: var(--lb3-messages-details-text-color);
   margin: 0;
