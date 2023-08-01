@@ -2011,10 +2011,10 @@ export const MainWidget = function (options) {
       } else if (optInStatus.length && (optInStatus[0].statusCode === 10 || optInStatus[0].statusCode === 0)) {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.processing;
         addClass(optIn, 'checking');
-        optIn.parentNode.style.display = 'block';
+        optIn.parentNode.style.display = 'flex';
       } else {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.enter;
-        optIn.parentNode.style.display = 'block';
+        optIn.parentNode.style.display = 'flex';
         removeClass(optIn, 'checking');
       }
     } else {
