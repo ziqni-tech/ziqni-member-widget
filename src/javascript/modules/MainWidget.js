@@ -4338,10 +4338,6 @@ export const MainWidget = function (options) {
       isDrag = false;
     }, false);
 
-    canvas.addEventListener('mouseleave', function (event) {
-      isDrag = false;
-    }, false);
-
     canvas.addEventListener('touchstart', function (event) {
       if (event.targetTouches.length !== 1) {
         return;
@@ -4403,7 +4399,7 @@ export const MainWidget = function (options) {
         }
       }
 
-      if (n >= pixels.length * 0.85) {
+      if (n >= pixels.length * 0.9) {
         ctx.globalCompositeOperation = 'destination-over';
         clearCanvas();
       }
