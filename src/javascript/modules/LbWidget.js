@@ -2522,6 +2522,10 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hideMissionDetails(function () {
       });
 
+      // competition details info button
+    } else if (hasClass(el, 'cl-main-widget-lb-details-description-info')) {
+      _this.settings.mainWidget.toggleCompetitionDescription();
+
       // mission details info button
     } else if (hasClass(el, 'cl-main-widget-missions-details-info-btn')) {
       _this.settings.mainWidget.loadMissionDetailsCyGraph();

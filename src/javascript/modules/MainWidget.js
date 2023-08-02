@@ -531,6 +531,7 @@ export const MainWidget = function (options) {
     const sectionLBDetailsContentContainerDateMinutes = document.createElement('div');
     const sectionLBDetailsContentContainerDateSeconds = document.createElement('div');
     const sectionLBDetailsDescriptionContainer = document.createElement('div');
+    const sectionLBDetailsDescriptionInfo = document.createElement('div');
     const sectionLBDetailsDescriptionHeader = document.createElement('div');
     const sectionLBDetailsDescriptionHeaderTitle = document.createElement('div');
     // const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
@@ -546,6 +547,9 @@ export const MainWidget = function (options) {
     const sectionLBDetailsDescriptionDateSeconds = document.createElement('div');
 
     const sectionLBDetailsDescription = document.createElement('div');
+    const sectionLBDetailsTandC = document.createElement('div');
+    const sectionLBDetailsDescriptionTitle = document.createElement('div');
+    const sectionLBDetailsDescriptionTCTitle = document.createElement('div');
     const sectionLBDetailsDescriptionClose = document.createElement('span');
 
     const sectionLBLeaderboard = document.createElement('div');
@@ -606,6 +610,10 @@ export const MainWidget = function (options) {
 
     sectionLBDetailsDescriptionContainer.setAttribute('class', 'cl-main-widget-lb-details-description-container');
     sectionLBDetailsDescription.setAttribute('class', 'cl-main-widget-lb-details-description');
+    sectionLBDetailsTandC.setAttribute('class', 'cl-main-widget-lb-details-tc');
+    sectionLBDetailsDescriptionTitle.setAttribute('class', 'cl-main-widget-lb-details-description-title');
+    sectionLBDetailsDescriptionTCTitle.setAttribute('class', 'cl-main-widget-lb-details-tc-title');
+    sectionLBDetailsDescriptionInfo.setAttribute('class', 'cl-main-widget-lb-details-description-info');
     sectionLBDetailsDescriptionHeader.setAttribute('class', 'cl-main-widget-lb-details-description-header');
     sectionLBDetailsDescriptionHeaderTitle.setAttribute('class', 'cl-main-widget-lb-details-description-header-title');
     // sectionLBDetailsDescriptionHeaderBack.setAttribute('class', 'cl-main-widget-lb-details-description-header-back');
@@ -665,6 +673,9 @@ export const MainWidget = function (options) {
     sectionTournamentDetailsOptInAction.href = 'javascript:void(0);';
     sectionLBOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
     sectionLBOptInAction.href = 'javascript:void(0);';
+    sectionLBDetailsDescriptionTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.descriptionLabel;
+    sectionLBDetailsDescriptionTCTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.tAndCLabel;
+    sectionLBDetailsDescriptionInfo.innerHTML = 'i';
 
     sectionLBHeaderList.appendChild(sectionLBHeaderListIcon);
     sectionLBHeaderList.appendChild(sectionLBHeaderBackIcon);
@@ -699,6 +710,7 @@ export const MainWidget = function (options) {
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
       // sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderBack);
       sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderTitle);
+      sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionInfo);
 
       sectionLBDetailsDescriptionDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
       sectionLBDetailsDescriptionDateHours.innerHTML = this.settings.lbWidget.settings.translation.time.hoursFull;
@@ -718,7 +730,10 @@ export const MainWidget = function (options) {
 
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionHeader);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionBanner);
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionTitle);
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionTCTitle);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescription);
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsTandC);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionClose);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBMissingMemberDetails);
       sectionLBDetails.appendChild(sectionLBDetailsDescriptionContainer);
@@ -1902,6 +1917,19 @@ export const MainWidget = function (options) {
     return description ? description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
   };
 
+  this.getActiveCompetitionTAndC = function () {
+    const tc = (this.settings.lbWidget.settings.competition.activeContest !== null &&
+      this.settings.lbWidget.settings.competition.activeContest.termsAndConditions &&
+      this.settings.lbWidget.settings.competition.activeContest.termsAndConditions.length > 0)
+      ? this.settings.lbWidget.settings.competition.activeContest.termsAndConditions
+      : ((this.settings.lbWidget.settings.competition.activeCompetition !== null &&
+        this.settings.lbWidget.settings.competition.activeCompetition.termsAndConditions &&
+        this.settings.lbWidget.settings.competition.activeCompetition.termsAndConditions.length > 0)
+        ? this.settings.lbWidget.settings.competition.activeCompetition.termsAndConditions : '');
+
+    return tc ? tc.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+  };
+
   this.extractImage = function (body, imageContainer, isBodyVirtualOpt) {
     const _this = this;
     const activeImageContainer = closest(body, '.cl-main-section-image-banner-active');
@@ -1956,19 +1984,22 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardDetailsUpdate = function () {
-    var _this = this;
-    var mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
-    var body = null;
+    const _this = this;
+    const mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
+    let body = null;
+    let tc = null;
     let title = null;
     let bannerTitle = null;
     _this.settings.descriptionDate = query(_this.settings.container, '.cl-main-widget-lb-details-description-date');
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
       body = query(_this.settings.section, '.cl-main-widget-lb-details-description');
+      tc = query(_this.settings.section, '.cl-main-widget-lb-details-tc');
       title = query(_this.settings.section, '.cl-main-widget-lb-details-description-header-title');
       bannerTitle = query(_this.settings.section, '.cl-main-widget-lb-details-description-label-text');
       if (!body) return;
       body.innerHTML = _this.getActiveCompetitionDescription();
+      tc.innerHTML = _this.getActiveCompetitionTAndC();
       title.innerHTML = _this.getActiveContestTitle();
       bannerTitle.innerHTML = _this.getActiveContestTitle();
     }
@@ -2629,6 +2660,24 @@ export const MainWidget = function (options) {
         preLoader.hide();
       }, 50);
     });
+  };
+  this.toggleCompetitionDescription = function () {
+    const descriptionLabel = query(this.settings.section, '.cl-main-widget-lb-details-description-title');
+    const description = query(this.settings.section, '.cl-main-widget-lb-details-description');
+    const tcLabel = query(this.settings.section, '.cl-main-widget-lb-details-tc-title');
+    const tc = query(this.settings.section, '.cl-main-widget-lb-details-tc');
+
+    if (tc.style.display === 'block') {
+      tcLabel.style.display = 'none';
+      tc.style.display = 'none';
+      descriptionLabel.style.display = 'block';
+      description.style.display = 'block';
+    } else {
+      tcLabel.style.display = 'block';
+      tc.style.display = 'block';
+      descriptionLabel.style.display = 'none';
+      description.style.display = 'none';
+    }
   };
 
   this.hideCompetitionList = function (callback) {
