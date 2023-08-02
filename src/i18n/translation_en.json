@@ -31,7 +31,9 @@
     "finished": "Finished",
     "registered": "Registered",
     "noAvailableCompetitions": "No available competition",
-    "date": "Date"
+    "date": "Date",
+    "descriptionLabel": "Description",
+    "tAndCLabel": "Terms & Conditions"
   },
   "leaderboard": {
     "rank": "Rank",
