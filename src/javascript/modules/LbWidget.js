@@ -403,6 +403,50 @@ export const LbWidget = function (options) {
     return '<div class="banner-date">' + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
   };
 
+  this.getDashboardCompetitions = async function () {
+    const request = CompetitionRequest.constructFromObject({
+      languageKey: this.settings.language,
+      competitionFilter: {
+        statusCode: {
+          moreThan: 20,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        limit: 2,
+        skip: 0
+      }
+    }, null);
+
+    const activeCompetitions = await this.getCompetitionsApi(request);
+    let activeCompetitionsData = activeCompetitions.data;
+
+    if (activeCompetitionsData) {
+      const ids = activeCompetitionsData.map(a => a.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Competition',
+          entityIds: ids
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      activeCompetitionsData = activeCompetitionsData.map(comp => {
+        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+
+        return comp;
+      });
+    }
+
+    return activeCompetitionsData;
+  };
+
   /**
    * get a list of available competition filtered by provided global criteria
    * @param callback {Function}
@@ -2421,6 +2465,39 @@ export const LbWidget = function (options) {
 
       _this.settings.mainWidget.loadScratchCards();
 
+      // dashboard competition button
+    } else if (hasClass(el, 'dashboard-tournament-list-btn')) {
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const lbIcon = document.querySelector('.cl-main-widget-navigation-lb');
+
+      dashboard.style.display = 'none';
+      dashboardIcon.classList.remove('cl-active-nav');
+      lbIcon.classList.add('cl-active-nav');
+      const tournamentId = el.dataset.id;
+      const preLoader = _this.settings.mainWidget.preloader();
+
+      preLoader.show(function () {
+        _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
+        _this.settings.mainWidget.settings.active = true;
+        _this.settings.tournaments.activeCompetitionId = tournamentId;
+        _this.activeDataRefresh(function () {
+          _this.settings.mainWidget.hideCompetitionList(function () {
+            if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
+              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+            } else if (_this.settings.competition.activeContest !== null) {
+              _this.settings.mainWidget.loadCompetitionDetails(function () {});
+            }
+
+            const lbContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.tournaments.containerClass);
+            lbContainer.style.display = 'flex';
+            addClass(lbContainer, 'cl-main-active-section');
+
+            preLoader.hide();
+          });
+        });
+      });
+
       // leaderboard details back button
     } else if (hasClass(el, 'cl-main-widget-lb-details-back-btn')) {
       _this.settings.mainWidget.hideCompetitionDetails();
@@ -2553,8 +2630,8 @@ export const LbWidget = function (options) {
 
       // load competition
     } else if (hasClass(el, 'cl-tour-list-item') || closest(el, '.cl-tour-list-item') !== null) {
-      var tournamentId = (hasClass(el, 'cl-tour-list-item')) ? el.dataset.id : closest(el, '.cl-tour-list-item').dataset.id;
-      var preLoader = _this.settings.mainWidget.preloader();
+      const tournamentId = (hasClass(el, 'cl-tour-list-item')) ? el.dataset.id : closest(el, '.cl-tour-list-item').dataset.id;
+      const preLoader = _this.settings.mainWidget.preloader();
 
       preLoader.show(function () {
         _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
