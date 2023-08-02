@@ -1458,7 +1458,8 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title {
   color: #ffffff;
   font-family: 'Syne', sans-serif;
   font-size: 20px;
@@ -1466,7 +1467,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
-  padding-top: 40px;
+  padding-top: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins {}
@@ -1611,6 +1612,112 @@
   text-overflow: ellipsis;
   cursor: pointer;
   margin: 0 auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list {
+  padding-top: 20px;
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list .dashboard-tournament-item {
+  width: 340px;
+  height: 186px;
+  background: #141E28;
+  border-radius: 10px;
+  overflow: hidden;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-item:nth-child(1) .dashboard-tournament-list-bg {
+  height: 86px;
+  background: url(../../images/dashboard-tur-1.svg) no-repeat;
+  background-size: cover;
+  margin-bottom: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-item:nth-child(2) .dashboard-tournament-list-bg {
+  height: 86px;
+  background: url(../../images/dashboard-tur-2.svg) no-repeat;
+  background-size: cover;
+  margin-bottom: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-title {
+  width: 100%;
+  max-width: 290px;
+  color: var(--lb3-achievements-item-label-color);
+  font-family: "Syne",sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  padding: 10px 16px 10px 16px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: absolute;
+  left: 0;
+  top: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-btn {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 36px;
+  background: #ee3ec8;
+  border-radius: 10px;
+  color: #fff;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  margin:  10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-ends-wrapp,
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-prize-wrapp {
+  display: flex;
+  justify-content: space-between;
+  font-family: "Syne", sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 12px;
+  line-height: 12px;
+  padding: 0 16px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-ends-title {
+  display: flex;
+  align-items: center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-ends-title::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url(../../images/clock_filled.svg) no-repeat center;
+  margin-right: 4px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-prize-title {
+  display: flex;
+  align-items: center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-prize-title::before {
+  content: '';
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: url(../../images/trophy_filled.svg) no-repeat center;
+  margin-right: 4px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list {

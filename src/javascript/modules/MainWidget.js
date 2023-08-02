@@ -1318,6 +1318,11 @@ export const MainWidget = function (options) {
     const sectionDashboardAchievementsWrapp = document.createElement('div');
     const achList = document.createElement('div');
 
+    const sectionDashboardTournaments = document.createElement('div');
+    const sectionDashboardTournamentsTitle = document.createElement('div');
+    const sectionDashboardTournamentsWrapp = document.createElement('div');
+    const tournamentsList = document.createElement('div');
+
     sectionDashboard.setAttribute('class', _this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
     sectionDashboardHeader.setAttribute('class', 'cl-main-widget-dashboard-header');
     sectionDashboardHeaderLabel.setAttribute('class', 'cl-main-widget-dashboard-header-label');
@@ -1393,8 +1398,20 @@ export const MainWidget = function (options) {
     sectionDashboardAchievements.appendChild(sectionDashboardAchievementsTitle);
     sectionDashboardAchievements.appendChild(sectionDashboardAchievementsWrapp);
 
+    sectionDashboardTournaments.setAttribute('class', 'cl-main-widget-dashboard-tournaments');
+    sectionDashboardTournamentsTitle.setAttribute('class', 'cl-main-widget-dashboard-tournaments-title');
+    sectionDashboardTournamentsWrapp.setAttribute('class', 'cl-main-widget-dashboard-tournaments-wrapp');
+    tournamentsList.setAttribute('class', 'cl-main-widget-dashboard-tournaments-list');
+
+    sectionDashboardTournamentsTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle;
+
+    sectionDashboardTournamentsWrapp.appendChild(tournamentsList);
+    sectionDashboardTournaments.appendChild(sectionDashboardTournamentsTitle);
+    sectionDashboardTournaments.appendChild(sectionDashboardTournamentsWrapp);
+
     sectionDashboardBody.appendChild(sectionDashboardInstantWins);
     sectionDashboardBody.appendChild(sectionDashboardAchievements);
+    sectionDashboardBody.appendChild(sectionDashboardTournaments);
 
     sectionDashboardHeader.appendChild(sectionDashboardHeaderLabel);
     sectionDashboardHeader.appendChild(sectionDashboardHeaderClose);
@@ -3478,6 +3495,97 @@ export const MainWidget = function (options) {
     });
   };
 
+  this.dashboardTournamentItem = function (tournament) {
+    const listItem = document.createElement('div');
+    const itemBg = document.createElement('div');
+    const title = document.createElement('div');
+    const endsWrapp = document.createElement('div');
+    const endsTitle = document.createElement('div');
+    const endsValue = document.createElement('div');
+    const prizeWrapp = document.createElement('div');
+    const prizeTitle = document.createElement('div');
+    const prizeValue = document.createElement('div');
+    const btn = document.createElement('div');
+
+    listItem.setAttribute('class', 'dashboard-tournament-item');
+    itemBg.setAttribute('class', 'dashboard-tournament-list-bg');
+    title.setAttribute('class', 'dashboard-tournament-list-title');
+    endsWrapp.setAttribute('class', 'dashboard-tournament-list-ends-wrapp');
+    endsTitle.setAttribute('class', 'dashboard-tournament-list-ends-title');
+    endsValue.setAttribute('class', 'dashboard-tournament-list-ends-value');
+    prizeWrapp.setAttribute('class', 'dashboard-tournament-list-prize-wrapp');
+    prizeTitle.setAttribute('class', 'dashboard-tournament-list-prize-title');
+    prizeValue.setAttribute('class', 'dashboard-tournament-list-prize-value');
+    btn.setAttribute('class', 'dashboard-tournament-list-btn');
+    btn.setAttribute('data-id', tournament.id);
+
+    title.innerHTML = tournament.name;
+    btn.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentBtn;
+    endsTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.endsTitle;
+    prizeTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.prizeTitle;
+    const date = new Date(tournament.scheduledEndDate);
+    endsValue.innerHTML = date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+
+    let rewardValue = '';
+
+    if (tournament.rewards && tournament.rewards.length) {
+      const idx = tournament.rewards.findIndex(reward => {
+        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+          const rewardRankArr = reward.rewardRank.split(',');
+          rewardRankArr.forEach(r => {
+            const idx = r.indexOf('-');
+            if (idx !== -1) {
+              const start = parseInt(r);
+              if (start === 1) {
+                return true;
+              }
+            } else if (parseInt(r) === 1) {
+              return true;
+            }
+            return false;
+          });
+        } else if (parseInt(reward.rewardRank) === 1) {
+          return true;
+        }
+        return false;
+      });
+
+      if (idx !== -1) {
+        rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(tournament.rewards[idx]);
+      }
+    }
+
+    prizeValue.innerHTML = rewardValue;
+
+    endsWrapp.appendChild(endsTitle);
+    endsWrapp.appendChild(endsValue);
+
+    prizeWrapp.appendChild(prizeTitle);
+    prizeWrapp.appendChild(prizeValue);
+
+    listItem.appendChild(itemBg);
+    listItem.appendChild(title);
+    listItem.appendChild(endsWrapp);
+    listItem.appendChild(prizeWrapp);
+    listItem.appendChild(btn);
+
+    return listItem;
+  };
+
+  this.loadDashboardTournaments = async function () {
+    const tournamentsList = query(this.settings.section, '.cl-main-widget-dashboard-tournaments-list');
+    const tournaments = await this.settings.lbWidget.getDashboardCompetitions();
+
+    tournamentsList.innerHTML = '';
+
+    if (tournaments && tournaments.length) {
+      tournaments.forEach(t => {
+        const listItem = this.dashboardTournamentItem(t);
+        tournamentsList.appendChild(listItem);
+      });
+    }
+  };
+
   this.loadDashboardAchievements = function (achievementData) {
     const _this = this;
     const achList = query(this.settings.section, '.cl-main-widget-dashboard-achievements-list');
@@ -4660,6 +4768,8 @@ export const MainWidget = function (options) {
               _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {
                 _this.loadDashboardAchievements(achievementData);
               });
+
+              _this.loadDashboardTournaments();
 
               changeInterval = setTimeout(function () {
                 addClass(dashboardContainer, 'cl-main-active-section');
