@@ -18,7 +18,11 @@
     "leave": "Leave Achievement",
     "listEnterBtn": "Join",
     "listLeaveBtn": "Leave",
-    "listProgressionBtn": "Processing..."
+    "listProgressionBtn": "Processing...",
+    "leavePopupTitle": "Leave the achievement",
+    "leavePopupDescription": "Are you sure you want to leave this achievement?",
+    "leavePopupClose": "Close",
+    "leavePopupConfirm": "Leave"
   },
   "tournaments": {
     "label": "Tournaments",

@@ -956,6 +956,30 @@ export const LbWidget = function (options) {
     });
   };
 
+  this.leaveAchievement = function (activeAchievementId) {
+    const _this = this;
+    if (!this.settings.apiWs.optInApiWsClient) {
+      this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
+    }
+
+    const optInRequest = ManageOptinRequest.constructFromObject({
+      entityId: activeAchievementId,
+      entityType: 'Achievement',
+      action: 'leave'
+    }, null);
+
+    const preLoader = this.settings.mainWidget.preloader();
+    preLoader.show(async function () {
+      await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
+        setTimeout(function () {
+          _this.settings.mainWidget.loadAchievements(1, function () {
+            preLoader.hide();
+          });
+        }, 2000);
+      });
+    });
+  };
+
   this.getAward = async function (awardId, callback) {
     let awardData = null;
     const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards];
@@ -2044,27 +2068,8 @@ export const LbWidget = function (options) {
       // Achievement list leave action
     } else if (hasClass(el, 'cl-ach-list-leave')) {
       const activeAchievementId = el.dataset.id;
-      if (!this.settings.apiWs.optInApiWsClient) {
-        this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-      }
 
-      const optInRequest = ManageOptinRequest.constructFromObject({
-        entityId: activeAchievementId,
-        entityType: 'Achievement',
-        action: 'leave'
-      }, null);
-
-      const preLoader = _this.settings.mainWidget.preloader();
-      preLoader.show(async function () {
-        await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-          setTimeout(function () {
-            _this.settings.mainWidget.loadAchievements(1, function () {
-              preLoader.hide();
-            });
-          }, 2000);
-        });
-      });
-
+      this.settings.mainWidget.showLeaveAchievementPopup(activeAchievementId);
       // close mini scoreboard info area
     } else if (hasClass(el, 'cl-widget-ms-information-close') && !hasClass(el, 'checking')) {
       _this.settings.miniScoreBoard.clearAll();

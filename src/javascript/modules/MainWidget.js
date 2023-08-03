@@ -812,6 +812,39 @@ export const MainWidget = function (options) {
     var sectionAchievementDetailsOptInContainer = document.createElement('div');
     var sectionAchievementDetailsOptInAction = document.createElement('a');
 
+    const leavePopupWrapp = document.createElement('div');
+    const leavePopup = document.createElement('div');
+    const leavePopupTitle = document.createElement('div');
+    const leavePopupClose = document.createElement('div');
+    const leavePopupDescription = document.createElement('div');
+    const leavePopupActionConfirm = document.createElement('div');
+    const leavePopupActionCancel = document.createElement('div');
+    const leavePopupActions = document.createElement('div');
+
+    leavePopupWrapp.setAttribute('class', 'cl-main-widget-ach-list-popup-wrapp');
+    leavePopup.setAttribute('class', 'cl-main-widget-ach-list-popup');
+    leavePopupTitle.setAttribute('class', 'cl-main-widget-ach-list-popup-title');
+    leavePopupClose.setAttribute('class', 'cl-main-widget-ach-list-popup-close');
+    leavePopupDescription.setAttribute('class', 'cl-main-widget-ach-list-popup-description');
+    leavePopupActionConfirm.setAttribute('class', 'cl-main-widget-ach-list-popup-confirm');
+    leavePopupActionCancel.setAttribute('class', 'cl-main-widget-ach-list-popup-cancel');
+    leavePopupActions.setAttribute('class', 'cl-main-widget-ach-list-popup-actions');
+
+    leavePopupTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupTitle;
+    leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
+    leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
+    leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
+
+    leavePopupActions.appendChild(leavePopupActionCancel);
+    leavePopupActions.appendChild(leavePopupActionConfirm);
+
+    leavePopup.appendChild(leavePopupTitle);
+    leavePopup.appendChild(leavePopupClose);
+    leavePopup.appendChild(leavePopupDescription);
+    leavePopup.appendChild(leavePopupActions);
+
+    leavePopupWrapp.appendChild(leavePopup);
+
     sectionACH.setAttribute('class', _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' cl-main-section-item');
     sectionACHHeader.setAttribute('class', 'cl-main-widget-ach-header');
     sectionACHHeaderLabel.setAttribute('class', 'cl-main-widget-ach-header-label');
@@ -878,6 +911,7 @@ export const MainWidget = function (options) {
     sectionACHDetails.appendChild(sectionACHDetailsContentContainer);
 
     sectionACHListBody.appendChild(sectionACHListBodyResults);
+    sectionACHListBody.appendChild(leavePopupWrapp);
     sectionACHList.appendChild(sectionACHListBody);
 
     sectionACHFooter.appendChild(sectionACHFooterContent);
@@ -3542,6 +3576,31 @@ export const MainWidget = function (options) {
         callback();
       }
     });
+  };
+
+  this.showLeaveAchievementPopup = function (activeAchievementId) {
+    const popup = document.querySelector('.cl-main-widget-ach-list-popup-wrapp');
+    const closeBtn = popup.querySelector('.cl-main-widget-ach-list-popup-close');
+    const confirm = popup.querySelector('.cl-main-widget-ach-list-popup-confirm');
+    const close = popup.querySelector('.cl-main-widget-ach-list-popup-cancel');
+
+    const closePopup = () => {
+      popup.style.display = 'none';
+    };
+    const leaveAchievement = () => {
+      closePopup();
+      this.settings.lbWidget.leaveAchievement(activeAchievementId);
+    };
+
+    popup.style.display = 'flex';
+
+    closeBtn.removeEventListener('click', closePopup);
+    close.removeEventListener('click', closePopup);
+    confirm.removeEventListener('click', leaveAchievement);
+
+    closeBtn.addEventListener('click', closePopup);
+    close.addEventListener('click', closePopup);
+    confirm.addEventListener('click', leaveAchievement);
   };
 
   this.dashboardTournamentItem = function (tournament) {
