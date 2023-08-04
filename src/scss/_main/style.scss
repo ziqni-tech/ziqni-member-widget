@@ -4587,6 +4587,10 @@
   border-radius: 6px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-main-accordion-container-menu-item.not-available {
+  cursor: not-allowed;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion {
   width: 100%;
 }

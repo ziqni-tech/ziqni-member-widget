@@ -4028,9 +4028,37 @@ export const MainWidget = function (options) {
       });
     }
 
+    if (!totalCount) {
+      if (claimedTotalCount) {
+        _this.settings.rewardsSection.accordionLayout.map(t => {
+          switch (t.type) {
+            case 'availableAwards':
+              t.show = false;
+              break;
+            case 'claimedAwards':
+              t.show = true;
+              break;
+          }
+        });
+      } else {
+        _this.settings.rewardsSection.accordionLayout.map(t => {
+          switch (t.type) {
+            case 'availableAwards':
+              t.show = false;
+              break;
+            case 'claimedAwards':
+              t.show = false;
+              break;
+            case 'instantWins':
+              t.show = true;
+              break;
+          }
+        });
+      }
+    }
+
     const accordionObj = _this.awardsList(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
       const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
-
       if (typeof rewardData !== 'undefined') {
         if (rewardData.length === 0) {
           accordionSection.style.display = 'none';
@@ -4081,6 +4109,21 @@ export const MainWidget = function (options) {
         const container = query(claimedRewards, '.cl-accordion-list-container');
         container.appendChild(paginatorClaimed);
       }
+    }
+
+    const availableBtn = document.querySelector('.cl-main-accordion-container-menu-item.availableAwards');
+    const claimedBtn = document.querySelector('.cl-main-accordion-container-menu-item.claimedAwards');
+
+    if (!totalCount) {
+      availableBtn.classList.add('not-available');
+    } else {
+      availableBtn.classList.remove('not-available');
+    }
+
+    if (!claimedTotalCount) {
+      claimedBtn.classList.add('not-available');
+    } else {
+      claimedBtn.classList.remove('not-available');
     }
   };
 

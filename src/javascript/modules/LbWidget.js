@@ -2675,6 +2675,7 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-accordion-label')) {
       _this.settings.mainWidget.accordionNavigation(el);
     } else if (hasClass(el, 'cl-main-accordion-container-menu-item')) {
+      if (el.classList.contains('not-available')) return;
       _this.settings.mainWidget.listsNavigation(el);
 
       // mobile theme switcher
