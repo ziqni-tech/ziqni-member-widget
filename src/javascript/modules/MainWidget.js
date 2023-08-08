@@ -4739,17 +4739,18 @@ export const MainWidget = function (options) {
     const singleWheel = document.querySelector('.single-wheel');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
     const _this = this;
+    const preLoader = _this.preloader();
 
     singleWheel.classList.add('cl-show');
     backBtn.style.display = 'block';
 
     const sectors = [
-      { color: '#14114e', label: '50$ bonus' },
-      { color: '#204040', label: 'Free spins' },
-      { color: '#190879', label: 'Next time' },
-      { color: '#2d2f4a', label: '50$ bonus' },
-      { color: '#111a3a', label: 'Free spins' },
-      { color: '#140538', label: 'Next time' }
+      { color: '#14114e', label: '50$ bonus', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_1.5d368727.svg' },
+      { color: '#204040', label: 'Free spins', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_2.c2d6a2fb.svg' },
+      { color: '#190879', label: 'Next time', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_3.1478f762.svg' },
+      { color: '#2d2f4a', label: '50$ bonus', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_4.0f9e80f8.svg' },
+      { color: '#111a3a', label: 'Free spins', src: 'https://first-space.cdn.ziqni.com/_id/cuAElokBl_S2IPKJWgK7' },
+      { color: '#140538', label: 'Next time', src: 'https://first-space.cdn.ziqni.com/_id/duAElokBl_S2IPKJWgLA' }
     ];
 
     const rand = (m, M) => Math.random() * (M - m) + m;
@@ -4771,17 +4772,39 @@ export const MainWidget = function (options) {
 
     const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
 
-    function drawSector (sector, i) {
+    const addImageProcess = (src) => {
+      return new Promise((resolve, reject) => {
+        const img = new Image();
+        img.onload = () => resolve(img);
+        img.onerror = reject;
+        img.src = src;
+      });
+    };
+
+    const loadImage = async (ctx, sector, rad, rot) => {
+      const img = await addImageProcess(sector.src);
+      ctx.save();
+      ctx.resetTransform();
+      ctx.translate(rad, rad);
+      ctx.rotate(rot);
+      ctx.clip();
+      ctx.drawImage(img, 0, -75, 150, 150);
+      ctx.restore();
+    };
+
+    async function drawSector (sector, i) {
       const ang = arc * i;
+      const rot = ang + arc / 2;
       ctx.save();
       // COLOR
       ctx.beginPath();
-      ctx.fillStyle = sector.color;
+      // ctx.fillStyle = sector.color;
       ctx.strokeStyle = '#8D0C71';
       ctx.moveTo(rad, rad);
       ctx.arc(rad, rad, rad, ang, ang + arc);
       ctx.lineTo(rad, rad);
-      ctx.fill();
+      // ctx.fill();
+      await loadImage(ctx, sector, rad, rot);
       ctx.stroke();
       // TEXT
       ctx.translate(rad, rad);
@@ -4789,8 +4812,8 @@ export const MainWidget = function (options) {
       ctx.textAlign = 'right';
       ctx.fillStyle = '#fff';
       ctx.font = wheelFont;
+      ctx.strokeText(sector.label, rad - 15, 10);
       ctx.fillText(sector.label, rad - 15, 10);
-
       ctx.restore();
     }
 
@@ -4823,10 +4846,11 @@ export const MainWidget = function (options) {
       frame();
       requestAnimationFrame(engine);
     }
-
-    function init () {
-      sectors.forEach(drawSector);
-      rotate();
+    async function init () {
+      for (const [i, sector] of sectors.entries()) {
+        await drawSector(sector, i);
+      }
+      // rotate();
       engine();
       spinEl.addEventListener('click', () => {
         if (!angVel) angVel = rand(0.25, 0.45);
@@ -4840,7 +4864,12 @@ export const MainWidget = function (options) {
       });
     }
 
-    init();
+    preLoader.show(async function () {
+      await init();
+      preLoader.hide();
+    });
+
+    // init();
   };
 
   this.hideInstantWins = function () {
