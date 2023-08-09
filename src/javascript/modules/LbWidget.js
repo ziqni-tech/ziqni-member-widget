@@ -2948,13 +2948,25 @@ export const LbWidget = function (options) {
   };
 
   this.generateUserToken = async function () {
-    const memberTokenRequest = {
-      member: this.settings.memberRefId,
-      apiKey: this.settings.apiKey,
-      isReferenceId: true,
-      expires: this.settings.expires,
-      resource: 'ziqni-gapi'
-    };
+    let memberTokenRequest;
+
+    if (this.settings.memberRefId) {
+      memberTokenRequest = {
+        member: this.settings.memberRefId,
+        apiKey: this.settings.apiKey,
+        isReferenceId: true,
+        expires: this.settings.expires,
+        resource: 'ziqni-gapi'
+      };
+    } else {
+      memberTokenRequest = {
+        member: 'PUBLIC',
+        apiKey: this.settings.apiKey,
+        isReferenceId: false,
+        expires: this.settings.expires,
+        resource: 'ziqni-gapi'
+      };
+    }
 
     const response = await fetch('https://api.ziqni.com/member-token', {
       method: 'post',

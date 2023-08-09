@@ -6552,6 +6552,7 @@
       .cl-main-widget-dashboard-header-close {
         background-image: url(../../images/close-icon-light.svg);
       }
+      .cl-main-widget-dashboard-tournaments-title,
       .cl-main-widget-dashboard-achievements-title,
       .cl-main-widget-dashboard-instant-wins-title {
         color: #080D12;
@@ -6591,6 +6592,9 @@
       .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
       .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
         color: #080D12;
+      }
+      .dashboard-tournament-item {
+        background-color: #dce6ef;
       }
     }
   }
