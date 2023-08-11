@@ -11,6 +11,7 @@ import appendNext from '../utils/appendNext';
 import stripHtml from '../utils/stripHtml';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
+import tournamentBrackets from './TournamentBrackets';
 
 /**
  * MainWidget
@@ -552,6 +553,8 @@ export const MainWidget = function (options) {
     const sectionLBDetailsDescriptionTCTitle = document.createElement('div');
     const sectionLBDetailsDescriptionClose = document.createElement('span');
 
+    const sectionLBBrackets = document.createElement('div');
+
     const sectionLBLeaderboard = document.createElement('div');
     const sectionLBLeaderboardHeader = document.createElement('div');
     const sectionLBLeaderboardHeaderLabels = document.createElement('div');
@@ -630,6 +633,8 @@ export const MainWidget = function (options) {
     sectionLBDetailsDescriptionDateSeconds.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item seconds');
 
     sectionLBDetailsDescriptionClose.setAttribute('class', 'cl-main-widget-lb-details-description-close');
+
+    sectionLBBrackets.setAttribute('class', 'cl-main-widget-lb-details-brackets');
 
     // Leaderboard result container
     sectionLBLeaderboard.setAttribute('class', 'cl-main-widget-lb-leaderboard');
@@ -734,9 +739,12 @@ export const MainWidget = function (options) {
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionTCTitle);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescription);
       sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsTandC);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionClose);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBMissingMemberDetails);
+      sectionLBDetailsDescriptionContainer.appendChild(sectionLBBrackets);
+      // sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionClose);
+      // sectionLBDetailsDescriptionContainer.appendChild(sectionLBMissingMemberDetails);
       sectionLBDetails.appendChild(sectionLBDetailsDescriptionContainer);
+      sectionLBDetails.appendChild(sectionLBDetailsDescriptionClose);
+      sectionLBDetails.appendChild(sectionLBMissingMemberDetails);
     }
 
     sectionLBLeaderboardHeader.appendChild(sectionLBLeaderboardHeaderLabels);
@@ -2068,12 +2076,25 @@ export const MainWidget = function (options) {
     } else {
       addClass(this.settings.section, 'cl-main-active-embedded-description');
     }
+
+    tournamentBrackets(
+      this.settings.lbWidget.apiClientStomp,
+      this.settings.lbWidget.settings.tournaments.activeCompetitionId,
+      this.settings.lbWidget.settings.language,
+      this.settings.lbWidget.settings.translation
+    );
+
     if (typeof callback === 'function') callback();
   };
 
   this.hideEmbeddedCompetitionDetailsContent = function (callback) {
     const listIcon = query(this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const backIcon = query(this.settings.container, '.cl-main-widget-lb-header-back-icon');
+    const missingMember = document.querySelector('.cl-main-widget-lb-missing-member-details');
+
+    if (missingMember) {
+      missingMember.style.display = 'none';
+    }
 
     listIcon.style.display = 'block';
     backIcon.style.display = 'none';
@@ -2287,7 +2308,7 @@ export const MainWidget = function (options) {
         area.style.display = 'none';
       }
 
-      if (areaDetails !== null && member !== null) {
+      if (areaDetails !== null && member !== null && sectionContainer.classList.contains('cl-main-active-embedded-description')) {
         areaDetails.style.display = 'flex';
       } else {
         areaDetails.style.display = 'none';

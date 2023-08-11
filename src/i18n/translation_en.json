@@ -46,6 +46,12 @@
     "prize": "Prize",
     "you": "You"
   },
+  "brackets": {
+    "title": "Tournaments bracket",
+    "starts": "Starts",
+    "ends": "Ends",
+    "ended": "Ended"
+  },
   "miniLeaderboard": {
     "highScore": "High Score",
     "lastScore": "Last Score",
