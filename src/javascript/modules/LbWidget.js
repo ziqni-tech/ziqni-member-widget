@@ -710,7 +710,7 @@ export const LbWidget = function (options) {
 
     if (contests.length) {
       contests.forEach(contest => {
-        if (contest.statusCode < 30 && this.settings.competition.activeContest === null) {
+        if (contest.statusCode < 30 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
           this.settings.competition.activeContest = contest;
           this.settings.competition.activeContestId = contest.id;
 
