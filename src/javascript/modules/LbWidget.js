@@ -107,6 +107,7 @@ export const LbWidget = function (options) {
       activeCompetitionId: null,
       activeContestId: null,
       activeCompetition: null,
+      contests: null,
       activeContest: null,
       refreshInterval: null,
       refreshIntervalMillis: 1000000,
@@ -684,6 +685,7 @@ export const LbWidget = function (options) {
   this.setActiveCompetition = async function (json, callback) {
     this.settings.competition.activeCompetition = json[0];
     this.settings.competition.activeContest = null;
+    this.settings.competition.contests = null;
     this.settings.competition.activeContestId = null;
 
     const contestRequest = ContestRequest.constructFromObject({
@@ -709,6 +711,7 @@ export const LbWidget = function (options) {
     const contests = await this.getContests(contestRequest);
 
     if (contests.length) {
+      this.settings.competition.contests = contests;
       contests.forEach(contest => {
         if (contest.statusCode < 30 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
           this.settings.competition.activeContest = contest;
@@ -945,6 +948,10 @@ export const LbWidget = function (options) {
       languageKey: this.settings.language,
       achievementFilter: {
         ids: achievementIds,
+        statusCode: {
+          moreThan: 0,
+          lessThan: 100
+        },
         limit: achievementIds.length
       }
     }, null);
@@ -2098,6 +2105,66 @@ export const LbWidget = function (options) {
       // load embedded competition details
     } else if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage && (hasClass(el, 'cl-main-widget-lb-details-content-label') || closest(el, '.cl-main-widget-lb-details-content-label') !== null)) {
       _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+
+      // load embedded competition details
+    } else if (hasClass(el, 'connections-table_round-item') || closest(el, '.connections-table_round-item') !== null) {
+      const item = hasClass(el, 'connections-table_round-item') ? el : closest(el, '.connections-table_round-item');
+      const preLoader = _this.settings.mainWidget.preloader();
+
+      preLoader.show(async function () {
+        if (_this.settings.competition.activeContestId) {
+          const leaderboardUnsubscribeRequest = LeaderboardSubscriptionRequest.constructFromObject({
+            entityId: _this.settings.competition.activeContestId,
+            action: 'Unsubscribe',
+            leaderboardFilter: {}
+          });
+          _this.settings.leaderboard.leaderboardData = [];
+          await _this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest);
+        }
+
+        _this.settings.competition.activeContestId = item.dataset.connectId;
+        const activeContestIdx = _this.settings.competition.contests.findIndex(c => c.id === _this.settings.competition.activeContestId);
+        if (activeContestIdx !== -1) {
+          _this.settings.competition.activeContest = _this.settings.competition.contests[activeContestIdx];
+        }
+
+        let ranksAboveToInclude = 0;
+        let ranksBelowToInclude = 0;
+
+        if (_this.settings.leaderboard.miniScoreBoard.enableRankings) {
+          ranksAboveToInclude = _this.settings.leaderboard.miniScoreBoard.rankingsCount;
+          ranksBelowToInclude = _this.settings.leaderboard.miniScoreBoard.rankingsCount;
+        }
+
+        const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+          entityId: _this.settings.competition.activeContestId,
+          action: 'Subscribe',
+          leaderboardFilter: {
+            topRanksToInclude: _this.settings.leaderboard.fullLeaderboardSize,
+            ranksAboveToInclude: ranksAboveToInclude,
+            ranksBelowToInclude: ranksBelowToInclude
+          }
+        });
+
+        _this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
+          .then(data => {
+            let leaderboardEntries = [];
+            if (data && data.leaderboardEntries) {
+              leaderboardEntries = data.leaderboardEntries;
+            }
+            _this.settings.leaderboard.leaderboardData = leaderboardEntries;
+            _this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
+              _this.settings.leaderboard.leaderboardData = lbData;
+            });
+            _this.settings.mainWidget.leaderboardDetailsUpdate();
+            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+          })
+          .catch(error => {
+            _this.log(error);
+          });
+
+        preLoader.hide();
+      });
 
       // hide embedded competition details
     } else if (

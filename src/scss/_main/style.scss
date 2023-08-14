@@ -7169,8 +7169,9 @@
         }
       }
       .cl-main-widget-tournaments-list.cl-show {
-        left: 0;
+        left: -1px;
         top: 70px;
+        width: calc(100% + 2px);
       }
       .cl-main-widget-tournaments-list {
         height: calc(100% - 79px);
@@ -7716,6 +7717,13 @@
               line-height: 14px;
               background: unset;
             }
+          }
+        }
+        .cl-main-widget-dashboard-tournaments-list {
+          flex-direction: column;
+          .dashboard-tournament-item {
+            width: 100%;
+            margin-bottom: 20px;
           }
         }
       }

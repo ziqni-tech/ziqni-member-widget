@@ -2071,9 +2071,7 @@ export const MainWidget = function (options) {
     listIcon.style.display = 'none';
     backIcon.style.display = 'block';
 
-    if (hasClass(this.settings.section, 'cl-main-active-embedded-description')) {
-      removeClass(this.settings.section, 'cl-main-active-embedded-description');
-    } else {
+    if (!hasClass(this.settings.section, 'cl-main-active-embedded-description')) {
       addClass(this.settings.section, 'cl-main-active-embedded-description');
     }
 
