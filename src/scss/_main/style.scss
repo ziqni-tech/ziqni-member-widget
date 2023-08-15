@@ -6473,6 +6473,9 @@
       .cl-main-widget-missions-details-header-label {
         color: #0D0D0D;
       }
+      .cl-main-widget-missions-details-tc-label,
+      .cl-main-widget-missions-details-description,
+      .cl-main-widget-missions-details-tc,
       .cl-main-widget-missions-details-description-label {
         color: #0D0D0D;
       }
@@ -6677,6 +6680,34 @@
       }
       .cl-missions-list-details-progress-bar {
         background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+      }
+    }
+
+    .cl-main-widget-lb-details-description-info {
+      color: #080D12;
+    }
+
+    .cl-main-widget-lb-details-description-container {
+      &::-webkit-scrollbar {
+        background: #DCE6EF;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #96B5CF;
+      }
+    }
+
+    .cl-main-widget-lb-details-brackets {
+      .connections-table_round-item {
+        background-color: #dce6ef;
+        .connections-table_round-item-name {
+          color: #080D12;
+        }
+        .connections-table_round-item-date-title {
+          color: #223241;
+        }
+        .connections-table_round-item-date-value {
+          color: #080D12;
+        }
       }
     }
 
@@ -7222,11 +7253,15 @@
           height: unset;
           width: 100%;
         }
+        .cl-main-widget-ach-list-popup {
+          width: 270px;
+        }
       }
       .cl-main-widget-ach-details-container {
+        top: 72px;
         &.cl-show {
           padding: 0;
-          top: 24px;
+          top: 72px;
           height: calc(100% - 26px);
         }
       }
@@ -7408,6 +7443,7 @@
         }
       }
       .cl-main-widget-reward-details-container {
+        top: 72px;
         &.cl-show {
           padding-left: 0;
           height: calc(100% - 80px);
@@ -7455,6 +7491,7 @@
           height: calc(100% - 92px);
         }
         .cl-main-widget-inbox-details-container {
+          top: 72px;
           &.cl-show {
             padding: 0;
             top: 72px;
@@ -7573,10 +7610,13 @@
               font-size: 14px;
               padding-top: 10px;
             }
+            .cl-main-widget-missions-details-tc-label,
             .cl-main-widget-missions-details-description-label {
               font-size: 10px;
               font-weight: 700;
             }
+            .cl-main-widget-missions-details-description,
+            .cl-main-widget-missions-details-tc,
             .cl-main-widget-missions-details-description {
               font-size: 10px;
             }
