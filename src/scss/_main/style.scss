@@ -517,6 +517,14 @@
   line-height: 40px;
 }
 
+.cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-default-wrapper .cl-mem-rank.cl-mem-rank-1,
+.cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-default-wrapper .cl-mem-rank.cl-mem-rank-2,
+.cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-default-wrapper .cl-mem-rank.cl-mem-rank-3 {
+  transform: translate(20px, 0);
+  font-size: 14px;
+  line-height: 23px;
+}
+
 .cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-default-wrapper .cl-mem-points-label {
   display: block;
   font-size: 11px;

@@ -174,7 +174,11 @@ export const MainWidget = function (options) {
           claimedTitle.classList.add('active');
           break;
         case 'instantWins':
-          instantWinsTitle.classList.add('active');
+          if (this.settings.lbWidget.settings.instantWins.enable) {
+            instantWinsTitle.classList.add('active');
+          } else {
+            claimedTitle.classList.add('active');
+          }
           break;
       }
     }
@@ -185,7 +189,9 @@ export const MainWidget = function (options) {
 
     statusMenu.appendChild(availableTitle);
     statusMenu.appendChild(claimedTitle);
-    statusMenu.appendChild(instantWinsTitle);
+    if (this.settings.lbWidget.settings.instantWins.enable) {
+      statusMenu.appendChild(instantWinsTitle);
+    }
 
     accordionWrapper.appendChild(statusMenu);
 
@@ -1466,7 +1472,10 @@ export const MainWidget = function (options) {
     sectionDashboardTournaments.appendChild(sectionDashboardTournamentsTitle);
     sectionDashboardTournaments.appendChild(sectionDashboardTournamentsWrapp);
 
-    sectionDashboardBody.appendChild(sectionDashboardInstantWins);
+    if (this.settings.lbWidget.settings.instantWins.enable) {
+      sectionDashboardBody.appendChild(sectionDashboardInstantWins);
+    }
+
     sectionDashboardBody.appendChild(sectionDashboardAchievements);
     sectionDashboardBody.appendChild(sectionDashboardTournaments);
 

@@ -148,6 +148,9 @@ export const LbWidget = function (options) {
       missions: [],
       totalCount: 0
     },
+    instantWins: {
+      enable: false
+    },
     tournaments: {
       activeCompetitionId: null,
       readyCompetitions: [],
@@ -216,7 +219,7 @@ export const LbWidget = function (options) {
         order: 5
       },
       missions: {
-        enable: false,
+        enable: true,
         navigationClass: 'cl-main-widget-navigation-missions',
         navigationClassIcon: 'cl-main-widget-navigation-missions-icon',
         containerClass: 'cl-main-widget-section-missions',
