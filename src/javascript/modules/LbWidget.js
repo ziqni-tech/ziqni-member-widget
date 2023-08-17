@@ -2601,6 +2601,10 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-main-widget-lb-details-description-info')) {
       _this.settings.mainWidget.toggleCompetitionDescription();
 
+      // achievement details info button
+    } else if (hasClass(el, 'cl-main-widget-ach-details-header-info')) {
+      _this.settings.mainWidget.toggleAchievementDescription();
+
       // mission details info button
     } else if (hasClass(el, 'cl-main-widget-missions-details-info-btn')) {
       _this.settings.mainWidget.loadMissionDetailsCyGraph();

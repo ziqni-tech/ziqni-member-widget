@@ -22,7 +22,10 @@
     "leavePopupTitle": "Leave the achievement",
     "leavePopupDescription": "Are you sure you want to leave this achievement?",
     "leavePopupClose": "Close",
-    "leavePopupConfirm": "Leave"
+    "leavePopupConfirm": "Leave",
+    "descriptionLabel": "Description",
+    "tAndCLabel": "Terms & Conditions",
+    "progress": "Progress"
   },
   "tournaments": {
     "label": "Tournaments",
@@ -103,11 +106,15 @@
     "btn": "Go",
     "descriptionLabel": "Description",
     "tAndCLabel": "Terms & Conditions",
-    "tAndCDefault": "No Terms and Conditions available",
+    "tAndCDefault": "No Terms and Conditions provided",
     "prizeLabel": "Prize",
     "mapLabel": "Mission map"
   },
   "global": {
-    "copy": "Powered By Ziqni"
+    "copy": "Powered By Ziqni",
+    "descriptionLabel": "Description",
+    "tAndCLabel": "Terms & Conditions",
+    "tAndCEmpty": "No Terms and Conditions provided",
+    "descriptionEmpty": "No Descriptions provided"
   }
 }

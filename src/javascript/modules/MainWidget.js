@@ -818,13 +818,24 @@ export const MainWidget = function (options) {
     var sectionAchievementDetailsHeader = document.createElement('div');
     var sectionAchievementDetailsHeaderLabel = document.createElement('div');
     var sectionAchievementDetailsHeaderDate = document.createElement('div');
+    var sectionAchievementDetailsHeaderInfo = document.createElement('div');
     var sectionAchievementDetailsBackBtn = document.createElement('a');
     var sectionAchievementDetailsBodyContainer = document.createElement('div');
     var sectionAchievementDetailsBodyImageContainer = document.createElement('div');
     var sectionAchievementDetailsBody = document.createElement('div');
+    var sectionAchievementDetailsTC = document.createElement('div');
+    var sectionAchievementDetailsBodyDescriptionTitle = document.createElement('div');
+    var sectionAchievementDetailsBodyTCTitle = document.createElement('div');
+
+    const sectionAchievementDetailsProgressionTitle = document.createElement('div');
+    const sectionAchievementDetailsProgression = document.createElement('div');
+    const sectionAchievementDetailsProgressionCont = document.createElement('div');
+    const sectionAchievementDetailsProgressionBar = document.createElement('div');
+    const sectionAchievementDetailsProgressionLabel = document.createElement('div');
 
     var sectionAchievementDetailsOptInContainer = document.createElement('div');
     var sectionAchievementDetailsOptInAction = document.createElement('a');
+    var sectionAchievementDetailsReward = document.createElement('div');
 
     const leavePopupWrapp = document.createElement('div');
     const leavePopup = document.createElement('div');
@@ -848,6 +859,11 @@ export const MainWidget = function (options) {
     leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
     leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
     leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
+    sectionAchievementDetailsHeaderInfo.innerHTML = 'i';
+    sectionAchievementDetailsBodyDescriptionTitle.innerHTML = this.settings.lbWidget.settings.translation.global.descriptionLabel;
+    sectionAchievementDetailsBodyTCTitle.innerHTML = this.settings.lbWidget.settings.translation.global.tAndCLabel;
+    sectionAchievementDetailsProgressionTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.progress;
+    sectionAchievementDetailsProgressionLabel.innerHTML = '0/100';
 
     leavePopupActions.appendChild(leavePopupActionCancel);
     leavePopupActions.appendChild(leavePopupActionConfirm);
@@ -887,12 +903,28 @@ export const MainWidget = function (options) {
     sectionAchievementDetailsHeader.setAttribute('class', 'cl-main-widget-ach-details-header');
     sectionAchievementDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-ach-details-header-label');
     sectionAchievementDetailsHeaderDate.setAttribute('class', 'cl-main-widget-ach-details-header-date');
+    sectionAchievementDetailsHeaderInfo.setAttribute('class', 'cl-main-widget-ach-details-header-info');
     sectionAchievementDetailsBackBtn.setAttribute('class', 'cl-main-widget-ach-details-back-btn');
     sectionAchievementDetailsBodyContainer.setAttribute('class', 'cl-main-widget-ach-details-body-container');
     sectionAchievementDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-ach-details-body-image-cont');
     sectionAchievementDetailsBody.setAttribute('class', 'cl-main-widget-ach-details-body');
+    sectionAchievementDetailsTC.setAttribute('class', 'cl-main-widget-ach-details-tc');
+    sectionAchievementDetailsBodyDescriptionTitle.setAttribute('class', 'cl-main-widget-ach-details-body-description-title');
+    sectionAchievementDetailsBodyTCTitle.setAttribute('class', 'cl-main-widget-ach-details-body-description-tc-title');
     sectionAchievementDetailsOptInContainer.setAttribute('class', 'cl-main-widget-ach-details-optin-container');
     sectionAchievementDetailsOptInAction.setAttribute('class', 'cl-main-widget-ach-details-optin-action');
+    sectionAchievementDetailsReward.setAttribute('class', 'cl-main-widget-ach-details-reward');
+
+    sectionAchievementDetailsProgressionTitle.setAttribute('class', 'cl-main-widget-ach-details-body-progress-title');
+    sectionAchievementDetailsProgression.setAttribute('class', 'cl-main-widget-ach-details-body-progress');
+    sectionAchievementDetailsProgressionCont.setAttribute('class', 'cl-main-widget-ach-details-body-progress-cont');
+    sectionAchievementDetailsProgressionBar.setAttribute('class', 'cl-main-widget-ach-details-body-progress-bar');
+    sectionAchievementDetailsProgressionLabel.setAttribute('class', 'cl-main-widget-ach-details-body-progress-label');
+
+    sectionAchievementDetailsProgressionCont.appendChild(sectionAchievementDetailsProgressionBar);
+
+    sectionAchievementDetailsProgression.appendChild(sectionAchievementDetailsProgressionCont);
+    sectionAchievementDetailsProgression.appendChild(sectionAchievementDetailsProgressionLabel);
 
     sectionACHHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.achievements.label;
     sectionACHFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
@@ -900,13 +932,20 @@ export const MainWidget = function (options) {
     sectionAchievementDetailsOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
     sectionAchievementDetailsOptInAction.href = 'javascript:void(0);';
 
+    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsReward);
     sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsOptInAction);
 
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsBackBtn);
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderLabel);
     sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderDate);
+    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderInfo);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyImageContainer);
+    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsProgressionTitle);
+    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsProgression);
+    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyDescriptionTitle);
+    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyTCTitle);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBody);
+    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsTC);
     sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsOptInContainer);
 
     sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsHeader);
@@ -2723,11 +2762,31 @@ export const MainWidget = function (options) {
       }, 50);
     });
   };
+
   this.toggleCompetitionDescription = function () {
     const descriptionLabel = query(this.settings.section, '.cl-main-widget-lb-details-description-title');
     const description = query(this.settings.section, '.cl-main-widget-lb-details-description');
     const tcLabel = query(this.settings.section, '.cl-main-widget-lb-details-tc-title');
     const tc = query(this.settings.section, '.cl-main-widget-lb-details-tc');
+
+    if (tc.style.display === 'block') {
+      tcLabel.style.display = 'none';
+      tc.style.display = 'none';
+      descriptionLabel.style.display = 'block';
+      description.style.display = 'block';
+    } else {
+      tcLabel.style.display = 'block';
+      tc.style.display = 'block';
+      descriptionLabel.style.display = 'none';
+      description.style.display = 'none';
+    }
+  };
+
+  this.toggleAchievementDescription = function () {
+    const descriptionLabel = query(this.settings.section, '.cl-main-widget-ach-details-body-description-title');
+    const description = query(this.settings.section, '.cl-main-widget-ach-details-body');
+    const tcLabel = query(this.settings.section, '.cl-main-widget-ach-details-body-description-tc-title');
+    const tc = query(this.settings.section, '.cl-main-widget-ach-details-tc');
 
     if (tc.style.display === 'block') {
       tcLabel.style.display = 'none';
@@ -2965,7 +3024,24 @@ export const MainWidget = function (options) {
     const _this = this;
     const label = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-header-label');
     const body = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-body');
+    const descriptionLabel = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-body-description-title');
+    const tc = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-tc');
+    const tcLabel = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-body-description-tc-title');
     const image = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-body-image-cont');
+    const pregressBar = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-body-progress-bar');
+    const pregressLabel = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-body-progress-label');
+    const reward = query(_this.settings.achievement.detailsContainer, '.cl-main-widget-ach-details-reward');
+
+    tcLabel.style.display = 'none';
+    tc.style.display = 'none';
+    descriptionLabel.style.display = 'block';
+    body.style.display = 'block';
+
+    if (data.reward) {
+      reward.innerHTML = data.reward.rewardValue;
+    } else {
+      reward.innerHTML = '';
+    }
 
     let optinRequiredForEntrants = false;
 
@@ -2986,7 +3062,7 @@ export const MainWidget = function (options) {
         optIn.innerHTML = _this.settings.lbWidget.settings.translation.achievements.leave;
         removeClass(optIn, 'cl-disabled');
         addClass(optIn, 'leave-achievement');
-        optIn.parentNode.style.display = 'block';
+        optIn.style.display = 'block';
       } else if (
         memberAchievementOptInStatus.length &&
         (memberAchievementOptInStatus[0].statusCode === 10 || memberAchievementOptInStatus[0].statusCode === 0)
@@ -2994,31 +3070,38 @@ export const MainWidget = function (options) {
         optIn.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listProgressionBtn;
         removeClass(optIn, 'cl-disabled');
         addClass(optIn, 'leave-achievement');
-        optIn.parentNode.style.display = 'block';
+        optIn.style.display = 'block';
       } else {
         optIn.innerHTML = _this.settings.lbWidget.settings.translation.achievements.enter;
         removeClass(optIn, 'cl-disabled');
-        optIn.parentNode.style.display = 'block';
+        optIn.style.display = 'block';
       }
     } else {
       addClass(optIn, 'cl-disabled');
-      optIn.parentNode.style.display = 'none';
+      optIn.style.display = 'none';
     }
 
     label.innerHTML = data.name;
-    body.innerHTML = data.description ? data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+    body.innerHTML = data.description ? data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : _this.settings.lbWidget.settings.translation.global.descriptionEmpty;
+    tc.innerHTML = data.termsAndConditions
+      ? data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      : this.settings.lbWidget.settings.translation.global.tAndCEmpty;
 
-    if (_this.settings.lbWidget.settings.achievements.extractImageHeader) {
-      var imageLookup = query(body, 'img');
-      objectIterator(imageLookup, function (img, key, count) {
-        if (count === 0) {
-          var newImg = img.cloneNode(true);
-          image.appendChild(newImg);
-
-          remove(img);
-        }
-      });
+    if (data && data.iconLink) {
+      image.setAttribute('style', `background-image: url(${data.iconLink})`);
     }
+
+    this.settings.lbWidget.checkForMemberAchievementsProgression([data.id], function (issued, progression) {
+      if (issued && issued.length && issued[0].status === 'Completed') {
+        pregressLabel.innerHTML = '100/100';
+        pregressBar.style.width = '100%';
+      } else if (progression && progression.length) {
+        const perc = parseInt(progression[0].percentageComplete);
+        const percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
+        pregressLabel.innerHTML = perc + '/100';
+        pregressBar.style.width = percValue;
+      }
+    });
 
     _this.settings.achievement.detailsContainer.style.display = 'block';
     setTimeout(function () {

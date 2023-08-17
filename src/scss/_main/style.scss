@@ -3211,6 +3211,43 @@
   padding: 10px 0;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-optin-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-reward {
+  display: inline-block;
+  text-align: left;
+  width: 120px;
+  height: 36px;
+  padding-left: 28px;
+  padding-right: 12px;
+  background: #0f1921;
+  border-radius: 10px;
+  color: var(--lb3-rewards-item-label-color);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 36px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  position: relative;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-reward::before {
+  content: "";
+  display: block;
+  width: 12px;
+  height: 12px;
+  position: absolute;
+  left: 9px;
+  top: 11px;
+  background: url(../../images/award-icon.svg) no-repeat center;
+  background-size: contain;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-lb-details-container .cl-main-widget-lb-details-optin-action,
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-optin-action {
   text-align: center;
@@ -3537,6 +3574,24 @@
   font-weight: 500;
   font-size: 12px;
   line-height: 16px;
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-header-info {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 1px solid #333333;
+  border-radius: 5px;
+  cursor: pointer;
+  width: 30px;
+  height: 30px;
+  font-family: "Syne",sans-serif;
+  color: #fff;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 16px;
+  line-height: 16px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-back-btn {
@@ -3559,10 +3614,84 @@
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body {
   width: 100%;
   color: var(--lb3-achievements-details-body-color);
-  font-size: 14px;
+  font-size: 12px;
   line-height: 20px;
   margin: 0;
   padding: 0 0 40px 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-tc {
+  width: 100%;
+  color: var(--lb3-achievements-details-body-color);
+  font-size: 12px;
+  line-height: 20px;
+  margin: 0;
+  padding: 0 0 40px 0;
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-description-tc-title,
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-description-title {
+  font-family: "Syne",sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 14px;
+  padding-bottom: 14px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-description-tc-title {
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress-title {
+  font-family: "Syne",sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 14px;
+  padding-bottom: 14px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  width: 100%;
+  position: relative;
+  z-index: 1;
+  margin-bottom: 20px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress-cont {
+  width: 100%;
+  background: var(--lb3-achievements-progress-bg-color);
+  height: 4px;
+  border-radius: 5px;
+  background: #223241;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress-bar {
+  float: left;
+  width: 0;
+  height: 4px;
+  background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+  border-radius: 5px;
+  transition: all .3s ease;
+  font-size: 10px;
+  line-height: 12px;
+  text-align: right;
+  color: var(--lb3-achievements-progress-text-color);
+  text-transform: uppercase;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress-label {
+  width: 56px;
+  flex-shrink: 0;
+  font-family: "Syne",sans-serif;
+  font-style: normal;
+  font-weight: 500;
+  font-size: 12px;
+  line-height: 16px;
+  text-align: right;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body * {
@@ -3580,14 +3709,6 @@
   max-width: 100%;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body p {
-  position: unset;
-  transform: none;
-  text-align: left;
-  font-size: 12px;
-  float: none;
-}
-
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body a {
   position: unset;
   transform: none;
@@ -3598,12 +3719,46 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-image-cont {
-  float: left;
-  width: 100%;
-  padding: 0;
-  margin: 0;
-  text-align: center;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  background-size: 70%;
+  background-position: center;
+  background-repeat: no-repeat;
+  position: relative;
+  margin: 20px auto;
 }
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-image-cont::before {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 100px;
+  background: radial-gradient(50% 50% at 50% 50%, #38ACCF 0%, rgba(56, 172, 207, 0) 100%);
+  opacity: .4;
+  filter: blur(12.5px);
+  border-radius: 50%;
+  position: absolute;
+  top: 0;
+  left: 0;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-image-cont::after {
+  content: "";
+  display: block;
+  width: 100px;
+  height: 100px;
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  background: url(../../images/ellipse.svg) no-repeat;
+  background-size: contain;
+  background-position-y: bottom;
+}
+
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-image-cont img {
   max-width: 100%;
