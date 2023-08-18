@@ -5686,6 +5686,36 @@
   position: relative;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(1) {
+  .cl-missions-list-details-img {
+    background-image: url(../../images/mission-1.png);
+  }
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(2) {
+  .cl-missions-list-details-img {
+    background-image: url(../../images/mission-2.png);
+  }
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(3) {
+  .cl-missions-list-details-img {
+    background-image: url(../../images/mission-3.png);
+  }
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(4) {
+  .cl-missions-list-details-img {
+    background-image: url(../../images/mission-4.png);
+  }
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(5) {
+  .cl-missions-list-details-img {
+    background-image: url(../../images/mission-5.png);
+  }
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-date {
   position: absolute;
   top: 18px;
@@ -6658,6 +6688,28 @@
         .cl-main-widget-ach-details-optin-action {
           color: #080D12;
         }
+        .cl-main-widget-ach-details-reward {
+          background: #EDF3F7;
+          color: #223241;
+          &::before {
+            background: url(../../images/award-icon-dark.svg) no-repeat center;
+            background-size: contain;
+          }
+        }
+        .cl-main-widget-ach-details-tc,
+        .cl-main-widget-ach-details-body {
+          color: var(--lightTheme-font-color);
+        }
+        .cl-main-widget-ach-details-body-progress-cont {
+          background: #fff;
+        }
+        .cl-main-widget-ach-details-body-progress-bar {
+          background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+        }
+        .cl-main-widget-ach-details-header-info {
+          color: #080d12;
+          border: 1px solid #ccc;
+        }
       }
     }
     .cl-main-widget-reward-list {
@@ -6848,6 +6900,7 @@
 
     .cl-main-widget-lb-details-description-info {
       color: #080D12;
+      border: 1px solid #cccccc;
     }
 
     .cl-main-widget-lb-details-description-container {

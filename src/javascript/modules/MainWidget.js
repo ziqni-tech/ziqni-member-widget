@@ -4158,10 +4158,16 @@ export const MainWidget = function (options) {
               t.show = false;
               break;
             case 'claimedAwards':
-              t.show = false;
+              if (this.settings.lbWidget.settings.instantWins.enable) {
+                t.show = false;
+              } else {
+                t.show = true;
+              }
               break;
             case 'instantWins':
-              t.show = true;
+              if (this.settings.lbWidget.settings.instantWins.enable) {
+                t.show = true;
+              }
               break;
           }
         });
@@ -4398,7 +4404,7 @@ export const MainWidget = function (options) {
       if (mission.scheduling.endDate) {
         const diff = moment(mission.scheduling.endDate).diff(moment());
         const date = _this.settings.lbWidget.formatMissionDateTime(moment.duration(diff));
-        const el = document.querySelector(`[data-id="${mission.id}"]`);
+        const el = document.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
         if (!el) return;
         const dateEl = el.querySelector('.cl-missions-list-details-date');
         if (!dateEl) return;
