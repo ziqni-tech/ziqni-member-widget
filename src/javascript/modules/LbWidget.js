@@ -149,7 +149,7 @@ export const LbWidget = function (options) {
       totalCount: 0
     },
     instantWins: {
-      enable: false
+      enable: true
     },
     tournaments: {
       activeCompetitionId: null,
