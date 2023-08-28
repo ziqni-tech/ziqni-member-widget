@@ -1130,6 +1130,17 @@
   width: 148px;
   height: 100%;
   z-index: 2;
+  overflow: auto;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container::-webkit-scrollbar {
+  width: 4px;
+  background: #141E28;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-navigation-container::-webkit-scrollbar-thumb {
+  border-radius: 10px;
+  background: #304F69;
 }
 
 .cl-main-widget-wrapper .cl-hidden-navigation .cl-main-widget-navigation-container {
@@ -5347,7 +5358,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list {
   width: 100%;
-  height: 100%;
+  height: calc(100% - 134px);
   z-index: 1;
   padding-right: 56px;
   padding-left: 44px;
@@ -5391,6 +5402,7 @@
   display: flex;
   align-items: center;
   padding: 0 16px;
+  flex-shrink: 0;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-cont {
