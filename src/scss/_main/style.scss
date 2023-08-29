@@ -800,13 +800,18 @@
   float: left;
   width: 70%;
   text-align: center;
+  line-height: 17px;
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-sum-best-wrapper.cl-inverse .cl-widget-ms-sum-best-date {
+  font-family: "Syne",sans-serif;
+  font-weight: 700;
+  font-size: 12px;
+  line-height: 17px;
+  color: var(--lb-widget-header-text-color);
   float: left;
   width: 30%;
   text-align: center;
-  color: var(--lb3-miniscoreboard-date-color);
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-sum-best-wrapper .cl-widget-ms-sum-best-area {
@@ -818,14 +823,14 @@
   float: left;
   width: 100%;
   padding: 0 5px 0 0;
-  line-height: 12px;
+  line-height: 14px;
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-sum-best-wrapper .cl-widget-ms-sum-best-high-label, .cl-widget-ms-wrapper .cl-widget-ms-sum-best-wrapper .cl-widget-ms-sum-best-last-label {
   float: left;
   width: 60%;
   text-align: left;
-  color: var(--lb3-miniscoreboard-rank-label-color);
+  color: #c7c7c7;
   font-size: 9px;
   text-transform: uppercase;
 }
@@ -842,8 +847,7 @@
   float: left;
   width: 100%;
   padding: 0 5px 0 0;
-
-  line-height: 12px;
+  line-height: 14px;
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-sum-best-wrapper .cl-widget-ms-sum-best-rank-area {
