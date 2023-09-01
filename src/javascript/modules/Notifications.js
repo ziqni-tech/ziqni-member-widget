@@ -77,7 +77,6 @@ export const Notifications = function (options) {
     informationClose.setAttribute('class', 'cl-widget-notif-information-close');
 
     informationClose.href = 'javascript:void(0);';
-    informationClose.innerHTML = 'x';
 
     informationDetailsContainer.appendChild(informationDetailsLabel);
     informationDetailsContainer.appendChild(informationDetailsDescription);

@@ -2435,14 +2435,17 @@ export const MainWidget = function (options) {
     const darkModeToggle = document.querySelector('input[id=darkmode-toggle]');
     const mainContainer = document.querySelector('.cl-main-widget-wrapper');
     const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+    const notificationContainer = document.querySelector('.cl-widget-notif-wrapper');
 
     darkModeToggle.addEventListener('change', function () {
       if (this.checked) {
         mainContainer.classList.add('lightTheme');
         msContainer.classList.add('lightTheme');
+        notificationContainer.classList.add('lightTheme');
       } else {
         mainContainer.classList.remove('lightTheme');
         msContainer.classList.remove('lightTheme');
+        notificationContainer.classList.remove('lightTheme');
       }
     });
   };
