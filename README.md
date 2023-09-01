@@ -210,7 +210,7 @@ instance.init();
                 translationPath: ""
             },
             resources: [
-                "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/cl-style-1-default-theme.css"
+                "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/default-theme.css"
             ]
         };
         var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
@@ -249,7 +249,7 @@ instance.init();
         }
       },
       resources: [
-        "https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/build/css/theme/cl-style-1-default-theme.css"
+        "https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/build/css/theme/default-theme.css"
       ]
     });
 
@@ -379,19 +379,3 @@ Here are some of the basic benefits of why we are using SASS:
 * provides mixin functionality: Mixins are like functions in other programming languages. They return a value or set of values and can take parameters including default values.
 * allows you to break apart your big complex CSS files into smaller chunks, this improves the ability to work on the same stylesheets for multiple teams
 * still supports the basic CSS syntax as SCSS syntax is CSS compatible
-
-### IE11 support
-Internet explorer 11 support is limited, at the moment styling and one of the libraries will need to be adjusted for full IE11 support which will require a review and update on the code where necessary.
-To get the code to compile we recommend to:
-1) inside the `src/javascript/modules/LbWidget.js` to remove/change the `import jsSHA from 'jssha'` import to the local library `import jsSHA from '../utils/jsSHA'`
-2) inside the method `populateIdenticonBase64Image` update the jsSHA implementation from:
-```javascript
-var shaObj = new jsSHA('SHA-512', 'TEXT');
-shaObj.update(str);
-var hash = shaObj.getHash('HEX', 1);
-``` 
-to:
-```javascript
-var shaObj = new jsSHA(str, 'TEXT');
-var hash = shaObj.getHash('SHA-512', 'HEX', 1);
-```
