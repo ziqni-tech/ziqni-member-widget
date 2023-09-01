@@ -77,7 +77,6 @@ export const Notifications = function (options) {
     informationClose.setAttribute('class', 'cl-widget-notif-information-close');
 
     informationClose.href = 'javascript:void(0);';
-    informationClose.innerHTML = 'x';
 
     informationDetailsContainer.appendChild(informationDetailsLabel);
     informationDetailsContainer.appendChild(informationDetailsDescription);
@@ -139,7 +138,7 @@ export const Notifications = function (options) {
       _this.handleCanvasAnimations(data);
     }
 
-    _this.autoNotificationHide();
+    // _this.autoNotificationHide();
   };
 
   this.handleCanvasAnimations = function (data) {
