@@ -47,7 +47,9 @@ import {
   AwardRequest,
   ClaimAwardRequest,
   GraphsApiWs,
-  EntityGraphRequest
+  EntityGraphRequest,
+  InstantWinsApiWs,
+  InstantWinRequest
 } from '@ziqni-tech/member-api-client';
 
 const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
@@ -149,7 +151,7 @@ export const LbWidget = function (options) {
       totalCount: 0
     },
     instantWins: {
-      enable: true
+      enable: false
     },
     tournaments: {
       activeCompetitionId: null,
@@ -237,7 +239,8 @@ export const LbWidget = function (options) {
       awardsApiWsClient: null,
       messagesApiWsClient: null,
       missionsApiWsClient: null,
-      filesApiWsClient: null
+      filesApiWsClient: null,
+      instantWinsApiWsClient: null
     },
     uri: {
       gatewayDomain: cLabs.api.url,
@@ -787,6 +790,32 @@ export const LbWidget = function (options) {
             this.log(error);
           });
       }
+    } else if (this.settings.competition.activeCompetition.statusCode === 35 || this.settings.competition.activeCompetition.statusCode === 45) {
+      const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+        entityId: this.settings.competition.activeCompetition.id,
+        action: 'Subscribe',
+        leaderboardFilter: {
+          topRanksToInclude: count,
+          ranksAboveToInclude: this.settings.leaderboard.miniScoreBoard.rankingsCount,
+          ranksBelowToInclude: this.settings.leaderboard.miniScoreBoard.rankingsCount
+        }
+      });
+
+      this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
+        .then(data => {
+          let leaderboardEntries = [];
+          if (data && data.leaderboardEntries) {
+            leaderboardEntries = data.leaderboardEntries;
+          }
+          _this.settings.leaderboard.leaderboardData = leaderboardEntries;
+          this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
+            _this.settings.leaderboard.leaderboardData = lbData;
+          });
+          callback(_this.settings.leaderboard.leaderboardData);
+        })
+        .catch(error => {
+          this.log(error);
+        });
     } else {
       this.settings.leaderboard.leaderboardData = [];
       callback();
@@ -932,6 +961,24 @@ export const LbWidget = function (options) {
 
       if (typeof callback === 'function') callback(_this.settings.achievements.list);
     });
+  };
+
+  this.getSingleWheels = async function (callback) {
+    const request = InstantWinRequest.constructFromObject({
+      languageKey: this.settings.language,
+      currencyKey: this.settings.currency,
+      instantWinFilter: {
+        instantWinTypes: [1],
+        limit: 20,
+        skip: 0
+      }
+    }, null);
+
+    const singleWheels = await this.getInstantWinsApi(request);
+
+    if (typeof callback === 'function') {
+      callback(singleWheels.data);
+    }
   };
 
   this.getAchievement = function (achievementId, callback) {
@@ -1367,6 +1414,18 @@ export const LbWidget = function (options) {
     }
     return new Promise((resolve, reject) => {
       this.settings.apiWs.rewardsApiWsClient.getRewards(rewardRequest, (json) => {
+        resolve(json);
+      });
+    });
+  };
+
+  this.getInstantWinsApi = async function (instantWinRequest) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.listInstantWins(instantWinRequest, (json) => {
         resolve(json);
       });
     });
@@ -2511,7 +2570,9 @@ export const LbWidget = function (options) {
       sections.forEach(s => s.classList.remove('cl-shown'));
       instantWinsSection.classList.add('cl-shown');
 
-      _this.settings.mainWidget.loadSingleWheel();
+      await _this.getSingleWheels(function (data) {
+        _this.settings.mainWidget.loadSingleWheels(data);
+      });
 
       // dashboard scratchcards button
     } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-cards-button')) {
@@ -2611,7 +2672,9 @@ export const LbWidget = function (options) {
 
       // Single Wheel
     } else if (hasClass(el, 'wheel-button')) {
-      _this.settings.mainWidget.loadSingleWheel();
+      await _this.getSingleWheels(function (data) {
+        _this.settings.mainWidget.loadSingleWheels(data);
+      });
 
       // Single Wheel
     } else if (hasClass(el, 'scratchcards-button')) {

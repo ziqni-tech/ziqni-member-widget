@@ -51,14 +51,7 @@ npm run build
 You can include css file into the bundle by running one of the commands (images will also be compiled into base64 format):
 
 ```sh
-npm run dev -- --inlineCss=true
 npm run build -- --inlineCss=true
-```
-
-Or run `npm run dev` to build widget in development mode.
-
-```sh
-npm run dev
 ```
 
 #### Coding standards
@@ -74,22 +67,6 @@ To automatically fix any style violations in your code, you can run:
 ```sh
 npm run lint -- --fix
 ```
-
-#### Running tests
-
-You can run the test suite using the following command:
-
-```sh
-npm run test
-```
-
-Run `npm run test:coverage` to open coverage report
-
-```sh
-npm run test:coverage
-```
-
-Please ensure that the tests are passing when submitting a pull request.
 
 #### Documentation
 
@@ -148,8 +125,13 @@ const instance = new MemberWidget({
   debug: false,
   apiKey: '<api_key>',
   memberRefId: '<member_reference_id>',
+  language: 'en',
+  currency: 'EUR',
   loadCustomTranslations: true,
   enableNotifications: true,
+  instantWins: {
+    enable:  false // This functionality is under development; the parameter is disabled by default
+  },
   navigation: {
     tournaments: {enable: true},
     achievements: {enable: true},
@@ -210,17 +192,17 @@ instance.init();
                 translationPath: ""
             },
             resources: [
-                "https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/css/theme/default-theme.css"
+                "<Path to your build /default-theme.css>"
             ]
         };
         var a=d.createElement(s), m=d.getElementsByTagName(s)[0];
         a.async=1;a.src=u;m.parentNode.insertBefore(a,m);
-    })(window,document,'script','https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/build/javascript/ziqni-member-widget.js',"_CLLBV3Opt");
+    })(window,document,'script','<Path to your build /ziqni-member-widget.js>',"_CLLBV3Opt");
 </script>
 ```
 ### Or
 ```html
-  <script type="text/javascript" src="https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/build/javascript/ziqni-member-widget-selfinit.js"></script>
+  <script type="text/javascript" src="<Path to your build /ziqni-member-widget-selfinit.js>"></script>
 
   <script type="text/javascript">
     const widgetInstance = new window._clLeaderBoardV3SelfInit({
@@ -249,46 +231,13 @@ instance.init();
         }
       },
       resources: [
-        "https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/build/css/theme/default-theme.css"
+        "<Path to your build /default-theme.css>"
       ]
     });
 
     widgetInstance.init();
   </script>
 ```
-
-## Using the loader script
-You can use this loader script to centralise all your widget loading needs (custom scripts, styles and environmental parameters) into a single place.
-The "Loader" script requires the bear minimum of 2 things to be set to the global `window._CLLBV3Opt` parameter before the scripts loads:
-1) `gameId`
-2) `memberId`
-```html
-<script type="text/javascript">
-    window._CLLBV3Opt = {
-        gameId: "my_game_id",
-        memberId: "my_member_id"
-    };
-</script>
-```
-#### Steps required to configure the loader script:
-1) update your default API key, space name (optional: `language` and `currency`), unless you are loading the API key and space name from your game/product
-2) define what products will load in the widget:
-```javascript
-products: {
-    "my_product_id": {
-        script: "https://my.custom.script.location",
-        resources: [
-            "https://my.custom.stylesheet.location"
-        ],
-        onBeforeLoad: function( instance, options, callback ){ // your custom logic before the widget gets initialised/rendered
-            if( typeof callback === "function" ) callback();
-        }
-    },
-    "my_product_id_2": {}
-}
-```
-3) add loader script to your website
-
 
 ## FAQ
 ### How do I set the currency:
@@ -303,24 +252,16 @@ The setting "currency" needs to be set to the appropriate ISO key used in units 
 All styles are loaded as part of the initialisation, so overwriting the resources array variable with your stylesheet asset will allow you to load in the external stylesheets dynamically.
 There is no limit to how many stylesheets you can add as the widget will load all of them from the specified array.
 
-### How to show game/product specific competitions only:
+### How to disable Tournaments, Achievements, Rewards, Inbox or Missions tabs:
 ```text
-The setting "enforceGameLookup" should be set to "true" and game/product ID should be assigned to the setting entry "gameId" part of the widget startup/initialisation
-{
-  enforceGameLookup: true,
-  gameId: "my_id"
-}
-```
-
-### How to disable Tournaments, Achievements, Rewards, or Inbox tabs:
-```text
-To disable Tournaments, Achievements, Rewards, or Inbox tabs on the full widget preview the following settings has to be set to "false":
+To disable Tournaments, Achievements, Rewards, Inbox or Missions tabs on the full widget preview the following settings has to be set to "false":
 
 navigation: {    
   tournaments: {enable: false},
   achievements: {enable: false},
   rewards: {enable: false},
   inbox: {enable: false},
+  missions: {enable: false},
 },
 
 Note: at least one tab should be left enabled
@@ -366,10 +307,10 @@ To enable translation the following steps need to be made:
 resource based on the language setting and the "translationPath"
 
 * If the resource path is used as "translation_:language.json" the widget script will try to replace ":language" with the 
-current language  setting and load the translation dynamically from an external source, example:
+current language setting and load the translation dynamically from an external source, example:
 https://ziqni.cdn.ziqni.com/ziqni-tech/gamification-ux-package/_widgets/gamification-ux-package/i18n/translation_:language.json
 
-* If translations are not required it is possible to disable them by changing "loadTranslations" setting to "false"
+* If custom translations are not required it is possible to disable them by changing "loadCustomTranslations" setting to "false"
 ```
 
 ### Why we use SASS:
