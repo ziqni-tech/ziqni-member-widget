@@ -1515,7 +1515,10 @@ export const MainWidget = function (options) {
       sectionDashboardBody.appendChild(sectionDashboardInstantWins);
     }
 
-    sectionDashboardBody.appendChild(sectionDashboardAchievements);
+    if (this.settings.lbWidget.settings.navigation.achievements.enable) {
+      sectionDashboardBody.appendChild(sectionDashboardAchievements);
+    }
+
     sectionDashboardBody.appendChild(sectionDashboardTournaments);
 
     sectionDashboardHeader.appendChild(sectionDashboardHeaderLabel);
@@ -3460,7 +3463,6 @@ export const MainWidget = function (options) {
     if (!itemBgSrc || itemBgSrc[0] === 'f') {
       itemBgSrc = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bg.png';
     }
-    console.log('itemBgSrc:', itemBgSrc);
 
     let starEl3Src = window.getComputedStyle(starEl3, false).backgroundImage.slice(4, -1).replace(/"/g, '');
     let starEl2Src = window.getComputedStyle(starEl2, false).backgroundImage.slice(4, -1).replace(/"/g, '');
@@ -4855,7 +4857,6 @@ export const MainWidget = function (options) {
   };
 
   this.loadSingleWheels = async function (singleWheelsData) {
-    console.log('singleWheelsData:', singleWheelsData);
     const isMobile = window.screen.availWidth <= 768;
     const singleWheel = document.querySelector('.single-wheel');
     const singleWheelWrapper = singleWheel.querySelector('.single-wheel-wrapper');
@@ -4998,7 +4999,6 @@ export const MainWidget = function (options) {
       engine();
       spinEl.addEventListener('click', () => {
         if (!angVel) angVel = rand(0.25, 0.45);
-        console.log('angVel:', angVel);
       });
       climeBtn.addEventListener('click', () => {
         const popup = document.querySelector('.single-wheel-popup');
@@ -5130,9 +5130,11 @@ export const MainWidget = function (options) {
 
               dashboardContainer.style.display = 'flex';
 
-              _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {
-                _this.loadDashboardAchievements(achievementData);
-              });
+              if (_this.settings.lbWidget.settings.navigation.achievements.enable) {
+                _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {
+                  _this.loadDashboardAchievements(achievementData);
+                });
+              }
 
               _this.loadDashboardTournaments();
 

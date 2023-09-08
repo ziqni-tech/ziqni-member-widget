@@ -151,7 +151,7 @@ export const LbWidget = function (options) {
       totalCount: 0
     },
     instantWins: {
-      enable: true
+      enable: false
     },
     tournaments: {
       activeCompetitionId: null,
@@ -800,10 +800,9 @@ export const LbWidget = function (options) {
           ranksBelowToInclude: this.settings.leaderboard.miniScoreBoard.rankingsCount
         }
       });
-      console.log('leaderboardSubscriptionRequest:', leaderboardSubscriptionRequest);
+
       this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
         .then(data => {
-          console.log('data:', data);
           let leaderboardEntries = [];
           if (data && data.leaderboardEntries) {
             leaderboardEntries = data.leaderboardEntries;

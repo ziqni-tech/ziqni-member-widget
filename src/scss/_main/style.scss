@@ -4718,7 +4718,14 @@
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
+  margin-bottom: 20px;
+  padding-bottom: 40px;
+  width: calc(100% - 80px);
+  border-bottom: solid 1px #223241 ;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-wrapper .single-wheel-element:last-child {
+  border-bottom: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-wrapper .single-wheel-relative {
