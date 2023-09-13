@@ -4,12 +4,26 @@
         "hours": "часа",
         "minutesShortHand": "мин",
         "minutes": "минути",
-        "seconds": "секунди"
+        "seconds": "секунди",
+        "daysFull": "Дни",
+        "hoursFull": "Часа",
+        "minutesFull": "Минути",
+        "secondsFull": "Секунди"
     },
     "achievements": {
         "label": "постижения",
         "more": "още",
-        "complete": "приключен 100%"
+        "complete": "приключен 100%",
+        "enter": "Въведете постижение",
+        "leave": "Напускане на постижението",
+        "listEnterBtn": "Присъединяване",
+        "listLeaveBtn": "Напусни",
+        "listProgressionBtn": "Обработка...",
+        "leavePopupTitle": "Оставете постижението",
+        "leavePopupDescription": "Сигурни ли сте, че искате да напуснете това постижение?",
+        "leavePopupClose": "Близо",
+        "leavePopupConfirm": "Напусни",
+        "progress": "Напредък"
     },
     "tournaments": {
         "label": "Турнира",
@@ -20,7 +34,8 @@
         "finishing": "Приключващи",
         "finished": "Приключени",
         "registered": "Регистрирани",
-        "noAvailableCompetitions": "Няма достъпно състезание"
+        "noAvailableCompetitions": "Няма достъпно състезание",
+        "date": "Дата"
     },
     "leaderboard": {
         "rank": "ранг",
@@ -28,6 +43,12 @@
         "points": "точки",
         "prize": "награда",
         "you": "Ти"
+    },
+    "brackets": {
+        "title": "Скоба за турнири",
+        "starts": "Започва",
+        "ends": "Завършва",
+        "ended": "Приключи"
     },
     "miniLeaderboard": {
         "highScore": "Най-висок резултат",
@@ -44,13 +65,48 @@
         "claim": "Заяви сега",
         "claimed": "Заявена",
         "availableRewards": "Налични награди",
+        "instantWins": "Незабавни печалби",
         "rewards": "Заявени награди",
-        "expiredRewards": "Изтекли награди"
+        "expiredRewards": "Изтекли награди",
+        "wheelLabel": "Единичното колело",
+        "scratchcardsLabel": "Скреч карти",
+        "wheelButton": "Играйте",
+        "scratchcardsButton": "Играйте",
+        "singleWheelWinLabel": "Честито!",
+        "singleWheelWinDescription": "Ти спечели",
+        "singleWheelWinButton": "Заяви сега",
+        "prizeLabel": "Разкрийте наградата си, като я издраскате!",
+        "prizeButton": "Издраскайте всички"
     },
     "messages": {
         "label": "Съобщения"
     },
+    "dashboard": {
+        "label": "Табло",
+        "instantWinsTitle": "Незабавни печалби",
+        "achievementsTitle": "Постижения",
+        "tournamentsTitle": "Текущи турнири",
+        "tournamentBtn": "Виж повече",
+        "endsTitle": "Завършва",
+        "prizeTitle": "Награда",
+        "singleWheelTitle": "Единичното колело",
+        "singleWheelDescription": "",
+        "singleWheelButton": "Играйте",
+        "scratchcardsTitle": "Скреч карти",
+        "scratchcardsDescription": "",
+        "scratchcardsButton": "Играйте"
+    },
+    "missions": {
+        "label": "Мисии",
+        "btn": "Отивам",
+        "prizeLabel": "Награда",
+        "mapLabel": "Карта на мисията"
+    },
     "global": {
-        "copy": "С помощта на Ziqni"
+        "copy": "С помощта на Ziqni",
+        "descriptionLabel": "Описание",
+        "tAndCLabel": "Правила и условия",
+        "tAndCEmpty": "Не са предоставени Правила и условия",
+        "descriptionEmpty": "Няма предоставени описания"
     }
 }
