@@ -23,8 +23,6 @@
     "leavePopupDescription": "Are you sure you want to leave this achievement?",
     "leavePopupClose": "Close",
     "leavePopupConfirm": "Leave",
-    "descriptionLabel": "Description",
-    "tAndCLabel": "Terms & Conditions",
     "progress": "Progress"
   },
   "tournaments": {
@@ -38,9 +36,7 @@
     "finished": "Finished",
     "registered": "Registered",
     "noAvailableCompetitions": "No available competition",
-    "date": "Date",
-    "descriptionLabel": "Description",
-    "tAndCLabel": "Terms & Conditions"
+    "date": "Date"
   },
   "leaderboard": {
     "rank": "Rank",
@@ -104,9 +100,6 @@
   "missions": {
     "label": "Missions",
     "btn": "Go",
-    "descriptionLabel": "Description",
-    "tAndCLabel": "Terms & Conditions",
-    "tAndCDefault": "No Terms and Conditions provided",
     "prizeLabel": "Prize",
     "mapLabel": "Mission map"
   },

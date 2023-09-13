@@ -49,7 +49,8 @@ import {
   GraphsApiWs,
   EntityGraphRequest,
   InstantWinsApiWs,
-  InstantWinRequest
+  InstantWinRequest,
+  InstantWinPlayRequest
 } from '@ziqni-tech/member-api-client';
 
 const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
@@ -963,6 +964,16 @@ export const LbWidget = function (options) {
     });
   };
 
+  this.playInstantWin = async function () {
+    const request = InstantWinPlayRequest.constructFromObject({
+      awardId: '',
+      languageKey: this.settings.language,
+      currencyKey: this.settings.currency
+    }, null);
+
+    return await this.playInstantWinsApi(request);
+  };
+
   this.getSingleWheels = async function (callback) {
     const request = InstantWinRequest.constructFromObject({
       languageKey: this.settings.language,
@@ -1414,6 +1425,18 @@ export const LbWidget = function (options) {
     }
     return new Promise((resolve, reject) => {
       this.settings.apiWs.rewardsApiWsClient.getRewards(rewardRequest, (json) => {
+        resolve(json);
+      });
+    });
+  };
+
+  this.playInstantWinsApi = async function (playRequest) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.playInstantWin(playRequest, (json) => {
         resolve(json);
       });
     });

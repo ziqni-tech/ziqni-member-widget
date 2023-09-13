@@ -684,8 +684,8 @@ export const MainWidget = function (options) {
     sectionTournamentDetailsOptInAction.href = 'javascript:void(0);';
     sectionLBOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
     sectionLBOptInAction.href = 'javascript:void(0);';
-    sectionLBDetailsDescriptionTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.descriptionLabel;
-    sectionLBDetailsDescriptionTCTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.tAndCLabel;
+    sectionLBDetailsDescriptionTitle.innerHTML = _this.settings.lbWidget.settings.translation.global.descriptionLabel;
+    sectionLBDetailsDescriptionTCTitle.innerHTML = _this.settings.lbWidget.settings.translation.global.tAndCLabel;
     sectionLBDetailsDescriptionInfo.innerHTML = 'i';
 
     sectionLBHeaderList.appendChild(sectionLBHeaderListIcon);
@@ -1320,8 +1320,8 @@ export const MainWidget = function (options) {
     sectionMissionsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.label;
     sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
     sectionMissionsDetailsInfoBtn.innerHTML = 'i';
-    sectionMissionsDetailsDescriptionLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.descriptionLabel;
-    sectionMissionsDetailsTandCLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.tAndCLabel;
+    sectionMissionsDetailsDescriptionLabel.innerHTML = _this.settings.lbWidget.settings.translation.global.descriptionLabel;
+    sectionMissionsDetailsTandCLabel.innerHTML = _this.settings.lbWidget.settings.translation.global.tAndCLabel;
     sectionMissionsDetailsPrizeLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.prizeLabel + ':';
     sectionMissionsMapHeader.innerHTML = _this.settings.lbWidget.settings.translation.missions.mapLabel;
 
@@ -1456,12 +1456,12 @@ export const MainWidget = function (options) {
 
     sectionDashboardInstantWinsWheelTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
     sectionDashboardInstantWinsWheelTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
-    sectionDashboardInstantWinsWheelDescription.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelDescription;
+    sectionDashboardInstantWinsWheelDescription.innerHTML = '';
     sectionDashboardInstantWinsWheelButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelButton;
 
     sectionDashboardInstantWinsCardsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
     sectionDashboardInstantWinsCardsTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
-    sectionDashboardInstantWinsCardsDescription.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsDescription;
+    sectionDashboardInstantWinsCardsDescription.innerHTML = '';
     sectionDashboardInstantWinsCardsButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton;
 
     sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelTitle);
@@ -3236,7 +3236,7 @@ export const MainWidget = function (options) {
     body.innerHTML = mission.data.description ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
     tc.innerHTML = mission.data.termsAndConditions
       ? mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-      : this.settings.lbWidget.settings.translation.missions.tAndCDefault;
+      : this.settings.lbWidget.settings.translation.global.tAndCDefault;
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
@@ -4857,6 +4857,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadSingleWheels = async function (singleWheelsData) {
+    console.log('singleWheelsData:', singleWheelsData);
     const isMobile = window.screen.availWidth <= 768;
     const singleWheel = document.querySelector('.single-wheel');
     const singleWheelWrapper = singleWheel.querySelector('.single-wheel-wrapper');
@@ -4879,15 +4880,6 @@ export const MainWidget = function (options) {
     const _this = this;
     const preLoader = _this.preloader();
     const tiles = singleWheel.tiles;
-
-    // const sectors = [
-    //   { color: '#14114e', label: '50$ bonus', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_1.5d368727.svg' },
-    //   { color: '#204040', label: 'Free spins', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_2.c2d6a2fb.svg' },
-    //   { color: '#190879', label: 'Next time', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_3.1478f762.svg' },
-    //   { color: '#2d2f4a', label: '50$ bonus', src: 'https://first-space.cdn.ziqni.com/member-home-page/img/tournament_4.0f9e80f8.svg' },
-    //   { color: '#111a3a', label: 'Free spins', src: 'https://first-space.cdn.ziqni.com/_id/cuAElokBl_S2IPKJWgK7' },
-    //   { color: '#140538', label: 'Next time', src: 'https://first-space.cdn.ziqni.com/_id/duAElokBl_S2IPKJWgLA' }
-    // ];
 
     const rand = (m, M) => Math.random() * (M - m) + m;
     const tot = tiles.length;
@@ -4998,6 +4990,8 @@ export const MainWidget = function (options) {
       // rotate();
       engine();
       spinEl.addEventListener('click', () => {
+        const play = _this.settings.lbWidget.playInstantWin();
+        console.log('play:', play);
         if (!angVel) angVel = rand(0.25, 0.45);
       });
       climeBtn.addEventListener('click', () => {
