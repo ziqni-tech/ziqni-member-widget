@@ -202,6 +202,7 @@ export const LbWidget = function (options) {
       },
       achievements: {
         enable: true,
+        showReadyAchievements: false,
         navigationClass: 'cl-main-widget-navigation-ach',
         navigationClassIcon: 'cl-main-widget-navigation-ach-icon',
         containerClass: 'cl-main-widget-section-ach',
@@ -889,6 +890,8 @@ export const LbWidget = function (options) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
     }
 
+    const moreValue = this.settings.navigation.achievements.showReadyAchievements ? 10 : 20;
+
     const achievementRequest = AchievementRequest.constructFromObject({
       languageKey: this.settings.language,
       achievementFilter: {
@@ -898,7 +901,7 @@ export const LbWidget = function (options) {
         endDate: null,
         ids: [],
         statusCode: {
-          moreThan: 20,
+          moreThan: moreValue,
           lessThan: 30
         },
         sortBy: [{
