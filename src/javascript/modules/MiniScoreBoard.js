@@ -833,25 +833,32 @@ export const MiniScoreBoard = function (options) {
     var _this = this;
 
     if (_this.settings.lbWidget.settings.layout.enableMiniScoreBoardDragging) {
-      dragElement(_this.settings.container, query(_this.settings.container, '.cl-widget-ms-icon'), _this.settings.overlayContainer, _this.settings.lbWidget.settings.bindContainer, function (newTop, newLeft) {
-        _this.settings.lbWidget.stopActivity();
+      dragElement(
+        _this.settings.container,
+        query(_this.settings.container, '.cl-widget-ms-icon'),
+        _this.settings.overlayContainer,
+        _this.settings.lbWidget.settings.bindContainer,
+        function (newTop, newLeft) {
+          _this.settings.lbWidget.stopActivity();
 
-        if (_this.settings.lbWidget.settings.layout.allowOrientationChange) {
-          if (newTop <= 5) {
-            addClass(_this.settings.container, _this.settings.verticalClass);
-          } else if (newLeft <= 5) {
-            removeClass(_this.settings.container, _this.settings.verticalClass);
+          if (_this.settings.lbWidget.settings.layout.allowOrientationChange) {
+            if (newTop <= 5) {
+              addClass(_this.settings.container, _this.settings.verticalClass);
+            } else if (newLeft <= 15) {
+              removeClass(_this.settings.container, _this.settings.verticalClass);
+            }
           }
-        }
-        _this.settings.dragging = true;
-      }, function () {
-        _this.settings.lbWidget.restartActivity();
-        setTimeout(function () {
-          _this.settings.dragging = false;
-        }, 200);
-      }, function () {
-        _this.settings.lbWidget.clickedMiniScoreBoard();
-      });
+          _this.settings.dragging = true;
+        },
+        function () {
+          _this.settings.lbWidget.restartActivity();
+          setTimeout(function () {
+            _this.settings.dragging = false;
+          }, 200);
+        },
+        function () {
+          _this.settings.lbWidget.clickedMiniScoreBoard();
+        });
     }
   };
 
