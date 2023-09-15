@@ -133,8 +133,14 @@ const instance = new MemberWidget({
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
   navigation: {
-    tournaments: {enable: true},
-    achievements: {enable: true},
+    tournaments: {
+      enable: true,
+      showFinishedTournaments: true
+    },
+    achievements: {
+      enable: true,
+      showReadyAchievements: false
+    },
     rewards: {enable: true},
     inbox: {enable: true},
     missions: {enable: true},
