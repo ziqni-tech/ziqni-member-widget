@@ -413,7 +413,7 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardCompetitions = async function () {
-    const request = CompetitionRequest.constructFromObject({
+    const activeRequest = CompetitionRequest.constructFromObject({
       languageKey: this.settings.language,
       competitionFilter: {
         statusCode: {
@@ -429,8 +429,26 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    const activeCompetitions = await this.getCompetitionsApi(request);
+    const readyRequest = CompetitionRequest.constructFromObject({
+      languageKey: this.settings.language,
+      competitionFilter: {
+        statusCode: {
+          moreThan: 10,
+          lessThan: 20
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        limit: 2,
+        skip: 0
+      }
+    }, null);
+
+    const activeCompetitions = await this.getCompetitionsApi(activeRequest);
+    const readyCompetitions = await this.getCompetitionsApi(readyRequest);
     let activeCompetitionsData = activeCompetitions.data;
+    let readyCompetitionsData = readyCompetitions.data;
 
     if (activeCompetitionsData) {
       const ids = activeCompetitionsData.map(a => a.id);
@@ -453,7 +471,28 @@ export const LbWidget = function (options) {
       });
     }
 
-    return activeCompetitionsData;
+    if (readyCompetitionsData) {
+      const ids = readyCompetitionsData.map(a => a.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Competition',
+          entityIds: ids
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      readyCompetitionsData = readyCompetitionsData.map(comp => {
+        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+
+        return comp;
+      });
+    }
+
+    return { activeCompetitions: activeCompetitionsData, readyCompetitions: readyCompetitionsData };
   };
 
   /**
@@ -2532,6 +2571,57 @@ export const LbWidget = function (options) {
           _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, pageNumber, 1, paginationArr, false, true, false);
         });
       }
+
+      // load dashboard achievements
+    } else if (hasClass(el, 'cl-main-widget-dashboard-achievements-list-more')) {
+      const preLoader = _this.settings.mainWidget.preloader();
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const achIcon = document.querySelector('.cl-main-widget-navigation-ach');
+
+      preLoader.show(function () {
+        achIcon.classList.add('cl-active-nav');
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+
+        _this.settings.mainWidget.loadAchievements(1, function () {
+          const achContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.achievements.containerClass);
+
+          _this.settings.mainWidget.settings.achievement.detailsContainer.style.display = 'none';
+
+          achContainer.style.display = 'flex';
+          setTimeout(function () {
+            addClass(achContainer, 'cl-main-active-section');
+          }, 30);
+
+          preLoader.hide();
+        });
+      });
+
+      // load dashboard competitions
+    } else if (hasClass(el, 'cl-main-widget-dashboard-tournaments-list-more')) {
+      const preLoader = _this.settings.mainWidget.preloader();
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const compIcon = document.querySelector('.cl-main-widget-navigation-lb');
+
+      preLoader.show(function () {
+        compIcon.classList.add('cl-active-nav');
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+
+        _this.checkForAvailableRewards(1);
+        _this.settings.mainWidget.loadLeaderboard(function () {
+          const lbContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.tournaments.containerClass);
+
+          lbContainer.style.display = 'flex';
+          setTimeout(function () {
+            addClass(lbContainer, 'cl-main-active-section');
+          }, 30);
+
+          preLoader.hide();
+        });
+      });
 
       // load achievement details
     } else if (hasClass(el, 'cl-ach-list-more') || closest(el, '.cl-ach-list-details-cont') !== null) {

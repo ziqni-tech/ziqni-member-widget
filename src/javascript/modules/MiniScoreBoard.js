@@ -111,12 +111,16 @@ export const MiniScoreBoard = function (options) {
     var dateObj = '';
     var inverse = false;
 
-    // readyCompetitions: [], // statusCode 3
-    //   activeCompetitions: [], // statusCode 5
-    //   finishedCompetitions: [] // statusCode 7
     // Unknown = 0; Draft = 5; Preparing = 10; Ready = 15; Starting = 20; Active = 25; Finishing = 30; Finished = 35; Template = 100; Cancelling = 110; Cancelled = 115; Deleting = 120; Deleted = 125
-    if (_this.settings.lbWidget.settings.competition.activeContest !== null) {
-      var startDate = _this.settings.lbWidget.settings.competition.activeContest.scheduledStart;
+    if (this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
+      const startDate = this.settings.lbWidget.settings.competition.activeCompetition.scheduledStartDate;
+      diff = moment(startDate).diff(moment());
+      label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
+      date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      dateObj = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      inverse = false;
+    } else if (_this.settings.lbWidget.settings.competition.activeContest !== null) {
+      let startDate = _this.settings.lbWidget.settings.competition.activeContest.scheduledStart;
       if (typeof _this.settings.lbWidget.settings.competition.activeContest.actualStart !== 'undefined') {
         startDate = _this.settings.lbWidget.settings.competition.activeContest.actualStart;
       }

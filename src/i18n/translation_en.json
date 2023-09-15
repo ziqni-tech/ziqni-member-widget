@@ -87,15 +87,18 @@
     "instantWinsTitle": "Instant wins",
     "achievementsTitle": "Achievements",
     "tournamentsTitle": "Current Tournaments",
+    "upcomingTournamentsTitle": "Upcoming Tournaments",
     "tournamentBtn": "See more",
     "endsTitle": "Ends",
+    "startsTitle": "Starts",
     "prizeTitle": "Prize",
     "singleWheelTitle": "The Single Wheel",
     "singleWheelDescription": "Short description about this instant wins",
     "singleWheelButton": "Play",
     "scratchcardsTitle": "Scratchcards",
     "scratchcardsDescription": "Short description about this instant wins",
-    "scratchcardsButton": "Play"
+    "scratchcardsButton": "Play",
+    "seeAll": "See all"
   },
   "missions": {
     "label": "Missions",

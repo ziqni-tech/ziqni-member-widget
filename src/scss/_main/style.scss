@@ -1643,6 +1643,7 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list .dashboard-tournament-item {
@@ -1749,6 +1750,18 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list-more,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list-more {
+  font-family: 'Syne', sans-serif;
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 16px;
+  letter-spacing: 0;
+  cursor: pointer;
+  text-align: left;
+  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-item {
@@ -2437,6 +2450,15 @@
   margin-top: 16px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-label {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  padding-bottom: 10px;
+  margin-top: -10px
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .banner-date {
   display: flex;
   justify-content: center;
@@ -2527,6 +2549,15 @@
   min-height: 14px;
   width: 100%;
   margin-top: 16px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-date-label {
+  font-family: 'Syne', sans-serif;
+  font-style: normal;
+  font-weight: 400;
+  font-size: 14px;
+  padding-bottom: 10px;
+  margin-top: -10px
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-date-headers-item {
