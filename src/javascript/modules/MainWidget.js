@@ -1942,7 +1942,7 @@ export const MainWidget = function (options) {
       lbDateEl.style.display = 'none';
       descriptionDateHeadersEl.style.display = 'none';
       lbDateHeaderEl.style.display = 'none';
-    } else if (this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
+    } else if (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
       descriptionDateEl.style.display = 'block';
       lbDateEl.style.display = 'block';
       descriptionDateHeadersEl.style.display = 'flex';
@@ -2034,7 +2034,7 @@ export const MainWidget = function (options) {
   this.getActiveContestTitle = function () {
     let name = '';
 
-    if (this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
+    if (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
       name = this.settings.lbWidget.settings.competition.activeCompetition.name;
     } else {
       name = (
@@ -2161,7 +2161,7 @@ export const MainWidget = function (options) {
       }
     }
 
-    if (this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
+    if (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
       mainLabel.innerHTML = this.settings.lbWidget.settings.competition.activeCompetition.name;
     } else {
       mainLabel.innerHTML = (_this.settings.lbWidget.settings.competition.activeContest !== null)
@@ -2336,7 +2336,7 @@ export const MainWidget = function (options) {
 
     if (
       _this.settings.lbWidget.settings.competition.activeContest !== null ||
-      this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15
+      (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15)
     ) {
       _this.updateLeaderboardTime();
     } else {
