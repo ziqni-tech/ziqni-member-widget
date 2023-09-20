@@ -149,8 +149,8 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
 
     if (!hasClass(elmnt, 'cl-being-moved')) addClass(elmnt, 'cl-being-moved');
 
-    var newTop = (isMobile) ? (posY - parseInt(draggableEl.offsetHeight / 2)) : (elmnt.offsetTop - pos2);
-    var newLeft = (isMobile) ? (posX - parseInt(draggableEl.offsetWidth / 2)) : (elmnt.offsetLeft - pos1);
+    const newTop = (isMobile) ? (posY - 165) : (elmnt.offsetTop - pos2);
+    const newLeft = (isMobile) ? (posX - 185) : (elmnt.offsetLeft - pos1);
     var leftTopCheck = checkMaxMinRestraints(newTop, newLeft, offsetMaxLeft, offsetMaxTop, isVertical);
 
     elmnt.style.top = leftTopCheck.top + 'px';
