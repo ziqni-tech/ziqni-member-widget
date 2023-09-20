@@ -2062,13 +2062,14 @@
   z-index: 2;
   background-image: $lb3-tournament-default-banner;
   background-repeat: no-repeat;
-  margin-right: 16px;
+  background-size: cover;
+  margin: 0 16px 20px 0;
+  border-radius: 10px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content {
   height: 176px;
   text-align: center;
-  margin: 0 0 20px 0;
   border-radius: 10px;
   background: linear-gradient(93.25deg, rgba(56, 172, 207, 0.29) -4.57%, rgba(16, 26, 34, 0.5) 49.35%, rgba(56, 172, 207, 0.29) 100%);
 }
@@ -2184,6 +2185,7 @@
   border-radius: 10px;
   background-image: linear-gradient(93.25deg, rgba(56, 172, 207, 0.29) -4.57%, rgba(16, 26, 34, 0.5) 49.35%, rgba(56, 172, 207, 0.29) 100%), $lb3-tournament-default-banner;
   margin-bottom: 20px;
+  background-size: cover;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description {
@@ -2257,7 +2259,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details {
-  background-image: none;
+  background-image: none !important;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description a{

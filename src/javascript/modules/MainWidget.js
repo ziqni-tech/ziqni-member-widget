@@ -593,7 +593,7 @@ export const MainWidget = function (options) {
     const sectionTournamentListBody = document.createElement('div');
     const sectionTournamentListBodyResults = document.createElement('div');
 
-    sectionLB.setAttribute('class', _this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section' + (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner ? ' cl-main-section-image-banner-active' : ''));
+    sectionLB.setAttribute('class', _this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section');
     sectionLBHeader.setAttribute('class', 'cl-main-widget-lb-header');
     sectionLBHeaderList.setAttribute('class', 'cl-main-widget-lb-header-list');
     sectionLBHeaderListIcon.setAttribute('class', 'cl-main-widget-lb-header-list-icon');
@@ -2048,6 +2048,26 @@ export const MainWidget = function (options) {
     return name;
   };
 
+  this.getActiveCompetitionBanner = function () {
+    let bannerImage = '';
+
+    if (this.settings.lbWidget.settings.competition.activeContest) {
+      if (this.settings.lbWidget.settings.competition.activeContest.bannerHighResolutionLink) {
+        bannerImage = this.settings.lbWidget.settings.competition.activeContest.bannerHighResolutionLink;
+      } else if (this.settings.lbWidget.settings.competition.activeContest.bannerLink) {
+        bannerImage = this.settings.lbWidget.settings.competition.activeContest.bannerLink;
+      }
+    } else if (this.settings.lbWidget.settings.competition.activeCompetition) {
+      if (this.settings.lbWidget.settings.competition.activeCompetition.bannerHighResolutionLink) {
+        bannerImage = this.settings.lbWidget.settings.competition.activeCompetition.bannerHighResolutionLink;
+      } else if (this.settings.lbWidget.settings.competition.activeCompetition.bannerLink) {
+        bannerImage = this.settings.lbWidget.settings.competition.activeCompetition.bannerLink;
+      }
+    }
+
+    return bannerImage;
+  };
+
   this.getActiveCompetitionDescription = function () {
     const description = (this.settings.lbWidget.settings.competition.activeContest !== null &&
         this.settings.lbWidget.settings.competition.activeContest.description &&
@@ -2074,59 +2094,6 @@ export const MainWidget = function (options) {
     return tc ? tc.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
   };
 
-  this.extractImage = function (body, imageContainer, isBodyVirtualOpt) {
-    const _this = this;
-    const activeImageContainer = closest(body, '.cl-main-section-image-banner-active');
-    let imageFound = false;
-    const isBodyVirtual = (typeof isBodyVirtualOpt === 'boolean') ? isBodyVirtualOpt : false;
-
-    if (_this.settings.lbWidget.settings.competition.extractImageHeader) {
-      objectIterator(query(body, 'img'), function (img, key, count) {
-        if (count === 0) {
-          imageFound = true;
-          var newImg = img.cloneNode(true);
-          addClass(newImg, 'cl-main-widget-lb-details-image');
-          imageContainer.innerHTML = '';
-          imageContainer.appendChild(newImg);
-
-          remove(img);
-        }
-      });
-      if (!imageFound) {
-        const urlRegex = (/(https?:\/\/[^ ]*\.(?:gif|png|jpg|jpeg))/i);
-        if (body.innerText) {
-          const url = body.innerText.match(urlRegex);
-          if (url && url.length) {
-            const currentImg = imageContainer.getElementsByTagName('img');
-            let currentImgSrc = '';
-
-            if (currentImg.length) {
-              currentImgSrc = currentImg[0].src;
-            }
-
-            if (url[0] !== currentImgSrc) {
-              const newImg = document.createElement('img');
-              newImg.setAttribute('src', url[0]);
-              addClass(newImg, 'cl-main-widget-lb-details-image');
-              imageContainer.appendChild(newImg);
-            }
-
-            body.innerHTML = body.innerHTML.replace(url[0], '');
-            imageFound = true;
-          }
-        }
-      }
-    }
-
-    if (!imageFound && activeImageContainer !== null) {
-      removeClass(activeImageContainer, 'cl-main-section-image-banner-active');
-      const detailsImageContainer = query(activeImageContainer, '.cl-main-widget-lb-details-image-container');
-      detailsImageContainer.innerHTML = '';
-    } else if (imageFound && activeImageContainer === null && _this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner && !isBodyVirtual) {
-      addClass(closest(body, '.cl-main-section-item'), 'cl-main-section-image-banner-active');
-    }
-  };
-
   this.leaderboardDetailsUpdate = function () {
     const _this = this;
     const mainLabel = query(_this.settings.section, '.cl-main-widget-lb-details-content-label-text');
@@ -2134,6 +2101,9 @@ export const MainWidget = function (options) {
     let tc = null;
     let title = null;
     let bannerTitle = null;
+    let bannerImage = null;
+    let lbBannerImage = null;
+
     _this.settings.descriptionDate = query(_this.settings.container, '.cl-main-widget-lb-details-description-date');
 
     if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
@@ -2141,24 +2111,41 @@ export const MainWidget = function (options) {
       tc = query(_this.settings.section, '.cl-main-widget-lb-details-tc');
       title = query(_this.settings.section, '.cl-main-widget-lb-details-description-header-title');
       bannerTitle = query(_this.settings.section, '.cl-main-widget-lb-details-description-label-text');
+      bannerImage = query(_this.settings.section, '.cl-main-widget-lb-details-description-banner');
+      lbBannerImage = query(_this.settings.section, '.cl-main-widget-lb-details');
       if (!body) return;
-      body.innerHTML = _this.getActiveCompetitionDescription();
+
+      const bodyInnerHTML = body.innerHTML;
+      if (!bodyInnerHTML || bodyInnerHTML !== _this.getActiveCompetitionDescription()) {
+        body.innerHTML = _this.getActiveCompetitionDescription();
+      }
+
+      if (!bannerImage.style || !bannerImage.style.backgroundImage || bannerImage.style.backgroundImage !== this.getActiveCompetitionBanner()) {
+        const link = this.getActiveCompetitionBanner();
+        if (link) {
+          bannerImage.setAttribute('style', `background-image: url(${link})`);
+        } else {
+          bannerImage.setAttribute('style', '');
+        }
+      }
+
+      if (!lbBannerImage.style || !lbBannerImage.style.backgroundImage || lbBannerImage.style.backgroundImage !== this.getActiveCompetitionBanner()) {
+        const link = this.getActiveCompetitionBanner();
+        if (link) {
+          lbBannerImage.setAttribute('style', `background-image: url(${link})`);
+        } else {
+          lbBannerImage.setAttribute('style', '');
+        }
+      }
+
       tc.innerHTML = _this.getActiveCompetitionTAndC();
       title.innerHTML = _this.getActiveContestTitle();
       bannerTitle.innerHTML = _this.getActiveContestTitle();
     }
 
-    if (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner) {
-      const imageContainer = query(_this.settings.section, '.cl-main-widget-lb-details-image-container');
-
-      if (body === null) {
-        body = document.createElement('div');
-        body.innerHTML = _this.getActiveCompetitionDescription();
-
-        _this.extractImage(body, imageContainer, true);
-      } else {
-        _this.extractImage(body, imageContainer, false);
-      }
+    if (body === null) {
+      body = document.createElement('div');
+      body.innerHTML = _this.getActiveCompetitionDescription();
     }
 
     if (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
@@ -2547,8 +2534,6 @@ export const MainWidget = function (options) {
 
     _this.settings.detailsContainer.style.display = 'block';
     _this.settings.headerDate.style.display = 'none';
-
-    _this.extractImage(body, image);
 
     setTimeout(function () {
       addClass(_this.settings.detailsContainer, 'cl-show');
@@ -3807,6 +3792,12 @@ export const MainWidget = function (options) {
     prizeTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.prizeTitle;
     const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
     endsValue.innerHTML = date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+
+    if (tournament.bannerLowResolutionLink) {
+      itemBg.setAttribute('style', `background-image: url(${tournament.bannerLowResolutionLink})`);
+    } else if (tournament.bannerLink) {
+      itemBg.setAttribute('style', `background-image: url(${tournament.bannerLink})`);
+    }
 
     let rewardValue = '';
 
