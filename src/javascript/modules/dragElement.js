@@ -59,8 +59,8 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
 
     draggableEl.addEventListener('touchmove', function (e) {
       e.preventDefault();
-      pos3 = e.targetTouches[0].pageX;
-      pos4 = e.targetTouches[0].pageY;
+      pos3 = e.targetTouches[0].clientX;
+      pos4 = e.targetTouches[0].clientY;
       // moving = new Date().getTime();
 
       elementDrag(e);
@@ -133,8 +133,8 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
     e = e || window.event;
     e.preventDefault();
     // calculate the new cursor position:
-    var posX = (isMobile) ? e.targetTouches[0].pageX : e.clientX;
-    var posY = (isMobile) ? e.targetTouches[0].pageY : e.clientY;
+    var posX = (isMobile) ? e.targetTouches[0].clientX : e.clientX;
+    var posY = (isMobile) ? e.targetTouches[0].clientY : e.clientY;
     var isVertical = hasClass(elmnt, 'cl-vertical-mini');
     var offsetMaxLeft = maxLeft - parseInt(elmnt.offsetWidth + (isVertical ? draggableEl.offsetWidth / 7 : draggableEl.offsetWidth / 1.6));
     var offsetMaxTop = maxTop - parseInt(elmnt.offsetHeight + (isVertical ? draggableEl.offsetHeight / 1.2 : draggableEl.offsetHeight / 4));
@@ -149,8 +149,10 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
 
     if (!hasClass(elmnt, 'cl-being-moved')) addClass(elmnt, 'cl-being-moved');
 
-    const newTop = (isMobile) ? (posY - 165) : (elmnt.offsetTop - pos2);
-    const newLeft = (isMobile) ? (posX - 185) : (elmnt.offsetLeft - pos1);
+    const containerRect = container.getBoundingClientRect();
+
+    const newTop = (isMobile) ? (posY - containerRect.top - 20) : (elmnt.offsetTop - pos2);
+    const newLeft = (isMobile) ? (posX - containerRect.left - 25) : (elmnt.offsetLeft - pos1);
     var leftTopCheck = checkMaxMinRestraints(newTop, newLeft, offsetMaxLeft, offsetMaxTop, isVertical);
 
     elmnt.style.top = leftTopCheck.top + 'px';
