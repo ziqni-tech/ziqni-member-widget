@@ -1643,7 +1643,6 @@
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
-  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list .dashboard-tournament-item {
@@ -1653,6 +1652,7 @@
   border-radius: 10px;
   overflow: hidden;
   position: relative;
+  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-item:nth-child(1) .dashboard-tournament-list-bg {
@@ -5062,6 +5062,7 @@
   display: block;
   border: 1px solid #223241;
   border-radius: 10px;
+  background: #0f1921;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body .cl-main-accordion-container .cl-shown .cl-accordion-list-container {
@@ -7258,6 +7259,7 @@
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel {
     margin-bottom: 20px;
   }
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list,
   .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list {
     justify-content: center;
   }
@@ -8093,6 +8095,49 @@
   .lightTheme {
     .cl-main-widget-dashboard-achievements-list .cl-ach-list-more {
       color: #170213 !important;
+    }
+  }
+}
+
+@media (orientation: landscape) and (max-height: 600px) {
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-lb-footer {
+        display: none;
+      }
+      .cl-main-widget-lb-details-content {
+        height: 40px;
+        .cl-main-widget-lb-details-content-label {
+          padding-top: 9px;
+          .cl-main-widget-lb-details-content-date {
+            height: 0;
+            margin: 0;
+            padding: 0;
+            visibility: hidden;
+          }
+          .cl-main-widget-lb-details-content-date-headers {
+            height: 0;
+            margin: 0;
+            padding: 0;
+            visibility: hidden;
+          }
+        }
+      }
+      .cl-main-widget-lb-leaderboard {
+        height: calc(100% - 136px);
+      }
+      .cl-main-widget-tournaments-list {
+        height: calc(100% - 86px);
+        border-radius: 0 0 20px 0;
+      }
+      .cl-main-accordion-container {
+        .cl-accordion.cl-shown {
+          height: calc(100% - 40px);
+        }
+      }
+      .cl-main-widget-lb-details {
+        margin: 0 16px 0 0;
+      }
     }
   }
 }
