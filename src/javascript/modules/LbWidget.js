@@ -92,6 +92,7 @@ export const LbWidget = function (options) {
     gameId: '',
     enforceGameLookup: false, // tournament lookup will include/exclude game only requests
     apiKey: '',
+    memberToken: '',
     expires: 36000000,
     member: null,
     itemsPerPage: 10,
@@ -3129,7 +3130,12 @@ export const LbWidget = function (options) {
   this.initApiClientStomp = async function () {
     const _this = this;
     this.settings.authToken = null;
-    await this.generateUserToken();
+
+    if (this.settings.memberToken) {
+      this.settings.authToken = this.settings.memberToken;
+    } else {
+      await this.generateUserToken();
+    }
 
     if (this.apiClientStomp) {
       await this.apiClientStomp.disconnect();
@@ -3239,6 +3245,11 @@ export const LbWidget = function (options) {
     }
   };
 
+  this.refreshMemberToken = async function (memberToken) {
+    this.settings.memberToken = memberToken;
+    await this.initApiClientStomp();
+  };
+
   /**
    * Init LbWidget method
    * @method
@@ -3248,9 +3259,11 @@ export const LbWidget = function (options) {
   this.init = async function () {
     await this.initApiClientStomp();
 
-    setInterval(async () => {
-      await this.initApiClientStomp();
-    }, this.settings.expires);
+    if (!this.settings.memberToken) {
+      setInterval(async () => {
+        await this.initApiClientStomp();
+      }, this.settings.expires);
+    }
 
     if (this.settings.authToken) {
       this.loadStylesheet(() => {
