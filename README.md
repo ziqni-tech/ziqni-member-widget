@@ -125,6 +125,7 @@ const instance = new MemberWidget({
   debug: false,
   apiKey: '<api_key>',
   memberRefId: '<member_reference_id>',
+  memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken! 
   language: 'en',
   currency: 'EUR',
   loadCustomTranslations: true,
@@ -178,6 +179,8 @@ const instance = new MemberWidget({
 });
 
 instance.init();
+
+instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parameter
 ```
 ### Or
 ```html
@@ -216,6 +219,7 @@ instance.init();
       debug: false,
       apiKey: '<api_key>',
       memberRefId: '<member_reference_id>',
+      memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken!
       loadCustomTranslations: false,
       navigation: {
         tournaments: {enable: true},
@@ -242,6 +246,8 @@ instance.init();
     });
 
     widgetInstance.init();
+
+    widgetInstance.refreshMemberToken('<New_Token>'); // If you use the memberToken parameter
   </script>
 ```
 
