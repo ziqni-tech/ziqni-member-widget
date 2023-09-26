@@ -283,6 +283,9 @@ export const MiniScoreBoard = function (options) {
 
       defaultDomObj = wrapperDomObj.appendChild(lbWrapper);
 
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
+
       setTimeout(function () {
         addClass(wrapperDomObj, 'cl-show');
       }, 200);
@@ -290,6 +293,9 @@ export const MiniScoreBoard = function (options) {
       if (!hasClass(wrapperDomObj, 'cl-show')) {
         addClass(wrapperDomObj, 'cl-show');
       }
+
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
 
       query(_this.settings.container, '.cl-widget-ms-default-results-header-rank').innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.rank;
       query(_this.settings.container, '.cl-widget-ms-default-results-header-points').innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.points;
@@ -433,6 +439,9 @@ export const MiniScoreBoard = function (options) {
 
       defaultDomObj = wrapperDomObj.appendChild(lbWrapper);
 
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
+
       setTimeout(function () {
         addClass(wrapperDomObj, 'cl-show');
       }, 200);
@@ -440,6 +449,9 @@ export const MiniScoreBoard = function (options) {
       if (!hasClass(wrapperDomObj, 'cl-show')) {
         addClass(wrapperDomObj, 'cl-show');
       }
+
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
 
       query(_this.settings.container, '.cl-widget-ms-first-to-results-header-rank').innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.rank;
       query(_this.settings.container, '.cl-widget-ms-first-to-results-header-points').innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.points;
@@ -565,6 +577,9 @@ export const MiniScoreBoard = function (options) {
 
       sumBestDomObj = wrapperDomObj.appendChild(lbWrapper);
 
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
+
       setTimeout(function () {
         addClass(wrapperDomObj, 'cl-show');
       }, 200);
@@ -572,6 +587,8 @@ export const MiniScoreBoard = function (options) {
       if (!hasClass(wrapperDomObj, 'cl-show')) {
         addClass(wrapperDomObj, 'cl-show');
       }
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
       query(_this.settings.container, '.cl-widget-ms-sum-best-high-label').innerHTML = _this.settings.lbWidget.settings.translation.miniLeaderboard.highScore;
       query(_this.settings.container, '.cl-widget-ms-sum-best-last-label').innerHTML = _this.settings.lbWidget.settings.translation.miniLeaderboard.lastScore;
       query(_this.settings.container, '.cl-widget-ms-sum-best-date-label').innerHTML = (date.length > 0) ? date : label;
@@ -680,6 +697,9 @@ export const MiniScoreBoard = function (options) {
 
       wrapperDomObj.appendChild(optInWrapper);
 
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
+
       setTimeout(function () {
         addClass(wrapperDomObj, 'cl-show');
       }, 200);
@@ -687,6 +707,8 @@ export const MiniScoreBoard = function (options) {
       if (!hasClass(wrapperDomObj, 'cl-show')) {
         addClass(wrapperDomObj, 'cl-show');
       }
+      const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      if (msContainer && hasClass(msContainer, 'cl-hide')) removeClass(msContainer, 'cl-hide');
       const optinActionBtn = query(_this.settings.container, '.cl-widget-ms-optin-action');
       if (isProcessing) {
         optinActionBtn.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.processing;
@@ -746,8 +768,10 @@ export const MiniScoreBoard = function (options) {
     var _this = this;
     var wrapperDomObj = query(_this.settings.container, '.cl-show');
     var layout = query(_this.settings.container, '.cl-widget-ms-default-wrapper');
+    const msContainer = document.querySelector('.cl-widget-ms-wrapper');
 
     if (wrapperDomObj !== null) removeClass(wrapperDomObj, 'cl-show');
+    if (msContainer !== null) addClass(msContainer, 'cl-hide');
 
     if (layout !== null) {
       if (removeInfoAreaInterval) {
