@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Turniere",
         "enter": "Turnier betreten",
+        "processing": "Wird bearbeitet...",
         "readyCompetitions": "Kommende Turniere",
         "activeCompetitions": "Aktive Turniere",
         "finishedCompetitions": "Abgeschlossene Turniere",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "Sofortige Gewinne",
         "achievementsTitle": "Erfolge",
         "tournamentsTitle": "Aktuelle Turniere",
+        "upcomingTournamentsTitle": "Kommende Turniere",
         "tournamentBtn": "Mehr sehen",
         "endsTitle": "Endet",
+        "startsTitle": "Beginnt",
         "prizeTitle": "Preis",
         "singleWheelTitle": "Das Einzelrad",
         "singleWheelButton": "Spielen",
         "scratchcardsTitle": "Rubbelkarten",
-        "scratchcardsButton": "Spielen"
+        "scratchcardsButton": "Spielen",
+        "seeAll": "Alles sehen"
     },
     "missions": {
         "label": "Missionen",

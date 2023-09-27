@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Torneos",
         "enter": "Entrar en el torneo",
+        "processing": "Procesando...",
         "readyCompetitions": "Próximos torneos",
         "activeCompetitions": "Torneos activos",
         "finishedCompetitions": "Torneos terminados",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "Victorias instantáneas",
         "achievementsTitle": "Logros",
         "tournamentsTitle": "Torneos actuales",
+        "upcomingTournamentsTitle": "Próximos Torneos",
         "tournamentBtn": "Ver más",
         "endsTitle": "Termina",
+        "startsTitle": "Empieza",
         "prizeTitle": "Premio",
         "singleWheelTitle": "La rueda única",
         "singleWheelButton": "Jugar",
         "scratchcardsTitle": "Tarjetas de rascar",
-        "scratchcardsButton": "Jugar"
+        "scratchcardsButton": "Jugar",
+        "seeAll": "Ver todo"
     },
     "missions": {
         "label": "Misiones",

@@ -28,6 +28,7 @@
     "tournaments": {
 		"label":"مسابقات",
         "enter": "ورود به مسابقه",
+        "processing": "در حال پردازش...",
         "readyCompetitions": "مسابقات پیش رو",
         "activeCompetitions": "مسابقات فعال",
         "finishedCompetitions": "مسابقات به اتمام رسیده",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "برنده های فوری",
         "achievementsTitle": "دستاوردها",
         "tournamentsTitle": "مسابقات جاری",
+        "upcomingTournamentsTitle": "مسابقات آتی",
         "tournamentBtn": "بیشتر ببین",
         "endsTitle": "به پایان می رسد",
+        "startsTitle": "شروع می شود",
         "prizeTitle": "جایزه",
         "singleWheelTitle": "تک چرخ",
         "singleWheelButton": "بازی",
         "scratchcardsTitle": "کارت های خراش",
-        "scratchcardsButton": "بازی"
+        "scratchcardsButton": "بازی",
+        "seeAll": "همه را ببین"
     },
     "missions": {
         "label": "ماموریت ها",

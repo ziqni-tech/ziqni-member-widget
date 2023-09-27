@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Turnaje",
         "enter": "Účastnit se turnaje",
+        "processing": "Zpracovává se...",
         "readyCompetitions": "Nadcházející turnaje",
         "activeCompetitions": "Aktivní turnaje",
         "finishedCompetitions": "Dokončené turnaje",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "Okamžité výhry",
         "achievementsTitle": "Úspěchy",
         "tournamentsTitle": "Aktuální turnaje",
+        "upcomingTournamentsTitle": "Nadcházející turnaje",
         "tournamentBtn": "Vidět víc",
         "endsTitle": "Končí",
+        "startsTitle": "Začíná",
         "prizeTitle": "Cena",
         "singleWheelTitle": "Jediné kolo",
         "singleWheelButton": "Hrát si",
         "scratchcardsTitle": "Stírací losy",
-        "scratchcardsButton": "Hrát si"
+        "scratchcardsButton": "Hrát si",
+        "seeAll": "Vidět vše"
     },
     "missions": {
         "label": "Mise",

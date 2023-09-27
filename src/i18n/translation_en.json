@@ -1,114 +1,114 @@
 {
-  "time": {
-    "days": "d",
-    "hours": "h",
-    "minutesShortHand": "min",
-    "minutes": "m",
-    "seconds": "s",
-    "daysFull": "Days",
-    "hoursFull": "Hours",
-    "minutesFull": "Minutes",
-    "secondsFull": "Seconds"
-  },
-  "achievements": {
-    "label": "Achievements",
-    "more": "More",
-    "complete": "complete 100%",
-    "enter": "Enter Achievement",
-    "leave": "Leave Achievement",
-    "listEnterBtn": "Join",
-    "listLeaveBtn": "Leave",
-    "listProgressionBtn": "Processing...",
-    "leavePopupTitle": "Leave the achievement",
-    "leavePopupDescription": "Are you sure you want to leave this achievement?",
-    "leavePopupClose": "Close",
-    "leavePopupConfirm": "Leave",
-    "progress": "Progress"
-  },
-  "tournaments": {
-    "label": "Tournaments",
-    "enter": "Enter Tournament",
-    "processing": "Processing...",
-    "readyCompetitions": "Upcoming",
-    "activeCompetitions": "Active",
-    "finishedCompetitions": "Finished",
-    "finishing": "Finishing",
-    "finished": "Finished",
-    "registered": "Registered",
-    "noAvailableCompetitions": "No available competition",
-    "date": "Date"
-  },
-  "leaderboard": {
-    "rank": "Rank",
-    "name": "Name",
-    "points": "Points",
-    "prize": "Prize",
-    "you": "You"
-  },
-  "brackets": {
-    "title": "Tournaments bracket",
-    "starts": "Starts",
-    "ends": "Ends",
-    "ended": "Ended"
-  },
-  "miniLeaderboard": {
-    "highScore": "High Score",
-    "lastScore": "Last Score",
-    "rank": "Rank",
-    "startsIn": "Starting In",
-    "started": "started",
-    "starting": "starting",
-    "finishing": "finishing",
-    "finished": "finished"
-  },
-  "rewards": {
-    "label": "Awards",
-    "claim": "Claim",
-    "claimed": "Claimed",
-    "availableRewards": "Available",
-    "instantWins": "Instant Wins",
-    "rewards": "Claimed Awards",
-    "expiredRewards": "Expired Awards",
-    "wheelLabel": "The Single Wheel",
-    "scratchcardsLabel": "Scratchcards",
-    "wheelButton": "Play",
-    "scratchcardsButton": "Play",
-    "singleWheelWinLabel": "Congratulations!",
-    "singleWheelWinDescription": "You won",
-    "singleWheelWinButton": "Claim",
-    "prizeLabel": "Uncover your prize by scratching away!",
-    "prizeButton": "Scratch all"
-  },
-  "messages": {
-    "label": "Messages"
-  },
-  "dashboard": {
-    "label": "Dashboard",
-    "instantWinsTitle": "Instant wins",
-    "achievementsTitle": "Achievements",
-    "tournamentsTitle": "Current Tournaments",
-    "upcomingTournamentsTitle": "Upcoming Tournaments",
-    "tournamentBtn": "See more",
-    "endsTitle": "Ends",
-    "startsTitle": "Starts",
-    "prizeTitle": "Prize",
-    "singleWheelTitle": "The Single Wheel",
-    "singleWheelButton": "Play",
-    "scratchcardsTitle": "Scratchcards",
-    "scratchcardsButton": "Play",
-    "seeAll": "See all"
-  },
-  "missions": {
-    "label": "Missions",
-    "btn": "Go",
-    "prizeLabel": "Prize",
-    "mapLabel": "Mission map"
-  },
-  "global": {
-    "copy": "Powered By Ziqni",
-    "descriptionLabel": "Description",
-    "tAndCLabel": "Terms & Conditions",
-    "tAndCEmpty": "No Terms and Conditions provided",
-    "descriptionEmpty": "No Descriptions provided"
-  }
+    "time": {
+        "days": "d",
+        "hours": "h",
+        "minutesShortHand": "min",
+        "minutes": "m",
+        "seconds": "s",
+        "daysFull": "Days",
+        "hoursFull": "Hours",
+        "minutesFull": "Minutes",
+        "secondsFull": "Seconds"
+    },
+    "achievements": {
+        "label": "Achievements",
+        "more": "More",
+        "complete": "complete 100%",
+        "enter": "Enter Achievement",
+        "leave": "Leave Achievement",
+        "listEnterBtn": "Join",
+        "listLeaveBtn": "Leave",
+        "listProgressionBtn": "Processing...",
+        "leavePopupTitle": "Leave the achievement",
+        "leavePopupDescription": "Are you sure you want to leave this achievement?",
+        "leavePopupClose": "Close",
+        "leavePopupConfirm": "Leave",
+        "progress": "Progress"
+    },
+    "tournaments": {
+        "label": "Tournaments",
+        "enter": "Enter Tournament",
+        "processing": "Processing...",
+        "readyCompetitions": "Upcoming",
+        "activeCompetitions": "Active",
+        "finishedCompetitions": "Finished",
+        "finishing": "Finishing",
+        "finished": "Finished",
+        "registered": "Registered",
+        "noAvailableCompetitions": "No available competition",
+        "date": "Date"
+    },
+    "leaderboard": {
+        "rank": "Rank",
+        "name": "Name",
+        "points": "Points",
+        "prize": "Prize",
+        "you": "You"
+    },
+    "brackets": {
+        "title": "Tournaments bracket",
+        "starts": "Starts",
+        "ends": "Ends",
+        "ended": "Ended"
+    },
+    "miniLeaderboard": {
+        "highScore": "High Score",
+        "lastScore": "Last Score",
+        "rank": "Rank",
+        "startsIn": "Starting In",
+        "started": "started",
+        "starting": "starting",
+        "finishing": "finishing",
+        "finished": "finished"
+    },
+    "rewards": {
+        "label": "Awards",
+        "claim": "Claim",
+        "claimed": "Claimed",
+        "availableRewards": "Available",
+        "instantWins": "Instant Wins",
+        "rewards": "Claimed Awards",
+        "expiredRewards": "Expired Awards",
+        "wheelLabel": "The Single Wheel",
+        "scratchcardsLabel": "Scratchcards",
+        "wheelButton": "Play",
+        "scratchcardsButton": "Play",
+        "singleWheelWinLabel": "Congratulations!",
+        "singleWheelWinDescription": "You won",
+        "singleWheelWinButton": "Claim",
+        "prizeLabel": "Uncover your prize by scratching away!",
+        "prizeButton": "Scratch all"
+    },
+    "messages": {
+        "label": "Messages"
+    },
+    "dashboard": {
+        "label": "Dashboard",
+        "instantWinsTitle": "Instant wins",
+        "achievementsTitle": "Achievements",
+        "tournamentsTitle": "Current Tournaments",
+        "upcomingTournamentsTitle": "Upcoming Tournaments",
+        "tournamentBtn": "See more",
+        "endsTitle": "Ends",
+        "startsTitle": "Starts",
+        "prizeTitle": "Prize",
+        "singleWheelTitle": "The Single Wheel",
+        "singleWheelButton": "Play",
+        "scratchcardsTitle": "Scratchcards",
+        "scratchcardsButton": "Play",
+        "seeAll": "See all"
+    },
+    "missions": {
+        "label": "Missions",
+        "btn": "Go",
+        "prizeLabel": "Prize",
+        "mapLabel": "Mission map"
+    },
+    "global": {
+        "copy": "Powered By Ziqni",
+        "descriptionLabel": "Description",
+        "tAndCLabel": "Terms & Conditions",
+        "tAndCEmpty": "No Terms and Conditions provided",
+        "descriptionEmpty": "No Descriptions provided"
+    }
 }

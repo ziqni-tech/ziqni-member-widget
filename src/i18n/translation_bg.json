@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Турнира",
         "enter": "Влез в турнира",
+        "processing": "Обработка...",
         "readyCompetitions": "Предстоящи турнири",
         "activeCompetitions": "Активни турнири",
         "finishedCompetitions": "Приключили турнири",
@@ -86,15 +87,16 @@
         "instantWinsTitle": "Незабавни печалби",
         "achievementsTitle": "Постижения",
         "tournamentsTitle": "Текущи турнири",
+        "upcomingTournamentsTitle": "Upcoming Tournaments",
         "tournamentBtn": "Виж повече",
         "endsTitle": "Завършва",
+        "startsTitle": "Започва",
         "prizeTitle": "Награда",
         "singleWheelTitle": "Единичното колело",
-        "singleWheelDescription": "",
         "singleWheelButton": "Играйте",
         "scratchcardsTitle": "Скреч карти",
-        "scratchcardsDescription": "",
-        "scratchcardsButton": "Играйте"
+        "scratchcardsButton": "Играйте",
+        "seeAll": "Виж всички"
     },
     "missions": {
         "label": "Мисии",

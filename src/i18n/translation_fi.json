@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Turnaukset",
         "enter": "Osallistu turnaukseen",
+        "processing": "Käsitellään...",
         "readyCompetitions": "Tulevat turnaukset",
         "activeCompetitions": "Aktiiviset turnaukset",
         "finishedCompetitions": "Päättyneet turnaukset",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "Välittömät voitot",
         "achievementsTitle": "Saavutukset",
         "tournamentsTitle": "Nykyiset turnaukset",
+        "upcomingTournamentsTitle": "Tulevat turnaukset",
         "tournamentBtn": "Katso lisää",
         "endsTitle": "Päättyy",
+        "startsTitle": "Alkaa",
         "prizeTitle": "Palkinto",
         "singleWheelTitle": "Yksi pyörä",
         "singleWheelButton": "Pelata",
         "scratchcardsTitle": "Raaputusarvat",
-        "scratchcardsButton": "Pelata"
+        "scratchcardsButton": "Pelata",
+        "seeAll": "Näytä kaikki"
     },
     "missions": {
         "label": "Tehtävät",

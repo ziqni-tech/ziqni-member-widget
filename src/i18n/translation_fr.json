@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Tournois",
         "enter": "Participer au tournoi",
+        "processing": "Traitement...",
         "readyCompetitions": "Tournois à venir",
         "activeCompetitions": "Tournois actifs",
         "finishedCompetitions": "Tournois terminés",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "Gains instantanés",
         "achievementsTitle": "Réalisations",
         "tournamentsTitle": "Tournois en cours",
+        "upcomingTournamentsTitle": "Tournois à venir",
         "tournamentBtn": "Voir plus",
         "endsTitle": "Prend fin",
+        "startsTitle": "Départs",
         "prizeTitle": "Prix",
         "singleWheelTitle": "La roue unique",
         "singleWheelButton": "Jouer",
         "scratchcardsTitle": "Cartes à gratter",
-        "scratchcardsButton": "Jouer"
+        "scratchcardsButton": "Jouer",
+        "seeAll": "Voir tout"
     },
     "missions": {
         "label": "Missions",

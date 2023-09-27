@@ -28,6 +28,7 @@
     "tournaments": {
         "label": "Turneringer",
         "enter": "Gå ind i turnering",
+        "processing": "Forarbejdning...",
         "readyCompetitions": "Kommende turneringer",
         "activeCompetitions": "Aktive turneringer",
         "finishedCompetitions": "Afsluttede turneringer",
@@ -86,13 +87,16 @@
         "instantWinsTitle": "Vinder med det samme",
         "achievementsTitle": "Præstationer",
         "tournamentsTitle": "Aktuelle turneringer",
+        "upcomingTournamentsTitle": "Kommende turneringer",
         "tournamentBtn": "Se mere",
         "endsTitle": "Slutter",
+        "startsTitle": "Starter",
         "prizeTitle": "Præmie",
         "singleWheelTitle": "Enkelthjulet",
         "singleWheelButton": "Spil",
         "scratchcardsTitle": "Skrabelodder",
-        "scratchcardsButton": "Spil"
+        "scratchcardsButton": "Spil",
+        "seeAll": "Se alt"
     },
     "missions": {
         "label": "Missioner",
