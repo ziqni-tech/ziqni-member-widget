@@ -322,7 +322,7 @@ export const MiniScoreBoard = function (options) {
     }
 
     mapObject(_this.settings.lbWidget.settings.leaderboard.leaderboardData, function (lbEntry) {
-      if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1) {
+      if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1) {
         var scoreArea = query(defaultDomObj, '.cl-widget-ms-default-results-list');
         scoreArea.innerHTML = '';
 
@@ -355,7 +355,7 @@ export const MiniScoreBoard = function (options) {
     var _this = this;
     var lbWrapper = _this.layoutDefaultOrEmptyEntry();
     // var img = query(lbWrapper, '.cl-widget-ms-default-mem-img');
-    const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
+    const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
     var formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lbEntry.score);
 
     // img.src = icon;
@@ -462,7 +462,7 @@ export const MiniScoreBoard = function (options) {
     addClass(query(_this.settings.container, '.cl-widget-ms-first-to-date-wrapper'), 'cl-widget-ms-first-to-date-only');
 
     mapObject(_this.settings.lbWidget.settings.leaderboard.leaderboardData, function (lbEntry) {
-      if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1) {
+      if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1) {
         var scoreArea = query(defaultDomObj, '.cl-widget-ms-first-to-results-list');
         scoreArea.innerHTML = '';
         if (_this.settings.lbWidget.settings.leaderboard.miniScoreBoard.enableRankings) {
@@ -484,7 +484,7 @@ export const MiniScoreBoard = function (options) {
     const _this = this;
     const lbWrapper = _this.layoutFirstToOrEmptyEntry();
     // const img = query(lbWrapper, '.cl-widget-ms-first-to-mem-img');
-    const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
+    const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
     const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lbEntry.score);
 
     if (selfMember) {
@@ -596,7 +596,7 @@ export const MiniScoreBoard = function (options) {
     }
 
     mapObject(_this.settings.lbWidget.settings.leaderboard.leaderboardData, function (lbEntry) {
-      if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1) {
+      if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1) {
         var lastScore = query(_this.settings.container, '.cl-widget-ms-sum-best-last-score').innerHTML;
         var highScore = query(_this.settings.container, '.cl-widget-ms-sum-best-high-score').innerHTML;
         var rank = query(_this.settings.container, '.cl-widget-ms-sum-best-rank-value');
