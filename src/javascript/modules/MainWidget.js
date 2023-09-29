@@ -1744,7 +1744,7 @@ export const MainWidget = function (options) {
         memberLbName = lb.name;
       }
       let count = 0;
-      const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
+      const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
 
       let memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
       const memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
@@ -1852,7 +1852,7 @@ export const MainWidget = function (options) {
       }
       var count = 0;
       const icon = memberLbName && memberLbName.length ? memberLbName[0] : '';
-      const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.memberRefId) !== -1;
+      const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
       var memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
       var memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
       var reward = clearPrize ? '' : _this.getReward(lb.rank);
