@@ -843,8 +843,11 @@ export const LbWidget = function (options) {
         }
       });
 
+      // console.log('leaderboardSubscriptionRequest:', leaderboardSubscriptionRequest);
+
       this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
         .then(data => {
+          // console.log('data:', data);
           let leaderboardEntries = [];
           if (data && data.leaderboardEntries) {
             leaderboardEntries = data.leaderboardEntries;

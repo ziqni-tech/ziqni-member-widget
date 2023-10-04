@@ -4975,8 +4975,8 @@ export const MainWidget = function (options) {
     };
 
     // eslint-disable-next-line no-unused-vars
-    const loadImage = async (ctx, sector, rad, rot) => {
-      const img = await addImageProcess(sector.src);
+    const loadImage = async (ctx, src, rad, rot) => {
+      const img = await addImageProcess(src);
       ctx.save();
       ctx.resetTransform();
       ctx.translate(rad, rad);
@@ -4999,7 +4999,9 @@ export const MainWidget = function (options) {
       ctx.arc(rad, rad, rad, ang, ang + arc);
       ctx.lineTo(rad, rad);
       ctx.fill();
-      // await loadImage(ctx, sector, rad, rot);
+      if (sector.iconLink) {
+        await loadImage(ctx, sector.iconLink, rad, rot);
+      }
       ctx.stroke();
       // TEXT
       ctx.translate(rad, rad);

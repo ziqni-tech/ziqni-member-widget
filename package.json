@@ -9,10 +9,7 @@
     "url": "https://github.com/ziqni-tech/ziqni-member-widget"
   },
   "scripts": {
-    "dev": "cross-env --env.production=dev --env.THEME=cl-style-1-light-theme webpack-dev-server --config ./webpack/webpack.config.js --progress",
     "build": "rimraf build && cross-env --env.production=prod --env.THEME=default-theme webpack --config ./webpack/webpack.config.js --progress",
-    "dev:layouts": "cross-env --env.production=layouts webpack-dev-server --config ./webpack/webpack.config.js --progress",
-    "dev:default-theme": "cross-env --env.production=dev --env.THEME=default-theme webpack-dev-server --config ./webpack/webpack.config.js --progress",
     "lint": "eslint ./src",
     "test": "jest --coverage",
     "test:watch": "jest --coverage --watch",
@@ -50,6 +47,7 @@
     "webpack-dev-server": "^3.11.0"
   },
   "dependencies": {
+    "@babel/plugin-transform-object-rest-spread": "^7.22.15",
     "@ziqni-tech/member-api-client": "^1.0.16",
     "css-vars-ponyfill": "^2.3.2",
     "cytoscape": "^3.25.0",
