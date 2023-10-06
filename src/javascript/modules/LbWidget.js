@@ -739,18 +739,12 @@ export const LbWidget = function (options) {
     const contestRequest = ContestRequest.constructFromObject({
       languageKey: this.settings.language,
       contestFilter: {
-        productIds: [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        sortBy: [],
-        ids: [],
+        // sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
         competitionIds: [json[0].id],
         statusCode: {
           moreThan: 0,
           lessThan: 100
         },
-        constraints: [],
         limit: 20,
         skip: 0
       }
@@ -761,7 +755,7 @@ export const LbWidget = function (options) {
     if (contests.length) {
       this.settings.competition.contests = contests;
       contests.forEach(contest => {
-        if (contest.statusCode < 30 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
+        if (contest.statusCode < 50 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
           this.settings.competition.activeContest = contest;
           this.settings.competition.activeContestId = contest.id;
 

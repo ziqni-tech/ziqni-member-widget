@@ -6726,6 +6726,7 @@
       .cl-shown {
         .cl-accordion-list-container {
           border: 1px solid #B9CEDF;
+          background-color: #edf3f7;
         }
       }
     }
@@ -7061,6 +7062,14 @@
     }
 
     .cl-main-widget-section-dashboard {
+      .cl-main-widget-dashboard-body {
+        &::-webkit-scrollbar {
+          background: #DCE6EF;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #96B5CF;
+        }
+      }
       .cl-main-widget-dashboard-header-label {
         color: #0d0d0d;
       }
@@ -7110,6 +7119,11 @@
       }
       .dashboard-tournament-item {
         background-color: #dce6ef;
+      }
+      .cl-main-widget-dashboard-achievements-list {
+        .cl-ach-list-more {
+          color: #170213;
+        }
       }
     }
   }
