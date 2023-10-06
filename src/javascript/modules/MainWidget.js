@@ -2489,11 +2489,11 @@ export const MainWidget = function (options) {
       if (this.checked) {
         mainContainer.classList.add('lightTheme');
         msContainer.classList.add('lightTheme');
-        notificationContainer.classList.add('lightTheme');
+        if (notificationContainer) notificationContainer.classList.add('lightTheme');
       } else {
         mainContainer.classList.remove('lightTheme');
         msContainer.classList.remove('lightTheme');
-        notificationContainer.classList.remove('lightTheme');
+        if (notificationContainer) notificationContainer.classList.remove('lightTheme');
       }
     });
   };
