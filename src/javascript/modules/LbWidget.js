@@ -563,8 +563,6 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    console.log('finishedCompetitionRequest:', finishedCompetitionRequest);
-
     const readyCompetitions = await this.getCompetitionsApi(readyCompetitionRequest);
     this.settings.tournaments.readyCompetitions = readyCompetitions.data;
     this.settings.tournaments.readyTotalCount = readyCompetitions.meta.totalRecordsFound;
