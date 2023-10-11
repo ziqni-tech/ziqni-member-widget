@@ -2930,9 +2930,7 @@ export const LbWidget = function (options) {
       if (_this.settings.leaderboard.refreshInterval) {
         clearTimeout(_this.settings.leaderboard.refreshInterval);
       }
-      _this.settings.mainWidget.loadCompetitionList(function () {
-        _this.activeDataRefresh();
-      });
+      _this.settings.mainWidget.loadCompetitionList();
 
       // load competition
     } else if (hasClass(el, 'cl-tour-list-item') || closest(el, '.cl-tour-list-item') !== null) {
