@@ -574,9 +574,7 @@ export const LbWidget = function (options) {
     this.settings.tournaments.totalCount = activeCompetitions.meta.totalRecordsFound;
 
     if (this.settings.navigation.tournaments.showFinishedTournaments) {
-      console.log(666);
       const finishedCompetitions = await this.getCompetitionsApi(finishedCompetitionRequest);
-      console.log('finishedCompetitions:', finishedCompetitions);
       this.settings.tournaments.finishedCompetitions = finishedCompetitions.data;
       this.settings.tournaments.finishedTotalCount = finishedCompetitions.meta.totalRecordsFound;
     }
