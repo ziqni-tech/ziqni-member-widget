@@ -541,6 +541,9 @@ export const LbWidget = function (options) {
       }
     }, null);
 
+    // const finishedDateFilter = new Date();
+    // finishedDateFilter.setDate(finishedDateFilter.getDate() - 30);
+
     const finishedCompetitionRequest = CompetitionRequest.constructFromObject({
       languageKey: this.settings.language,
       competitionFilter: {
@@ -548,6 +551,9 @@ export const LbWidget = function (options) {
           moreThan: 30,
           lessThan: 50
         },
+        // endDate: {
+        //   after: finishedDateFilter.toISOString()
+        // },
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -739,7 +745,7 @@ export const LbWidget = function (options) {
     const contestRequest = ContestRequest.constructFromObject({
       languageKey: this.settings.language,
       contestFilter: {
-        // sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
+        sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
         competitionIds: [json[0].id],
         statusCode: {
           moreThan: 0,
@@ -837,11 +843,8 @@ export const LbWidget = function (options) {
         }
       });
 
-      // console.log('leaderboardSubscriptionRequest:', leaderboardSubscriptionRequest);
-
       this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
         .then(data => {
-          // console.log('data:', data);
           let leaderboardEntries = [];
           if (data && data.leaderboardEntries) {
             leaderboardEntries = data.leaderboardEntries;
@@ -1742,6 +1745,49 @@ export const LbWidget = function (options) {
     _this.settings.leaderboard.refreshLbDataInterval = setTimeout(function () {
       _this.leaderboardDataRefresh();
     }, _this.settings.leaderboard.refreshIntervalMillis);
+  };
+
+  this.activeDataRefreshSimple = async function (callback) {
+    const _this = this;
+    await _this.prepareActiveCompetition(function () {
+      // clear to not clash with LB refresh that could happen at same time
+      if (_this.settings.leaderboard.refreshInterval) {
+        clearTimeout(_this.settings.leaderboard.refreshInterval);
+      }
+
+      if (_this.settings.miniScoreBoard.settings.active || _this.settings.mainWidget.settings.active) {
+        if (
+          (_this.settings.competition.activeCompetition !== null && typeof _this.settings.competition.activeCompetition.optinRequired === 'boolean' && !_this.settings.competition.activeCompetition.optinRequired) ||
+          (_this.settings.competition.activeCompetition !== null && typeof _this.settings.competition.activeCompetition.optin === 'boolean' && _this.settings.competition.activeCompetition.optin)
+        ) {
+          _this.leaderboardDataRefresh();
+
+          if (typeof callback === 'function') {
+            callback();
+          }
+        } else {
+          if (_this.settings.miniScoreBoard.settings.active) {
+            _this.settings.miniScoreBoard.loadScoreBoard();
+          }
+          if (_this.settings.mainWidget.settings.active) {
+            _this.settings.mainWidget.loadLeaderboard();
+          }
+
+          // restart leaderboard refresh
+          _this.leaderboardDataRefresh();
+
+          if (typeof callback === 'function') {
+            callback();
+          }
+        }
+      } else {
+        if (_this.settings.miniScoreBoard.settings.active) _this.settings.miniScoreBoard.loadScoreBoard();
+
+        if (typeof callback === 'function') {
+          callback();
+        }
+      }
+    });
   };
 
   this.activeDataRefresh = function (callback) {
@@ -2897,7 +2943,7 @@ export const LbWidget = function (options) {
         _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
-        _this.activeDataRefresh(function () {
+        _this.activeDataRefreshSimple(function () {
           _this.settings.mainWidget.hideCompetitionList(function () {
             if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
               _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
