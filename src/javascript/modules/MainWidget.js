@@ -1529,7 +1529,9 @@ export const MainWidget = function (options) {
       sectionDashboardBody.appendChild(sectionDashboardAchievements);
     }
 
-    sectionDashboardBody.appendChild(sectionDashboardTournaments);
+    if (this.settings.lbWidget.settings.navigation.tournaments.enable) {
+      sectionDashboardBody.appendChild(sectionDashboardTournaments);
+    }
 
     sectionDashboardHeader.appendChild(sectionDashboardHeaderLabel);
     sectionDashboardHeader.appendChild(sectionDashboardHeaderClose);
@@ -5190,7 +5192,9 @@ export const MainWidget = function (options) {
                 });
               }
 
-              _this.loadDashboardTournaments();
+              if (_this.settings.lbWidget.settings.navigation.tournaments.enable) {
+                _this.loadDashboardTournaments();
+              }
 
               changeInterval = setTimeout(function () {
                 addClass(dashboardContainer, 'cl-main-active-section');
