@@ -134,6 +134,7 @@ const instance = new MemberWidget({
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
   navigation: {
+    dashboard: {enable: true},
     tournaments: {
       enable: true,
       showFinishedTournaments: true
@@ -269,6 +270,7 @@ There is no limit to how many stylesheets you can add as the widget will load al
 To disable Tournaments, Achievements, Rewards, Inbox or Missions tabs on the full widget preview the following settings has to be set to "false":
 
 navigation: {    
+  dashboard: {enable: false},
   tournaments: {enable: false},
   achievements: {enable: false},
   rewards: {enable: false},
@@ -294,6 +296,21 @@ To disable the inbox/messaging area on the full widget preview the following set
 The primary method “this.startup“ inside the "LbWidget" class is the one you should adjust to implement your scenario to achieve a pre-launch check, you can wrap what's inside of that method with the function:
 this.checkForAvailableCompetitions()
 This method collects all the necessary information about active, ready and finished competitions (example: _this.settings.tournaments.readyCompetitions will contain a list of upcoming competitions) so you can use the callback and the collected information to decide to show or hide the mini-scoreboard on startup based on your requirements.
+```
+#### Example:
+```html
+<script type="text/javascript" src="<Path to your build /ziqni-member-widget-selfinit.js>"></script>
+<script type="text/javascript">
+    const widgetInstance = new window._clLeaderBoardV3SelfInit({
+      <Your settings>
+    });
+
+    widgetInstance.checkForAvailableCompetitions(function () {
+      if (widgetInstance.settings.tournaments.activeCompetitions.length) {
+        widgetInstance.init();
+      }
+   })
+</script>
 ```
 
 ### How do I only show the competition tab if there is an active competition only and/or change the default tab to the achievements tab
