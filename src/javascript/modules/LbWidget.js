@@ -1285,87 +1285,72 @@ export const LbWidget = function (options) {
       },
       currencyKey: this.settings.currency
     });
+    const claimedAwards = await this.getAwardsApi(claimedAwardRequest);
+    this.settings.awards.claimedAwards = claimedAwards.data;
+    const claimedRewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
+    if (claimedRewardIds.length) {
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Reward',
+          entityIds: claimedRewardIds
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
 
-    this.getAwardsApi(claimedAwardRequest)
-      .then(async json => {
-        this.settings.awards.claimedAwards = json.data;
-        const rewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
-        if (rewardIds.length) {
-          const rewardRequest = {
-            entityFilter: [{
-              entityType: 'Reward',
-              entityIds: rewardIds
-            }],
-            currencyKey: this.settings.currency,
-            skip: 0,
-            limit: 20
-          };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
 
-          const rewards = await this.getRewardsApi(rewardRequest);
-          const rewardsData = rewards.data;
-
-          this.settings.awards.claimedAwards = this.settings.awards.claimedAwards.map(award => {
-            const idx = rewardsData.findIndex(r => r.id === award.rewardId);
-            if (idx !== -1) {
-              award.rewardData = rewardsData[idx];
-            }
-
-            return award;
-          });
+      this.settings.awards.claimedAwards = this.settings.awards.claimedAwards.map(award => {
+        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
+        if (idx !== -1) {
+          award.rewardData = rewardsData[idx];
         }
 
-        this.settings.awards.claimedTotalCount = (json.meta && json.meta.totalRecordsFound)
-          ? json.meta.totalRecordsFound
-          : 0;
-
-        if (typeof callback === 'function') {
-          callback();
-        }
-      })
-      .catch(error => {
-        this.log(error);
+        return award;
       });
+    }
 
-    this.getAwardsApi(availableAwardRequest)
-      .then(async json => {
-        this.settings.awards.availableAwards = json.data;
+    this.settings.awards.claimedTotalCount = (claimedAwards.meta && claimedAwards.meta.totalRecordsFound)
+      ? claimedAwards.meta.totalRecordsFound
+      : 0;
 
-        const rewardIds = this.settings.awards.availableAwards.map(c => c.rewardId);
-        if (rewardIds.length) {
-          const rewardRequest = {
-            entityFilter: [{
-              entityType: 'Reward',
-              entityIds: rewardIds
-            }],
-            currencyKey: this.settings.currency,
-            skip: 0,
-            limit: 20
-          };
+    const availableAwards = await this.getAwardsApi(availableAwardRequest);
+    this.settings.awards.availableAwards = availableAwards.data;
 
-          const rewards = await this.getRewardsApi(rewardRequest);
-          const rewardsData = rewards.data;
+    const rewardIds = this.settings.awards.availableAwards.map(c => c.rewardId);
+    if (rewardIds.length) {
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Reward',
+          entityIds: rewardIds
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
 
-          this.settings.awards.availableAwards = this.settings.awards.availableAwards.map(award => {
-            const idx = rewardsData.findIndex(r => r.id === award.rewardId);
-            if (idx !== -1) {
-              award.rewardData = rewardsData[idx];
-            }
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
 
-            return award;
-          });
+      this.settings.awards.availableAwards = this.settings.awards.availableAwards.map(award => {
+        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
+        if (idx !== -1) {
+          award.rewardData = rewardsData[idx];
         }
 
-        this.settings.awards.totalCount = (json.meta && json.meta.totalRecordsFound)
-          ? json.meta.totalRecordsFound
-          : 0;
-
-        if (typeof callback === 'function') {
-          callback();
-        }
-      })
-      .catch(error => {
-        this.log(error);
+        return award;
       });
+    }
+
+    this.settings.awards.totalCount = (availableAwards.meta && availableAwards.meta.totalRecordsFound)
+      ? availableAwards.meta.totalRecordsFound
+      : 0;
+
+    if (typeof callback === 'function') {
+      callback(this.settings.awards.claimedAwards, this.settings.awards.availableAwards);
+    }
   };
 
   this.getAwardsApi = function (awardRequest) {
@@ -2088,8 +2073,18 @@ export const LbWidget = function (options) {
           // load initial available reward data
           if (_this.settings.navigation.rewards.enable) {
             _this.checkForAvailableAwards(
-              function () {
-                // _this.updateRewardsNavigationCounts();
+              function (claimedAwards, availableAwards) {
+                if (!_this.settings.hideEmptyTabs) return;
+
+                const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards-icon').parentElement;
+
+                if (!awardsIcon) return;
+
+                if ((!claimedAwards || !claimedAwards.length) && (!availableAwards || !availableAwards.length) && !_this.settings.instantWins.enable) {
+                  awardsIcon.classList.add('hidden');
+                } else {
+                  awardsIcon.classList.remove('hidden');
+                }
               },
               1,
               1

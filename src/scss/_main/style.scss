@@ -3385,7 +3385,7 @@
   width: 100%;
   height: 68px;
   position: absolute;
-  bottom: 62px;
+  bottom: 82px;
   left: 0;
   z-index: 3;
   color: var(--light-font-color);
@@ -6672,6 +6672,9 @@
   }
   .cl-main-widget-missions-map-wrapper {
     border: 1px solid #B9CEDF;
+  }
+  .cl-main-widget-lb-optin-action {
+    color: #ffffff;
   }
   .paginator-item {
     border: 1px solid #cccccc;
