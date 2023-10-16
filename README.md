@@ -130,6 +130,7 @@ const instance = new MemberWidget({
   currency: 'EUR',
   loadCustomTranslations: true,
   enableNotifications: true,
+  hideEmptyTabs: false,
   instantWins: {
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
