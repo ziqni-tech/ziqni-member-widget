@@ -79,6 +79,7 @@ export const LbWidget = function (options) {
     miniScoreBoard: null,
     canvasAnimation: null,
     enableNotifications: false,
+    hideEmptyTabs: false,
     mainWidget: null,
     language: process.env.LANG,
     currency: '',
@@ -2069,8 +2070,18 @@ export const LbWidget = function (options) {
 
           // load achievement data
           if (_this.settings.navigation.achievements.enable) {
-            _this.checkForAvailableAchievements(1, function () {
-              // _this.updateAchievementNavigationCounts();
+            _this.checkForAvailableAchievements(1, function (achievements) {
+              if (!_this.settings.hideEmptyTabs) return;
+
+              const achievementsIcon = document.querySelector('.cl-main-widget-navigation-ach-icon').parentElement;
+
+              if (!achievementsIcon) return;
+
+              if (!achievements || !achievements.length) {
+                achievementsIcon.classList.add('hidden');
+              } else {
+                achievementsIcon.classList.remove('hidden');
+              }
             });
           }
 
@@ -2088,15 +2099,35 @@ export const LbWidget = function (options) {
 
           // load initial available messages data
           if (_this.settings.navigation.inbox.enable) {
-            _this.checkForAvailableMessages(1, function () {
-              // _this.updateMessagesNavigationCounts();
+            _this.checkForAvailableMessages(1, function (messages) {
+              if (!_this.settings.hideEmptyTabs) return;
+
+              const messagesIcon = document.querySelector('.cl-main-widget-navigation-inbox-icon').parentElement;
+
+              if (!messagesIcon) return;
+
+              if (!messages || !messages.length) {
+                messagesIcon.classList.add('hidden');
+              } else {
+                messagesIcon.classList.remove('hidden');
+              }
             });
           }
 
           // load initial available messages data
           if (_this.settings.navigation.missions.enable) {
-            _this.checkForAvailableMissions(1, function () {
-              // _this.updateMissionsNavigationCounts();
+            _this.checkForAvailableMissions(1, function (missions) {
+              if (!_this.settings.hideEmptyTabs) return;
+
+              const missionsIcon = document.querySelector('.cl-main-widget-navigation-missions-icon').parentElement;
+
+              if (!missionsIcon) return;
+
+              if (!missions || !missions.length) {
+                missionsIcon.classList.add('hidden');
+              } else {
+                missionsIcon.classList.remove('hidden');
+              }
             });
           }
         });

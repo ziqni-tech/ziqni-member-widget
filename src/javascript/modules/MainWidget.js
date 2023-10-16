@@ -3849,11 +3849,13 @@ export const MainWidget = function (options) {
 
   this.loadDashboardTournaments = async function () {
     const tournamentsList = query(this.settings.section, '.cl-main-widget-dashboard-tournaments-list');
+    const tournamentsContainer = query(this.settings.section, '.cl-main-widget-dashboard-tournaments');
     const { activeCompetitions, readyCompetitions } = await this.settings.lbWidget.getDashboardCompetitions();
 
     tournamentsList.innerHTML = '';
 
     if (activeCompetitions && activeCompetitions.length) {
+      tournamentsContainer.classList.remove('hidden');
       const title = document.querySelector('.cl-main-widget-dashboard-tournaments-title');
       title.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle;
       activeCompetitions.forEach(t => {
@@ -3861,19 +3863,30 @@ export const MainWidget = function (options) {
         tournamentsList.appendChild(listItem);
       });
     } else if (readyCompetitions && readyCompetitions.length) {
+      tournamentsContainer.classList.remove('hidden');
       const title = document.querySelector('.cl-main-widget-dashboard-tournaments-title');
       title.innerHTML = this.settings.lbWidget.settings.translation.dashboard.upcomingTournamentsTitle;
       readyCompetitions.forEach(t => {
         const listItem = this.dashboardTournamentItem(t, true);
         tournamentsList.appendChild(listItem);
       });
+    } else {
+      tournamentsContainer.classList.add('hidden');
     }
   };
 
   this.loadDashboardAchievements = function (achievementData) {
     const _this = this;
     const achList = query(this.settings.section, '.cl-main-widget-dashboard-achievements-list');
+    const achContainer = query(this.settings.section, '.cl-main-widget-dashboard-achievements');
     achList.innerHTML = '';
+
+    if (!achievementData.length) {
+      achContainer.classList.add('hidden');
+      return;
+    }
+
+    achContainer.classList.remove('hidden');
 
     if (achievementData.length > 2) {
       achievementData = achievementData.slice(0, 2);
