@@ -1212,6 +1212,10 @@
   border-radius: 10px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-items .cl-main-widget-navigation-item.hidden {
+  display: none;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-navigation-container .cl-main-widget-navigation-darkMode-toggle {
   padding-bottom: 45px;
 }
@@ -1508,6 +1512,11 @@
   background: #304F69;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments.hidden,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements.hidden {
+  display: none;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title {
@@ -1517,8 +1526,9 @@
   font-weight: 700;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
-  padding-top: 20px;
+  padding-top: 30px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins {}
@@ -1788,7 +1798,6 @@
   letter-spacing: 0;
   cursor: pointer;
   text-align: left;
-  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-item {
