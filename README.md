@@ -131,6 +131,7 @@ const instance = new MemberWidget({
   loadCustomTranslations: true,
   enableNotifications: true,
   hideEmptyTabs: false,
+  defaultLightTheme: false,
   instantWins: {
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
