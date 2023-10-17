@@ -1504,28 +1504,18 @@ export const LbWidget = function (options) {
     var _this = this;
 
     if (typeof _this.settings.uri.translationPath === 'string' && _this.settings.uri.translationPath.length > 0 && _this.settings.loadTranslations) {
-      var url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : _this.settings.uri.gatewayDomain + _this.settings.uri.translationPath.replace(':language', _this.settings.language);
+      const url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : _this.settings.uri.gatewayDomain + _this.settings.uri.translationPath.replace(':language', _this.settings.language);
 
-      _this.settings.globalAjax.abort().getData({
-        type: 'GET',
-        url: url,
-        headers: {
-          'X-API-KEY': _this.settings.apiKey
-        },
-        success: function (response, dataObj, xhr) {
-          if (xhr.status === 200) {
-            var json = JSON.parse(response);
-
-            _this.settings.translation = mergeObjects(_this.settings.translation, json);
-
-            callback();
-          } else {
-            _this.log('no translation foound ' + response);
-
-            callback();
-          }
-        }
-      });
+      fetch(url, { method: 'GET' })
+        .then(response => response.json())
+        .then(json => {
+          _this.settings.translation = mergeObjects(_this.settings.translation, json);
+          callback();
+        })
+        .catch(error => {
+          _this.log('no translation foound ' + error);
+          callback();
+        });
     } else {
       if (_this.settings.language) {
         let translation = require('../../i18n/translation_en.json');
