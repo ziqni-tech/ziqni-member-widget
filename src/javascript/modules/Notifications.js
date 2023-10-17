@@ -66,6 +66,9 @@ export const Notifications = function (options) {
     const informationClose = document.createElement('a');
 
     wrapper.setAttribute('class', 'cl-widget-notif-wrapper');
+    if (this.settings.lbWidget && this.settings.lbWidget.settings.defaultLightTheme) {
+      wrapper.classList.add('lightTheme');
+    }
     iconWrapper.setAttribute('class', 'cl-widget-notif-icon-wrapper');
     icon.setAttribute('class', 'cl-widget-notif-icon');
     informationTopWrapper.setAttribute('class', 'cl-widget-notif-information-top-wrapper');

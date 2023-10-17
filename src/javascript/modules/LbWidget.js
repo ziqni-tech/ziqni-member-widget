@@ -80,6 +80,7 @@ export const LbWidget = function (options) {
     canvasAnimation: null,
     enableNotifications: false,
     hideEmptyTabs: false,
+    defaultLightTheme: false,
     mainWidget: null,
     language: process.env.LANG,
     currency: '',
