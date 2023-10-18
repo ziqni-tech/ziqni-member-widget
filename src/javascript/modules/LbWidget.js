@@ -740,6 +740,7 @@ export const LbWidget = function (options) {
 
   this.setActiveCompetition = async function (json, callback) {
     this.settings.competition.activeCompetition = json[0];
+    this.settings.tournaments.activeCompetitionId = json[0].id;
     this.settings.competition.activeContest = null;
     this.settings.competition.contests = null;
     this.settings.competition.activeContestId = null;
@@ -2302,7 +2303,12 @@ export const LbWidget = function (options) {
 
       // load embedded competition details
     } else if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage && (hasClass(el, 'cl-main-widget-lb-details-content-label') || closest(el, '.cl-main-widget-lb-details-content-label') !== null)) {
-      _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+      const preLoader = _this.settings.mainWidget.preloader();
+      preLoader.show(function () {
+        _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {
+          preLoader.hide();
+        });
+      });
 
       // load embedded competition details
     } else if (hasClass(el, 'connections-table_round-item') || closest(el, '.connections-table_round-item') !== null) {
@@ -2805,9 +2811,9 @@ export const LbWidget = function (options) {
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
         _this.activeDataRefresh(function () {
-          _this.settings.mainWidget.hideCompetitionList(function () {
+          _this.settings.mainWidget.hideCompetitionList(async function () {
             if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
             } else if (_this.settings.competition.activeContest !== null) {
               _this.settings.mainWidget.loadCompetitionDetails(function () {});
             }
@@ -2969,9 +2975,9 @@ export const LbWidget = function (options) {
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
         _this.activeDataRefreshSimple(function () {
-          _this.settings.mainWidget.hideCompetitionList(function () {
+          _this.settings.mainWidget.hideCompetitionList(async function () {
             if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
             } else if (_this.settings.competition.activeContest !== null) {
               _this.settings.mainWidget.loadCompetitionDetails(function () {});
             }

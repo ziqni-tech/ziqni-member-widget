@@ -2163,7 +2163,7 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.showEmbeddedCompetitionDetailsContent = function (callback) {
+  this.showEmbeddedCompetitionDetailsContent = async function (callback) {
     const listIcon = query(this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const backIcon = query(this.settings.container, '.cl-main-widget-lb-header-back-icon');
 
@@ -2174,7 +2174,7 @@ export const MainWidget = function (options) {
       addClass(this.settings.section, 'cl-main-active-embedded-description');
     }
 
-    tournamentBrackets(
+    await tournamentBrackets(
       this.settings.lbWidget.apiClientStomp,
       this.settings.lbWidget.settings.tournaments.activeCompetitionId,
       this.settings.lbWidget.settings.language,
