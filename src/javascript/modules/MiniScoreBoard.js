@@ -51,6 +51,9 @@ export const MiniScoreBoard = function (options) {
     var informationClose = document.createElement('a');
 
     wrapper.setAttribute('class', 'cl-widget-ms-wrapper');
+    if (this.settings.lbWidget.settings.defaultLightTheme) {
+      wrapper.classList.add('lightTheme');
+    }
     iconWrapper.setAttribute('class', 'cl-widget-ms-icon-wrapper');
     icon.setAttribute('class', 'cl-widget-ms-icon');
     informationTopWrapper.setAttribute('class', 'cl-widget-ms-information-top-wrapper');
