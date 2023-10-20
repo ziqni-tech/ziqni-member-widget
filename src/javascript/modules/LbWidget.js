@@ -2315,6 +2315,10 @@ export const LbWidget = function (options) {
       const item = hasClass(el, 'connections-table_round-item') ? el : closest(el, '.connections-table_round-item');
       const preLoader = _this.settings.mainWidget.preloader();
 
+      if (_this.settings.competition.activeContestId && _this.settings.competition.activeContestId === item.dataset.connectId) {
+        return;
+      }
+
       preLoader.show(async function () {
         if (_this.settings.competition.activeContestId) {
           const leaderboardUnsubscribeRequest = LeaderboardSubscriptionRequest.constructFromObject({
