@@ -2109,6 +2109,11 @@
   border-radius: 10px;
   background: linear-gradient(93.25deg, rgba(56, 172, 207, 0.29) -4.57%, rgba(16, 26, 34, 0.5) 49.35%, rgba(56, 172, 207, 0.29) 100%);
 }
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content.no-gradient {
+  background: none;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-section-image-banner-active .cl-main-widget-lb-details-content {
   background-color: var(--main-widget-image-banner-active-details-content-background);
 }

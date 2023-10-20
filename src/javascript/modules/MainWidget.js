@@ -2137,10 +2137,13 @@ export const MainWidget = function (options) {
 
       if (!lbBannerImage.style || !lbBannerImage.style.backgroundImage || lbBannerImage.style.backgroundImage !== this.getActiveCompetitionBanner()) {
         const link = this.getActiveCompetitionBanner();
+        const lbBannerContent = query(_this.settings.section, '.cl-main-widget-lb-details-content');
         if (link) {
           lbBannerImage.setAttribute('style', `background-image: url(${link})`);
+          lbBannerContent.classList.add('no-gradient');
         } else {
           lbBannerImage.setAttribute('style', '');
+          lbBannerContent.classList.remove('no-gradient');
         }
       }
 
