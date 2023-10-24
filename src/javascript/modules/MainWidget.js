@@ -3725,8 +3725,36 @@ export const MainWidget = function (options) {
   this.updateAchievementProgressionAndIssued = function (issued, progression) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
+    const dashboardAchList = document.querySelector('.cl-main-widget-dashboard-achievements-list');
 
     objectIterator(query(achList, '.cl-ach-list-item'), function (ach) {
+      var id = ach.dataset.id;
+      var issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
+
+      var perc = 0;
+      mapObject(progression, function (pr) {
+        if (pr.entityId === id) {
+          perc = parseInt(pr.percentageComplete);
+        }
+      });
+
+      if (ach !== null) {
+        var bar = query(ach, '.cl-ach-list-progression-bar');
+        const barLabel = query(ach, '.cl-ach-list-progression-label');
+
+        if (issuedStatus) {
+          addClass(bar, 'cl-ach-complete');
+          barLabel.innerHTML = '100/100';
+          bar.style.width = '100%';
+        } else {
+          var percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
+          barLabel.innerHTML = perc + '/100';
+          bar.style.width = percValue;
+        }
+      }
+    });
+
+    objectIterator(query(dashboardAchList, '.cl-ach-list-item'), function (ach) {
       var id = ach.dataset.id;
       var issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
 
@@ -3931,6 +3959,12 @@ export const MainWidget = function (options) {
         const listItem = _this.achievementItem(ach);
         achList.appendChild(listItem);
       }
+    });
+
+    const idList = achievementData.map(a => a.id);
+
+    _this.settings.lbWidget.checkForMemberAchievementsProgression(idList, function (issued, progression) {
+      _this.updateAchievementProgressionAndIssued(issued, progression);
     });
   };
 
