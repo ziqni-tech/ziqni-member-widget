@@ -2526,6 +2526,11 @@
   margin-left: 5px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-months {
+  display: flex;
+  padding-right: 30px;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .banner-date .banner-days {
   display: flex;
 }
@@ -2558,6 +2563,10 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-headers-item {
   width: 100px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-headers-item.hidden {
+  display: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-label-text {
@@ -2605,6 +2614,10 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-date-headers-item {
   width: 100px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-date-headers-item.hidden {
+  display: none;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-label::before {}

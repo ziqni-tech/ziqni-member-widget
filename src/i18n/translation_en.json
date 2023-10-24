@@ -1,10 +1,12 @@
 {
     "time": {
+        "months": "m",
         "days": "d",
         "hours": "h",
         "minutesShortHand": "min",
         "minutes": "m",
         "seconds": "s",
+        "monthsFull": "Months",
         "daysFull": "Days",
         "hoursFull": "Hours",
         "minutesFull": "Minutes",
