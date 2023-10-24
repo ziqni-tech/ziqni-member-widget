@@ -375,6 +375,7 @@ export const LbWidget = function (options) {
     var _this = this;
     var largeResult = [];
     var result = [];
+    if (duration.months()) largeResult.push(duration.months() + '<span class="time-ind">' + _this.settings.translation.time.months + '</span>');
     if (duration.days()) largeResult.push(duration.days() + '<span class="time-ind">' + _this.settings.translation.time.days + '</span>');
     if (duration.hours() || duration.days() > 0) {
       result.push(formatNumberLeadingZeros(duration.hours(), 2) + '<span class="time-ind">' + _this.settings.translation.time.hours + '</span>');
@@ -402,17 +403,23 @@ export const LbWidget = function (options) {
   };
 
   this.formatBannerDateTime = function (duration) {
+    const months = formatNumberLeadingZeros(duration.months(), 2);
     const days = formatNumberLeadingZeros(duration.days(), 2);
     const hours = formatNumberLeadingZeros(duration.hours(), 2);
     const minutes = formatNumberLeadingZeros(duration.minutes(), 2);
     const seconds = formatNumberLeadingZeros(duration.seconds(), 2);
+
+    let monthsElem = '';
+    if (Number(months[0]) || Number(months[1])) {
+      monthsElem = '<div class="banner-months"><div class="banner-date-cell">' + months[0] + '</div><div class="banner-date-cell">' + months[1] + '</div></div>';
+    }
 
     const daysElem = '<div class="banner-days"><div class="banner-date-cell">' + days[0] + '</div><div class="banner-date-cell">' + days[1] + '</div></div>';
     const hoursElem = '<div class="banner-hours"><div class="banner-date-cell">' + hours[0] + '</div><div class="banner-date-cell">' + hours[1] + '</div></div>';
     const minutesElem = '<div class="banner-minutes"><div class="banner-date-cell">' + minutes[0] + '</div><div class="banner-date-cell">' + minutes[1] + '</div></div>';
     const secondsElem = '<div class="banner-seconds"><div class="banner-date-cell">' + seconds[0] + '</div><div class="banner-date-cell">' + seconds[1] + '</div></div>';
 
-    return '<div class="banner-date">' + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
+    return '<div class="banner-date">' + monthsElem + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
   };
 
   this.getDashboardCompetitions = async function () {

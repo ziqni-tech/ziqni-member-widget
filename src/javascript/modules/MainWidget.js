@@ -537,6 +537,7 @@ export const MainWidget = function (options) {
     const sectionLBDetailsContentContainerLabelText = document.createElement('span');
     const sectionLBDetailsContentContainerDate = document.createElement('span');
     const sectionLBDetailsContentContainerDateHeaders = document.createElement('div');
+    const sectionLBDetailsContentContainerDateMonths = document.createElement('div');
     const sectionLBDetailsContentContainerDateDays = document.createElement('div');
     const sectionLBDetailsContentContainerDateHours = document.createElement('div');
     const sectionLBDetailsContentContainerDateMinutes = document.createElement('div');
@@ -552,6 +553,7 @@ export const MainWidget = function (options) {
     const sectionLBDetailsDescriptionLabelText = document.createElement('span');
     const sectionLBDetailsDescriptionDate = document.createElement('span');
     const sectionLBDetailsDescriptionDateHeaders = document.createElement('div');
+    const sectionLBDetailsDescriptionDateMonths = document.createElement('div');
     const sectionLBDetailsDescriptionDateDays = document.createElement('div');
     const sectionLBDetailsDescriptionDateHours = document.createElement('div');
     const sectionLBDetailsDescriptionDateMinutes = document.createElement('div');
@@ -616,6 +618,7 @@ export const MainWidget = function (options) {
 
     sectionLBDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-lb-details-content-date');
     sectionLBDetailsContentContainerDateHeaders.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers');
+    sectionLBDetailsContentContainerDateMonths.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item months hidden');
     sectionLBDetailsContentContainerDateDays.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item days');
     sectionLBDetailsContentContainerDateHours.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item hours');
     sectionLBDetailsContentContainerDateMinutes.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item minutes');
@@ -637,6 +640,7 @@ export const MainWidget = function (options) {
 
     sectionLBDetailsDescriptionDate.setAttribute('class', 'cl-main-widget-lb-details-description-date');
     sectionLBDetailsDescriptionDateHeaders.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers');
+    sectionLBDetailsDescriptionDateMonths.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item months hidden');
     sectionLBDetailsDescriptionDateDays.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item days');
     sectionLBDetailsDescriptionDateHours.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item hours');
     sectionLBDetailsDescriptionDateMinutes.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item minutes');
@@ -699,11 +703,13 @@ export const MainWidget = function (options) {
     sectionLBHeader.appendChild(sectionLBHeaderDate);
     sectionLBHeader.appendChild(sectionLBHeaderClose);
 
+    sectionLBDetailsContentContainerDateMonths.innerHTML = this.settings.lbWidget.settings.translation.time.monthsFull;
     sectionLBDetailsContentContainerDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
     sectionLBDetailsContentContainerDateHours.innerHTML = this.settings.lbWidget.settings.translation.time.hoursFull;
     sectionLBDetailsContentContainerDateMinutes.innerHTML = this.settings.lbWidget.settings.translation.time.minutesFull;
     sectionLBDetailsContentContainerDateSeconds.innerHTML = this.settings.lbWidget.settings.translation.time.secondsFull;
 
+    sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateMonths);
     sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateDays);
     sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateHours);
     sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateMinutes);
@@ -727,11 +733,13 @@ export const MainWidget = function (options) {
       sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderTitle);
       sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionInfo);
 
+      sectionLBDetailsDescriptionDateMonths.innerHTML = this.settings.lbWidget.settings.translation.time.monthsFull;
       sectionLBDetailsDescriptionDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
       sectionLBDetailsDescriptionDateHours.innerHTML = this.settings.lbWidget.settings.translation.time.hoursFull;
       sectionLBDetailsDescriptionDateMinutes.innerHTML = this.settings.lbWidget.settings.translation.time.minutesFull;
       sectionLBDetailsDescriptionDateSeconds.innerHTML = this.settings.lbWidget.settings.translation.time.secondsFull;
 
+      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateMonths);
       sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateDays);
       sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateHours);
       sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateMinutes);
@@ -1942,6 +1950,8 @@ export const MainWidget = function (options) {
     const descriptionDateHeadersEl = document.querySelector('.cl-main-widget-lb-details-description-date-headers');
     const lbDateEl = document.querySelector('.cl-main-widget-lb-details-content-date');
     const lbDateHeaderEl = document.querySelector('.cl-main-widget-lb-details-content-date-headers');
+    const descriptionMonthsLabel = document.querySelector('.cl-main-widget-lb-details-description-date-headers-item.months');
+    const lbMonthsLabel = document.querySelector('.cl-main-widget-lb-details-content-date-headers-item.months');
 
     if (!_this.settings.lbWidget.settings.competition.activeContest && this.settings.lbWidget.settings.competition.activeCompetition.statusCode !== 15) {
       descriptionDateEl.style.display = 'none';
@@ -1956,6 +1966,15 @@ export const MainWidget = function (options) {
 
       const diff = moment(this.settings.lbWidget.settings.competition.activeCompetition.scheduledStartDate).diff(moment());
       const date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      const months = moment.duration(diff).months();
+      if (months) {
+        descriptionMonthsLabel.classList.remove('hidden');
+        lbMonthsLabel.classList.remove('hidden');
+      } else {
+        descriptionMonthsLabel.classList.add('hidden');
+        lbMonthsLabel.classList.add('hidden');
+      }
+
       const labelDate = '<div class="cl-main-widget-lb-details-content-date-label">' +
         _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
         ':</div>' +
@@ -1983,6 +2002,14 @@ export const MainWidget = function (options) {
       let date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
       let labelDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
       let descriptionDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+      const months = moment.duration(diff).months();
+      if (months) {
+        descriptionMonthsLabel.classList.remove('hidden');
+        lbMonthsLabel.classList.remove('hidden');
+      } else {
+        descriptionMonthsLabel.classList.add('hidden');
+        lbMonthsLabel.classList.add('hidden');
+      }
 
       if (_this.settings.leaderboard.timerInterval) {
         clearTimeout(_this.settings.leaderboard.timerInterval);
