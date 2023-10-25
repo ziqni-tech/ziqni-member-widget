@@ -3283,6 +3283,7 @@ export const LbWidget = function (options) {
         if (json && json.entityType === 'Achievement') {
           if (headers.callback === 'optinStatus') {
             _this.settings.mainWidget.achievementItemUpdateProgression(json.entityId, json.percentageComplete);
+            _this.settings.mainWidget.achievementDashboardItemUpdateProgression(json.entityId, json.percentageComplete);
           } else {
             _this.settings.mainWidget.loadAchievements();
           }

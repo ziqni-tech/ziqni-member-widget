@@ -3030,6 +3030,19 @@ export const MainWidget = function (options) {
     barLabel.innerHTML = percentageComplete + '/100';
   };
 
+  this.achievementDashboardItemUpdateProgression = function (id, percentageComplete) {
+    const achList = document.querySelector('.cl-main-widget-dashboard-achievements-list');
+    if (!achList) return;
+
+    const ach = achList.querySelector('[data-id="' + id + '"]');
+    if (!ach) return;
+
+    const bar = query(ach, '.cl-ach-list-progression-bar');
+    const barLabel = query(ach, '.cl-ach-list-progression-label');
+    bar.style.width = ((percentageComplete > 1 || percentageComplete === 0) ? percentageComplete : 1) + '%';
+    barLabel.innerHTML = percentageComplete + '/100';
+  };
+
   this.achievementListLayout = function (pageNumber, achievementData, paginationArr = null) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
