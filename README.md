@@ -135,6 +135,9 @@ const instance = new MemberWidget({
   instantWins: {
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
+  layout: {
+    logoUrl: '',
+  },
   navigation: {
     dashboard: {enable: true},
     tournaments: {
@@ -224,6 +227,9 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
       memberRefId: '<member_reference_id>',
       memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken!
       loadCustomTranslations: false,
+      layout: {
+        logoUrl: '',
+      },
       navigation: {
         tournaments: {enable: true},
         achievements: {enable: true},

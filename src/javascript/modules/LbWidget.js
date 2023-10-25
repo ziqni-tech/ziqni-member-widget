@@ -99,6 +99,7 @@ export const LbWidget = function (options) {
     member: null,
     itemsPerPage: 10,
     layout: {
+      logoUrl: '',
       enableMiniScoreBoardDragging: true, // enable/disable dragging with mouse/touch
       miniScoreBoardPosition: { // default position of mini scoreboard left/right/bottom/top (Example: top: '20px')
         left: null,
