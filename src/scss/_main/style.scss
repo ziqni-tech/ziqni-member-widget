@@ -1182,7 +1182,8 @@
   width: 68px;
   height: 68px;
   background-image: $lb3-widget-icon-nav;
-  background-size: 100%;
+  background-size: contain;
+  background-repeat: no-repeat;
   flex-shrink: 0;
 }
 

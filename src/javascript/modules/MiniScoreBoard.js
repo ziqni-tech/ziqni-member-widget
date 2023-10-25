@@ -56,6 +56,9 @@ export const MiniScoreBoard = function (options) {
     }
     iconWrapper.setAttribute('class', 'cl-widget-ms-icon-wrapper');
     icon.setAttribute('class', 'cl-widget-ms-icon');
+    if (this.settings.lbWidget.settings.layout.logoUrl) {
+      icon.setAttribute('style', `background-image: url(${this.settings.lbWidget.settings.layout.logoUrl})`);
+    }
     informationTopWrapper.setAttribute('class', 'cl-widget-ms-information-top-wrapper');
     informationWrapper.setAttribute('class', 'cl-widget-ms-information-wrapper');
     informationWrapperClose.setAttribute('class', 'cl-widget-ms-information-close-wrapper');

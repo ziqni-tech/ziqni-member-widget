@@ -452,6 +452,9 @@ export const MainWidget = function (options) {
     navigationContainer.setAttribute('class', 'cl-main-widget-navigation-container');
     navigationItems.setAttribute('class', 'cl-main-widget-navigation-items');
     navigationLogo.setAttribute('class', 'cl-main-widget-navigation-logo');
+    if (this.settings.lbWidget.settings.layout.logoUrl) {
+      navigationLogo.setAttribute('style', `background-image: url(${this.settings.lbWidget.settings.layout.logoUrl})`);
+    }
 
     navigationDarkModeToggle.setAttribute('class', 'cl-main-widget-navigation-darkMode-toggle');
     navigationDarkModeToggleInput.setAttribute('type', 'checkbox');
