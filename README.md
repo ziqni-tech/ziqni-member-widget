@@ -128,6 +128,7 @@ const instance = new MemberWidget({
   memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken! 
   language: 'en',
   currency: 'EUR',
+  memberNameLength: 5, // The first 5 characters of the user name + '*****' will be displayed on the leaderboard
   loadCustomTranslations: true,
   enableNotifications: true,
   hideEmptyTabs: false,
@@ -226,6 +227,7 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
       apiKey: '<api_key>',
       memberRefId: '<member_reference_id>',
       memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken!
+      memberNameLength: 5, // The first 5 characters of the user name + '*****' will be displayed on the leaderboard
       loadCustomTranslations: false,
       layout: {
         logoUrl: '',
