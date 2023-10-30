@@ -1918,6 +1918,23 @@
   line-height: 14px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-leave {
+  text-align: center;
+  color: var(--light-font-color);
+  background: #ee3ec8;
+  text-decoration: none;
+  border-radius: 10px;
+  padding: 10px 28px;
+  margin-left: 16px;
+  cursor: pointer;
+  transition: all .3s ease;
+  font-family: "Syne",sans-serif;
+  font-style: normal;
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 16px;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-enter {
   text-align: center;
   color: var(--light-font-color);
