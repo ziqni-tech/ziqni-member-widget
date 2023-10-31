@@ -3034,6 +3034,7 @@ export const MainWidget = function (options) {
   };
 
   this.achievementDashboardItemUpdateProgression = function (id, percentageComplete) {
+    console.log('percentageComplete:', percentageComplete);
     const achList = document.querySelector('.cl-main-widget-dashboard-achievements-list');
     if (!achList) return;
 
@@ -3197,7 +3198,7 @@ export const MainWidget = function (options) {
         pregressLabel.innerHTML = '100/100';
         pregressBar.style.width = '100%';
       } else if (progression && progression.length) {
-        const perc = parseInt(progression[0].percentageComplete);
+        const perc = progression[0].percentageComplete ? parseInt(progression[0].percentageComplete) : 0;
         const percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
         pregressLabel.innerHTML = perc + '/100';
         pregressBar.style.width = percValue;
@@ -3750,7 +3751,7 @@ export const MainWidget = function (options) {
       var perc = 0;
       mapObject(progression, function (pr) {
         if (pr.entityId === id) {
-          perc = parseInt(pr.percentageComplete);
+          perc = pr.percentageComplete ? parseInt(pr.percentageComplete) : 0;
         }
       });
 
@@ -3777,7 +3778,7 @@ export const MainWidget = function (options) {
       var perc = 0;
       mapObject(progression, function (pr) {
         if (pr.entityId === id) {
-          perc = parseInt(pr.percentageComplete);
+          perc = pr.percentageComplete ? parseInt(pr.percentageComplete) : 0;
         }
       });
 
