@@ -2060,7 +2060,7 @@ export const LbWidget = function (options) {
         _this.settings.mainWidget.initLayout(function () {
           // load tournaments data
           if (_this.settings.navigation.tournaments.enable) {
-            _this.activeDataRefresh();
+            _this.activeDataRefreshSimple();
           }
 
           // load achievement data
