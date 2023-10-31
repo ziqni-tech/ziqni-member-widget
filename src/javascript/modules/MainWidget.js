@@ -1442,6 +1442,39 @@ export const MainWidget = function (options) {
     const tournamentsList = document.createElement('div');
     const tournamentsListMore = document.createElement('div');
 
+    const leavePopupWrapp = document.createElement('div');
+    const leavePopup = document.createElement('div');
+    const leavePopupTitle = document.createElement('div');
+    const leavePopupClose = document.createElement('div');
+    const leavePopupDescription = document.createElement('div');
+    const leavePopupActionConfirm = document.createElement('div');
+    const leavePopupActionCancel = document.createElement('div');
+    const leavePopupActions = document.createElement('div');
+
+    leavePopupWrapp.setAttribute('class', 'cl-main-widget-ach-list-popup-wrapp');
+    leavePopup.setAttribute('class', 'cl-main-widget-ach-list-popup');
+    leavePopupTitle.setAttribute('class', 'cl-main-widget-ach-list-popup-title');
+    leavePopupClose.setAttribute('class', 'cl-main-widget-ach-list-popup-close');
+    leavePopupDescription.setAttribute('class', 'cl-main-widget-ach-list-popup-description');
+    leavePopupActionConfirm.setAttribute('class', 'cl-main-widget-ach-list-popup-confirm');
+    leavePopupActionCancel.setAttribute('class', 'cl-main-widget-ach-list-popup-cancel');
+    leavePopupActions.setAttribute('class', 'cl-main-widget-ach-list-popup-actions');
+
+    leavePopupTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupTitle;
+    leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
+    leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
+    leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
+
+    leavePopupActions.appendChild(leavePopupActionCancel);
+    leavePopupActions.appendChild(leavePopupActionConfirm);
+
+    leavePopup.appendChild(leavePopupTitle);
+    leavePopup.appendChild(leavePopupClose);
+    leavePopup.appendChild(leavePopupDescription);
+    leavePopup.appendChild(leavePopupActions);
+
+    leavePopupWrapp.appendChild(leavePopup);
+
     sectionDashboard.setAttribute('class', _this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
     sectionDashboardHeader.setAttribute('class', 'cl-main-widget-dashboard-header');
     sectionDashboardHeaderLabel.setAttribute('class', 'cl-main-widget-dashboard-header-label');
@@ -1541,6 +1574,7 @@ export const MainWidget = function (options) {
     }
 
     if (this.settings.lbWidget.settings.navigation.achievements.enable) {
+      sectionDashboardBody.appendChild(leavePopupWrapp);
       sectionDashboardBody.appendChild(sectionDashboardAchievements);
     }
 
@@ -3817,8 +3851,14 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.showLeaveAchievementPopup = function (activeAchievementId) {
-    const popup = document.querySelector('.cl-main-widget-ach-list-popup-wrapp');
+  this.showLeaveAchievementPopup = function (activeAchievementId, isDashboard = false) {
+    let container = null;
+    if (isDashboard) {
+      container = document.querySelector('.cl-main-widget-section-dashboard');
+    } else {
+      container = document.querySelector('.cl-main-widget-section-ach');
+    }
+    const popup = container.querySelector('.cl-main-widget-ach-list-popup-wrapp');
     const closeBtn = popup.querySelector('.cl-main-widget-ach-list-popup-close');
     const confirm = popup.querySelector('.cl-main-widget-ach-list-popup-confirm');
     const close = popup.querySelector('.cl-main-widget-ach-list-popup-cancel');
@@ -3828,7 +3868,7 @@ export const MainWidget = function (options) {
     };
     const leaveAchievement = () => {
       closePopup();
-      this.settings.lbWidget.leaveAchievement(activeAchievementId);
+      this.settings.lbWidget.leaveAchievement(activeAchievementId, isDashboard);
     };
 
     popup.style.display = 'flex';
@@ -3953,7 +3993,7 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.loadDashboardAchievements = function (achievementData) {
+  this.loadDashboardAchievements = function (achievementData, callback) {
     const _this = this;
     const achList = query(this.settings.section, '.cl-main-widget-dashboard-achievements-list');
     const achContainer = query(this.settings.section, '.cl-main-widget-dashboard-achievements');
@@ -3982,6 +4022,10 @@ export const MainWidget = function (options) {
     _this.settings.lbWidget.checkForMemberAchievementsProgression(idList, function (issued, progression) {
       _this.updateAchievementProgressionAndIssued(issued, progression);
     });
+
+    if (typeof callback === 'function') {
+      callback();
+    }
   };
 
   this.rewardItem = function (rew) {
