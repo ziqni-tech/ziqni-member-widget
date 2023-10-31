@@ -3034,7 +3034,6 @@ export const MainWidget = function (options) {
   };
 
   this.achievementDashboardItemUpdateProgression = function (id, percentageComplete) {
-    console.log('percentageComplete:', percentageComplete);
     const achList = document.querySelector('.cl-main-widget-dashboard-achievements-list');
     if (!achList) return;
 
