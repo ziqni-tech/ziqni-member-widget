@@ -1078,7 +1078,7 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.leaveAchievement = function (activeAchievementId) {
+  this.leaveAchievement = function (activeAchievementId, isDashboard = false) {
     const _this = this;
     if (!this.settings.apiWs.optInApiWsClient) {
       this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
@@ -1094,9 +1094,17 @@ export const LbWidget = function (options) {
     preLoader.show(async function () {
       await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
         setTimeout(function () {
-          _this.settings.mainWidget.loadAchievements(1, function () {
-            preLoader.hide();
-          });
+          if (isDashboard) {
+            _this.checkForAvailableAchievements(1, function (achievementData) {
+              _this.settings.mainWidget.loadDashboardAchievements(achievementData, function () {
+                preLoader.hide();
+              });
+            });
+          } else {
+            _this.settings.mainWidget.loadAchievements(1, function () {
+              preLoader.hide();
+            });
+          }
         }, 2000);
       });
     });
@@ -2262,6 +2270,8 @@ export const LbWidget = function (options) {
         this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
       }
 
+      const isDashboard = closest(el, '.cl-main-widget-dashboard-achievements-list');
+
       const optInRequest = ManageOptinRequest.constructFromObject({
         entityId: activeAchievementId,
         entityType: 'Achievement',
@@ -2272,9 +2282,17 @@ export const LbWidget = function (options) {
       preLoader.show(async function () {
         await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
           setTimeout(function () {
-            _this.settings.mainWidget.loadAchievements(1, function () {
-              preLoader.hide();
-            });
+            if (isDashboard) {
+              _this.checkForAvailableAchievements(1, function (achievementData) {
+                _this.settings.mainWidget.loadDashboardAchievements(achievementData, function () {
+                  preLoader.hide();
+                });
+              });
+            } else {
+              _this.settings.mainWidget.loadAchievements(1, function () {
+                preLoader.hide();
+              });
+            }
           }, 2000);
         });
       });
@@ -2283,7 +2301,11 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-ach-list-leave')) {
       const activeAchievementId = el.dataset.id;
 
-      this.settings.mainWidget.showLeaveAchievementPopup(activeAchievementId);
+      if (closest(el, '.cl-main-widget-dashboard-achievements-list')) {
+        this.settings.mainWidget.showLeaveAchievementPopup(activeAchievementId, true);
+      } else {
+        this.settings.mainWidget.showLeaveAchievementPopup(activeAchievementId);
+      }
       // close mini scoreboard info area
     } else if (hasClass(el, 'cl-widget-ms-information-close') && !hasClass(el, 'checking')) {
       _this.settings.miniScoreBoard.clearAll();
