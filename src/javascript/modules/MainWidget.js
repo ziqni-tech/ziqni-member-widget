@@ -5485,9 +5485,9 @@ export const MainWidget = function (options) {
 
     _this.loadLeaderboard();
 
-    _this.settings.container.style.display = 'block';
-    _this.settings.overlayContainer.style.display = 'block';
     setTimeout(function () {
+      _this.settings.container.style.display = 'block';
+      _this.settings.overlayContainer.style.display = 'block';
       addClass(_this.settings.container, 'cl-show');
 
       var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
@@ -5499,6 +5499,6 @@ export const MainWidget = function (options) {
       }
 
       _this.resetNavigation(callback);
-    }, 30);
+    }, 200);
   };
 };
