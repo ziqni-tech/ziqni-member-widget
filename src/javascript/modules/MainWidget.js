@@ -3362,10 +3362,12 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = mission.data.name;
-    body.innerHTML = mission.data.description ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+    body.innerHTML = mission.data.description
+      ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      : this.settings.lbWidget.settings.translation.global.descriptionEmpty;
     tc.innerHTML = mission.data.termsAndConditions
       ? mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-      : this.settings.lbWidget.settings.translation.global.tAndCDefault;
+      : this.settings.lbWidget.settings.translation.global.tAndCEmpty;
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
