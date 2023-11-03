@@ -7161,6 +7161,23 @@
           background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
         }
       }
+      .cl-main-widget-ach-list-popup {
+        background-color: #DCE6EF;
+      }
+      .cl-main-widget-ach-list-popup-close {
+        background-image: url(../../images/close-icon-light.svg);
+      }
+      .cl-main-widget-ach-list-popup-title {
+        color: #141e28;
+        border-bottom: solid 1px #b9cedf;
+      }
+      .cl-main-widget-ach-list-popup-description {
+        color: #141e28;
+        border-bottom: solid 1px #b9cedf;
+      }
+      .cl-main-widget-ach-list-popup-cancel {
+        color: #170213;
+      }
       .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
       .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
         color: #080D12;
@@ -7173,6 +7190,14 @@
           color: #170213;
         }
       }
+    }
+
+    .cl-main-widget-lb-details-description-date-label,
+    .cl-main-widget-lb-details-content-date-label,
+    .cl-main-widget-lb-details-content-date,
+    .cl-main-widget-lb-details-content-date,
+    .cl-main-widget-lb-details-description-date {
+      color: #ffffff;
     }
   }
   .cl-main-widget-inner-wrapper {
