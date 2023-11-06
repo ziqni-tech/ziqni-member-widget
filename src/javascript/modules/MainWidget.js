@@ -2148,7 +2148,9 @@ export const MainWidget = function (options) {
             this.settings.lbWidget.settings.competition.activeCompetition.description.length > 0)
         ? this.settings.lbWidget.settings.competition.activeCompetition.description : '');
 
-    return description ? description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+    return description
+      ? description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      : '<p>' + this.settings.lbWidget.settings.translation.global.descriptionEmpty + '</p>';
   };
 
   this.getActiveCompetitionTAndC = function () {
@@ -2161,7 +2163,9 @@ export const MainWidget = function (options) {
         this.settings.lbWidget.settings.competition.activeCompetition.termsAndConditions.length > 0)
         ? this.settings.lbWidget.settings.competition.activeCompetition.termsAndConditions : '');
 
-    return tc ? tc.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
+    return tc
+      ? tc.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
+      : '<p>' + this.settings.lbWidget.settings.translation.global.tAndCEmpty + '</p>';
   };
 
   this.leaderboardDetailsUpdate = function () {
