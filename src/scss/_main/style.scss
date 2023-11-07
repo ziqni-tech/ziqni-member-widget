@@ -3174,7 +3174,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-pre-loader-content {
   left: 48%;
-  top: 30%;
+  top: calc(50% - 40px);
   line-height: 30px;
   text-align: left;
   color: var(--light-font-color);
