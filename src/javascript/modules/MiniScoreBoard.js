@@ -6,6 +6,7 @@ import hasClass from '../utils/hasClass';
 import removeClass from '../utils/removeClass';
 import remove from '../utils/remove';
 import dragElement from './dragElement';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * MiniScoreBoard
@@ -327,7 +328,29 @@ export const MiniScoreBoard = function (options) {
       }
     }
 
-    mapObject(_this.settings.lbWidget.settings.leaderboard.leaderboardData, function (lbEntry) {
+    let leaderboardData = cloneDeep(_this.settings.lbWidget.settings.leaderboard.leaderboardData);
+
+    if (_this.settings.lbWidget.settings.leaderboard.miniScoreBoard.enableRankings) {
+      let isSelfMember = false;
+      let selfMemberIdx = -1;
+      _this.settings.lbWidget.settings.leaderboard.leaderboardData.forEach((entry, index) => {
+        if (entry.members && entry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1) {
+          isSelfMember = true;
+          selfMemberIdx = index;
+        }
+      });
+
+      if (isSelfMember && selfMemberIdx !== -1) {
+        let firsIndex = selfMemberIdx - _this.settings.lbWidget.settings.leaderboard.miniScoreBoard.rankingsCount;
+        const lastIndex = selfMemberIdx + _this.settings.lbWidget.settings.leaderboard.miniScoreBoard.rankingsCount + 1;
+        if (firsIndex < 0) firsIndex = 0;
+        leaderboardData = leaderboardData.slice(firsIndex, lastIndex);
+      } else {
+        leaderboardData = [];
+      }
+    }
+
+    mapObject(leaderboardData, function (lbEntry) {
       if (lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1) {
         var scoreArea = query(defaultDomObj, '.cl-widget-ms-default-results-list');
         scoreArea.innerHTML = '';
@@ -336,19 +359,12 @@ export const MiniScoreBoard = function (options) {
         query(_this.settings.container, '.cl-widget-ms-default-date').innerHTML = date;
 
         if (_this.settings.lbWidget.settings.leaderboard.miniScoreBoard.enableRankings) {
-          mapObject(_this.settings.lbWidget.settings.leaderboard.leaderboardData, function (lbRankingEntry) {
+          mapObject(leaderboardData, function (lbRankingEntry) {
             scoreArea.appendChild(_this.layoutDefaultOrEmptySingleRow(lbRankingEntry));
           });
         } else {
           scoreArea.appendChild(_this.layoutDefaultOrEmptySingleRow(lbEntry));
         }
-        // if (_this.settings.lbWidget.settings.leaderboard.miniScoreBoard.enableRankings && typeof lbEntry.rankings !== 'undefined') {
-        //   mapObject(lbEntry.rankings, function (lbRankingEntry) {
-        //     scoreArea.appendChild(_this.layoutDefaultOrEmptySingleRow(lbRankingEntry));
-        //   });
-        // } else {
-        //   scoreArea.appendChild(_this.layoutDefaultOrEmptySingleRow(lbEntry));
-        // }
       }
     });
 
