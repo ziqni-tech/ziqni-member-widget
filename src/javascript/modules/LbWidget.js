@@ -1742,7 +1742,7 @@ export const LbWidget = function (options) {
       var count = (_this.settings.miniScoreBoard.settings.active) ? 0 : _this.settings.leaderboard.fullLeaderboardSize;
       _this.getLeaderboardData(count, function (data) {
         if (_this.settings.miniScoreBoard.settings.active) _this.settings.miniScoreBoard.loadScoreBoard();
-        if (_this.settings.mainWidget.settings.active) _this.settings.mainWidget.loadLeaderboard();
+        if (_this.settings.mainWidget.settings.active) _this.settings.mainWidget.loadLeaderboard(() => {}, false);
       });
     }
 
@@ -1774,7 +1774,7 @@ export const LbWidget = function (options) {
             _this.settings.miniScoreBoard.loadScoreBoard();
           }
           if (_this.settings.mainWidget.settings.active) {
-            _this.settings.mainWidget.loadLeaderboard();
+            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
           }
 
           // restart leaderboard refresh
@@ -1794,7 +1794,7 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.activeDataRefresh = function (callback) {
+  this.activeDataRefresh = function (callback, isReloadTime = false) {
     var _this = this;
 
     if (_this.settings.competition.refreshInterval) {
@@ -1824,7 +1824,7 @@ export const LbWidget = function (options) {
               _this.settings.miniScoreBoard.loadScoreBoard();
             }
             if (_this.settings.mainWidget.settings.active) {
-              _this.settings.mainWidget.loadLeaderboard();
+              _this.settings.mainWidget.loadLeaderboard(() => {}, isReloadTime);
             }
 
             // restart leaderboard refresh
@@ -2222,7 +2222,7 @@ export const LbWidget = function (options) {
         await _this.optInMemberToActiveCompetition(function () {
           setTimeout(function () {
             preLoader.hide();
-            _this.settings.mainWidget.loadLeaderboard();
+            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
           }, 2000);
         });
       });
@@ -2731,7 +2731,7 @@ export const LbWidget = function (options) {
           }, 30);
 
           preLoader.hide();
-        });
+        }, true);
       });
 
       // load achievement details
@@ -2858,7 +2858,7 @@ export const LbWidget = function (options) {
 
             preLoader.hide();
           });
-        });
+        }, true);
       });
 
       // leaderboard details back button
@@ -3264,8 +3264,8 @@ export const LbWidget = function (options) {
             this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
               _this.settings.leaderboard.leaderboardData = lbData;
             });
-            this.settings.miniScoreBoard.loadScoreBoard();
-            this.settings.mainWidget.loadLeaderboard();
+            // this.settings.miniScoreBoard.loadScoreBoard(true);
+            this.settings.mainWidget.loadLeaderboard(() => {}, false);
           }
         }
         if (json && json.entityType === 'Message') {
