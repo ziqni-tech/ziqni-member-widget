@@ -26,7 +26,7 @@ export const MiniScoreBoard = function (options) {
     overlayContainer: null,
     infoContainer: null,
     updateInterval: null,
-    updateIntervalTime: 3000,
+    updateIntervalTime: 1000,
     active: false,
     enableDragging: true,
     dragging: false,
@@ -806,7 +806,7 @@ export const MiniScoreBoard = function (options) {
   };
 
   this.updateScoreBoard = function () {
-    var _this = this;
+    const _this = this;
 
     if (_this.settings.updateInterval) {
       clearTimeout(_this.settings.updateInterval);
@@ -855,25 +855,6 @@ export const MiniScoreBoard = function (options) {
       if (typeof callback === 'function') {
         callback();
       }
-
-      // if (typeof _this.settings.lbWidget.settings.competition.activeCompetition.optinRequired === 'boolean' && _this.settings.lbWidget.settings.competition.activeCompetition.optinRequired && typeof _this.settings.lbWidget.settings.competition.activeCompetition.optin === 'boolean' && !_this.settings.lbWidget.settings.competition.activeCompetition.optin) {
-      //   _this.layoutRequiresOptIn();
-      //   callback();
-      // } else if (
-      //   _this.settings.lbWidget.settings.competition.activeContest !== null &&
-      //   _this.settings.lbWidget.settings.competition.activeContest.strategies.strategyType === 'SumBest'
-      // ) {
-      //   _this.layoutSumBestOf();
-      //   callback();
-      // } else if (_this.settings.lbWidget.settings.competition.activeContest !== null && _this.settings.lbWidget.settings.competition.activeContest.strategies.strategyType === 'FirstTo') {
-      //   _this.layoutFirstToOrEmpty(_this.settings.lbWidget.settings.competition.activeContest.strategies);
-      //   callback();
-      // } else if (_this.settings.lbWidget.settings.competition.activeContestId !== null) {
-      //   _this.layoutDefaultOrEmpty();
-      //   callback();
-      // } else {
-      //   _this.layoutDefaultOrEmpty();
-      // }
     } else {
       _this.clearAll();
     }
@@ -936,10 +917,10 @@ export const MiniScoreBoard = function (options) {
       _this.loadInfoArea(function () {
         _this.updateScoreBoard();
       });
-
-      setTimeout(function () {
-        _this.updateScoreBoard();
-      }, 1000);
+      //
+      // setTimeout(function () {
+      //   _this.updateScoreBoard();
+      // }, 1000);
     });
   };
 };

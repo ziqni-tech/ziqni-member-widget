@@ -2096,6 +2096,7 @@ export const MainWidget = function (options) {
       _this.settings.descriptionDate.innerHTML = descriptionDate;
       _this.settings.detailsContainerDate.innerHTML = date;
     }
+
     _this.settings.leaderboard.timerInterval = setTimeout(function () {
       _this.updateLeaderboardTime();
     }, 1000);
@@ -2358,7 +2359,7 @@ export const MainWidget = function (options) {
     _this.settings.overlayContainer = null;
   };
 
-  this.loadLeaderboard = function (callback) {
+  this.loadLeaderboard = function (callback, isTimeReload = false) {
     var _this = this;
 
     if (_this.settings.container === null) {
@@ -2402,7 +2403,9 @@ export const MainWidget = function (options) {
       _this.settings.lbWidget.settings.competition.activeContest !== null ||
       (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15)
     ) {
-      _this.updateLeaderboardTime();
+      if (isTimeReload) {
+        _this.updateLeaderboardTime();
+      }
     } else {
       _this.settings.labelDateHeaders.display = 'none';
       _this.settings.detailsDateHeaders.display = 'none';
@@ -5369,7 +5372,7 @@ export const MainWidget = function (options) {
                 preLoader.hide();
 
                 _this.settings.navigationSwitchInProgress = false;
-              });
+              }, true);
             } else if (target.classList.contains('cl-main-widget-navigation-ach') || target.closest('.cl-main-widget-navigation-ach')) {
               _this.loadAchievements(1, function () {
                 var achContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.achievements.containerClass);
@@ -5489,7 +5492,7 @@ export const MainWidget = function (options) {
 
     _this.settings.active = true;
 
-    _this.loadLeaderboard();
+    _this.loadLeaderboard(() => {}, true);
 
     setTimeout(function () {
       _this.settings.container.style.display = 'block';
