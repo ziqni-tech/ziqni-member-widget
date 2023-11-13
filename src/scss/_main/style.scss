@@ -7538,7 +7538,7 @@
         .banner-date {
           .banner-date-cell{
             font-size: 20px;
-            width: 24px;
+            width: 20px;
             height: 36px;
           }
           .banner-minutes,
@@ -7547,6 +7547,9 @@
             padding-left: 16px;
           }
         }
+      }
+      .cl-main-widget-lb-details-description-date-headers {
+        height: 24px;
       }
       .cl-main-widget-lb-details-description-label-text {
         font-size: 14px;
@@ -7560,8 +7563,8 @@
       .cl-main-widget-lb-details-description-date {
         .banner-date {
           .banner-date-cell{
-            font-size: 20px;
-            width: 24px;
+            font-size: 18px;
+            width: 18px;
             height: 36px;
           }
           .banner-minutes,
