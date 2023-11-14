@@ -99,8 +99,6 @@ npm run jsdoc
 </table>
 
 ## Examples
-Running the project in dev mode will initialise with an example page.
-
 <table style="border:none;">
     <tr>
         <td>
