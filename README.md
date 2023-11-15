@@ -99,8 +99,6 @@ npm run jsdoc
 </table>
 
 ## Examples
-Running the project in dev mode will initialise with an example page.
-
 <table style="border:none;">
     <tr>
         <td>
@@ -156,7 +154,7 @@ const instance = new MemberWidget({
   leaderboard: {
     fullLeaderboardSize: 100,
     miniScoreBoard: {
-      rankingsCount: 2
+      rankingsCount: 2 // The number of positions that will be displayed before and after the current user in miniScoreBoard
     },
     pointsFormatter: function(points) {
       if (isNaN(points)) {
@@ -201,7 +199,7 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
                 fullLeaderboardSize: 50,
                 topResultSize: 3,
                 miniScoreBoard: {
-                  rankingsCount: 2
+                  rankingsCount: 2 // The number of positions that will be displayed before and after the current user in miniScoreBoard
                 },
             },
             uri: {
@@ -242,7 +240,7 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
       leaderboard: {
         fullLeaderboardSize: 50,
         miniScoreBoard: {
-          rankingsCount: 2
+          rankingsCount: 2 // The number of positions that will be displayed before and after the current user in miniScoreBoard
         },
         pointsFormatter: function(points) {
           if (isNaN(points)) {
