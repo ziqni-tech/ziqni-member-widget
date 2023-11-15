@@ -2771,7 +2771,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels .cl-col.cl-rank-col {
-  transform: translate(22px, 0);
+  transform: translate(18px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels .cl-col.cl-name-col {
@@ -2783,7 +2783,7 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels .cl-col.cl-reward-col {
-  transform: translate(-2px, 0);
+  transform: translate(0, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-rank-col {
@@ -2810,7 +2810,10 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-reward-col {
   width: 12%;
-  min-width: 50px;
+  min-width: 100px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-res-container {
@@ -2940,6 +2943,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-points-col {
   width: 31%;
+  min-width: 80px;
   max-width: 240px;
 }
 
@@ -7382,6 +7386,54 @@
   }
 }
 
+@media screen and (max-width: 425px) {
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-lb-leaderboard-header {
+        padding: 0 12px;
+        .cl-rank-col {
+          max-width: 100px;
+          transform: translate(24px, 0) !important;
+        }
+        .cl-name-col {
+          max-width: 124px;
+          transform: translate(-12px, 0) !important;
+        }
+        .cl-points-col {
+          width: 100%;
+          max-width: 80px;
+          transform: translate(-10px, 0) !important;
+        }
+        .cl-reward-col {
+          transform: translate(28px, 0) !important;
+        }
+      }
+      .cl-main-widget-lb-leaderboard-res-container {
+        .cl-rank-col {
+          max-width: 80px;
+        }
+        .cl-name-col {
+          max-width: 100px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .cl-points-col {
+          max-width: 80px;
+        }
+        .cl-reward-col {
+          width: 100%;
+          max-width: 90px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: center;
+        }
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   #cy {
     height: 300px;
@@ -7470,6 +7522,7 @@
       .cl-main-widget-reward-footer-content,
       .cl-main-widget-ach-footer,
       .cl-main-widget-inbox-footer,
+
       .cl-main-widget-lb-footer {
         display: none;
       }
@@ -7574,6 +7627,16 @@
           }
         }
       }
+
+      .cl-main-widget-lb-leaderboard-header {
+        .cl-col.cl-rank-col {
+          transform: translate(8px, 0);
+        }
+        .cl-col.cl-reward-col {
+          transform: translate(14px, 0);
+        }
+      }
+
       &.cl-main-active-embedded-description {
         .cl-main-widget-lb-details-description-banner {
           height: 120px;
