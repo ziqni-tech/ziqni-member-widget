@@ -292,7 +292,9 @@ export const MainWidget = function (options) {
 
       header.appendChild(headerLabel);
       header.appendChild(headerDate);
-      header.appendChild(headerPrize);
+      if (_this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn) {
+        header.appendChild(headerPrize);
+      }
 
       accordionListContainer.appendChild(header);
       accordionListContainer.appendChild(accordionList);
@@ -4197,7 +4199,7 @@ export const MainWidget = function (options) {
     label.innerHTML = tournament.name ?? '';
     period.innerHTML = startDate + ' - ' + endDate;
 
-    if (tournament.rewards && tournament.rewards.length) {
+    if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.rewards && tournament.rewards.length) {
       const idx = tournament.rewards.findIndex(reward => {
         if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
           const rewardRankArr = reward.rewardRank.split(',');
@@ -4227,7 +4229,9 @@ export const MainWidget = function (options) {
     detailsContainer.appendChild(labelIcon);
     detailsContainer.appendChild(label);
     detailsContainer.appendChild(period);
-    detailsContainer.appendChild(prize);
+    if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn) {
+      detailsContainer.appendChild(prize);
+    }
     listItem.appendChild(detailsContainer);
 
     return listItem;

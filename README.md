@@ -137,6 +137,9 @@ const instance = new MemberWidget({
   layout: {
     logoUrl: '',
   },
+  tournaments: {
+    showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
+  },
   navigation: {
     dashboard: {enable: true},
     tournaments: {
@@ -229,6 +232,9 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
       loadCustomTranslations: false,
       layout: {
         logoUrl: '',
+      },
+      tournaments: {
+        showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
       },
       navigation: {
         tournaments: {enable: true},
