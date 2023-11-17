@@ -2044,8 +2044,14 @@ export const MainWidget = function (options) {
 
       let diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledStartDate).diff(moment());
       let date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
-      let labelDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
-      let descriptionDate = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+      let labelDate = '<div class="cl-main-widget-lb-details-content-date-label">' +
+        _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
+        ':</div>' +
+        _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+      let descriptionDate = '<div class="cl-main-widget-lb-details-description-date-label">' +
+        _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
+        ':</div>' +
+        _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
       const months = moment.duration(diff).months();
       if (months) {
         descriptionMonthsLabel.classList.remove('hidden');
