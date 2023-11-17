@@ -2351,7 +2351,7 @@ export const LbWidget = function (options) {
       }
 
       preLoader.show(async function () {
-        if (_this.settings.competition.activeContestId) {
+        if (_this.settings.competition.activeContestId && _this.settings.competition.activeContest.statusCode !== 15) {
           const leaderboardUnsubscribeRequest = LeaderboardSubscriptionRequest.constructFromObject({
             entityId: _this.settings.competition.activeContestId,
             action: 'Unsubscribe',
@@ -2385,25 +2385,33 @@ export const LbWidget = function (options) {
           }
         });
 
-        _this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
-          .then(data => {
-            let leaderboardEntries = [];
-            if (data && data.leaderboardEntries) {
-              leaderboardEntries = data.leaderboardEntries;
-            }
-            _this.settings.leaderboard.leaderboardData = leaderboardEntries;
-            _this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
-              _this.settings.leaderboard.leaderboardData = lbData;
-            });
-            _this.settings.mainWidget.leaderboardDetailsUpdate();
-            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
-            _this.checkForAvailableRewards(1);
-          })
-          .catch(error => {
-            _this.log(error);
+        if (_this.settings.competition.activeContest.statusCode === 15) {
+          _this.checkForAvailableRewards(1, () => {
+            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(() => {});
+            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            preLoader.hide();
           });
+        } else {
+          _this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
+            .then(data => {
+              let leaderboardEntries = [];
+              if (data && data.leaderboardEntries) {
+                leaderboardEntries = data.leaderboardEntries;
+              }
+              _this.settings.leaderboard.leaderboardData = leaderboardEntries;
+              _this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
+                _this.settings.leaderboard.leaderboardData = lbData;
+              });
+              _this.settings.mainWidget.leaderboardDetailsUpdate();
+              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              _this.checkForAvailableRewards(1);
+            })
+            .catch(error => {
+              _this.log(error);
+            });
 
-        preLoader.hide();
+          preLoader.hide();
+        }
       });
 
       // hide embedded competition details
