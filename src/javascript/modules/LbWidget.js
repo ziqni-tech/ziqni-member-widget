@@ -2397,9 +2397,7 @@ export const LbWidget = function (options) {
             });
             _this.settings.mainWidget.leaderboardDetailsUpdate();
             _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
-            _this.checkForAvailableRewards(1, () => {
-              _this.settings.mainWidget.loadLeaderboard(() => {}, true);
-            });
+            _this.checkForAvailableRewards(1);
           })
           .catch(error => {
             _this.log(error);
