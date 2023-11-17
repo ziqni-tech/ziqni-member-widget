@@ -2397,6 +2397,7 @@ export const LbWidget = function (options) {
             });
             _this.settings.mainWidget.leaderboardDetailsUpdate();
             _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+            _this.checkForAvailableRewards(1);
           })
           .catch(error => {
             _this.log(error);
@@ -3016,7 +3017,7 @@ export const LbWidget = function (options) {
             } else if (_this.settings.competition.activeContest !== null) {
               _this.settings.mainWidget.loadCompetitionDetails(function () {});
             }
-
+            _this.checkForAvailableRewards(1);
             preLoader.hide();
           });
         });
