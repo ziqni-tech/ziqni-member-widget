@@ -1720,9 +1720,14 @@ export const MainWidget = function (options) {
       iconCel.innerText = name ? name[0] : '';
 
       if (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0) {
-        var rewardCel = query(cellRow, '.cl-reward-col');
+        const rewardCel = query(cellRow, '.cl-reward-col');
         if (rewardCel !== null) {
           rewardCel.innerHTML = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
+        }
+      } else {
+        const rewardCel = query(cellRow, '.cl-reward-col');
+        if (rewardCel !== null) {
+          rewardCel.innerHTML = '';
         }
       }
     }
