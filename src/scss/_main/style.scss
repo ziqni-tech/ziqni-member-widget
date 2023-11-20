@@ -4328,7 +4328,7 @@
   max-width: 228px;
   background: #141E28;
   border-radius: 10px;
-  margin-bottom: 20px;
+  margin: 0 10px 20px 10px;
   padding: 10px 34px 13px;
 }
 
@@ -5161,7 +5161,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-accordion-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: center;
   width: 100%;
   padding: 0 0 0 40px;
 }
