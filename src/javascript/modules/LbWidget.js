@@ -2444,15 +2444,25 @@ export const LbWidget = function (options) {
         preLoader.show(async function () {
           let pageNumber;
           const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
+          let isPrev = false;
+          let isNext = false;
 
-          if (el.classList.contains('prev')) {
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
+
+          if (el.classList.contains('prev') || isPrev) {
             const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
             if (activePage > 1) {
               pageNumber = activePage - 1;
             } else {
               pageNumber = 1;
             }
-          } else if (el.classList.contains('next')) {
+          } else if (el.classList.contains('next') || isNext) {
             const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
             if (activePage < pagesCount) {
               pageNumber = activePage + 1;
@@ -2476,14 +2486,25 @@ export const LbWidget = function (options) {
           preLoader.show(async function () {
             let pageNumber;
             const pagesCount = Math.ceil(_this.settings.awards.claimedTotalCount / 6);
-            if (el.classList.contains('prev')) {
+            let isPrev = false;
+            let isNext = false;
+
+            if (el.dataset && el.dataset.page === '...') {
+              if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+                isPrev = true;
+              } else {
+                isNext = true;
+              }
+            }
+
+            if (el.classList.contains('prev') || isPrev) {
               const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
               if (activePage > 1) {
                 pageNumber = activePage - 1;
               } else {
                 pageNumber = 1;
               }
-            } else if (el.classList.contains('next')) {
+            } else if (el.classList.contains('next') || isNext) {
               const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
               if (activePage < pagesCount) {
                 pageNumber = activePage + 1;
@@ -2506,14 +2527,25 @@ export const LbWidget = function (options) {
           preLoader.show(async function () {
             let pageNumber;
             const pagesCount = Math.ceil(_this.settings.awards.totalCount / 6);
-            if (el.classList.contains('prev')) {
+            let isPrev = false;
+            let isNext = false;
+
+            if (el.dataset && el.dataset.page === '...') {
+              if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+                isPrev = true;
+              } else {
+                isNext = true;
+              }
+            }
+
+            if (el.classList.contains('prev') || isPrev) {
               const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
               if (activePage > 1) {
                 pageNumber = activePage - 1;
               } else {
                 pageNumber = 1;
               }
-            } else if (el.classList.contains('next')) {
+            } else if (el.classList.contains('next') || isNext) {
               const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
               if (activePage < pagesCount) {
                 pageNumber = activePage + 1;
@@ -2537,15 +2569,25 @@ export const LbWidget = function (options) {
         preLoader.show(async function () {
           let pageNumber;
           const pagesCount = Math.ceil(_this.settings.messages.totalCount / 9);
+          let isPrev = false;
+          let isNext = false;
 
-          if (el.classList.contains('prev')) {
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
+
+          if (el.classList.contains('prev') || isPrev) {
             const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
             if (activePage > 1) {
               pageNumber = activePage - 1;
             } else {
               pageNumber = 1;
             }
-          } else if (el.classList.contains('next')) {
+          } else if (el.classList.contains('next') || isNext) {
             const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
             if (activePage < pagesCount) {
               pageNumber = activePage + 1;
@@ -2567,15 +2609,25 @@ export const LbWidget = function (options) {
       if (el.closest('.cl-main-widget-missions-list-body-res')) {
         let pageNumber;
         const pagesCount = Math.ceil(_this.settings.missions.totalCount / 6);
+        let isPrev = false;
+        let isNext = false;
 
-        if (el.classList.contains('prev')) {
+        if (el.dataset && el.dataset.page === '...') {
+          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+            isPrev = true;
+          } else {
+            isNext = true;
+          }
+        }
+
+        if (el.classList.contains('prev') || isPrev) {
           const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
           if (activePage > 1) {
             pageNumber = activePage - 1;
           } else {
             pageNumber = 1;
           }
-        } else if (el.classList.contains('next')) {
+        } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
@@ -2597,15 +2649,25 @@ export const LbWidget = function (options) {
         preLoader.show(async function () {
           let pageNumber;
           const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+          let isPrev = false;
+          let isNext = false;
 
-          if (el.classList.contains('prev')) {
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
+
+          if (el.classList.contains('prev') || isPrev) {
             const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
             if (activePage > 1) {
               pageNumber = activePage - 1;
             } else {
               pageNumber = 1;
             }
-          } else if (el.classList.contains('next')) {
+          } else if (el.classList.contains('next') || isNext) {
             const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
             const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
             if (activePage < pagesCount) {
@@ -2630,15 +2692,25 @@ export const LbWidget = function (options) {
         preLoader.show(async function () {
           let pageNumber;
           const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+          let isPrev = false;
+          let isNext = false;
 
-          if (el.classList.contains('prev')) {
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
+
+          if (el.classList.contains('prev') || isPrev) {
             const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
             if (activePage > 1) {
               pageNumber = activePage - 1;
             } else {
               pageNumber = 1;
             }
-          } else if (el.classList.contains('next')) {
+          } else if (el.classList.contains('next') || isNext) {
             const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
             const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
             if (activePage < pagesCount) {
@@ -2662,15 +2734,25 @@ export const LbWidget = function (options) {
       if (el.closest('.paginator-active')) {
         let pageNumber;
         const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
+        let isPrev = false;
+        let isNext = false;
 
-        if (el.classList.contains('prev')) {
+        if (el.dataset && el.dataset.page === '...') {
+          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+            isPrev = true;
+          } else {
+            isNext = true;
+          }
+        }
+
+        if (el.classList.contains('prev') || isPrev) {
           const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
           if (activePage > 1) {
             pageNumber = activePage - 1;
           } else {
             pageNumber = 1;
           }
-        } else if (el.classList.contains('next')) {
+        } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
           const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
           if (activePage < pagesCount) {
