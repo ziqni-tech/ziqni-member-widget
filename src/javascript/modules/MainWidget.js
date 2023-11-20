@@ -2060,7 +2060,6 @@ export const MainWidget = function (options) {
         descriptionMonthsLabel.classList.add('hidden');
         lbMonthsLabel.classList.add('hidden');
       }
-
       if (_this.settings.leaderboard.timerInterval) {
         clearTimeout(_this.settings.leaderboard.timerInterval);
       }
@@ -2082,6 +2081,15 @@ export const MainWidget = function (options) {
         date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
         labelDate = _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
         descriptionDate = _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+
+        const months = moment.duration(diff).months();
+        if (months) {
+          descriptionMonthsLabel.classList.remove('hidden');
+          lbMonthsLabel.classList.remove('hidden');
+        } else {
+          descriptionMonthsLabel.classList.add('hidden');
+          lbMonthsLabel.classList.add('hidden');
+        }
 
         if (diff <= 0) {
           date = _this.settings.lbWidget.settings.translation.tournaments.finishing;
