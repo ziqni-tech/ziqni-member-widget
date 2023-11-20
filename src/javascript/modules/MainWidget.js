@@ -3934,7 +3934,7 @@ export const MainWidget = function (options) {
     prizeTitle.setAttribute('class', 'dashboard-tournament-list-prize-title');
     prizeValue.setAttribute('class', 'dashboard-tournament-list-prize-value');
     btn.setAttribute('class', 'dashboard-tournament-list-btn');
-    btn.setAttribute('data-id', tournament.id);
+    listItem.setAttribute('data-id', tournament.id);
 
     title.innerHTML = tournament.name;
     btn.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentBtn;
