@@ -2921,7 +2921,10 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.loadScratchCards();
 
       // dashboard competition button
-    } else if (hasClass(el, 'dashboard-tournament-list-btn')) {
+    } else if (hasClass(el, 'dashboard-tournament-item') || closest(el, '.dashboard-tournament-item')) {
+      const tournamentId = hasClass(el, 'dashboard-tournament-item')
+        ? el.dataset.id
+        : closest(el, '.dashboard-tournament-item').dataset.id;
       const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
       const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
       const lbIcon = document.querySelector('.cl-main-widget-navigation-lb');
@@ -2929,7 +2932,6 @@ export const LbWidget = function (options) {
       dashboard.style.display = 'none';
       dashboardIcon.classList.remove('cl-active-nav');
       lbIcon.classList.add('cl-active-nav');
-      const tournamentId = el.dataset.id;
       const preLoader = _this.settings.mainWidget.preloader();
 
       preLoader.show(function () {
