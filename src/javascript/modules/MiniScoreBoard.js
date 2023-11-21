@@ -122,6 +122,9 @@ export const MiniScoreBoard = function (options) {
     if (this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15) {
       const startDate = this.settings.lbWidget.settings.competition.activeCompetition.scheduledStartDate;
       diff = moment(startDate).diff(moment());
+
+      if (diff <= 0) _this.settings.lbWidget.activeDataRefresh(() => {});
+
       label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
       date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
       dateObj = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
