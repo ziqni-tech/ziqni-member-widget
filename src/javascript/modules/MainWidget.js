@@ -5381,7 +5381,11 @@ export const MainWidget = function (options) {
             } else if (target.classList.contains('cl-main-widget-navigation-lb') || target.closest('.cl-main-widget-navigation-lb')) {
               _this.settings.lbWidget.checkForAvailableRewards(1);
               _this.loadLeaderboard(function () {
-                var lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);
+                const lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);
+                const missingMember = query(lbContainer, '.cl-main-widget-lb-missing-member');
+                if (missingMember) {
+                  missingMember.style.display = 'none';
+                }
 
                 lbContainer.style.display = 'flex';
                 changeInterval = setTimeout(function () {

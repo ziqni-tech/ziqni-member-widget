@@ -2423,6 +2423,10 @@ export const LbWidget = function (options) {
         hasClass(el, 'cl-main-widget-lb-details-description-header-back')
       )
     ) {
+      const missingMember = document.querySelector('.cl-main-widget-lb-missing-member');
+      if (missingMember) {
+        missingMember.style.display = 'none';
+      }
       _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
       _this.settings.mainWidget.hideCompetitionList();
 
