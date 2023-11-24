@@ -2532,14 +2532,24 @@ export const MainWidget = function (options) {
     if (Array.isArray(el)) {
       el = el[0];
     }
-    var position = el.getBoundingClientRect();
-    var elemContainer = container.getBoundingClientRect();
-    var elemTop = position.top;
-    var elemBottom = position.bottom;
-    var elemHeight = position.height;
+    const position = el.getBoundingClientRect();
+    const elemContainer = container.getBoundingClientRect();
+    const elemTop = position.top;
+    const elemBottom = position.bottom;
+    const elemHeight = position.height;
+    const topThree = document.querySelector('.cl-main-widget-lb-leaderboard-header-top-res');
+    let indentation = 110;
 
-    return (elemTop - 110) <= elemContainer.top
-      ? elemContainer.top - (elemTop - 110) <= elemHeight : elemBottom - elemContainer.bottom <= elemHeight;
+    if (topThree) {
+      const topThreeStyle = window.getComputedStyle(topThree);
+      if (topThreeStyle.position && topThreeStyle.position === 'relative') {
+        indentation = 0;
+        console.log('666');
+      }
+    }
+
+    return (elemTop - indentation) <= elemContainer.top
+      ? elemContainer.top - (elemTop - indentation) <= elemHeight : elemBottom - elemContainer.bottom <= elemHeight;
   };
 
   var onresizeInitialised = false;
