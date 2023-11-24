@@ -8283,9 +8283,161 @@
 @media (orientation: landscape) and (max-height: 600px) {
   .cl-main-widget-wrapper {
     .cl-main-widget-section-container {
+      .cl-main-widget-missions-footer,
+      .cl-main-widget-inbox-footer,
+      .cl-main-widget-reward-footer,
+      .cl-main-widget-ach-footer {
+        display: none;
+      }
+
+      // Dashboard
+      .cl-main-widget-dashboard-header {
+        height: 40px;
+        .cl-main-widget-dashboard-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-dashboard-body {
+        height: calc(100% - 56px);
+        .cl-main-widget-dashboard-instant-wins-title,
+        .cl-main-widget-dashboard-achievements-title,
+        .cl-main-widget-dashboard-tournaments-title {
+          font-size: 17px;
+        }
+      }
       .cl-main-widget-lb-footer {
         display: none;
       }
+
+      // LB
+      .cl-main-widget-lb-header {
+        height: 40px;
+        .cl-main-widget-lb-header-label {
+          font-size: 18px;
+        }
+        .cl-main-widget-lb-header-back-icon,
+        .cl-main-widget-lb-header-list-icon {
+          width: 35px;
+          height: 35px;
+        }
+      }
+      .cl-main-widget-tournaments-list {
+        top: 40px;
+      }
+      .cl-main-widget-tournaments-list {
+        height: calc(100% - 46px);
+        border-radius: 0 0 20px 0;
+      }
+      .cl-main-widget-lb-leaderboard {
+        height: calc(100% - 94px);
+      }
+      &.cl-main-active-embedded-description {
+        .cl-main-widget-lb-details {
+          height: calc(100% - 52px);
+        }
+        .cl-main-widget-lb-details-description-container {
+          height: 100%;
+        }
+        .cl-main-widget-lb-details-description-close {
+          bottom: 50px;
+        }
+      }
+      .cl-main-widget-lb-missing-member-details {
+        bottom: 10px;
+      }
+      .cl-main-widget-lb-leaderboard-header-top-res {
+        position: relative;
+      }
+
+      // Achievements
+      .cl-main-widget-ach-header {
+        height: 40px;
+        .cl-main-widget-ach-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-ach-list {
+        height: calc(100% - 52px);
+      }
+      .cl-main-widget-ach-details-container {
+        top: 40px;
+        height: calc(100% - 50px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
+      // Awards
+      .cl-main-widget-reward-header {
+        height: 40px;
+        .cl-main-widget-reward-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-reward-list {
+        top: 40px;
+        height: calc(100% - 62px);
+      }
+      .cl-main-widget-reward-details-container {
+        height: calc(100% - 76px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
+      // Messages
+      .cl-main-widget-inbox-header {
+        height: 40px;
+        .cl-main-widget-inbox-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-inbox-list {
+        height: calc(100% - 52px);
+      }
+      .cl-main-widget-inbox-details-container {
+        top: 40px;
+        height: calc(100% - 52px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
+      // Missions
+      .cl-main-widget-missions-header {
+        height: 40px;
+        .cl-main-widget-missions-header-label {
+          font-size: 18px;
+        }
+        .cl-main-widget-mission-header-back-icon {
+          width: 35px;
+          height: 35px;
+        }
+      }
+      .cl-main-widget-missions-list {
+        height: calc(100% - 52px);
+      }
+      .cl-main-widget-missions-map-container {
+        top: 40px;
+        height: calc(100% - 52px);
+        border-radius: 0 0 30px 0;
+      }
+      .cl-main-widget-missions-details-container {
+        top: 40px;
+        height: calc(100% - 52px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
       .cl-main-widget-lb-details-content {
         height: 40px;
         .cl-main-widget-lb-details-content-label {
@@ -8303,13 +8455,6 @@
             visibility: hidden;
           }
         }
-      }
-      .cl-main-widget-lb-leaderboard {
-        height: calc(100% - 136px);
-      }
-      .cl-main-widget-tournaments-list {
-        height: calc(100% - 86px);
-        border-radius: 0 0 20px 0;
       }
       .cl-main-accordion-container {
         .cl-accordion.cl-shown {
