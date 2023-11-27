@@ -2544,7 +2544,6 @@ export const MainWidget = function (options) {
       const topThreeStyle = window.getComputedStyle(topThree);
       if (topThreeStyle.position && topThreeStyle.position === 'relative') {
         indentation = 0;
-        console.log('666');
       }
     }
 
