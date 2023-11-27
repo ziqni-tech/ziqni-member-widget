@@ -7431,6 +7431,16 @@
           text-align: center;
         }
       }
+
+      .cl-main-widget-lb-missing-member-details {
+        padding-left: 18px;
+        .cl-rank-col {
+          max-width: 50px;
+        }
+        .cl-name-col {
+          min-width: 50px;
+        }
+      }
     }
   }
 }
