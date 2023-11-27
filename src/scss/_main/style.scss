@@ -3659,7 +3659,9 @@
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container {
   position: absolute;
-  height: calc(100% - 134px);
+  height: calc(100% - 76px);
+  overflow: auto;
+  border-radius: 0 0 30px 0;
   background: var(--lb3-achievements-details-bg-color);
   top: 76px;
   left: -200px;
@@ -7649,7 +7651,7 @@
         }
         .cl-main-widget-lb-details-content-date-headers-item {
           font-size: 12px;
-          width: 68px;
+          width: 60px;
         }
         .banner-date {
           .banner-date-cell{
@@ -7661,6 +7663,9 @@
           .banner-seconds,
           .banner-hours {
             padding-left: 16px;
+          }
+          .banner-months {
+            padding-right: 16px;
           }
         }
       }
@@ -7674,7 +7679,7 @@
       }
       .cl-main-widget-lb-details-description-date-headers-item {
         font-size: 12px;
-        width: 68px;
+        width: 60px;
       }
       .cl-main-widget-lb-details-description-date {
         .banner-date {
@@ -7688,6 +7693,9 @@
           .banner-hours {
             padding-left: 16px;
           }
+        }
+        .banner-months {
+          padding-right: 16px;
         }
       }
 
@@ -8423,7 +8431,7 @@
       }
       .cl-main-widget-ach-details-container {
         top: 40px;
-        height: calc(100% - 50px);
+        height: calc(100% - 40px);
         overflow: auto;
         border-radius: 0 0 30px 0;
         &.cl-show {
