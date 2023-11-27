@@ -2445,134 +2445,50 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'paginator-item')) {
       const preLoader = _this.settings.mainWidget.preloader();
       if (el.closest('.cl-main-widget-ach-list-body-res')) {
-        preLoader.show(async function () {
-          let pageNumber;
-          const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
-          let isPrev = false;
-          let isNext = false;
+        let pageNumber;
+        const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
+        let isPrev = false;
+        let isNext = false;
 
-          if (el.dataset && el.dataset.page === '...') {
-            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-              isPrev = true;
-            } else {
-              isNext = true;
-            }
-          }
-
-          if (el.classList.contains('prev') || isPrev) {
-            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-            if (activePage > 1) {
-              pageNumber = activePage - 1;
-            } else {
-              pageNumber = 1;
-            }
-          } else if (el.classList.contains('next') || isNext) {
-            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-            if (activePage < pagesCount) {
-              pageNumber = activePage + 1;
-            } else {
-              pageNumber = pagesCount;
-            }
+        if (el.dataset && el.dataset.page === '...') {
+          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+            isPrev = true;
           } else {
-            pageNumber = Number(el.dataset.page);
+            isNext = true;
           }
+        }
 
-          let paginationArr = null;
-          if (pagesCount > 7) {
-            paginationArr = pagination(6, pageNumber, pagesCount);
+        if (el.classList.contains('prev') || isPrev) {
+          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+          if (activePage > 1) {
+            pageNumber = activePage - 1;
+          } else {
+            return;
           }
+        } else if (el.classList.contains('next') || isNext) {
+          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+          if (activePage < pagesCount) {
+            pageNumber = activePage + 1;
+          } else {
+            return;
+          }
+        } else {
+          pageNumber = Number(el.dataset.page);
+        }
 
+        let paginationArr = null;
+        if (pagesCount > 7) {
+          paginationArr = pagination(6, pageNumber, pagesCount);
+        }
+
+        preLoader.show(async function () {
           _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr);
         });
       }
       if (el.closest('.cl-main-widget-reward-list-body-res')) {
         if (el.closest('.paginator-claimed')) {
-          preLoader.show(async function () {
-            let pageNumber;
-            const pagesCount = Math.ceil(_this.settings.awards.claimedTotalCount / 6);
-            let isPrev = false;
-            let isNext = false;
-
-            if (el.dataset && el.dataset.page === '...') {
-              if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-                isPrev = true;
-              } else {
-                isNext = true;
-              }
-            }
-
-            if (el.classList.contains('prev') || isPrev) {
-              const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-              if (activePage > 1) {
-                pageNumber = activePage - 1;
-              } else {
-                pageNumber = 1;
-              }
-            } else if (el.classList.contains('next') || isNext) {
-              const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-              if (activePage < pagesCount) {
-                pageNumber = activePage + 1;
-              } else {
-                pageNumber = pagesCount;
-              }
-            } else {
-              pageNumber = Number(el.dataset.page);
-            }
-
-            let paginationArr = null;
-            if (pagesCount > 7) {
-              paginationArr = pagination(6, pageNumber, pagesCount);
-            }
-
-            _this.settings.mainWidget.loadAwards(preLoader.hide(), 1, pageNumber, paginationArr, true);
-          });
-        }
-        if (el.closest('.paginator-available')) {
-          preLoader.show(async function () {
-            let pageNumber;
-            const pagesCount = Math.ceil(_this.settings.awards.totalCount / 6);
-            let isPrev = false;
-            let isNext = false;
-
-            if (el.dataset && el.dataset.page === '...') {
-              if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-                isPrev = true;
-              } else {
-                isNext = true;
-              }
-            }
-
-            if (el.classList.contains('prev') || isPrev) {
-              const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-              if (activePage > 1) {
-                pageNumber = activePage - 1;
-              } else {
-                pageNumber = 1;
-              }
-            } else if (el.classList.contains('next') || isNext) {
-              const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-              if (activePage < pagesCount) {
-                pageNumber = activePage + 1;
-              } else {
-                pageNumber = pagesCount;
-              }
-            } else {
-              pageNumber = Number(el.dataset.page);
-            }
-
-            let paginationArr = null;
-            if (pagesCount > 7) {
-              paginationArr = pagination(6, pageNumber, pagesCount);
-            }
-
-            _this.settings.mainWidget.loadAwards(preLoader.hide(), pageNumber, 1, paginationArr, false);
-          });
-        }
-      }
-      if (el.closest('.cl-main-widget-inbox-list-body-res')) {
-        preLoader.show(async function () {
           let pageNumber;
-          const pagesCount = Math.ceil(_this.settings.messages.totalCount / 9);
+          const pagesCount = Math.ceil(_this.settings.awards.claimedTotalCount / 6);
           let isPrev = false;
           let isNext = false;
 
@@ -2589,14 +2505,14 @@ export const LbWidget = function (options) {
             if (activePage > 1) {
               pageNumber = activePage - 1;
             } else {
-              pageNumber = 1;
+              return;
             }
           } else if (el.classList.contains('next') || isNext) {
             const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
             if (activePage < pagesCount) {
               pageNumber = activePage + 1;
             } else {
-              pageNumber = pagesCount;
+              return;
             }
           } else {
             pageNumber = Number(el.dataset.page);
@@ -2607,6 +2523,90 @@ export const LbWidget = function (options) {
             paginationArr = pagination(6, pageNumber, pagesCount);
           }
 
+          preLoader.show(async function () {
+            _this.settings.mainWidget.loadAwards(preLoader.hide(), 1, pageNumber, paginationArr, true);
+          });
+        }
+        if (el.closest('.paginator-available')) {
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.awards.totalCount / 6);
+          let isPrev = false;
+          let isNext = false;
+
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
+
+          if (el.classList.contains('prev') || isPrev) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              return;
+            }
+          } else if (el.classList.contains('next') || isNext) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              return;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
+          preLoader.show(async function () {
+            _this.settings.mainWidget.loadAwards(preLoader.hide(), pageNumber, 1, paginationArr, false);
+          });
+        }
+      }
+      if (el.closest('.cl-main-widget-inbox-list-body-res')) {
+        let pageNumber;
+        const pagesCount = Math.ceil(_this.settings.messages.totalCount / 9);
+        let isPrev = false;
+        let isNext = false;
+
+        if (el.dataset && el.dataset.page === '...') {
+          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+            isPrev = true;
+          } else {
+            isNext = true;
+          }
+        }
+
+        if (el.classList.contains('prev') || isPrev) {
+          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+          if (activePage > 1) {
+            pageNumber = activePage - 1;
+          } else {
+            return;
+          }
+        } else if (el.classList.contains('next') || isNext) {
+          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+          if (activePage < pagesCount) {
+            pageNumber = activePage + 1;
+          } else {
+            return;
+          }
+        } else {
+          pageNumber = Number(el.dataset.page);
+        }
+
+        let paginationArr = null;
+        if (pagesCount > 7) {
+          paginationArr = pagination(6, pageNumber, pagesCount);
+        }
+
+        preLoader.show(async function () {
           _this.settings.mainWidget.loadMessages(pageNumber, preLoader.hide(), paginationArr);
         });
       }
@@ -2629,14 +2629,14 @@ export const LbWidget = function (options) {
           if (activePage > 1) {
             pageNumber = activePage - 1;
           } else {
-            pageNumber = 1;
+            return;
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
-            pageNumber = pagesCount;
+            return;
           }
         } else {
           pageNumber = Number(el.dataset.page);
@@ -2650,87 +2650,85 @@ export const LbWidget = function (options) {
         _this.settings.mainWidget.loadMissions(pageNumber, null, paginationArr);
       }
       if (el.closest('.paginator-finished')) {
-        preLoader.show(async function () {
-          let pageNumber;
-          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
-          let isPrev = false;
-          let isNext = false;
+        let pageNumber;
+        const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+        let isPrev = false;
+        let isNext = false;
 
-          if (el.dataset && el.dataset.page === '...') {
-            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-              isPrev = true;
-            } else {
-              isNext = true;
-            }
-          }
-
-          if (el.classList.contains('prev') || isPrev) {
-            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
-            if (activePage > 1) {
-              pageNumber = activePage - 1;
-            } else {
-              pageNumber = 1;
-            }
-          } else if (el.classList.contains('next') || isNext) {
-            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
-            const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
-            if (activePage < pagesCount) {
-              pageNumber = activePage + 1;
-            } else {
-              pageNumber = pagesCount;
-            }
+        if (el.dataset && el.dataset.page === '...') {
+          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+            isPrev = true;
           } else {
-            pageNumber = Number(el.dataset.page);
+            isNext = true;
           }
+        }
 
-          let paginationArr = null;
-          if (pagesCount > 7) {
-            paginationArr = pagination(6, pageNumber, pagesCount);
+        if (el.classList.contains('prev') || isPrev) {
+          const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+          if (activePage > 1) {
+            pageNumber = activePage - 1;
+          } else {
+            return;
           }
+        } else if (el.classList.contains('next') || isNext) {
+          const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+          if (activePage < pagesCount) {
+            pageNumber = activePage + 1;
+          } else {
+            return;
+          }
+        } else {
+          pageNumber = Number(el.dataset.page);
+        }
 
+        let paginationArr = null;
+        if (pagesCount > 7) {
+          paginationArr = pagination(6, pageNumber, pagesCount);
+        }
+        preLoader.show(async function () {
           await _this.checkForAvailableCompetitions(null, 1, 1, pageNumber);
           _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, 1, pageNumber, paginationArr, false, false, true);
         });
       }
       if (el.closest('.paginator-ready')) {
-        preLoader.show(async function () {
-          let pageNumber;
-          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
-          let isPrev = false;
-          let isNext = false;
+        let pageNumber;
+        const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+        let isPrev = false;
+        let isNext = false;
 
-          if (el.dataset && el.dataset.page === '...') {
-            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-              isPrev = true;
-            } else {
-              isNext = true;
-            }
-          }
-
-          if (el.classList.contains('prev') || isPrev) {
-            const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
-            if (activePage > 1) {
-              pageNumber = activePage - 1;
-            } else {
-              pageNumber = 1;
-            }
-          } else if (el.classList.contains('next') || isNext) {
-            const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
-            const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
-            if (activePage < pagesCount) {
-              pageNumber = activePage + 1;
-            } else {
-              pageNumber = pagesCount;
-            }
+        if (el.dataset && el.dataset.page === '...') {
+          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+            isPrev = true;
           } else {
-            pageNumber = Number(el.dataset.page);
+            isNext = true;
           }
+        }
 
-          let paginationArr = null;
-          if (pagesCount > 7) {
-            paginationArr = pagination(6, pageNumber, pagesCount);
+        if (el.classList.contains('prev') || isPrev) {
+          const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
+          if (activePage > 1) {
+            pageNumber = activePage - 1;
+          } else {
+            return;
           }
+        } else if (el.classList.contains('next') || isNext) {
+          const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
+          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+          if (activePage < pagesCount) {
+            pageNumber = activePage + 1;
+          } else {
+            return;
+          }
+        } else {
+          pageNumber = Number(el.dataset.page);
+        }
 
+        let paginationArr = null;
+        if (pagesCount > 7) {
+          paginationArr = pagination(6, pageNumber, pagesCount);
+        }
+        preLoader.show(async function () {
           await _this.checkForAvailableCompetitions(null, pageNumber, 1, 1);
           _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), pageNumber, 1, 1, paginationArr, true, false, false);
         });
@@ -2754,7 +2752,7 @@ export const LbWidget = function (options) {
           if (activePage > 1) {
             pageNumber = activePage - 1;
           } else {
-            pageNumber = 1;
+            return;
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
@@ -2762,7 +2760,7 @@ export const LbWidget = function (options) {
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
-            pageNumber = pagesCount;
+            return;
           }
         } else {
           pageNumber = Number(el.dataset.page);
