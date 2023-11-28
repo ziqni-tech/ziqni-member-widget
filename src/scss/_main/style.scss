@@ -7450,6 +7450,42 @@
 @media screen and (max-width: 375px) {
   .cl-main-widget-wrapper {
     .cl-main-widget-section-container {
+      .cl-main-widget-lb-leaderboard-header {
+        .cl-rank-col {
+          transform: translate(12px, 0) !important;
+        }
+        .cl-name-col {
+          transform: translate(10px, 0) !important;
+          min-width: 58px;
+        }
+        .cl-points-col {
+          transform: translate(30px, 0) !important;
+          min-width: 60px;
+        }
+        .cl-reward-col {
+          transform: translate(48px, 0) !important;
+        }
+      }
+      .cl-main-widget-lb-leaderboard-res-container {
+        .cl-rank-col {
+          max-width: 60px;
+          width: 100%;
+        }
+        .cl-name-col {
+          max-width: 60px;
+        }
+        .cl-points-col {
+          min-width: 60px;
+        }
+        .cl-reward-col {
+          min-width: 60px;
+        }
+        .cl-main-widget-lb-leaderboard-header-top-res {
+          .cl-rank-col-value {
+            transform: translate(14px, 0);
+          }
+        }
+      }
       .cl-main-widget-lb-details-content {
         .cl-main-widget-lb-details-content-date-headers-item {
           width: 56px;
