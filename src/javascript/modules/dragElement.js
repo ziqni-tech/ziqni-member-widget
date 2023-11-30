@@ -54,7 +54,7 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
 
       touchStart = setTimeout(function () {
         justATouch = false;
-      }, 100);
+      }, 300);
     }, { passive: isiOS });
 
     draggableEl.addEventListener('touchmove', function (e) {
