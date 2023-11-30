@@ -113,8 +113,8 @@
 }
 
 .cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-icon-wrapper {
-  left: 0;
-  top: -7px;
+  left: 13px;
+  top: -5px;
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-icon-wrapper .cl-widget-ms-icon {
@@ -909,15 +909,15 @@
  * Mini score board vertical
  */
 .cl-widget-ms-wrapper.cl-vertical-mini {
-  max-width: 74px;
-  min-width: 74px;
+  max-width: 88px;
+  min-width: 88px;
 }
 
 .cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper {
   display: block;
   position: relative;
   float: left;
-  left: -40px;
+  left: -25px;
   top: 32px;
   z-index: 1;
   width: 88px;
