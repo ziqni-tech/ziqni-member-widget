@@ -1973,7 +1973,11 @@ export const LbWidget = function (options) {
   };
 
   this.startup = function () {
-    var _this = this;
+    const _this = this;
+
+    if (screen.width <= 360) {
+      this.settings.layout.miniScoreBoardOrientation = 'vertical';
+    }
 
     _this.settings.miniScoreBoard.initLayout(function () {
       _this.settings.miniScoreBoard.settings.active = true;
