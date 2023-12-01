@@ -342,6 +342,7 @@
   color: var(--lb3-miniscoreboard-date-color);
 }
 
+.cl-widget-ms-wrapper .cl-widget-ms-first-to-mem-entry,
 .cl-widget-ms-wrapper .cl-widget-ms-default-mem-entry {
   width: 100%;
   height: 30px;
@@ -481,6 +482,13 @@
   box-shadow: none !important;
 }
 
+.cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-first-to-wrapper .cl-widget-ms-first-to-mem-entry.cl-widget-ms-first-to-mem-self {
+  display: block;
+  background: none !important;
+  border: none !important;
+  box-shadow: none !important;
+}
+
 .cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-default-wrapper .cl-widget-ms-default-date-label {
   width: 100%;
   padding: 0;
@@ -596,7 +604,7 @@
   float: left;
   width: 30%;
   text-align: center;
-  color: var(--lb3-miniscoreboard-first-to-date-color);
+  color: var(--lb3-widget-date-text-color);
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-first-to-mem-entry {
@@ -657,7 +665,7 @@
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-first-to-wrapper.cl-inverse .cl-widget-ms-first-to-date-only .cl-widget-ms-first-to-date {
-  color: var(--lb3-miniscoreboard-inverse-first-to-date-only-color);
+  color: var(--lb3-widget-date-text-color);
   text-align: right;
   float: right;
   width: 55%;
@@ -681,12 +689,12 @@
   text-transform: uppercase;
   font-size: 11px;
   text-align: right;
-  padding: 0 20px 0 0;
+  padding: 0;
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-first-to-wrapper .cl-widget-ms-first-to-results-header-points {
   float: left;
-  width: 100px;
+  width: 112px;
   color: var(--lb3-miniscoreboard-first-to-header-points-color);
   text-transform: uppercase;
   font-size: 11px;
@@ -6674,6 +6682,17 @@
       }
     }
   }
+  .cl-widget-ms-first-to-wrapper {
+    color: #223241;
+    .cl-widget-ms-first-to-results-headers {
+      .cl-widget-ms-first-to-results-header-rank {
+        color: #223241;
+      }
+      .cl-widget-ms-first-to-results-header-points {
+        color: #223241;
+      }
+    }
+  }
   .cl-widget-ms-default-wrapper.cl-inverse {
     .cl-widget-ms-default-date-only {
       .cl-widget-ms-default-date-label {
@@ -6687,6 +6706,20 @@
       }
     }
   }
+  .cl-widget-ms-first-to-wrapper.cl-inverse {
+    .cl-widget-ms-first-to-date-only {
+      .cl-widget-ms-first-to-date-label {
+        color: #223241;
+      }
+      .cl-widget-ms-first-to-date {
+        color: #223241;
+        .time-ind {
+          color: #223241;
+        }
+      }
+    }
+  }
+
   .cl-widget-ms-information-top-wrapper {
     .cl-widget-ms-information-wrapper {
       .cl-widget-ms-default-wrapper {
@@ -6694,6 +6727,19 @@
           .cl-widget-ms-default-results-list {
             .cl-widget-ms-default-mem-entry {
               &.cl-widget-ms-default-mem-self {
+                background: #BEE9F3;
+                border: 1px solid #F7A1E4;
+                box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+              }
+            }
+          }
+        }
+      }
+      .cl-widget-ms-first-to-wrapper {
+        .cl-widget-ms-first-to-results-wrapper {
+          .cl-widget-ms-first-to-results-list {
+            .cl-widget-ms-first-to-mem-entry {
+              &.cl-widget-ms-first-to-mem-self {
                 background: #BEE9F3;
                 border: 1px solid #F7A1E4;
                 box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
