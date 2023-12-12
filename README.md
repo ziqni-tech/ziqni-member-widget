@@ -131,14 +131,17 @@ const instance = new MemberWidget({
   enableNotifications: true,
   hideEmptyTabs: false,
   defaultLightTheme: false,
-  instantWins: {
-    enable:  false // This functionality is under development; the parameter is disabled by default
-  },
   layout: {
     logoUrl: '',
   },
   tournaments: {
     showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
+  },
+  awards: {
+    showExpiredAwards: false // false by default
+  },
+  instantWins: {
+    enable:  false // This functionality is under development; the parameter is disabled by default
   },
   navigation: {
     dashboard: {enable: true},

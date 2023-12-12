@@ -110,17 +110,17 @@ export const MainWidget = function (options) {
           showTopResults: 1
         },
         {
+          label: 'Expired Awards',
+          type: 'expiredAwards',
+          show: false,
+          showTopResults: 1
+        },
+        {
           label: 'Instant Wins',
           type: 'instantWins',
           show: false,
           showTopResults: 1
         }
-        // {
-        //   label: 'Expired Rewards',
-        //   type: 'expiredRewards',
-        //   show: false,
-        //   showTopResults: 1
-        // }
       ]
     },
     active: false,
@@ -158,10 +158,12 @@ export const MainWidget = function (options) {
 
     const availableTitle = document.createElement('div');
     const claimedTitle = document.createElement('div');
+    const expiredTitle = document.createElement('div');
     const instantWinsTitle = document.createElement('div');
 
     availableTitle.setAttribute('class', 'cl-main-accordion-container-menu-item availableAwards');
     claimedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item claimedAwards');
+    expiredTitle.setAttribute('class', 'cl-main-accordion-container-menu-item expiredAwards');
     instantWinsTitle.setAttribute('class', 'cl-main-accordion-container-menu-item instantWins');
 
     const idx = data.findIndex(d => d.show === true);
@@ -172,6 +174,9 @@ export const MainWidget = function (options) {
           break;
         case 'claimedAwards':
           claimedTitle.classList.add('active');
+          break;
+        case 'expiredAwards':
+          expiredTitle.classList.add('active');
           break;
         case 'instantWins':
           if (this.settings.lbWidget.settings.instantWins.enable) {
@@ -185,10 +190,14 @@ export const MainWidget = function (options) {
 
     availableTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.availableRewards;
     claimedTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.claimed;
+    expiredTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.expired;
     instantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.instantWins;
 
     statusMenu.appendChild(availableTitle);
     statusMenu.appendChild(claimedTitle);
+    if (this.settings.lbWidget.settings.awards.showExpiredAwards) {
+      statusMenu.appendChild(expiredTitle);
+    }
     if (this.settings.lbWidget.settings.instantWins.enable) {
       statusMenu.appendChild(instantWinsTitle);
     }
@@ -338,6 +347,10 @@ export const MainWidget = function (options) {
     if (element.classList.contains('claimedAwards')) {
       const claimedContainer = container.querySelector('.cl-accordion.claimedAwards');
       claimedContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('expiredAwards')) {
+      const expiredContainer = container.querySelector('.cl-accordion.expiredAwards');
+      expiredContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('instantWins')) {
       const instantWinsContainer = container.querySelector('.cl-accordion.instantWins');
@@ -4105,7 +4118,7 @@ export const MainWidget = function (options) {
     detailsWrapper.appendChild(label);
     detailsWrapper.appendChild(type);
     detailsWrapper.appendChild(prize);
-    if (!rew.claimed) {
+    if (!rew.claimed && rew.statusCode !== 115) {
       detailsWrapper.appendChild(claimBtn);
     }
     detailsContainer.appendChild(detailsWrapper);
@@ -4265,7 +4278,17 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
-  this.rewardsListLayout = function (pageNumber = 1, claimedPageNumber = 1, rewards, availableRewards, expiredRewards, paginationArr = null, isClaimed = false) {
+  this.rewardsListLayout = function (
+    pageNumber = 1,
+    claimedPageNumber = 1,
+    expiredPageNumber = 1,
+    rewards,
+    availableRewards,
+    expiredRewards,
+    paginationArr = null,
+    isClaimed = false,
+    isExpired = false
+  ) {
     const _this = this;
     const rewardList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
@@ -4664,12 +4687,12 @@ export const MainWidget = function (options) {
     }, 1000);
   };
 
-  this.loadAwards = function (callback, pageNumber, claimedPageNumber, paginationArr = null, isClaimed = false) {
+  this.loadAwards = function (callback, pageNumber, claimedPageNumber, expiredPageNumber, paginationArr = null, isClaimed = false, isExpired = false) {
     const _this = this;
     _this.settings.lbWidget.checkForAvailableAwards(
       function (rewards, availableRewards, expiredRewards) {
         // _this.settings.lbWidget.updateRewardsNavigationCounts();
-        _this.rewardsListLayout(pageNumber, claimedPageNumber, rewards, availableRewards, expiredRewards, paginationArr, isClaimed);
+        _this.rewardsListLayout(pageNumber, claimedPageNumber, expiredPageNumber, rewards, availableRewards, expiredRewards, paginationArr, isClaimed, isExpired);
 
         if (typeof callback === 'function') {
           callback();
@@ -5446,6 +5469,7 @@ export const MainWidget = function (options) {
 
                   _this.settings.navigationSwitchInProgress = false;
                 },
+                1,
                 1,
                 1
               );
