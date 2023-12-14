@@ -131,17 +131,21 @@ const instance = new MemberWidget({
   enableNotifications: true,
   hideEmptyTabs: false,
   defaultLightTheme: false,
+  instantWins: {
+    enable:  false // This functionality is under development; the parameter is disabled by default
+  },
   layout: {
     logoUrl: '',
-  },
-  tournaments: {
-    showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
   },
   awards: {
     showExpiredAwards: false // false by default
   },
-  instantWins: {
-    enable:  false // This functionality is under development; the parameter is disabled by default
+  tournaments: {
+    showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
+  },
+  historicalData: {
+    finalisedCompetitions: 30, // Days; 30 by default
+    messagesForTheLast: 30 // Days; 30 by default
   },
   navigation: {
     dashboard: {enable: true},
@@ -338,8 +342,8 @@ The current flow is:
 
 To achieve this scenario you would need to do an available competition check prior to the navigation reset and then hide/show tabs accordingly based on your business requirement.
 The code of interest would be on line inside the method called: "this.initLayout" in the "MainWidget" widget class, the method that resets the navigation is "_this.resetNavigation( callback )" this handles what navigation item to set as default for the user.
-You can either change this code directly or override that method after initialization inside the "this.startup" method for the class "LbWidget" by doing the following "_this.settings.mainWidget.resetNavigation = function(callback){}". 
-There you can write some logic that would check what tabs to show/hide. 
+You can either change this code directly or override that method after initialization inside the "this.startup" method for the class "LbWidget" by doing the following "_this.settings.mainWidget.resetNavigation = function(callback){}".
+There you can write some logic that would check what tabs to show/hide.
 Or you can overwrite this on a more global scope level where you initialize the widget "new LbWidget(window._CLLBV3Opt)" as you get full access to the settings and all other methods.
 
 
