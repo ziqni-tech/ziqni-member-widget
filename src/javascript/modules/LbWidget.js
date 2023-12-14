@@ -3460,7 +3460,6 @@ export const LbWidget = function (options) {
     const body = await response.json();
 
     if (body.data && body.data.jwtToken) {
-      console.log('body.data.jwtToken:', { token: body.data.jwtToken });
       this.settings.authToken = body.data.jwtToken;
     } else {
       console.warn('Member Token Error');
