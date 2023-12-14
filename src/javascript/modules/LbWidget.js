@@ -110,6 +110,10 @@ export const LbWidget = function (options) {
       allowOrientationChange: true, // allows the switch between horizontal/vertical orientation
       miniScoreBoardOrientation: 'horizontal' // vertical/horizontal => default is horizontal
     },
+    historicalData: {
+      finalisedCompetitions: 30,
+      messagesForTheLast: 30
+    },
     competition: {
       activeCompetitionId: null,
       activeContestId: null,
@@ -552,8 +556,8 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    // const finishedDateFilter = new Date();
-    // finishedDateFilter.setDate(finishedDateFilter.getDate() - 30);
+    const finishedDateFilter = new Date();
+    finishedDateFilter.setDate(finishedDateFilter.getDate() - this.settings.historicalData.finalisedCompetitions ?? 30);
 
     const finishedCompetitionRequest = CompetitionRequest.constructFromObject({
       languageKey: this.settings.language,
@@ -562,9 +566,10 @@ export const LbWidget = function (options) {
           moreThan: 30,
           lessThan: 50
         },
-        // endDate: {
-        //   after: finishedDateFilter.toISOString()
-        // },
+        endDateRange: {
+          before: finishedDateFilter.toISOString(),
+          after: (new Date()).toISOString()
+        },
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -1503,10 +1508,17 @@ export const LbWidget = function (options) {
   };
 
   this.checkForAvailableMessages = async function (pageNumber, callback) {
+    const createdDateFilter = new Date();
+    createdDateFilter.setDate(createdDateFilter.getDate() - this.settings.historicalData.messagesForTheLast ?? 30);
+
     const messageRequest = MessageRequest.constructFromObject({
       languageKey: this.settings.language,
       messageFilter: {
         messageType: 'InboxItem',
+        createdDateRange: {
+          before: createdDateFilter.toISOString(),
+          after: (new Date()).toISOString()
+        },
         sortBy: [{
           queryField: 'created',
           order: 'Desc'

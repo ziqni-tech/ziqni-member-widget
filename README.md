@@ -140,6 +140,10 @@ const instance = new MemberWidget({
   tournaments: {
     showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
   },
+  historicalData: {
+    finalisedCompetitions: 30, // Days; 30 by default
+    messagesForTheLast: 30 // Days; 30 by default
+  },
   navigation: {
     dashboard: {enable: true},
     tournaments: {
