@@ -779,16 +779,29 @@ export const LbWidget = function (options) {
 
     if (contests.length) {
       this.settings.competition.contests = contests;
-      contests.forEach(contest => {
-        if (contest.statusCode < 50 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
-          this.settings.competition.activeContest = contest;
-          this.settings.competition.activeContestId = contest.id;
+      if (json[0].statusCode === 15) {
+        contests.forEach(contest => {
+          if (contest.statusCode === 15) {
+            this.settings.competition.activeContest = contest;
+            this.settings.competition.activeContestId = contest.id;
 
-          if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
-            this.settings.competition.activeContest.rewards = [];
+            if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
+              this.settings.competition.activeContest.rewards = [];
+            }
           }
-        }
-      });
+        });
+      } else {
+        contests.forEach(contest => {
+          if (contest.statusCode < 50 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
+            this.settings.competition.activeContest = contest;
+            this.settings.competition.activeContestId = contest.id;
+
+            if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
+              this.settings.competition.activeContest.rewards = [];
+            }
+          }
+        });
+      }
     }
 
     if (typeof callback === 'function') {
@@ -1120,7 +1133,7 @@ export const LbWidget = function (options) {
 
   this.getAward = async function (awardId, callback) {
     let awardData = null;
-    const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards];
+    const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards, ...this.settings.awards.expiredAwards];
     const idx = awards.findIndex(r => r.id === awardId);
     if (idx !== -1) {
       awardData = awards[idx];
@@ -3180,7 +3193,11 @@ export const LbWidget = function (options) {
             } else if (_this.settings.competition.activeContest !== null) {
               _this.settings.mainWidget.loadCompetitionDetails(function () {});
             }
-            _this.checkForAvailableRewards(1);
+            _this.checkForAvailableRewards(1, function () {
+              if (_this.settings.mainWidget.settings.active) {
+                _this.settings.mainWidget.updateLeaderboard();
+              }
+            });
             preLoader.hide();
           });
         });
