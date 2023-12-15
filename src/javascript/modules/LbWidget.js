@@ -145,10 +145,12 @@ export const LbWidget = function (options) {
     awards: {
       availableAwards: [],
       claimedAwards: [],
+      expiredAwards: [],
       rewards: [],
       totalCount: 0,
       claimedTotalCount: 0,
-      intervalId: null
+      intervalId: null,
+      showExpiredAwards: false
     },
     iconIntervalId: null,
     messages: {
@@ -777,16 +779,29 @@ export const LbWidget = function (options) {
 
     if (contests.length) {
       this.settings.competition.contests = contests;
-      contests.forEach(contest => {
-        if (contest.statusCode < 50 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
-          this.settings.competition.activeContest = contest;
-          this.settings.competition.activeContestId = contest.id;
+      if (json[0].statusCode === 15) {
+        contests.forEach(contest => {
+          if (contest.statusCode === 15) {
+            this.settings.competition.activeContest = contest;
+            this.settings.competition.activeContestId = contest.id;
 
-          if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
-            this.settings.competition.activeContest.rewards = [];
+            if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
+              this.settings.competition.activeContest.rewards = [];
+            }
           }
-        }
-      });
+        });
+      } else {
+        contests.forEach(contest => {
+          if (contest.statusCode < 50 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
+            this.settings.competition.activeContest = contest;
+            this.settings.competition.activeContestId = contest.id;
+
+            if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
+              this.settings.competition.activeContest.rewards = [];
+            }
+          }
+        });
+      }
     }
 
     if (typeof callback === 'function') {
@@ -1118,7 +1133,7 @@ export const LbWidget = function (options) {
 
   this.getAward = async function (awardId, callback) {
     let awardData = null;
-    const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards];
+    const awards = [...this.settings.awards.availableAwards, ...this.settings.awards.claimedAwards, ...this.settings.awards.expiredAwards];
     const idx = awards.findIndex(r => r.id === awardId);
     if (idx !== -1) {
       awardData = awards[idx];
@@ -1274,6 +1289,7 @@ export const LbWidget = function (options) {
   this.checkForAvailableAwards = async function (callback, pageNumber = 1, claimedPageNumber = 1) {
     this.settings.awards.availableAwards = [];
     this.settings.awards.claimedAwards = [];
+    this.settings.awards.expiredAwards = [];
     this.settings.awards.rewards = [];
 
     const availableAwardRequest = AwardRequest.constructFromObject({
@@ -1309,6 +1325,24 @@ export const LbWidget = function (options) {
       },
       currencyKey: this.settings.currency
     });
+
+    const expiredAwardRequest = AwardRequest.constructFromObject({
+      languageKey: this.settings.language,
+      awardFilter: {
+        statusCode: {
+          moreThan: 114,
+          lessThan: 116
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: (claimedPageNumber - 1) * 6,
+        limit: 6
+      },
+      currencyKey: this.settings.currency
+    });
+
     const claimedAwards = await this.getAwardsApi(claimedAwardRequest);
     this.settings.awards.claimedAwards = claimedAwards.data;
     const claimedRewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
@@ -1372,8 +1406,40 @@ export const LbWidget = function (options) {
       ? availableAwards.meta.totalRecordsFound
       : 0;
 
+    const expiredAwards = await this.getAwardsApi(expiredAwardRequest);
+    this.settings.awards.expiredAwards = expiredAwards.data;
+
+    const expiredRewardIds = this.settings.awards.expiredAwards.map(c => c.rewardId);
+    if (expiredRewardIds.length) {
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Reward',
+          entityIds: expiredRewardIds
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      this.settings.awards.expiredAwards = this.settings.awards.expiredAwards.map(award => {
+        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
+        if (idx !== -1) {
+          award.rewardData = rewardsData[idx];
+        }
+
+        return award;
+      });
+    }
+
     if (typeof callback === 'function') {
-      callback(this.settings.awards.claimedAwards, this.settings.awards.availableAwards);
+      callback(
+        this.settings.awards.claimedAwards,
+        this.settings.awards.availableAwards,
+        this.settings.awards.expiredAwards
+      );
     }
   };
 
@@ -1854,13 +1920,13 @@ export const LbWidget = function (options) {
             callback();
           }
         }
-        _this.checkForAvailableAwards(
-          function () {
-            // _this.updateRewardsNavigationCounts();
-          },
-          1,
-          1
-        );
+        // _this.checkForAvailableAwards(
+        //   function () {
+        //     // _this.updateRewardsNavigationCounts();
+        //   },
+        //   1,
+        //   1
+        // );
         _this.checkForAvailableRewards(1, function () {
           if (_this.settings.mainWidget.settings.active) {
             _this.settings.mainWidget.updateLeaderboard();
@@ -2540,7 +2606,7 @@ export const LbWidget = function (options) {
           }
 
           preLoader.show(async function () {
-            _this.settings.mainWidget.loadAwards(preLoader.hide(), 1, pageNumber, paginationArr, true);
+            _this.settings.mainWidget.loadAwards(preLoader.hide(), 1, pageNumber, 1, paginationArr, true, false);
           });
         }
         if (el.closest('.paginator-available')) {
@@ -2581,7 +2647,7 @@ export const LbWidget = function (options) {
           }
 
           preLoader.show(async function () {
-            _this.settings.mainWidget.loadAwards(preLoader.hide(), pageNumber, 1, paginationArr, false);
+            _this.settings.mainWidget.loadAwards(preLoader.hide(), pageNumber, 1, 1, paginationArr, false, false);
           });
         }
       }
@@ -3127,7 +3193,11 @@ export const LbWidget = function (options) {
             } else if (_this.settings.competition.activeContest !== null) {
               _this.settings.mainWidget.loadCompetitionDetails(function () {});
             }
-            _this.checkForAvailableRewards(1);
+            _this.checkForAvailableRewards(1, function () {
+              if (_this.settings.mainWidget.settings.active) {
+                _this.settings.mainWidget.updateLeaderboard();
+              }
+            });
             preLoader.hide();
           });
         });

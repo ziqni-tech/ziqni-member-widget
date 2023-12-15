@@ -67,6 +67,7 @@
         "label": "Awards",
         "claim": "Claim",
         "claimed": "Claimed",
+        "expired": "Expired",
         "availableRewards": "Available",
         "instantWins": "Instant Wins",
         "rewards": "Claimed Awards",
