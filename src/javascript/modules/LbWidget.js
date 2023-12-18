@@ -311,7 +311,7 @@ export const LbWidget = function (options) {
       rewardFormatter: function (reward) {
         let defaultRewardValue = Number.isInteger(reward.rewardValue)
           ? reward.rewardValue
-          : reward.rewardValue.toFixed(2);
+          : Math.floor(reward.rewardValue);
 
         if (reward.rewardType && reward.rewardType.uomSymbol) {
           defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
@@ -322,12 +322,12 @@ export const LbWidget = function (options) {
       awardFormatter: function (award) {
         let defaultAwardValue = Number.isInteger(award.rewardValue)
           ? award.rewardValue
-          : award.rewardValue.toFixed(2);
+          : Math.floor(award.rewardValue);
 
         if (award.uomSymbol) {
           defaultAwardValue = award.uomSymbol + defaultAwardValue;
         } else if (!award.uom && award.rewardType && award.rewardType.uomSymbol) {
-          defaultAwardValue = award.rewardType.uomSymbol + award.rewardValue;
+          defaultAwardValue = award.rewardType.uomSymbol + Math.floor(award.rewardValue);
         }
 
         return defaultAwardValue;
