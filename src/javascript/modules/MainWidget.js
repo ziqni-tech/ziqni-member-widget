@@ -3063,7 +3063,7 @@ export const MainWidget = function (options) {
     }
 
     if (ach.reward) {
-      actionsReward.innerHTML = ach.reward.rewardValue;
+      actionsReward.innerHTML = Math.floor(ach.reward.rewardValue);
     }
 
     detailsContainer.appendChild(icon);
@@ -3223,7 +3223,7 @@ export const MainWidget = function (options) {
     body.style.display = 'block';
 
     if (data.reward) {
-      reward.innerHTML = data.reward.rewardValue;
+      reward.innerHTML = Math.floor(data.reward.rewardValue);
     } else {
       reward.innerHTML = '';
     }
@@ -4111,7 +4111,7 @@ export const MainWidget = function (options) {
     label.innerHTML = (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText;
     claimBtn.innerHTML = this.settings.lbWidget.settings.translation.rewards.claim;
     type.innerHTML = rew.rewardType.key;
-    prize.innerHTML = rew.rewardValue;
+    prize.innerHTML = Math.floor(rew.rewardValue);
 
     detailsWrapper.appendChild(expires);
     detailsWrapper.appendChild(icon);
