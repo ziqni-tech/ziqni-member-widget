@@ -4190,7 +4190,11 @@ export const MainWidget = function (options) {
     label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
 
     if (mission.reward) {
-      actionsReward.innerHTML = mission.reward.rewardValue;
+      actionsReward.innerHTML = Math.floor(mission.reward.rewardValue);
+    }
+
+    if (mission.bannerLowResolutionLink) {
+      image.setAttribute('style', `background-image: url(${mission.bannerLowResolutionLink})`);
     }
 
     progressLabel.innerHTML = '0/100';

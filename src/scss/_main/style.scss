@@ -5865,9 +5865,10 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-img {
   height: 215px;
-  background: $lb3-missions-def-img;
-  background-size: cover;
+  background-size: contain;
+  background-repeat: no-repeat;
   position: relative;
+  border-radius: 10px 10px 0 0;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(1) {
