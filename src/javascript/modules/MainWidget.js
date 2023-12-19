@@ -3395,10 +3395,16 @@ export const MainWidget = function (options) {
     const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
     const tc = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc');
     const prizeValue = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-prize-value');
+    const icon = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-body-image');
 
     if (!mission.data || !mission.data.name) {
       if (typeof callback === 'function') callback();
       return;
+    }
+
+    if (mission.data.iconLink) {
+      icon.setAttribute('style', `background-image: url(${mission.data.iconLink})`);
+      icon.classList.add('full-bg');
     }
 
     if (mission.data.reward && mission.data.reward.rewardValue) {
@@ -3408,7 +3414,7 @@ export const MainWidget = function (options) {
         symbol = ' ' + mission.data.reward.rewardType.uomSymbol;
       }
 
-      prizeValue.innerHTML = mission.data.reward.rewardValue + symbol;
+      prizeValue.innerHTML = Math.floor(mission.data.reward.rewardValue) + symbol;
     }
 
     label.innerHTML = mission.data.name;
@@ -4190,7 +4196,11 @@ export const MainWidget = function (options) {
     label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
 
     if (mission.reward) {
-      actionsReward.innerHTML = mission.reward.rewardValue;
+      actionsReward.innerHTML = Math.floor(mission.reward.rewardValue);
+    }
+
+    if (mission.bannerLowResolutionLink) {
+      image.setAttribute('style', `background-image: url(${mission.bannerLowResolutionLink})`);
     }
 
     progressLabel.innerHTML = '0/100';
