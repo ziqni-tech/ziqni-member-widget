@@ -3395,10 +3395,16 @@ export const MainWidget = function (options) {
     const body = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-description');
     const tc = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-tc');
     const prizeValue = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-prize-value');
+    const icon = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-body-image');
 
     if (!mission.data || !mission.data.name) {
       if (typeof callback === 'function') callback();
       return;
+    }
+
+    if (mission.data.iconLink) {
+      icon.setAttribute('style', `background-image: url(${mission.data.iconLink})`);
+      icon.classList.add('full-bg');
     }
 
     if (mission.data.reward && mission.data.reward.rewardValue) {
@@ -3408,7 +3414,7 @@ export const MainWidget = function (options) {
         symbol = ' ' + mission.data.reward.rewardType.uomSymbol;
       }
 
-      prizeValue.innerHTML = mission.data.reward.rewardValue + symbol;
+      prizeValue.innerHTML = Math.floor(mission.data.reward.rewardValue) + symbol;
     }
 
     label.innerHTML = mission.data.name;

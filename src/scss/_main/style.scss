@@ -6246,6 +6246,10 @@
   position: relative;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image.full-bg {
+  background-size: 100%;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-body-image::before {
   content: "";
   display: block;
