@@ -3188,11 +3188,12 @@ export const LbWidget = function (options) {
         _this.settings.tournaments.activeCompetitionId = tournamentId;
         _this.activeDataRefreshSimple(function () {
           _this.settings.mainWidget.hideCompetitionList(async function () {
-            if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
-            } else if (_this.settings.competition.activeContest !== null) {
-              _this.settings.mainWidget.loadCompetitionDetails(function () {});
-            }
+            // if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
+            //   await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+            // } else if (_this.settings.competition.activeContest !== null) {
+            //   _this.settings.mainWidget.loadCompetitionDetails(function () {});
+            // }
+            _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
             _this.checkForAvailableRewards(1, function () {
               if (_this.settings.mainWidget.settings.active) {
                 _this.settings.mainWidget.updateLeaderboard();
