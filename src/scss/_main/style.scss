@@ -3221,7 +3221,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-pre-loader-content .cl-pre-loader-bar:nth-child(3) {
   left: 56px;
-  animation-delay: 0;
+  animation-delay: unset;
 }
 
 @keyframes cl-main-widget-pre-loader-content {
@@ -7866,7 +7866,7 @@
         width: calc(100% + 2px);
       }
       .cl-main-widget-tournaments-list {
-        height: calc(100% - 79px);
+        height: calc(100% - 66px);
       }
 
       .cl-main-widget-ach-header {
@@ -8474,12 +8474,14 @@
         }
         .cl-main-widget-lb-header-back-icon,
         .cl-main-widget-lb-header-list-icon {
-          width: 35px;
-          height: 35px;
+          width: 25px;
+          height: 25px;
+          top: 10px;
         }
       }
-      .cl-main-widget-tournaments-list {
+      .cl-main-widget-tournaments-list.cl-show {
         top: 40px;
+        height: calc(100% - 36px);
       }
       .cl-main-widget-tournaments-list {
         height: calc(100% - 46px);
