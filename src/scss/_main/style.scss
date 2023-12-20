@@ -7425,168 +7425,311 @@
  * *************************************
  */
 @media screen and (max-width: 1005px) {
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp {
-    justify-content: center;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel {
-    margin-bottom: 20px;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list,
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list {
-    justify-content: center;
-  }
-  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res {
-    justify-content: center;
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-dashboard-body {
+        padding: 0 20px 0 23px;
+      }
+
+      .cl-main-widget-dashboard-instant-wins-wrapp {
+        justify-content: space-around;
+        .cl-main-widget-dashboard-instant-wins-wheel,
+        .cl-main-widget-dashboard-instant-wins-cards {
+          width: 280px;
+        }
+
+        .cl-main-widget-dashboard-instant-wins-cards-image,
+        .cl-main-widget-dashboard-instant-wins-wheel-image {
+          width: 122px;
+        }
+      }
+
+      .cl-main-widget-dashboard-achievements-list {
+        justify-content: space-around;
+        .cl-ach-list-item {
+          width: 280px;
+        }
+      }
+
+      .cl-main-widget-dashboard-tournaments-list {
+        justify-content: space-around;
+        .dashboard-tournament-item {
+          width: 280px;
+        }
+      }
+
+      .cl-main-widget-ach-list {
+        padding-right: 27px;
+        padding-left: 20px;
+      }
+      .cl-main-widget-ach-list-body-res {
+        justify-content: space-around;
+      }
+      .cl-main-widget-section-ach {
+        .cl-ach-list-item {
+          width: 280px;
+        }
+      }
+    }
   }
 }
 
-@media screen and (max-width: 425px) {
+@media (orientation: landscape) and (max-height: 600px) {
   .cl-main-widget-wrapper {
-    .cl-main-widget-section-container {
-      .cl-main-widget-lb-leaderboard-header {
-        padding: 0 12px;
-        .cl-rank-col {
-          max-width: 100px;
-          transform: translate(24px, 0) !important;
-        }
-        .cl-name-col {
-          max-width: 124px;
-          transform: translate(-12px, 0) !important;
-        }
-        .cl-points-col {
-          width: 100%;
-          max-width: 80px;
-          transform: translate(-10px, 0) !important;
-        }
-        .cl-reward-col {
-          transform: translate(28px, 0) !important;
+    .cl-main-widget-navigation-container {
+      width: 120px;
+      .cl-main-widget-navigation-darkMode-toggle {
+        display: none;
+      }
+      .cl-main-navigation-item-title {
+        display: none;
+      }
+      .cl-main-widget-navigation-items {
+        padding: 20px 0 0 0;
+        .cl-main-widget-navigation-item {
+          width: 90px;
+          min-height: 44px;
+          margin-bottom: 8px;
         }
       }
-      .cl-main-widget-lb-leaderboard-res-container {
-        .cl-rank-col {
-          max-width: 80px;
-        }
-        .cl-name-col {
-          max-width: 100px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-        }
-        .cl-points-col {
-          max-width: 80px;
-        }
-        .cl-reward-col {
-          width: 100%;
-          max-width: 90px;
-          white-space: nowrap;
-          overflow: hidden;
-          text-overflow: ellipsis;
-          text-align: center;
-        }
+    }
+
+    .cl-main-widget-section-container {
+      .cl-mobile-theme-switcher {
+        display: block;
+        width: 32px;
+        height: 32px;
+        position: absolute;
+        top: 10px;
+        right: 42px;
+        background: url(../../images/theme-switcher.svg) no-repeat center;
+        z-index: 10;
       }
 
+      .cl-main-widget-missions-footer,
+      .cl-main-widget-inbox-footer,
+      .cl-main-widget-reward-footer,
+      .cl-main-widget-ach-footer {
+        display: none;
+      }
+
+      // Dashboard
+      .cl-main-widget-dashboard-header {
+        height: 40px;
+        .cl-main-widget-dashboard-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-dashboard-body {
+        height: calc(100% - 56px);
+        .cl-main-widget-dashboard-instant-wins-title,
+        .cl-main-widget-dashboard-achievements-title,
+        .cl-main-widget-dashboard-tournaments-title {
+          font-size: 17px;
+        }
+      }
+      .cl-main-widget-lb-footer {
+        display: none;
+      }
+
+      // LB
+      .cl-main-widget-lb-header {
+        height: 40px;
+        .cl-main-widget-lb-header-label {
+          font-size: 18px;
+        }
+        .cl-main-widget-lb-header-back-icon,
+        .cl-main-widget-lb-header-list-icon {
+          width: 25px;
+          height: 25px;
+          top: 20px;
+        }
+      }
+      .cl-main-widget-tournaments-list.cl-show {
+        top: 40px;
+        height: calc(100% - 40px);
+      }
+      .cl-main-widget-tournaments-list {
+        height: calc(100% - 46px);
+        border-radius: 0 0 20px 0;
+      }
+      .cl-main-widget-lb-leaderboard {
+        height: calc(100% - 94px);
+      }
+      &.cl-main-active-embedded-description {
+        .cl-main-widget-lb-details {
+          height: calc(100% - 52px);
+        }
+        .cl-main-widget-lb-details-description-container {
+          height: 100%;
+        }
+        .cl-main-widget-lb-details-description-close {
+          bottom: 50px;
+        }
+      }
       .cl-main-widget-lb-missing-member-details {
-        padding-left: 18px;
-        .cl-rank-col {
-          max-width: 50px;
-        }
-        .cl-name-col {
-          min-width: 50px;
-        }
+        bottom: 10px;
       }
-    }
-  }
-}
+      .cl-main-widget-lb-leaderboard-header-top-res {
+        position: relative;
+      }
 
-@media screen and (max-width: 375px) {
-  .cl-main-widget-wrapper {
-    .cl-main-widget-section-container {
-      .cl-main-widget-lb-leaderboard-header {
-        .cl-rank-col {
-          transform: translate(12px, 0) !important;
-        }
-        .cl-name-col {
-          transform: translate(10px, 0) !important;
-          min-width: 58px;
-        }
-        .cl-points-col {
-          transform: translate(30px, 0) !important;
-          min-width: 60px;
-        }
-        .cl-reward-col {
-          transform: translate(48px, 0) !important;
+      // Achievements
+      .cl-main-widget-ach-header {
+        height: 40px;
+        .cl-main-widget-ach-header-label {
+          font-size: 18px;
         }
       }
-      .cl-main-widget-lb-leaderboard-res-container {
-        .cl-rank-col {
-          max-width: 60px;
-          width: 100%;
-        }
-        .cl-name-col {
-          max-width: 60px;
-        }
-        .cl-points-col {
-          min-width: 60px;
-        }
-        .cl-reward-col {
-          min-width: 60px;
-        }
-        .cl-main-widget-lb-leaderboard-header-top-res {
-          .cl-rank-col-value {
-            transform: translate(14px, 0);
-          }
+      .cl-main-widget-ach-list {
+        height: calc(100% - 52px);
+      }
+      .cl-main-widget-ach-details-container {
+        top: 40px;
+        height: calc(100% - 40px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
         }
       }
+
+      // Awards
+      .cl-main-widget-reward-header {
+        height: 40px;
+        .cl-main-widget-reward-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-reward-list {
+        top: 40px;
+        height: calc(100% - 62px);
+      }
+      .cl-main-widget-reward-details-container {
+        height: calc(100% - 76px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
+      // Messages
+      .cl-main-widget-inbox-header {
+        height: 40px;
+        .cl-main-widget-inbox-header-label {
+          font-size: 18px;
+        }
+      }
+      .cl-main-widget-inbox-list {
+        height: calc(100% - 52px);
+      }
+      .cl-main-widget-inbox-details-container {
+        top: 40px;
+        height: calc(100% - 52px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
+      // Missions
+      .cl-main-widget-missions-header {
+        height: 40px;
+        .cl-main-widget-missions-header-label {
+          font-size: 18px;
+        }
+        .cl-main-widget-mission-header-back-icon {
+          width: 35px;
+          height: 35px;
+        }
+      }
+      .cl-main-widget-missions-list {
+        height: calc(100% - 52px);
+      }
+      .cl-main-widget-missions-map-container {
+        top: 40px;
+        height: calc(100% - 52px);
+        border-radius: 0 0 30px 0;
+      }
+      .cl-main-widget-missions-details-container {
+        top: 40px;
+        height: calc(100% - 52px);
+        overflow: auto;
+        border-radius: 0 0 30px 0;
+        &.cl-show {
+          padding-left: 0;
+        }
+      }
+
       .cl-main-widget-lb-details-content {
-        .cl-main-widget-lb-details-content-date-headers-item {
-          width: 56px;
-        }
-        .cl-main-widget-lb-details-content-date {
-          .banner-date {
-            .banner-months {
-              padding-right: 14px;
-            }
-            .banner-seconds,
-            .banner-minutes,
-            .banner-hours {
-              padding-left: 14px;
-            }
-            .banner-date-cell {
-              font-size: 18px;
-              width: 18px;
-              height: 32px;
-            }
+        height: 40px;
+        .cl-main-widget-lb-details-content-label {
+          padding-top: 9px;
+          .cl-main-widget-lb-details-content-date {
+            height: 0;
+            margin: 0;
+            padding: 0;
+            visibility: hidden;
+          }
+          .cl-main-widget-lb-details-content-date-headers {
+            height: 0;
+            margin: 0;
+            padding: 0;
+            visibility: hidden;
           }
         }
       }
-      .cl-main-widget-lb-details-description-container {
-        .cl-main-widget-lb-details-description-date {
-          .banner-date {
-            .banner-months {
-              padding-right: 10px;
-            }
-            .banner-date-cell {
-              font-size: 16px;
-              width: 16px;
-              height: 30px;
-            }
-            .banner-seconds,
-            .banner-minutes,
-            .banner-hours {
-              padding-left: 10px;
-            }
-          }
+      .cl-main-accordion-container {
+        .cl-accordion.cl-shown {
+          height: calc(100% - 40px);
         }
-        .cl-main-widget-lb-details-description-date-headers-item {
-          font-size: 10px;
-          width: 46px;
+      }
+      .cl-main-widget-lb-details {
+        margin: 0 16px 0 0;
+      }
+    }
+  }
+}
+
+@media (orientation: landscape) and (max-height: 460px) and (min-width: 769px) {
+  .cl-main-widget-wrapper {
+    .cl-main-widget-navigation-container {
+      width: 120px;
+
+      .cl-main-widget-navigation-darkMode-toggle {
+        display: none;
+      }
+
+      .cl-main-navigation-item-title {
+        display: none;
+      }
+
+      .cl-main-widget-navigation-missions-icon,
+      .cl-main-widget-navigation-inbox-icon,
+      .cl-main-widget-navigation-rewards-icon,
+      .cl-main-widget-navigation-ach-icon,
+      .cl-main-widget-navigation-lb-icon,
+      .cl-main-widget-navigation-dashboard-icon {
+        height: 24px;
+        width: 24px;
+      }
+
+      .cl-main-widget-navigation-items {
+        padding: 20px 0 0 0;
+
+        .cl-main-widget-navigation-item {
+          width: 70px;
+          min-height: 36px;
+          margin-bottom: 0;
         }
       }
     }
   }
 }
 
-@media screen and (max-width: 768px), (orientation: landscape) and (max-height: 600px) {
+@media screen and (max-width: 768px) {
   #cy {
     height: 300px;
   }
@@ -8437,191 +8580,147 @@
   }
 }
 
-@media (orientation: landscape) and (max-height: 600px) {
+@media screen and (max-width: 425px) {
   .cl-main-widget-wrapper {
     .cl-main-widget-section-container {
-      .cl-main-widget-missions-footer,
-      .cl-main-widget-inbox-footer,
-      .cl-main-widget-reward-footer,
-      .cl-main-widget-ach-footer {
-        display: none;
+      .cl-main-widget-lb-leaderboard-header {
+        padding: 0 12px;
+        .cl-rank-col {
+          max-width: 100px;
+          transform: translate(24px, 0) !important;
+        }
+        .cl-name-col {
+          max-width: 124px;
+          transform: translate(-12px, 0) !important;
+        }
+        .cl-points-col {
+          width: 100%;
+          max-width: 80px;
+          transform: translate(-10px, 0) !important;
+        }
+        .cl-reward-col {
+          transform: translate(28px, 0) !important;
+        }
+      }
+      .cl-main-widget-lb-leaderboard-res-container {
+        .cl-rank-col {
+          max-width: 80px;
+        }
+        .cl-name-col {
+          max-width: 100px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+        }
+        .cl-points-col {
+          max-width: 80px;
+        }
+        .cl-reward-col {
+          width: 100%;
+          max-width: 90px;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          text-align: center;
+        }
       }
 
-      // Dashboard
-      .cl-main-widget-dashboard-header {
-        height: 40px;
-        .cl-main-widget-dashboard-header-label {
-          font-size: 18px;
-        }
-      }
-      .cl-main-widget-dashboard-body {
-        height: calc(100% - 56px);
-        .cl-main-widget-dashboard-instant-wins-title,
-        .cl-main-widget-dashboard-achievements-title,
-        .cl-main-widget-dashboard-tournaments-title {
-          font-size: 17px;
-        }
-      }
-      .cl-main-widget-lb-footer {
-        display: none;
-      }
-
-      // LB
-      .cl-main-widget-lb-header {
-        height: 40px;
-        .cl-main-widget-lb-header-label {
-          font-size: 18px;
-        }
-        .cl-main-widget-lb-header-back-icon,
-        .cl-main-widget-lb-header-list-icon {
-          width: 25px;
-          height: 25px;
-          top: 10px;
-        }
-      }
-      .cl-main-widget-tournaments-list.cl-show {
-        top: 40px;
-        height: calc(100% - 36px);
-      }
-      .cl-main-widget-tournaments-list {
-        height: calc(100% - 46px);
-        border-radius: 0 0 20px 0;
-      }
-      .cl-main-widget-lb-leaderboard {
-        height: calc(100% - 94px);
-      }
-      &.cl-main-active-embedded-description {
-        .cl-main-widget-lb-details {
-          height: calc(100% - 52px);
-        }
-        .cl-main-widget-lb-details-description-container {
-          height: 100%;
-        }
-        .cl-main-widget-lb-details-description-close {
-          bottom: 50px;
-        }
-      }
       .cl-main-widget-lb-missing-member-details {
-        bottom: 10px;
+        padding-left: 18px;
+        .cl-rank-col {
+          max-width: 50px;
+        }
+        .cl-name-col {
+          min-width: 50px;
+        }
       }
-      .cl-main-widget-lb-leaderboard-header-top-res {
-        position: relative;
-      }
+    }
+  }
+}
 
-      // Achievements
-      .cl-main-widget-ach-header {
-        height: 40px;
-        .cl-main-widget-ach-header-label {
-          font-size: 18px;
+@media screen and (max-width: 375px) {
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-lb-leaderboard-header {
+        .cl-rank-col {
+          transform: translate(12px, 0) !important;
+        }
+        .cl-name-col {
+          transform: translate(10px, 0) !important;
+          min-width: 58px;
+        }
+        .cl-points-col {
+          transform: translate(30px, 0) !important;
+          min-width: 60px;
+        }
+        .cl-reward-col {
+          transform: translate(48px, 0) !important;
         }
       }
-      .cl-main-widget-ach-list {
-        height: calc(100% - 52px);
-      }
-      .cl-main-widget-ach-details-container {
-        top: 40px;
-        height: calc(100% - 40px);
-        overflow: auto;
-        border-radius: 0 0 30px 0;
-        &.cl-show {
-          padding-left: 0;
+      .cl-main-widget-lb-leaderboard-res-container {
+        .cl-rank-col {
+          max-width: 60px;
+          width: 100%;
+        }
+        .cl-name-col {
+          max-width: 60px;
+        }
+        .cl-points-col {
+          min-width: 60px;
+        }
+        .cl-reward-col {
+          min-width: 60px;
+        }
+        .cl-main-widget-lb-leaderboard-header-top-res {
+          .cl-rank-col-value {
+            transform: translate(14px, 0);
+          }
         }
       }
-
-      // Awards
-      .cl-main-widget-reward-header {
-        height: 40px;
-        .cl-main-widget-reward-header-label {
-          font-size: 18px;
-        }
-      }
-      .cl-main-widget-reward-list {
-        top: 40px;
-        height: calc(100% - 62px);
-      }
-      .cl-main-widget-reward-details-container {
-        height: calc(100% - 76px);
-        overflow: auto;
-        border-radius: 0 0 30px 0;
-        &.cl-show {
-          padding-left: 0;
-        }
-      }
-
-      // Messages
-      .cl-main-widget-inbox-header {
-        height: 40px;
-        .cl-main-widget-inbox-header-label {
-          font-size: 18px;
-        }
-      }
-      .cl-main-widget-inbox-list {
-        height: calc(100% - 52px);
-      }
-      .cl-main-widget-inbox-details-container {
-        top: 40px;
-        height: calc(100% - 52px);
-        overflow: auto;
-        border-radius: 0 0 30px 0;
-        &.cl-show {
-          padding-left: 0;
-        }
-      }
-
-      // Missions
-      .cl-main-widget-missions-header {
-        height: 40px;
-        .cl-main-widget-missions-header-label {
-          font-size: 18px;
-        }
-        .cl-main-widget-mission-header-back-icon {
-          width: 35px;
-          height: 35px;
-        }
-      }
-      .cl-main-widget-missions-list {
-        height: calc(100% - 52px);
-      }
-      .cl-main-widget-missions-map-container {
-        top: 40px;
-        height: calc(100% - 52px);
-        border-radius: 0 0 30px 0;
-      }
-      .cl-main-widget-missions-details-container {
-        top: 40px;
-        height: calc(100% - 52px);
-        overflow: auto;
-        border-radius: 0 0 30px 0;
-        &.cl-show {
-          padding-left: 0;
-        }
-      }
-
       .cl-main-widget-lb-details-content {
-        height: 40px;
-        .cl-main-widget-lb-details-content-label {
-          padding-top: 9px;
-          .cl-main-widget-lb-details-content-date {
-            height: 0;
-            margin: 0;
-            padding: 0;
-            visibility: hidden;
-          }
-          .cl-main-widget-lb-details-content-date-headers {
-            height: 0;
-            margin: 0;
-            padding: 0;
-            visibility: hidden;
+        .cl-main-widget-lb-details-content-date-headers-item {
+          width: 56px;
+        }
+        .cl-main-widget-lb-details-content-date {
+          .banner-date {
+            .banner-months {
+              padding-right: 14px;
+            }
+            .banner-seconds,
+            .banner-minutes,
+            .banner-hours {
+              padding-left: 14px;
+            }
+            .banner-date-cell {
+              font-size: 18px;
+              width: 18px;
+              height: 32px;
+            }
           }
         }
       }
-      .cl-main-accordion-container {
-        .cl-accordion.cl-shown {
-          height: calc(100% - 40px);
+      .cl-main-widget-lb-details-description-container {
+        .cl-main-widget-lb-details-description-date {
+          .banner-date {
+            .banner-months {
+              padding-right: 10px;
+            }
+            .banner-date-cell {
+              font-size: 16px;
+              width: 16px;
+              height: 30px;
+            }
+            .banner-seconds,
+            .banner-minutes,
+            .banner-hours {
+              padding-left: 10px;
+            }
+          }
         }
-      }
-      .cl-main-widget-lb-details {
-        margin: 0 16px 0 0;
+        .cl-main-widget-lb-details-description-date-headers-item {
+          font-size: 10px;
+          width: 46px;
+        }
       }
     }
   }
