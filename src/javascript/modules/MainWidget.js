@@ -1971,9 +1971,9 @@ export const MainWidget = function (options) {
   };
 
   this.updateLeaderboard = function () {
-    var _this = this;
-    var topResults = [];
-    var remainingResults = [];
+    const _this = this;
+    const topResults = [];
+    const remainingResults = [];
 
     _this.populateLeaderboardResultsWithDefaultEntries();
 
@@ -1988,14 +1988,11 @@ export const MainWidget = function (options) {
     _this.updateLeaderboardTopResults(topResults);
     _this.updateLeaderboardResults(remainingResults);
 
-    var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
-    var memberInTop = query(_this.settings.leaderboard.topResults, '.cl-lb-member-row');
+    const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
 
     if (member !== null) {
-      _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
+      // _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
       _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
-    } else if (memberInTop !== null) {
-      _this.missingMember(true);
     } else {
       _this.missingMemberReset();
     }
@@ -2557,6 +2554,8 @@ export const MainWidget = function (options) {
       const topThreeStyle = window.getComputedStyle(topThree);
       if (topThreeStyle.position && topThreeStyle.position === 'relative') {
         indentation = 0;
+      } else if (topThree.querySelector('.cl-lb-member-row')) {
+        return true;
       }
     }
 
@@ -2564,15 +2563,15 @@ export const MainWidget = function (options) {
       ? elemContainer.top - (elemTop - indentation) <= elemHeight : elemBottom - elemContainer.bottom <= elemHeight;
   };
 
-  var onresizeInitialised = false;
+  let onresizeInitialised = false;
   this.eventListeners = function () {
-    var _this = this;
+    const _this = this;
 
     // unique solution to support horizontal mobile orientation
     if (_this.settings.leaderboard.resultContainer !== null && _this.settings.leaderboard.resultContainer.onscroll === null) {
       _this.settings.leaderboard.resultContainer.onscroll = function (evt) {
         evt.preventDefault();
-        var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
+        const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
 
         if (member !== null) {
           _this.missingMember(_this.isElementVisibleInView(member, evt.target));
@@ -2583,7 +2582,7 @@ export const MainWidget = function (options) {
     if (_this.settings.leaderboard.list !== null && _this.settings.leaderboard.list.parentNode.onscroll === null) {
       _this.settings.leaderboard.list.parentNode.onscroll = function (evt) {
         evt.preventDefault();
-        var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
+        const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
 
         if (member !== null) {
           _this.missingMember(_this.isElementVisibleInView(member, evt.target));
@@ -2594,10 +2593,10 @@ export const MainWidget = function (options) {
     if (!onresizeInitialised) {
       onresizeInitialised = true;
       window.onresize = function (evt) {
-        var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
+        const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
 
         if (member !== null) {
-          _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
+          // _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
           _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
         }
       };
@@ -5558,7 +5557,7 @@ export const MainWidget = function (options) {
   };
 
   this.initLayout = function (callback) {
-    var _this = this;
+    const _this = this;
 
     _this.settings.active = true;
 
@@ -5569,9 +5568,9 @@ export const MainWidget = function (options) {
       _this.settings.overlayContainer.style.display = 'block';
       addClass(_this.settings.container, 'cl-show');
 
-      var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
+      const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
       if (member !== null) {
-        _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
+        // _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
         _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
       } else {
         _this.missingMemberReset();
