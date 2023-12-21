@@ -5847,7 +5847,7 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-item {
   width: 228px;
-  height: 332px;
+  height: 300px;
   background: #141e28;
   border-radius: 10px;
   margin-bottom: 20px;
@@ -5864,8 +5864,8 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-img {
-  height: 215px;
-  background-size: contain;
+  height: 180px;
+  background-size: cover;
   background-repeat: no-repeat;
   position: relative;
   border-radius: 10px 10px 0 0;
@@ -7476,6 +7476,7 @@
 
 @media (orientation: landscape) and (max-height: 600px) {
   .cl-main-widget-wrapper {
+    padding: 20px 20px 10px;
     .cl-main-widget-navigation-container {
       width: 120px;
       .cl-main-widget-navigation-darkMode-toggle {
@@ -7706,6 +7707,11 @@
         display: none;
       }
 
+      .cl-main-widget-navigation-logo {
+        width: 60px;
+        height: 60px;
+      }
+
       .cl-main-widget-navigation-missions-icon,
       .cl-main-widget-navigation-inbox-icon,
       .cl-main-widget-navigation-rewards-icon,
@@ -7717,7 +7723,7 @@
       }
 
       .cl-main-widget-navigation-items {
-        padding: 20px 0 0 0;
+        padding: 10px 0 0 0;
 
         .cl-main-widget-navigation-item {
           width: 70px;
