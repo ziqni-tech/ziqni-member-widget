@@ -3062,7 +3062,7 @@ export const MainWidget = function (options) {
     }
 
     if (ach.reward) {
-      actionsReward.innerHTML = Math.floor(ach.reward.rewardValue);
+      actionsReward.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(ach.reward);
     }
 
     detailsContainer.appendChild(icon);
@@ -3222,7 +3222,7 @@ export const MainWidget = function (options) {
     body.style.display = 'block';
 
     if (data.reward) {
-      reward.innerHTML = Math.floor(data.reward.rewardValue);
+      reward.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(data.reward);
     } else {
       reward.innerHTML = '';
     }
@@ -3318,7 +3318,7 @@ export const MainWidget = function (options) {
 
     label.innerHTML = data.name;
     body.innerHTML = data.description ? data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
-    value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.awardFormatter(data);
+    value.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(data);
     claimBtn.dataset.id = data.id;
 
     if (data.claimed) {
@@ -3407,13 +3407,7 @@ export const MainWidget = function (options) {
     }
 
     if (mission.data.reward && mission.data.reward.rewardValue) {
-      let symbol = '';
-
-      if (mission.data.reward.rewardType && mission.data.reward.rewardType.uomSymbol) {
-        symbol = ' ' + mission.data.reward.rewardType.uomSymbol;
-      }
-
-      prizeValue.innerHTML = Math.floor(mission.data.reward.rewardValue) + symbol;
+      prizeValue.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.data.reward);
     }
 
     label.innerHTML = mission.data.name;
@@ -4116,7 +4110,7 @@ export const MainWidget = function (options) {
     label.innerHTML = (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText;
     claimBtn.innerHTML = this.settings.lbWidget.settings.translation.rewards.claim;
     type.innerHTML = rew.rewardType.key;
-    prize.innerHTML = Math.floor(rew.rewardValue);
+    prize.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.rewardData);
 
     detailsWrapper.appendChild(expires);
     detailsWrapper.appendChild(icon);
@@ -4195,11 +4189,13 @@ export const MainWidget = function (options) {
     label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
 
     if (mission.reward) {
-      actionsReward.innerHTML = Math.floor(mission.reward.rewardValue);
+      actionsReward.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward);
     }
 
     if (mission.bannerLowResolutionLink) {
       image.setAttribute('style', `background-image: url(${mission.bannerLowResolutionLink})`);
+    } else if (mission.bannerLink) {
+      image.setAttribute('style', `background-image: url(${mission.bannerLink})`);
     }
 
     progressLabel.innerHTML = '0/100';
