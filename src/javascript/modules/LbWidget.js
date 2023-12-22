@@ -272,65 +272,17 @@ export const LbWidget = function (options) {
     resources: [], // Example: ["http://example.com/style.css", "http://example.com/my-fonts.css"]
     styles: null, // Example: {widgetBgColor: '#1f294a', widgetIcon: 'url(../../../examples/images/logo-icon-3.png)'}
     partialFunctions: {
-      uri: {
-        availableCompetitionsListParameters: function (filter) {
-          return filter;
-        },
-        finishedCompetitionsListParameters: function (filter) {
-          return filter;
-        },
-        competitionByIdParameters: function (filter) {
-          return filter;
-        },
-        leaderboardParameters: function (filter) {
-          return filter;
-        },
-        achievementsAvailableForAllListParameters: function (filter) {
-          return filter;
-        },
-        achievementsForMemberListParameters: function (filter) {
-          return filter;
-        },
-        achievementByIdParameters: function (filter) {
-          return filter;
-        },
-        claimedRewardsListParameters: function (filter) {
-          return filter;
-        },
-        notClaimedRewardsListParameters: function (filter) {
-          return filter;
-        },
-        expiredRewardsListParameters: function (filter) {
-          return filter;
-        },
-        availableMessagesListParameters: function (filter) {
-          return filter;
-        }
-      },
       startupCallback: function (instance) {},
       rewardFormatter: function (reward) {
         let defaultRewardValue = Number.isInteger(reward.rewardValue)
           ? reward.rewardValue
-          : Math.floor(reward.rewardValue);
+          : Math.floor(reward.rewardValue * 100) / 100;
 
-        if (reward.rewardType && reward.rewardType.uomSymbol) {
+        if (reward.rewardType?.uomSymbol) {
           defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
         }
 
         return defaultRewardValue;
-      },
-      awardFormatter: function (award) {
-        let defaultAwardValue = Number.isInteger(award.rewardValue)
-          ? award.rewardValue
-          : Math.floor(award.rewardValue);
-
-        if (award.uomSymbol) {
-          defaultAwardValue = award.uomSymbol + defaultAwardValue;
-        } else if (!award.uom && award.rewardType && award.rewardType.uomSymbol) {
-          defaultAwardValue = award.rewardType.uomSymbol + Math.floor(award.rewardValue);
-        }
-
-        return defaultAwardValue;
       },
       competitionDataAvailableResponseParser: function (competitionData, callback) { callback(competitionData); },
       competitionDataFinishedResponseParser: function (competitionData, callback) { callback(competitionData); },
