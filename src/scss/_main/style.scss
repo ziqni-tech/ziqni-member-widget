@@ -25,7 +25,7 @@
   overflow: unset;
   visibility: visible;
   outline: none;
-  font-family: var(--lb3-widget-font);
+  font-family: 'Syne', sans-serif;
   font-weight: 300;
   border: none;
   display: block;
@@ -293,7 +293,6 @@
 
 .cl-widget-ms-wrapper .cl-widget-ms-default-wrapper .cl-widget-ms-default-results-header-rank {
   text-align: left;
-  font-family: 'Syne', sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 17px;
@@ -302,7 +301,6 @@
 
 .cl-widget-ms-wrapper .cl-widget-ms-default-wrapper .cl-widget-ms-default-results-header-points {
   text-align: left;
-  font-family: 'Syne', sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 17px;
@@ -373,7 +371,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -435,7 +432,6 @@
   width: 100px;
   text-align: right;
   line-height: 16px;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -825,7 +821,6 @@
 }
 
 .cl-widget-ms-wrapper .cl-widget-ms-sum-best-wrapper.cl-inverse .cl-widget-ms-sum-best-date {
-  font-family: "Syne",sans-serif;
   font-weight: 700;
   font-size: 12px;
   line-height: 17px;
@@ -1129,7 +1124,7 @@
   height: 100%;
   background: transparent;
   padding: 40px 20px 10px;
-  font-family: var(--lb3-widget-font);
+  font-family: 'Syne', sans-serif;
   font-weight: 300;
   margin: 0;
   box-sizing: border-box;
@@ -1208,7 +1203,6 @@
   width: 108px;
   min-height: 67px;
   margin-bottom: 20px;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 14px;
@@ -1485,7 +1479,6 @@
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  font-family: 'Syne', sans-serif;
   font-size: 24px;
   font-weight: 700;
 }
@@ -1530,7 +1523,6 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title {
   color: #ffffff;
-  font-family: 'Syne', sans-serif;
   font-size: 20px;
   font-weight: 700;
 }
@@ -1575,7 +1567,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-title {
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #ffffff;
@@ -1586,7 +1577,6 @@
   display: none;
   color: #ffffff;
   text-align: center;
-  font-family: 'Syne', sans-serif;
   font-size: 12px;
   line-height: 12px;
   font-weight: 700;
@@ -1594,7 +1584,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-description {
-  font-family: 'Syne', sans-serif;
   font-size: 12px;
   line-height: 14px;
   font-weight: 400;
@@ -1649,14 +1638,12 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-title {
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   color: #ffffff;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-cards-description {
-  font-family: 'Syne', sans-serif;
   font-size: 12px;
   line-height: 14px;
   font-weight: 400;
@@ -1720,7 +1707,6 @@
   width: 100%;
   max-width: 290px;
   color: var(--lb3-achievements-item-label-color);
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -1756,7 +1742,6 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .dashboard-tournament-list-prize-wrapp {
   display: flex;
   justify-content: space-between;
-  font-family: "Syne", sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -1801,7 +1786,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list-more,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list-more {
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 16px;
@@ -1920,7 +1904,6 @@
   padding: 10px 28px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -1937,7 +1920,6 @@
   margin-left: 16px;
   cursor: pointer;
   transition: all .3s ease;
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -1954,7 +1936,6 @@
   margin-left: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -1965,7 +1946,6 @@
   width: 100%;
   max-width: 204px;
   color: var(--lb3-achievements-item-label-color);
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -1997,7 +1977,6 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list .cl-ach-list-progression-label {
   width: 56px;
   flex-shrink: 0;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -2087,7 +2066,6 @@
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  font-family: 'Syne', sans-serif;
   font-size: 24px;
   font-weight: 700;
 }
@@ -2224,7 +2202,6 @@
   align-items: center;
   width: 100%;
   height: 30px;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -2278,7 +2255,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description-title {
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
@@ -2286,7 +2262,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-tc-title {
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
@@ -2303,7 +2278,6 @@
   cursor: pointer;
   width: 30px;
   height: 30px;
-  font-family: "Syne",sans-serif;
   color: #fff;
   font-style: normal;
   font-weight: 500;
@@ -2351,7 +2325,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-brackets-title {
-  font-family: "Syne",sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
@@ -2419,7 +2392,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .connections-table_round-item-name {
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
   font-weight: 700;
   max-width: 120px;
@@ -2431,7 +2403,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .connections-table_round-item-date-title {
-  font-family: 'Syne', sans-serif;
   font-size: 12px;
   font-weight: 400;
   color: #B3B3B3;
@@ -2441,7 +2412,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .connections-table_round-item-date-value {
-  font-family: 'Syne', sans-serif;
   font-size: 10px;
   font-weight: 500;
 }
@@ -2506,7 +2476,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -2521,7 +2490,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-label {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -2543,7 +2511,6 @@
   display: flex;
   justify-content: center;
   align-items: center;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 28px;
@@ -2579,7 +2546,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-content-date-headers {
   display: flex;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -2602,7 +2568,6 @@
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -2612,7 +2577,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-date-headers {
   display: flex;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -2631,7 +2595,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-details-description-date-label {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -2682,7 +2645,6 @@
   height: 40px;
   border-radius: 10px;
   align-items: center;
-  font-family: "Syne",sans-serif;
   font-weight: 500;
   font-size: 12px;
   position: absolute;
@@ -2708,7 +2670,6 @@
   height: 40px;
   border-radius: 10px;
   align-items: center;
-  font-family: "Syne",sans-serif;
   font-weight: 500;
   font-size: 12px;
   position: absolute;
@@ -2759,7 +2720,6 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard-header-labels {
   height: 40px;
   width: 100%;
-  font-family: 'Syne',sans-serif;
   display: flex;
   align-items: center;
   font-size: 14px;
@@ -2931,7 +2891,6 @@
   background: #406A8C;
   border-radius: 50%;
   text-align: center;
-  font-family: 'Syne', sans-serif;
   font-weight: 700;
   line-height: 24px;
 }
@@ -2967,7 +2926,6 @@
   border-radius: 10px;
   display: flex;
   align-items: center;
-  font-family: 'Syne', sans-serif;
   font-weight: 500;
   font-size: 12px;
 }
@@ -3406,7 +3364,6 @@
   padding: 10px 28px;
   cursor: pointer;
   transition: all .3s ease;
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -3501,7 +3458,6 @@
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  font-family: "Syne",sans-serif;
   font-size: 24px;
   font-weight: 700;
 }
@@ -3592,7 +3548,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-popup-title {
   color: var(--lb3-achievements-item-label-color);
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -3603,7 +3558,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-popup-description {
   color: var(--lb3-achievements-item-label-color);
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -3635,7 +3589,6 @@
   border-radius: 10px;
   padding: 10px 28px;
   cursor: pointer;
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -3651,7 +3604,6 @@
   border-radius: 10px;
   padding: 10px 28px;
   cursor: pointer;
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -3702,7 +3654,6 @@
   padding: 26px 16px;
   display: flex;
   align-items: center;
-  font-family: "Syne",sans-serif;
   justify-content: space-between;
 }
 
@@ -3736,7 +3687,6 @@
   cursor: pointer;
   width: 30px;
   height: 30px;
-  font-family: "Syne",sans-serif;
   color: #fff;
   font-style: normal;
   font-weight: 500;
@@ -3782,7 +3732,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-description-tc-title,
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-description-title {
-  font-family: "Syne",sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
@@ -3794,7 +3743,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress-title {
-  font-family: "Syne",sans-serif;
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
@@ -3836,7 +3784,6 @@
 .cl-main-widget-wrapper .cl-main-widget-ach-details-container .cl-main-widget-ach-details-body-progress-label {
   width: 56px;
   flex-shrink: 0;
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -4040,7 +3987,6 @@
   width: 100%;
   max-width: 204px;
   color: var(--lb3-achievements-item-label-color);
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -4086,7 +4032,6 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-section-ach .cl-ach-list-progression-label {
   width: 56px;
   flex-shrink: 0;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -4121,7 +4066,6 @@
   padding: 10px 28px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -4138,7 +4082,6 @@
   margin-left: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -4155,7 +4098,6 @@
   margin-left: 16px;
   cursor: pointer;
   transition: all 0.3s ease;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -4230,7 +4172,6 @@
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  font-family: "Syne",sans-serif;
   font-size: 24px;
   font-weight: 700;
 }
@@ -4352,7 +4293,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-details-wrap {
   width: 100%;
-  font-family: "Syne",sans-serif;
   text-align: center;
   display: flex;
   flex-direction: column;
@@ -4498,7 +4438,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .wheel-label,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-label {
-  font-family: 'Syne', sans-serif;
   font-weight: 700;
   font-size: 14px;
   line-height: 52px;
@@ -4582,7 +4521,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-label {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -4656,7 +4594,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-label {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -4673,7 +4610,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .scratchcards-game-prize-prizes-label {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 14px;
@@ -4750,7 +4686,6 @@
   background: #EE3EC8;
   border-radius: 10px;
   padding: 0 40px;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -4768,7 +4703,6 @@
   border: 1px solid #406a8c;
   box-shadow: 0 2px 12px rgba(64,106,140,.5);
   border-radius: 10px;
-  font-family: "Syne",sans-serif;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -4797,7 +4731,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: "Syne",sans-serif;
   width: 148px;
   height: 36px;
   background: #ee3ec8;
@@ -4875,7 +4808,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-label {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 20px;
@@ -4885,7 +4817,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .single-wheel-description {
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -4945,7 +4876,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Syne', sans-serif;
   width: 148px;
   height: 36px;
   background: #EE3EC8;
@@ -4975,7 +4905,6 @@
   border: 1px solid #406A8C;
   box-shadow: 0 2px 12px rgba(64, 106, 140, 0.5);
   border-radius: 10px;
-  font-family: 'Syne', sans-serif;
   position: absolute;
   left: 50%;
   top: 50%;
@@ -5004,7 +4933,6 @@
   display: flex;
   align-items: center;
   justify-content: center;
-  font-family: 'Syne', sans-serif;
   width: 148px;
   height: 36px;
   background: #EE3EC8;
@@ -5031,7 +4959,6 @@
   width: fit-content;
   align-items: center;
   margin: 0 auto;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -5113,7 +5040,6 @@
   display: flex;
   height: 45px;
   align-items: center;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -5202,7 +5128,6 @@
   display: flex;
   height: 40px;
   align-items: center;
-  font-family: "Syne",sans-serif;
   font-weight: 500;
   font-size: 12px;
 }
@@ -5291,7 +5216,6 @@
   padding: 26px 16px;
   display: flex;
   align-items: center;
-  font-family: "Syne",sans-serif;
   justify-content: space-between;
 }
 
@@ -5420,7 +5344,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-reward-details-container .cl-main-widget-reward-winnings-value {
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 18px;
@@ -5444,7 +5367,6 @@
   padding: 10px 28px;
   cursor: pointer;
   transition: all .3s ease;
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -5487,7 +5409,6 @@
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  font-family: 'Syne', sans-serif;
   font-size: 24px;
   font-weight: 700;
 }
@@ -5569,7 +5490,6 @@
   background: #141E28;
   border-radius: 10px;
   height: 60px;
-  font-family: 'Syne', sans-serif;
   margin-bottom: 10px;
   display: flex;
   align-items: center;
@@ -5581,7 +5501,6 @@
   display: flex;
   align-items: center;
   width: 100%;
-  font-family: 'Syne', sans-serif;
   font-weight: 500;
   font-size: 12px;
 }
@@ -5641,7 +5560,6 @@
   padding: 26px 16px;
   display: flex;
   align-items: center;
-  font-family: 'Syne', sans-serif;
   justify-content: space-between;
 }
 
@@ -5690,7 +5608,6 @@
 
 .cl-main-widget-wrapper .cl-main-widget-inbox-details-container .cl-main-widget-inbox-details-body {
   color: var(--lb3-messages-details-text-color);
-  font-family: 'Syne', sans-serif;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
@@ -5753,7 +5670,6 @@
   text-align: center;
   line-height: 30px;
   color: var(--lb3-tournament-header-label-color);
-  font-family: "Syne",sans-serif;
   font-size: 24px;
   font-weight: 700;
 }
@@ -5909,7 +5825,6 @@
   height: 32px;
   background: #8D0C71;
   border-radius: 6px;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -5921,7 +5836,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-label {
-  font-family: 'Syne', serif;
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -5958,7 +5872,6 @@
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-label {
-  font-family: "Syne",sans-serif;
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -6060,7 +5973,6 @@
 .cl-main-widget-wrapper .cl-main-widget-missions-map-header {
   color: #ffffff;
   text-align: center;
-  font-family: Syne, sans-serif;
   font-size: 20px;
   font-weight: 700;
   padding-top: 20px;
@@ -6144,7 +6056,6 @@
   padding: 26px 16px 0;
   display: flex;
   align-items: center;
-  font-family: "Syne",sans-serif;
   justify-content: space-between;
 }
 
@@ -6212,7 +6123,6 @@
   cursor: pointer;
   width: 30px;
   height: 30px;
-  font-family: "Syne",sans-serif;
   color: #fff;
   font-style: normal;
   font-weight: 500;
@@ -6287,7 +6197,6 @@
   color: var(--lb3-messages-details-text-color);
   margin: 0;
   padding: 0 0 14px 0;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -6301,7 +6210,6 @@
   color: var(--lb3-messages-details-text-color);
   margin: 0;
   padding: 0 0 14px 0;
-  font-family: 'Syne', sans-serif;
   font-style: normal;
   font-weight: 400;
   font-size: 12px;
@@ -6313,18 +6221,15 @@
   display: flex;
   align-items: center;
   padding-top: 20px;
-  font-family: 'Syne', sans-serif;
   font-size: 14px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-label {
-  font-family: 'Syne', sans-serif;
   font-weight: 500;
   line-height: 15px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-missions-details-container .cl-main-widget-missions-details-prize-value {
-  font-family: 'Syne', sans-serif;
   font-weight: 700;
   line-height: 14px;
   display: flex;
@@ -6389,7 +6294,6 @@
       border: 1px solid #333333;
       border-radius: 5px;
       cursor: pointer;
-      font-family: 'Syne', sans-serif;
       font-style: normal;
       font-weight: 700;
       font-size: 12px;
@@ -8560,7 +8464,6 @@
               padding: 10px 28px;
               cursor: pointer;
               transition: all .3s ease;
-              font-family: "Syne",sans-serif;
               font-style: normal;
               font-weight: 700;
               font-size: 14px;
