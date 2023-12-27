@@ -3003,99 +3003,53 @@ export const MainWidget = function (options) {
     }, 200);
   };
 
-  this.achievementItem = function (ach, achieved, perc) {
-    const _this = this;
+  this.achievementItem = function (ach) {
     const listItem = document.createElement('div');
-    const detailsContainer = document.createElement('div');
-    const detailsWrapper = document.createElement('div');
-    const icon = document.createElement('div');
-    const label = document.createElement('div');
-    const progressionWrapper = document.createElement('div');
-    const progressionCont = document.createElement('div');
-    const progressionBar = document.createElement('div');
-    const progressionLabel = document.createElement('div');
-    const actionsWrapper = document.createElement('div');
-    const actionsReward = document.createElement('div');
-    const moreButton = document.createElement('a');
-    const enterButton = document.createElement('a');
-    const leaveButton = document.createElement('a');
-    const progressionButton = document.createElement('a');
-
     listItem.setAttribute('class', 'cl-ach-list-item cl-ach-' + ach.id);
-    detailsContainer.setAttribute('class', 'cl-ach-list-details-cont');
-    icon.setAttribute('class', 'cl-ach-list-icon');
-    detailsWrapper.setAttribute('class', 'cl-ach-list-details-wrap');
-    label.setAttribute('class', 'cl-ach-list-details-label');
-    progressionWrapper.setAttribute('class', 'cl-ach-list-progression');
-    progressionCont.setAttribute('class', 'cl-ach-list-progression-cont');
-    progressionBar.setAttribute('class', 'cl-ach-list-progression-bar');
-    progressionLabel.setAttribute('class', 'cl-ach-list-progression-label');
-    actionsWrapper.setAttribute('class', 'cl-ach-list-actions');
-    actionsReward.setAttribute('class', 'cl-ach-list-actions-reward');
-    moreButton.setAttribute('class', 'cl-ach-list-more');
-    enterButton.setAttribute('class', 'cl-ach-list-enter');
-    leaveButton.setAttribute('class', 'cl-ach-list-leave');
-    progressionButton.setAttribute('class', 'cl-ach-list-in-progress');
-
-    moreButton.dataset.id = ach.id;
-    moreButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.more;
-    moreButton.href = 'javascript:void(0);';
-
-    enterButton.dataset.id = ach.id;
-    enterButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listEnterBtn;
-    enterButton.href = 'javascript:void(0);';
-
-    leaveButton.dataset.id = ach.id;
-    leaveButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listLeaveBtn;
-    leaveButton.href = 'javascript:void(0);';
-
-    progressionButton.dataset.id = ach.id;
-    progressionButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listProgressionBtn;
-    progressionButton.href = 'javascript:void(0);';
-
     listItem.dataset.id = ach.id;
 
-    label.innerHTML = ach.name;
-
-    if (ach.iconLink) {
-      icon.setAttribute('style', 'background-image: url(' + ach.iconLink + ')');
-    }
-
-    if (ach.reward) {
-      actionsReward.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(ach.reward);
-    }
-
-    detailsContainer.appendChild(icon);
-
-    detailsContainer.appendChild(detailsWrapper);
-
-    progressionCont.appendChild(progressionBar);
-    progressionWrapper.appendChild(progressionCont);
-
-    // TODO: remove
-    progressionLabel.innerHTML = '0/100';
-    progressionWrapper.appendChild(progressionLabel);
-
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(progressionWrapper);
-
-    actionsWrapper.appendChild(actionsReward);
+    let isMore = false;
+    let isEnter = false;
+    let isLeave = false;
+    let isProgress = false;
 
     if (Array.isArray(ach.constraints) && ach.constraints.includes('optinRequiredForEntrants')) {
       if (ach.optInStatus && ach.optInStatus >= 15 && ach.optInStatus <= 35) {
-        actionsWrapper.appendChild(leaveButton);
+        isLeave = true;
       } else if (!isNaN(ach.optInStatus) && (ach.optInStatus === 10 || ach.optInStatus === 0)) {
-        actionsWrapper.appendChild(progressionButton);
+        isProgress = true;
       } else {
-        actionsWrapper.appendChild(enterButton);
+        isEnter = true;
       }
-      addClass(listItem, 'cl-ach-list-item--notentered');
     } else {
-      actionsWrapper.appendChild(moreButton);
+      isMore = true;
     }
 
-    listItem.appendChild(detailsContainer);
-    listItem.appendChild(actionsWrapper);
+    let bgImage = '';
+    if (ach.iconLink) {
+      bgImage = 'background-image: url(' + ach.iconLink + ')';
+    }
+
+    let rewardValue = '';
+    if (ach.reward) {
+      rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(ach.reward);
+    }
+
+    const template = require('../templates/mainWidget/achievementItem.hbs');
+    listItem.innerHTML = template({
+      id: ach.id,
+      title: ach.name,
+      bgImage: bgImage,
+      rewardValue: rewardValue,
+      moreLabel: this.settings.lbWidget.settings.translation.achievements.more,
+      enterLabel: this.settings.lbWidget.settings.translation.achievements.listEnterBtn,
+      leaveLabel: this.settings.lbWidget.settings.translation.achievements.listLeaveBtn,
+      progressLabel: this.settings.lbWidget.settings.translation.achievements.listProgressionBtn,
+      isMore: isMore,
+      isEnter: isEnter,
+      isLeave: isLeave,
+      isProgress: isProgress
+    });
 
     return listItem;
   };
