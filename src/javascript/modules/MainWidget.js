@@ -3935,40 +3935,8 @@ export const MainWidget = function (options) {
 
   this.dashboardTournamentItem = function (tournament, isReadyStatus = false) {
     const listItem = document.createElement('div');
-    const itemBg = document.createElement('div');
-    const title = document.createElement('div');
-    const endsWrapp = document.createElement('div');
-    const endsTitle = document.createElement('div');
-    const endsValue = document.createElement('div');
-    const prizeWrapp = document.createElement('div');
-    const prizeTitle = document.createElement('div');
-    const prizeValue = document.createElement('div');
-    const btn = document.createElement('div');
-
     listItem.setAttribute('class', 'dashboard-tournament-item');
-    itemBg.setAttribute('class', 'dashboard-tournament-list-bg');
-    title.setAttribute('class', 'dashboard-tournament-list-title');
-    endsWrapp.setAttribute('class', 'dashboard-tournament-list-ends-wrapp');
-    endsTitle.setAttribute('class', 'dashboard-tournament-list-ends-title');
-    endsValue.setAttribute('class', 'dashboard-tournament-list-ends-value');
-    prizeWrapp.setAttribute('class', 'dashboard-tournament-list-prize-wrapp');
-    prizeTitle.setAttribute('class', 'dashboard-tournament-list-prize-title');
-    prizeValue.setAttribute('class', 'dashboard-tournament-list-prize-value');
-    btn.setAttribute('class', 'dashboard-tournament-list-btn');
     listItem.setAttribute('data-id', tournament.id);
-
-    title.innerHTML = tournament.name;
-    btn.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentBtn;
-    endsTitle.innerHTML = isReadyStatus ? this.settings.lbWidget.settings.translation.dashboard.startsTitle : this.settings.lbWidget.settings.translation.dashboard.endsTitle;
-    prizeTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.prizeTitle;
-    const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
-    endsValue.innerHTML = date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
-
-    if (tournament.bannerLowResolutionLink) {
-      itemBg.setAttribute('style', `background-image: url(${tournament.bannerLowResolutionLink})`);
-    } else if (tournament.bannerLink) {
-      itemBg.setAttribute('style', `background-image: url(${tournament.bannerLink})`);
-    }
 
     let rewardValue = '';
 
@@ -3999,19 +3967,29 @@ export const MainWidget = function (options) {
       }
     }
 
-    prizeValue.innerHTML = rewardValue;
+    let itemBg = '';
+    if (tournament.bannerLowResolutionLink) {
+      itemBg = `background-image: url(${tournament.bannerLowResolutionLink})`;
+    } else if (tournament.bannerLink) {
+      itemBg = `background-image: url(${tournament.bannerLink})`;
+    }
 
-    endsWrapp.appendChild(endsTitle);
-    endsWrapp.appendChild(endsValue);
+    const endsLabel = isReadyStatus
+      ? this.settings.lbWidget.settings.translation.dashboard.startsTitle
+      : this.settings.lbWidget.settings.translation.dashboard.endsTitle;
 
-    prizeWrapp.appendChild(prizeTitle);
-    prizeWrapp.appendChild(prizeValue);
+    const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
 
-    listItem.appendChild(itemBg);
-    listItem.appendChild(title);
-    listItem.appendChild(endsWrapp);
-    listItem.appendChild(prizeWrapp);
-    listItem.appendChild(btn);
+    const template = require('../templates/dashboard/tournamentItem.hbs');
+    listItem.innerHTML = template({
+      title: tournament.name,
+      itemBg: itemBg,
+      endsLabel: endsLabel,
+      endsValue: date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' }),
+      prizeLabel: this.settings.lbWidget.settings.translation.dashboard.prizeTitle,
+      prizeValue: rewardValue,
+      seeMoreLabel: this.settings.lbWidget.settings.translation.dashboard.tournamentBtn
+    });
 
     return listItem;
   };

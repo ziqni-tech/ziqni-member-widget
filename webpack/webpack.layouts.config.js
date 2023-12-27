@@ -97,6 +97,15 @@ module.exports = {
           limit: 8192
         }
       },
+      {
+        test: /\.hbs$/,
+        loader: 'handlebars-loader',
+        options: {
+          precompileOptions: {
+            knownHelpersOnly: false
+          }
+        }
+      }
     ]
   },
   plugins: [
