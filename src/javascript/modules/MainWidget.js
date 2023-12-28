@@ -556,189 +556,22 @@ export const MainWidget = function (options) {
   };
 
   this.achievementsAreaLayout = function () {
-    var _this = this;
-    var sectionACH = document.createElement('div');
+    const sectionACH = document.createElement('div');
+    sectionACH.setAttribute('class', this.settings.lbWidget.settings.navigation.achievements.containerClass + ' cl-main-section-item');
 
-    var sectionACHHeader = document.createElement('div');
-    var sectionACHHeaderLabel = document.createElement('div');
-    var sectionACHHeaderDate = document.createElement('div');
-    var sectionACHHeaderClose = document.createElement('div');
-
-    var sectionACHDetails = document.createElement('div');
-    var sectionACHDetailsInfo = document.createElement('div');
-    var sectionACHDetailsInfoIcon = document.createElement('div');
-    var sectionACHDetailsContentContainer = document.createElement('div');
-    var sectionACHDetailsContentContainerLabel = document.createElement('div');
-    var sectionACHDetailsContentContainerDate = document.createElement('div');
-
-    var sectionACHList = document.createElement('div');
-    var sectionACHListBody = document.createElement('div');
-    var sectionACHListBodyResults = document.createElement('div');
-
-    var sectionACHFooter = document.createElement('div');
-    var sectionACHFooterContent = document.createElement('div');
-
-    var sectionAchievementDetailsContainer = document.createElement('div');
-    const sectionAchievementDetailsWrapper = document.createElement('div');
-    var sectionAchievementDetailsHeader = document.createElement('div');
-    var sectionAchievementDetailsHeaderLabel = document.createElement('div');
-    var sectionAchievementDetailsHeaderDate = document.createElement('div');
-    var sectionAchievementDetailsHeaderInfo = document.createElement('div');
-    var sectionAchievementDetailsBackBtn = document.createElement('a');
-    var sectionAchievementDetailsBodyContainer = document.createElement('div');
-    var sectionAchievementDetailsBodyImageContainer = document.createElement('div');
-    var sectionAchievementDetailsBody = document.createElement('div');
-    var sectionAchievementDetailsTC = document.createElement('div');
-    var sectionAchievementDetailsBodyDescriptionTitle = document.createElement('div');
-    var sectionAchievementDetailsBodyTCTitle = document.createElement('div');
-
-    const sectionAchievementDetailsProgressionTitle = document.createElement('div');
-    const sectionAchievementDetailsProgression = document.createElement('div');
-    const sectionAchievementDetailsProgressionCont = document.createElement('div');
-    const sectionAchievementDetailsProgressionBar = document.createElement('div');
-    const sectionAchievementDetailsProgressionLabel = document.createElement('div');
-
-    var sectionAchievementDetailsOptInContainer = document.createElement('div');
-    var sectionAchievementDetailsOptInAction = document.createElement('a');
-    var sectionAchievementDetailsReward = document.createElement('div');
-
-    const leavePopupWrapp = document.createElement('div');
-    const leavePopup = document.createElement('div');
-    const leavePopupTitle = document.createElement('div');
-    const leavePopupClose = document.createElement('div');
-    const leavePopupDescription = document.createElement('div');
-    const leavePopupActionConfirm = document.createElement('div');
-    const leavePopupActionCancel = document.createElement('div');
-    const leavePopupActions = document.createElement('div');
-
-    leavePopupWrapp.setAttribute('class', 'cl-main-widget-ach-list-popup-wrapp');
-    leavePopup.setAttribute('class', 'cl-main-widget-ach-list-popup');
-    leavePopupTitle.setAttribute('class', 'cl-main-widget-ach-list-popup-title');
-    leavePopupClose.setAttribute('class', 'cl-main-widget-ach-list-popup-close');
-    leavePopupDescription.setAttribute('class', 'cl-main-widget-ach-list-popup-description');
-    leavePopupActionConfirm.setAttribute('class', 'cl-main-widget-ach-list-popup-confirm');
-    leavePopupActionCancel.setAttribute('class', 'cl-main-widget-ach-list-popup-cancel');
-    leavePopupActions.setAttribute('class', 'cl-main-widget-ach-list-popup-actions');
-
-    leavePopupTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupTitle;
-    leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
-    leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
-    leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
-    sectionAchievementDetailsHeaderInfo.innerHTML = 'i';
-    sectionAchievementDetailsBodyDescriptionTitle.innerHTML = this.settings.lbWidget.settings.translation.global.descriptionLabel;
-    sectionAchievementDetailsBodyTCTitle.innerHTML = this.settings.lbWidget.settings.translation.global.tAndCLabel;
-    sectionAchievementDetailsProgressionTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.progress;
-    sectionAchievementDetailsProgressionLabel.innerHTML = '0/100';
-
-    leavePopupActions.appendChild(leavePopupActionCancel);
-    leavePopupActions.appendChild(leavePopupActionConfirm);
-
-    leavePopup.appendChild(leavePopupTitle);
-    leavePopup.appendChild(leavePopupClose);
-    leavePopup.appendChild(leavePopupDescription);
-    leavePopup.appendChild(leavePopupActions);
-
-    leavePopupWrapp.appendChild(leavePopup);
-
-    sectionACH.setAttribute('class', _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' cl-main-section-item');
-    sectionACHHeader.setAttribute('class', 'cl-main-widget-ach-header');
-    sectionACHHeaderLabel.setAttribute('class', 'cl-main-widget-ach-header-label');
-    sectionACHHeaderDate.setAttribute('class', 'cl-main-widget-ach-header-date');
-    sectionACHHeaderClose.setAttribute('class', 'cl-main-widget-ach-header-close');
-
-    sectionACHDetails.setAttribute('class', 'cl-main-widget-ach-details');
-    sectionACHDetailsInfo.setAttribute('class', 'cl-main-widget-ach-details-info');
-    sectionACHDetailsInfoIcon.setAttribute('class', 'cl-main-widget-ach-details-info-icon');
-    sectionACHDetailsContentContainer.setAttribute('class', 'cl-main-widget-ach-details-content');
-    sectionACHDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-ach-details-content-label');
-    sectionACHDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-ach-details-content-date');
-
-    // Leaderboard result container
-    sectionACHList.setAttribute('class', 'cl-main-widget-ach-list');
-    sectionACHListBody.setAttribute('class', 'cl-main-widget-ach-list-body');
-    sectionACHListBodyResults.setAttribute('class', 'cl-main-widget-ach-list-body-res');
-
-    // footer
-    sectionACHFooter.setAttribute('class', 'cl-main-widget-ach-footer');
-    sectionACHFooterContent.setAttribute('class', 'cl-main-widget-ach-footer-content');
-
-    // details section
-    sectionAchievementDetailsContainer.setAttribute('class', 'cl-main-widget-ach-details-container');
-    sectionAchievementDetailsWrapper.setAttribute('class', 'cl-main-widget-ach-details-wrapper');
-    sectionAchievementDetailsHeader.setAttribute('class', 'cl-main-widget-ach-details-header');
-    sectionAchievementDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-ach-details-header-label');
-    sectionAchievementDetailsHeaderDate.setAttribute('class', 'cl-main-widget-ach-details-header-date');
-    sectionAchievementDetailsHeaderInfo.setAttribute('class', 'cl-main-widget-ach-details-header-info');
-    sectionAchievementDetailsBackBtn.setAttribute('class', 'cl-main-widget-ach-details-back-btn');
-    sectionAchievementDetailsBodyContainer.setAttribute('class', 'cl-main-widget-ach-details-body-container');
-    sectionAchievementDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-ach-details-body-image-cont');
-    sectionAchievementDetailsBody.setAttribute('class', 'cl-main-widget-ach-details-body');
-    sectionAchievementDetailsTC.setAttribute('class', 'cl-main-widget-ach-details-tc');
-    sectionAchievementDetailsBodyDescriptionTitle.setAttribute('class', 'cl-main-widget-ach-details-body-description-title');
-    sectionAchievementDetailsBodyTCTitle.setAttribute('class', 'cl-main-widget-ach-details-body-description-tc-title');
-    sectionAchievementDetailsOptInContainer.setAttribute('class', 'cl-main-widget-ach-details-optin-container');
-    sectionAchievementDetailsOptInAction.setAttribute('class', 'cl-main-widget-ach-details-optin-action');
-    sectionAchievementDetailsReward.setAttribute('class', 'cl-main-widget-ach-details-reward');
-
-    sectionAchievementDetailsProgressionTitle.setAttribute('class', 'cl-main-widget-ach-details-body-progress-title');
-    sectionAchievementDetailsProgression.setAttribute('class', 'cl-main-widget-ach-details-body-progress');
-    sectionAchievementDetailsProgressionCont.setAttribute('class', 'cl-main-widget-ach-details-body-progress-cont');
-    sectionAchievementDetailsProgressionBar.setAttribute('class', 'cl-main-widget-ach-details-body-progress-bar');
-    sectionAchievementDetailsProgressionLabel.setAttribute('class', 'cl-main-widget-ach-details-body-progress-label');
-
-    sectionAchievementDetailsProgressionCont.appendChild(sectionAchievementDetailsProgressionBar);
-
-    sectionAchievementDetailsProgression.appendChild(sectionAchievementDetailsProgressionCont);
-    sectionAchievementDetailsProgression.appendChild(sectionAchievementDetailsProgressionLabel);
-
-    sectionACHHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.achievements.label;
-    sectionACHFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-
-    sectionAchievementDetailsOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
-    sectionAchievementDetailsOptInAction.href = 'javascript:void(0);';
-
-    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsReward);
-    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsOptInAction);
-
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsBackBtn);
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderLabel);
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderDate);
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderInfo);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyImageContainer);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsProgressionTitle);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsProgression);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyDescriptionTitle);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyTCTitle);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBody);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsTC);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsOptInContainer);
-
-    sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsHeader);
-    sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsBodyContainer);
-
-    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsWrapper);
-
-    sectionACHHeader.appendChild(sectionACHHeaderLabel);
-    sectionACHHeader.appendChild(sectionACHHeaderDate);
-    sectionACHHeader.appendChild(sectionACHHeaderClose);
-
-    sectionACHDetailsInfo.appendChild(sectionACHDetailsInfoIcon);
-    sectionACHDetailsContentContainer.appendChild(sectionACHDetailsContentContainerLabel);
-    sectionACHDetailsContentContainer.appendChild(sectionACHDetailsContentContainerDate);
-    sectionACHDetails.appendChild(sectionACHDetailsInfo);
-    sectionACHDetails.appendChild(sectionACHDetailsContentContainer);
-
-    sectionACHListBody.appendChild(sectionACHListBodyResults);
-    sectionACHListBody.appendChild(leavePopupWrapp);
-    sectionACHList.appendChild(sectionACHListBody);
-
-    sectionACHFooter.appendChild(sectionACHFooterContent);
-
-    sectionACH.appendChild(sectionACHHeader);
-    sectionACH.appendChild(sectionACHDetails);
-    sectionACH.appendChild(sectionACHList);
-    sectionACH.appendChild(sectionACHFooter);
-    sectionACH.appendChild(sectionAchievementDetailsContainer);
+    const template = require('../templates/layouts/achievementsAreaLayout.hbs');
+    sectionACH.innerHTML = template({
+      leavePopupTitle: this.settings.lbWidget.settings.translation.achievements.leavePopupTitle,
+      leavePopupDescription: this.settings.lbWidget.settings.translation.achievements.leavePopupDescription,
+      leavePopupActionConfirm: this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm,
+      leavePopupActionCancel: this.settings.lbWidget.settings.translation.achievements.leavePopupClose,
+      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
+      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
+      progressLabel: this.settings.lbWidget.settings.translation.achievements.progress,
+      headerLabel: this.settings.lbWidget.settings.translation.achievements.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
+      enterLabel: this.settings.lbWidget.settings.translation.achievements.enter
+    });
 
     return sectionACH;
   };
