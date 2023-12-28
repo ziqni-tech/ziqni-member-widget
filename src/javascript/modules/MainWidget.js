@@ -3795,30 +3795,22 @@ export const MainWidget = function (options) {
 
   this.messageItem = function (inbox) {
     const listItem = document.createElement('div');
-    const detailsContainer = document.createElement('div');
-    const detailsWrapper = document.createElement('div');
-    const label = document.createElement('div');
-    const description = document.createElement('div');
-    const date = document.createElement('div');
+    listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
+    listItem.dataset.id = inbox.id;
+
     const content = stripHtml(inbox.body);
 
-    listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
-    detailsContainer.setAttribute('class', 'cl-inbox-list-details-cont');
-    detailsWrapper.setAttribute('class', 'cl-inbox-list-details-wrap');
-    label.setAttribute('class', 'cl-inbox-list-details-label');
-    description.setAttribute('class', 'cl-inbox-list-details-description');
-    date.setAttribute('class', 'cl-inbox-list-details-date');
+    const subject = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
+    const description = (content.length > 60) ? content.substr(0, 60) + '...' : content;
+    const date = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
 
-    listItem.dataset.id = inbox.id;
-    label.innerHTML = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
-    description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
-    date.innerHTML = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
-
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(description);
-    detailsContainer.appendChild(detailsWrapper);
-    detailsContainer.appendChild(date);
-    listItem.appendChild(detailsContainer);
+    const template = require('../templates/mainWidget/messageItem.hbs');
+    listItem.innerHTML = template({
+      id: inbox.id,
+      subject: subject,
+      description: description,
+      date: date
+    });
 
     return listItem;
   };
