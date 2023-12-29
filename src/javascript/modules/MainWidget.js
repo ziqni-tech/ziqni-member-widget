@@ -577,130 +577,15 @@ export const MainWidget = function (options) {
   };
 
   this.rewardsAreaLayout = function () {
-    var _this = this;
-    var sectionRewards = document.createElement('div');
+    const sectionRewards = document.createElement('div');
+    sectionRewards.setAttribute('class', this.settings.lbWidget.settings.navigation.rewards.containerClass + ' cl-main-section-item');
 
-    var sectionRewardsHeader = document.createElement('div');
-    const sectionRewardsHeaderBack = document.createElement('div');
-    var sectionRewardsHeaderLabel = document.createElement('div');
-    var sectionRewardsHeaderDate = document.createElement('div');
-    var sectionRewardsHeaderClose = document.createElement('div');
-
-    var sectionRewardsDetails = document.createElement('div');
-    var sectionRewardsDetailsInfo = document.createElement('div');
-    var sectionRewardsDetailsInfoIcon = document.createElement('div');
-    var sectionRewardsDetailsContentContainer = document.createElement('div');
-    const sectionRewardsDetailsContentWrapper = document.createElement('div');
-    var sectionRewardsDetailsContentContainerLabel = document.createElement('div');
-    var sectionRewardsDetailsContentContainerDate = document.createElement('div');
-
-    var sectionRewardsList = document.createElement('div');
-    var sectionRewardsListBody = document.createElement('div');
-    var sectionRewardsListBodyResults = document.createElement('div');
-
-    var sectionRewardsFooter = document.createElement('div');
-    var sectionRewardsFooterContent = document.createElement('div');
-
-    var sectionRewardsDetailsContainer = document.createElement('div');
-    var sectionRewardsDetailsHeader = document.createElement('div');
-    var sectionRewardsDetailsHeaderLabel = document.createElement('div');
-    var sectionRewardsDetailsHeaderDate = document.createElement('div');
-    var sectionRewardsDetailsBackBtn = document.createElement('a');
-    var sectionRewardsDetailsBodyContainer = document.createElement('div');
-    var sectionRewardsDetailsBodyImageContainer = document.createElement('div');
-    var sectionRewardsDetailsBody = document.createElement('div');
-    const sectionRewardsDetailsDescription = document.createElement('div');
-    var sectionRewardsWinningsContainer = document.createElement('div');
-    var sectionRewardsWinningsIcon = document.createElement('div');
-    var sectionRewardsWinningsValue = document.createElement('div');
-    var sectionRewardsClaimContainer = document.createElement('div');
-    var sectionRewardsClaimBtn = document.createElement('a');
-
-    sectionRewards.setAttribute('class', _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' cl-main-section-item');
-    sectionRewardsHeader.setAttribute('class', 'cl-main-widget-reward-header');
-    sectionRewardsHeaderBack.setAttribute('class', 'cl-main-widget-reward-header-back');
-    sectionRewardsHeaderLabel.setAttribute('class', 'cl-main-widget-reward-header-label');
-    sectionRewardsHeaderDate.setAttribute('class', 'cl-main-widget-reward-header-date');
-    sectionRewardsHeaderClose.setAttribute('class', 'cl-main-widget-reward-header-close');
-
-    sectionRewardsDetails.setAttribute('class', 'cl-main-widget-reward-details');
-    sectionRewardsDetailsInfo.setAttribute('class', 'cl-main-widget-reward-details-info');
-    sectionRewardsDetailsInfoIcon.setAttribute('class', 'cl-main-widget-reward-details-info-icon');
-    sectionRewardsDetailsContentContainer.setAttribute('class', 'cl-main-widget-reward-details-content');
-    sectionRewardsDetailsContentWrapper.setAttribute('class', 'cl-main-widget-reward-details-wrapper');
-    sectionRewardsDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-reward-details-content-label');
-    sectionRewardsDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-reward-details-content-date');
-
-    // Leaderboard result container
-    sectionRewardsList.setAttribute('class', 'cl-main-widget-reward-list');
-    sectionRewardsListBody.setAttribute('class', 'cl-main-widget-reward-list-body');
-    sectionRewardsListBodyResults.setAttribute('class', 'cl-main-widget-reward-list-body-res');
-
-    // footer
-    sectionRewardsFooter.setAttribute('class', 'cl-main-widget-reward-footer');
-    sectionRewardsFooterContent.setAttribute('class', 'cl-main-widget-reward-footer-content');
-
-    // details section
-    sectionRewardsDetailsContainer.setAttribute('class', 'cl-main-widget-reward-details-container');
-    sectionRewardsDetailsHeader.setAttribute('class', 'cl-main-widget-reward-details-header');
-    sectionRewardsDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-reward-details-header-label');
-    sectionRewardsDetailsHeaderDate.setAttribute('class', 'cl-main-widget-reward-details-header-date');
-    sectionRewardsDetailsBackBtn.setAttribute('class', 'cl-main-widget-reward-details-back-btn');
-    sectionRewardsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-reward-details-body-container');
-    sectionRewardsDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-reward-details-body-image-cont');
-    sectionRewardsDetailsBody.setAttribute('class', 'cl-main-widget-reward-details-body');
-    sectionRewardsDetailsDescription.setAttribute('class', 'cl-main-widget-reward-details-description');
-    sectionRewardsWinningsContainer.setAttribute('class', 'cl-main-widget-reward-winnings-container');
-    sectionRewardsWinningsIcon.setAttribute('class', 'cl-main-widget-reward-winnings-icon');
-    sectionRewardsWinningsValue.setAttribute('class', 'cl-main-widget-reward-winnings-value');
-    sectionRewardsClaimContainer.setAttribute('class', 'cl-main-widget-reward-claim-container');
-    sectionRewardsClaimBtn.setAttribute('class', 'cl-main-widget-reward-claim-btn');
-
-    sectionRewardsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards.label;
-    sectionRewardsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-    sectionRewardsClaimBtn.innerHTML = _this.settings.lbWidget.settings.translation.rewards.claim;
-
-    sectionRewardsWinningsContainer.appendChild(sectionRewardsWinningsIcon);
-    sectionRewardsWinningsContainer.appendChild(sectionRewardsWinningsValue);
-    sectionRewardsClaimContainer.appendChild(sectionRewardsClaimBtn);
-
-    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsBackBtn);
-    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsHeaderLabel);
-    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsHeaderDate);
-
-    sectionRewardsDetailsBody.appendChild(sectionRewardsWinningsContainer);
-    sectionRewardsDetailsBody.appendChild(sectionRewardsDetailsDescription);
-
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBodyImageContainer);
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBody);
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsClaimContainer);
-
-    sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsHeader);
-    sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsBodyContainer);
-
-    sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsContentWrapper);
-
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderBack);
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderLabel);
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderDate);
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderClose);
-
-    sectionRewardsDetailsInfo.appendChild(sectionRewardsDetailsInfoIcon);
-    sectionRewardsDetailsContentContainer.appendChild(sectionRewardsDetailsContentContainerLabel);
-    sectionRewardsDetailsContentContainer.appendChild(sectionRewardsDetailsContentContainerDate);
-    sectionRewardsDetails.appendChild(sectionRewardsDetailsInfo);
-    sectionRewardsDetails.appendChild(sectionRewardsDetailsContentContainer);
-
-    sectionRewardsListBody.appendChild(sectionRewardsListBodyResults);
-    sectionRewardsList.appendChild(sectionRewardsListBody);
-
-    sectionRewardsFooter.appendChild(sectionRewardsFooterContent);
-
-    sectionRewards.appendChild(sectionRewardsHeader);
-    sectionRewards.appendChild(sectionRewardsDetails);
-    sectionRewards.appendChild(sectionRewardsList);
-    sectionRewards.appendChild(sectionRewardsFooter);
-    sectionRewards.appendChild(sectionRewardsDetailsContainer);
+    const template = require('../templates/layouts/awardsAreaLayout.hbs');
+    sectionRewards.innerHTML = template({
+      headerLabel: this.settings.lbWidget.settings.translation.rewards.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
+      claimBtn: this.settings.lbWidget.settings.translation.rewards.claim
+    });
 
     return sectionRewards;
   };
