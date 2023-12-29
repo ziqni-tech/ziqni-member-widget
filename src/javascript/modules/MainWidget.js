@@ -591,97 +591,14 @@ export const MainWidget = function (options) {
   };
 
   this.inboxAreaLayout = function () {
-    const _this = this;
     const sectionInbox = document.createElement('div');
+    sectionInbox.setAttribute('class', this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
 
-    const sectionInboxHeader = document.createElement('div');
-    const sectionInboxHeaderLabel = document.createElement('div');
-    const sectionInboxHeaderClose = document.createElement('div');
-
-    const sectionInboxDetails = document.createElement('div');
-    const sectionInboxDetailsInfo = document.createElement('div');
-    const sectionInboxDetailsInfoIcon = document.createElement('div');
-    const sectionInboxDetailsContentContainer = document.createElement('div');
-    const sectionInboxDetailsContentContainerLabel = document.createElement('div');
-    const sectionInboxDetailsContentContainerDate = document.createElement('div');
-
-    const sectionInboxList = document.createElement('div');
-    const sectionInboxListBody = document.createElement('div');
-    const sectionInboxListBodyResults = document.createElement('div');
-
-    const sectionInboxFooter = document.createElement('div');
-    const sectionInboxFooterContent = document.createElement('div');
-
-    const sectionInboxDetailsContainer = document.createElement('div');
-    const sectionInboxDetailsWrapper = document.createElement('div');
-    const sectionInboxDetailsHeader = document.createElement('div');
-    const sectionInboxDetailsHeaderLabel = document.createElement('div');
-    const sectionInboxDetailsHeaderDate = document.createElement('div');
-    const sectionInboxDetailsBackBtn = document.createElement('a');
-    const sectionInboxDetailsBodyContainer = document.createElement('div');
-    const sectionInboxDetailsBody = document.createElement('div');
-
-    sectionInbox.setAttribute('class', _this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
-    sectionInboxHeader.setAttribute('class', 'cl-main-widget-inbox-header');
-    sectionInboxHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-header-label');
-    sectionInboxHeaderClose.setAttribute('class', 'cl-main-widget-inbox-header-close');
-
-    sectionInboxDetails.setAttribute('class', 'cl-main-widget-inbox-details');
-    sectionInboxDetailsInfo.setAttribute('class', 'cl-main-widget-inbox-details-info');
-    sectionInboxDetailsInfoIcon.setAttribute('class', 'cl-main-widget-inbox-details-info-icon');
-    sectionInboxDetailsContentContainer.setAttribute('class', 'cl-main-widget-inbox-details-content');
-    sectionInboxDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-inbox-details-content-label');
-    sectionInboxDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-inbox-details-content-date');
-
-    // Leaderboard result container
-    sectionInboxList.setAttribute('class', 'cl-main-widget-inbox-list');
-    sectionInboxListBody.setAttribute('class', 'cl-main-widget-inbox-list-body');
-    sectionInboxListBodyResults.setAttribute('class', 'cl-main-widget-inbox-list-body-res');
-
-    // footer
-    sectionInboxFooter.setAttribute('class', 'cl-main-widget-inbox-footer');
-    sectionInboxFooterContent.setAttribute('class', 'cl-main-widget-inbox-footer-content');
-
-    // details section
-    sectionInboxDetailsContainer.setAttribute('class', 'cl-main-widget-inbox-details-container');
-    sectionInboxDetailsWrapper.setAttribute('class', 'cl-main-widget-inbox-details-wrapper');
-    sectionInboxDetailsHeader.setAttribute('class', 'cl-main-widget-inbox-details-header');
-    sectionInboxDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-details-header-label');
-    sectionInboxDetailsHeaderDate.setAttribute('class', 'cl-main-widget-inbox-details-header-date');
-    sectionInboxDetailsBackBtn.setAttribute('class', 'cl-main-widget-inbox-details-back-btn');
-    sectionInboxDetailsBodyContainer.setAttribute('class', 'cl-main-widget-inbox-details-body-container');
-    sectionInboxDetailsBody.setAttribute('class', 'cl-main-widget-inbox-details-body');
-
-    sectionInboxHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.messages.label;
-    sectionInboxFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-
-    sectionInboxHeader.appendChild(sectionInboxHeaderLabel);
-    sectionInboxHeader.appendChild(sectionInboxHeaderClose);
-
-    sectionInboxDetailsInfo.appendChild(sectionInboxDetailsInfoIcon);
-    sectionInboxDetailsContentContainer.appendChild(sectionInboxDetailsContentContainerLabel);
-    sectionInboxDetailsContentContainer.appendChild(sectionInboxDetailsContentContainerDate);
-    sectionInboxDetails.appendChild(sectionInboxDetailsInfo);
-    sectionInboxDetails.appendChild(sectionInboxDetailsContentContainer);
-
-    sectionInboxListBody.appendChild(sectionInboxListBodyResults);
-    sectionInboxList.appendChild(sectionInboxListBody);
-
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsBackBtn);
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderLabel);
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderDate);
-    sectionInboxDetailsWrapper.appendChild(sectionInboxDetailsHeader);
-    sectionInboxDetailsBodyContainer.appendChild(sectionInboxDetailsBody);
-    sectionInboxDetailsWrapper.appendChild(sectionInboxDetailsBodyContainer);
-    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsWrapper);
-
-    sectionInboxFooter.appendChild(sectionInboxFooterContent);
-
-    sectionInbox.appendChild(sectionInboxHeader);
-    sectionInbox.appendChild(sectionInboxDetails);
-    sectionInbox.appendChild(sectionInboxList);
-    sectionInbox.appendChild(sectionInboxFooter);
-    sectionInbox.appendChild(sectionInboxDetailsContainer);
+    const template = require('../templates/layouts/inboxAreaLayout.hbs');
+    sectionInbox.innerHTML = template({
+      headerLabel: this.settings.lbWidget.settings.translation.messages.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy
+    });
 
     return sectionInbox;
   };
