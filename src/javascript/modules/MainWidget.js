@@ -621,192 +621,28 @@ export const MainWidget = function (options) {
   };
 
   this.dashboardAreaLayout = function () {
-    const _this = this;
     const sectionDashboard = document.createElement('div');
+    sectionDashboard.setAttribute('class', this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
 
-    const sectionDashboardHeader = document.createElement('div');
-    const sectionDashboardHeaderLabel = document.createElement('div');
-    const sectionDashboardHeaderClose = document.createElement('div');
-
-    const sectionDashboardBody = document.createElement('div');
-
-    const sectionDashboardInstantWins = document.createElement('div');
-    const sectionDashboardInstantWinsTitle = document.createElement('div');
-    const sectionDashboardInstantWinsWrapp = document.createElement('div');
-
-    const sectionDashboardInstantWinsWheel = document.createElement('div');
-    const sectionDashboardInstantWinsWheelImage = document.createElement('div');
-    const sectionDashboardInstantWinsWheelBody = document.createElement('div');
-    const sectionDashboardInstantWinsWheelTitle = document.createElement('div');
-    const sectionDashboardInstantWinsWheelTitleMobile = document.createElement('div');
-    const sectionDashboardInstantWinsWheelDescription = document.createElement('div');
-    const sectionDashboardInstantWinsWheelButton = document.createElement('div');
-
-    const sectionDashboardInstantWinsCards = document.createElement('div');
-    const sectionDashboardInstantWinsCardsImage = document.createElement('div');
-    const sectionDashboardInstantWinsCardsBody = document.createElement('div');
-    const sectionDashboardInstantWinsCardsTitle = document.createElement('div');
-    const sectionDashboardInstantWinsCardsTitleMobile = document.createElement('div');
-    const sectionDashboardInstantWinsCardsDescription = document.createElement('div');
-    const sectionDashboardInstantWinsCardsButton = document.createElement('div');
-
-    const sectionDashboardAchievements = document.createElement('div');
-    const sectionDashboardAchievementsTitle = document.createElement('div');
-    const sectionDashboardAchievementsWrapp = document.createElement('div');
-    const achList = document.createElement('div');
-    const achListMore = document.createElement('div');
-
-    const sectionDashboardTournaments = document.createElement('div');
-    const sectionDashboardTournamentsTitle = document.createElement('div');
-    const sectionDashboardTournamentsWrapp = document.createElement('div');
-    const tournamentsList = document.createElement('div');
-    const tournamentsListMore = document.createElement('div');
-
-    const leavePopupWrapp = document.createElement('div');
-    const leavePopup = document.createElement('div');
-    const leavePopupTitle = document.createElement('div');
-    const leavePopupClose = document.createElement('div');
-    const leavePopupDescription = document.createElement('div');
-    const leavePopupActionConfirm = document.createElement('div');
-    const leavePopupActionCancel = document.createElement('div');
-    const leavePopupActions = document.createElement('div');
-
-    leavePopupWrapp.setAttribute('class', 'cl-main-widget-ach-list-popup-wrapp');
-    leavePopup.setAttribute('class', 'cl-main-widget-ach-list-popup');
-    leavePopupTitle.setAttribute('class', 'cl-main-widget-ach-list-popup-title');
-    leavePopupClose.setAttribute('class', 'cl-main-widget-ach-list-popup-close');
-    leavePopupDescription.setAttribute('class', 'cl-main-widget-ach-list-popup-description');
-    leavePopupActionConfirm.setAttribute('class', 'cl-main-widget-ach-list-popup-confirm');
-    leavePopupActionCancel.setAttribute('class', 'cl-main-widget-ach-list-popup-cancel');
-    leavePopupActions.setAttribute('class', 'cl-main-widget-ach-list-popup-actions');
-
-    leavePopupTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupTitle;
-    leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
-    leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
-    leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
-
-    leavePopupActions.appendChild(leavePopupActionCancel);
-    leavePopupActions.appendChild(leavePopupActionConfirm);
-
-    leavePopup.appendChild(leavePopupTitle);
-    leavePopup.appendChild(leavePopupClose);
-    leavePopup.appendChild(leavePopupDescription);
-    leavePopup.appendChild(leavePopupActions);
-
-    leavePopupWrapp.appendChild(leavePopup);
-
-    sectionDashboard.setAttribute('class', _this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
-    sectionDashboardHeader.setAttribute('class', 'cl-main-widget-dashboard-header');
-    sectionDashboardHeaderLabel.setAttribute('class', 'cl-main-widget-dashboard-header-label');
-    sectionDashboardHeaderClose.setAttribute('class', 'cl-main-widget-dashboard-header-close');
-
-    sectionDashboardBody.setAttribute('class', 'cl-main-widget-dashboard-body');
-
-    sectionDashboardInstantWins.setAttribute('class', 'cl-main-widget-dashboard-instant-wins');
-    sectionDashboardInstantWinsTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-title');
-    sectionDashboardInstantWinsWrapp.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wrapp');
-
-    sectionDashboardInstantWinsWheel.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel');
-    sectionDashboardInstantWinsWheelImage.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-image');
-    sectionDashboardInstantWinsWheelBody.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-body');
-    sectionDashboardInstantWinsWheelTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-title');
-    sectionDashboardInstantWinsWheelTitleMobile.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-title-mobile');
-    sectionDashboardInstantWinsWheelDescription.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-description');
-    sectionDashboardInstantWinsWheelButton.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-button');
-
-    sectionDashboardInstantWinsCards.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards');
-    sectionDashboardInstantWinsCardsImage.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-image');
-    sectionDashboardInstantWinsCardsBody.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-body');
-    sectionDashboardInstantWinsCardsTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-title');
-    sectionDashboardInstantWinsCardsTitleMobile.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-title-mobile');
-    sectionDashboardInstantWinsCardsDescription.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-description');
-    sectionDashboardInstantWinsCardsButton.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-button');
-
-    sectionDashboardInstantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle;
-
-    sectionDashboardInstantWinsWheelTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
-    sectionDashboardInstantWinsWheelTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
-    sectionDashboardInstantWinsWheelDescription.innerHTML = '';
-    sectionDashboardInstantWinsWheelButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelButton;
-
-    sectionDashboardInstantWinsCardsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
-    sectionDashboardInstantWinsCardsTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
-    sectionDashboardInstantWinsCardsDescription.innerHTML = '';
-    sectionDashboardInstantWinsCardsButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton;
-
-    sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelTitle);
-    sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelDescription);
-    sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelButton);
-
-    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelTitleMobile);
-    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelImage);
-    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelBody);
-
-    sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsTitle);
-    sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsDescription);
-    sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsButton);
-
-    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsTitleMobile);
-    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsImage);
-    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsBody);
-
-    sectionDashboardInstantWinsWrapp.appendChild(sectionDashboardInstantWinsWheel);
-    sectionDashboardInstantWinsWrapp.appendChild(sectionDashboardInstantWinsCards);
-
-    sectionDashboardInstantWins.appendChild(sectionDashboardInstantWinsTitle);
-    sectionDashboardInstantWins.appendChild(sectionDashboardInstantWinsWrapp);
-
-    sectionDashboardAchievements.setAttribute('class', 'cl-main-widget-dashboard-achievements');
-    sectionDashboardAchievementsTitle.setAttribute('class', 'cl-main-widget-dashboard-achievements-title');
-    sectionDashboardAchievementsWrapp.setAttribute('class', 'cl-main-widget-dashboard-achievements-wrapp');
-    achList.setAttribute('class', 'cl-main-widget-dashboard-achievements-list');
-    achListMore.setAttribute('class', 'cl-main-widget-dashboard-achievements-list-more');
-
-    sectionDashboardAchievementsTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.achievementsTitle;
-
-    sectionDashboardHeaderLabel.innerHTML = this.settings.lbWidget.settings.translation.dashboard.label;
-
-    achListMore.innerHTML = this.settings.lbWidget.settings.translation.dashboard.seeAll;
-
-    sectionDashboardAchievementsWrapp.appendChild(achList);
-    sectionDashboardAchievementsWrapp.appendChild(achListMore);
-
-    sectionDashboardAchievements.appendChild(sectionDashboardAchievementsTitle);
-    sectionDashboardAchievements.appendChild(sectionDashboardAchievementsWrapp);
-
-    sectionDashboardTournaments.setAttribute('class', 'cl-main-widget-dashboard-tournaments');
-    sectionDashboardTournamentsTitle.setAttribute('class', 'cl-main-widget-dashboard-tournaments-title');
-    sectionDashboardTournamentsWrapp.setAttribute('class', 'cl-main-widget-dashboard-tournaments-wrapp');
-    tournamentsList.setAttribute('class', 'cl-main-widget-dashboard-tournaments-list');
-    tournamentsListMore.setAttribute('class', 'cl-main-widget-dashboard-tournaments-list-more');
-
-    tournamentsListMore.innerHTML = this.settings.lbWidget.settings.translation.dashboard.seeAll;
-
-    sectionDashboardTournamentsTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle;
-
-    sectionDashboardTournamentsWrapp.appendChild(tournamentsList);
-    sectionDashboardTournamentsWrapp.appendChild(tournamentsListMore);
-    sectionDashboardTournaments.appendChild(sectionDashboardTournamentsTitle);
-    sectionDashboardTournaments.appendChild(sectionDashboardTournamentsWrapp);
-
-    if (this.settings.lbWidget.settings.instantWins.enable) {
-      sectionDashboardBody.appendChild(sectionDashboardInstantWins);
-    }
-
-    if (this.settings.lbWidget.settings.navigation.achievements.enable) {
-      sectionDashboardBody.appendChild(leavePopupWrapp);
-      sectionDashboardBody.appendChild(sectionDashboardAchievements);
-    }
-
-    if (this.settings.lbWidget.settings.navigation.tournaments.enable) {
-      sectionDashboardBody.appendChild(sectionDashboardTournaments);
-    }
-
-    sectionDashboardHeader.appendChild(sectionDashboardHeaderLabel);
-    sectionDashboardHeader.appendChild(sectionDashboardHeaderClose);
-
-    sectionDashboard.appendChild(sectionDashboardHeader);
-    sectionDashboard.appendChild(sectionDashboardBody);
+    const template = require('../templates/layouts/dashboardAreaLayout.hbs');
+    sectionDashboard.innerHTML = template({
+      isInstantWins: this.settings.lbWidget.settings.instantWins.enable,
+      isAchievements: this.settings.lbWidget.settings.navigation.achievements.enable,
+      isTournaments: this.settings.lbWidget.settings.navigation.tournaments.enable,
+      seeAllLabel: this.settings.lbWidget.settings.translation.dashboard.seeAll,
+      headerLabel: this.settings.lbWidget.settings.translation.dashboard.label,
+      tournamentsTitle: this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle,
+      achievementsTitle: this.settings.lbWidget.settings.translation.dashboard.achievementsTitle,
+      instantWinsTitle: this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle,
+      leavePopupTitle: this.settings.lbWidget.settings.translation.achievements.leavePopupTitle,
+      leavePopupDescription: this.settings.lbWidget.settings.translation.achievements.leavePopupDescription,
+      leavePopupActionConfirm: this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm,
+      leavePopupActionCancel: this.settings.lbWidget.settings.translation.achievements.leavePopupClose,
+      instantWinsWheelTitle: this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle,
+      instantWinsWheelButton: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
+      instantWinsCardsTitle: this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle,
+      instantWinsCardsButton: this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton
+    });
 
     return sectionDashboard;
   };
