@@ -607,7 +607,7 @@ export const MainWidget = function (options) {
     const sectionMissions = document.createElement('div');
     sectionMissions.setAttribute('class', this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
 
-    const template = require('../templates/layouts/awardsAreaLayout.hbs');
+    const template = require('../templates/layouts/missionsAreaLayout.hbs');
     sectionMissions.innerHTML = template({
       headerLabel: this.settings.lbWidget.settings.translation.missions.label,
       globalCopy: this.settings.lbWidget.settings.translation.global.copy,
