@@ -535,1073 +535,114 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardAreaLayout = function () {
-    const _this = this;
     const sectionLB = document.createElement('div');
+    sectionLB.setAttribute('class', this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section');
 
-    const sectionLBHeader = document.createElement('div');
-    const sectionLBHeaderList = document.createElement('div');
-    const sectionLBHeaderListIcon = document.createElement('div');
-    const sectionLBHeaderBackIcon = document.createElement('div');
-    const sectionLBHeaderLabel = document.createElement('div');
-    const sectionLBHeaderDate = document.createElement('div');
-    const sectionLBHeaderClose = document.createElement('div');
-
-    const sectionLBDetails = document.createElement('div');
-    const sectionLBDetailsInfo = document.createElement('div');
-    const sectionLBDetailsInfoIcon = document.createElement('div');
-    const sectionLBDetailsImageContainer = document.createElement('div');
-    const sectionLBDetailsContentContainer = document.createElement('div');
-    const sectionLBDetailsContentContainerLabel = document.createElement('div');
-    const sectionLBDetailsContentContainerLabelText = document.createElement('span');
-    const sectionLBDetailsContentContainerDate = document.createElement('span');
-    const sectionLBDetailsContentContainerDateHeaders = document.createElement('div');
-    const sectionLBDetailsContentContainerDateMonths = document.createElement('div');
-    const sectionLBDetailsContentContainerDateDays = document.createElement('div');
-    const sectionLBDetailsContentContainerDateHours = document.createElement('div');
-    const sectionLBDetailsContentContainerDateMinutes = document.createElement('div');
-    const sectionLBDetailsContentContainerDateSeconds = document.createElement('div');
-    const sectionLBDetailsDescriptionContainer = document.createElement('div');
-    const sectionLBDetailsDescriptionInfo = document.createElement('div');
-    const sectionLBDetailsDescriptionHeader = document.createElement('div');
-    const sectionLBDetailsDescriptionHeaderTitle = document.createElement('div');
-    // const sectionLBDetailsDescriptionHeaderBack = document.createElement('div');
-    const sectionLBDetailsDescriptionBanner = document.createElement('div');
-
-    const sectionLBDetailsDescriptionLabel = document.createElement('div');
-    const sectionLBDetailsDescriptionLabelText = document.createElement('span');
-    const sectionLBDetailsDescriptionDate = document.createElement('span');
-    const sectionLBDetailsDescriptionDateHeaders = document.createElement('div');
-    const sectionLBDetailsDescriptionDateMonths = document.createElement('div');
-    const sectionLBDetailsDescriptionDateDays = document.createElement('div');
-    const sectionLBDetailsDescriptionDateHours = document.createElement('div');
-    const sectionLBDetailsDescriptionDateMinutes = document.createElement('div');
-    const sectionLBDetailsDescriptionDateSeconds = document.createElement('div');
-
-    const sectionLBDetailsDescription = document.createElement('div');
-    const sectionLBDetailsTandC = document.createElement('div');
-    const sectionLBDetailsDescriptionTitle = document.createElement('div');
-    const sectionLBDetailsDescriptionTCTitle = document.createElement('div');
-    const sectionLBDetailsDescriptionClose = document.createElement('span');
-
-    const sectionLBBrackets = document.createElement('div');
-
-    const sectionLBLeaderboard = document.createElement('div');
-    const sectionLBLeaderboardHeader = document.createElement('div');
-    const sectionLBLeaderboardHeaderLabels = document.createElement('div');
-    const sectionLBLeaderboardResultsContainer = document.createElement('div');
-    const sectionLBLeaderboardHeaderTopResults = document.createElement('div');
-    const sectionLBLeaderboardBody = document.createElement('div');
-    const sectionLBLeaderboardBodyResults = document.createElement('div');
-
-    const sectionLBMissingMember = document.createElement('div');
-    const sectionLBMissingMemberDetails = document.createElement('div');
-
-    const sectionLBOptInContainer = document.createElement('div');
-    const sectionLBOptInAction = document.createElement('a');
-
-    const sectionLBFooter = document.createElement('div');
-    const sectionLBFooterContent = document.createElement('div');
-
-    const sectionTournamentDetailsContainer = document.createElement('div');
-    const sectionTournamentDetailsHeader = document.createElement('div');
-    const sectionTournamentDetailsHeaderLabel = document.createElement('div');
-    const sectionTournamentDetailsHeaderDate = document.createElement('div');
-    const sectionTournamentDetailsBackBtn = document.createElement('a');
-    const sectionTournamentDetailsBodyContainer = document.createElement('div');
-    const sectionTournamentDetailsBodyImageContainer = document.createElement('div');
-    const sectionTournamentDetailsBody = document.createElement('div');
-    const sectionTournamentDetailsOptInContainer = document.createElement('div');
-    const sectionTournamentDetailsOptInAction = document.createElement('a');
-
-    const sectionTournamentList = document.createElement('div');
-    const sectionTournamentListBody = document.createElement('div');
-    const sectionTournamentListBodyResults = document.createElement('div');
-
-    sectionLB.setAttribute('class', _this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section');
-    sectionLBHeader.setAttribute('class', 'cl-main-widget-lb-header');
-    sectionLBHeaderList.setAttribute('class', 'cl-main-widget-lb-header-list');
-    sectionLBHeaderListIcon.setAttribute('class', 'cl-main-widget-lb-header-list-icon');
-    sectionLBHeaderBackIcon.setAttribute('class', 'cl-main-widget-lb-header-back-icon');
-    sectionLBHeaderLabel.setAttribute('class', 'cl-main-widget-lb-header-label');
-    sectionLBHeaderDate.setAttribute('class', 'cl-main-widget-lb-header-date');
-    sectionLBHeaderClose.setAttribute('class', 'cl-main-widget-lb-header-close');
-
-    sectionLBDetails.setAttribute('class', 'cl-main-widget-lb-details');
-    sectionLBDetailsInfo.setAttribute('class', 'cl-main-widget-lb-details-info');
-    sectionLBDetailsInfoIcon.setAttribute('class', 'cl-main-widget-lb-details-info-icon');
-    sectionLBDetailsImageContainer.setAttribute('class', 'cl-main-widget-lb-details-image-container');
-    sectionLBDetailsContentContainer.setAttribute('class', 'cl-main-widget-lb-details-content');
-    sectionLBDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-lb-details-content-label');
-    sectionLBDetailsContentContainerLabelText.setAttribute('class', 'cl-main-widget-lb-details-content-label-text');
-
-    sectionLBDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-lb-details-content-date');
-    sectionLBDetailsContentContainerDateHeaders.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers');
-    sectionLBDetailsContentContainerDateMonths.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item months hidden');
-    sectionLBDetailsContentContainerDateDays.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item days');
-    sectionLBDetailsContentContainerDateHours.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item hours');
-    sectionLBDetailsContentContainerDateMinutes.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item minutes');
-    sectionLBDetailsContentContainerDateSeconds.setAttribute('class', 'cl-main-widget-lb-details-content-date-headers-item seconds');
-
-    sectionLBDetailsDescriptionContainer.setAttribute('class', 'cl-main-widget-lb-details-description-container');
-    sectionLBDetailsDescription.setAttribute('class', 'cl-main-widget-lb-details-description');
-    sectionLBDetailsTandC.setAttribute('class', 'cl-main-widget-lb-details-tc');
-    sectionLBDetailsDescriptionTitle.setAttribute('class', 'cl-main-widget-lb-details-description-title');
-    sectionLBDetailsDescriptionTCTitle.setAttribute('class', 'cl-main-widget-lb-details-tc-title');
-    sectionLBDetailsDescriptionInfo.setAttribute('class', 'cl-main-widget-lb-details-description-info');
-    sectionLBDetailsDescriptionHeader.setAttribute('class', 'cl-main-widget-lb-details-description-header');
-    sectionLBDetailsDescriptionHeaderTitle.setAttribute('class', 'cl-main-widget-lb-details-description-header-title');
-    // sectionLBDetailsDescriptionHeaderBack.setAttribute('class', 'cl-main-widget-lb-details-description-header-back');
-    sectionLBDetailsDescriptionBanner.setAttribute('class', 'cl-main-widget-lb-details-description-banner');
-
-    sectionLBDetailsDescriptionLabel.setAttribute('class', 'cl-main-widget-lb-details-description-label');
-    sectionLBDetailsDescriptionLabelText.setAttribute('class', 'cl-main-widget-lb-details-description-label-text');
-
-    sectionLBDetailsDescriptionDate.setAttribute('class', 'cl-main-widget-lb-details-description-date');
-    sectionLBDetailsDescriptionDateHeaders.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers');
-    sectionLBDetailsDescriptionDateMonths.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item months hidden');
-    sectionLBDetailsDescriptionDateDays.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item days');
-    sectionLBDetailsDescriptionDateHours.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item hours');
-    sectionLBDetailsDescriptionDateMinutes.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item minutes');
-    sectionLBDetailsDescriptionDateSeconds.setAttribute('class', 'cl-main-widget-lb-details-description-date-headers-item seconds');
-
-    sectionLBDetailsDescriptionClose.setAttribute('class', 'cl-main-widget-lb-details-description-close');
-
-    sectionLBBrackets.setAttribute('class', 'cl-main-widget-lb-details-brackets');
-
-    // Leaderboard result container
-    sectionLBLeaderboard.setAttribute('class', 'cl-main-widget-lb-leaderboard');
-    sectionLBLeaderboardHeader.setAttribute('class', 'cl-main-widget-lb-leaderboard-header');
-    sectionLBLeaderboardHeaderLabels.setAttribute('class', 'cl-main-widget-lb-leaderboard-header-labels');
-    sectionLBLeaderboardResultsContainer.setAttribute('class', 'cl-main-widget-lb-leaderboard-res-container');
-    sectionLBLeaderboardHeaderTopResults.setAttribute('class', 'cl-main-widget-lb-leaderboard-header-top-res');
-    sectionLBLeaderboardBody.setAttribute('class', 'cl-main-widget-lb-leaderboard-body');
-    sectionLBLeaderboardBodyResults.setAttribute('class', 'cl-main-widget-lb-leaderboard-body-res');
-
-    sectionLBMissingMember.setAttribute('class', 'cl-main-widget-lb-missing-member');
-    sectionLBMissingMemberDetails.setAttribute('class', 'cl-main-widget-lb-missing-member-details');
-
-    // footer
-    sectionLBFooter.setAttribute('class', 'cl-main-widget-lb-footer');
-    sectionLBFooterContent.setAttribute('class', 'cl-main-widget-lb-footer-content');
-
-    // details section
-    sectionTournamentDetailsContainer.setAttribute('class', 'cl-main-widget-lb-details-container');
-    sectionTournamentDetailsHeader.setAttribute('class', 'cl-main-widget-lb-details-header');
-    sectionTournamentDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-lb-details-header-label');
-    sectionTournamentDetailsHeaderDate.setAttribute('class', 'cl-main-widget-lb-details-header-date');
-    sectionTournamentDetailsBackBtn.setAttribute('class', 'cl-main-widget-lb-details-back-btn');
-    sectionTournamentDetailsBodyContainer.setAttribute('class', 'cl-main-widget-lb-details-body-container');
-    sectionTournamentDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-lb-details-body-image-cont');
-    sectionTournamentDetailsBody.setAttribute('class', 'cl-main-widget-lb-details-body');
-    sectionTournamentDetailsOptInContainer.setAttribute('class', 'cl-main-widget-lb-details-optin-container');
-    sectionTournamentDetailsOptInAction.setAttribute('class', 'cl-main-widget-lb-details-optin-action');
-
-    sectionTournamentList.setAttribute('class', 'cl-main-widget-tournaments-list');
-    // sectionTournamentBackAction.setAttribute('class', 'cl-main-widget-tournaments-back-btn');
-    sectionTournamentListBody.setAttribute('class', 'cl-main-widget-tournaments-list-body');
-    sectionTournamentListBodyResults.setAttribute('class', 'cl-main-widget-tournaments-list-body-res');
-
-    sectionLBOptInContainer.setAttribute('class', 'cl-main-widget-lb-optin-container');
-    sectionLBOptInAction.setAttribute('class', 'cl-main-widget-lb-optin-action');
-
-    sectionLBHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
-    sectionLBFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-    sectionTournamentDetailsOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
-    sectionTournamentDetailsOptInAction.href = 'javascript:void(0);';
-    sectionLBOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
-    sectionLBOptInAction.href = 'javascript:void(0);';
-    sectionLBDetailsDescriptionTitle.innerHTML = _this.settings.lbWidget.settings.translation.global.descriptionLabel;
-    sectionLBDetailsDescriptionTCTitle.innerHTML = _this.settings.lbWidget.settings.translation.global.tAndCLabel;
-    sectionLBDetailsDescriptionInfo.innerHTML = 'i';
-
-    sectionLBHeaderList.appendChild(sectionLBHeaderListIcon);
-    sectionLBHeaderList.appendChild(sectionLBHeaderBackIcon);
-    sectionLBHeader.appendChild(sectionLBHeaderList);
-    sectionLBHeader.appendChild(sectionLBHeaderLabel);
-    sectionLBHeader.appendChild(sectionLBHeaderDate);
-    sectionLBHeader.appendChild(sectionLBHeaderClose);
-
-    sectionLBDetailsContentContainerDateMonths.innerHTML = this.settings.lbWidget.settings.translation.time.monthsFull;
-    sectionLBDetailsContentContainerDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
-    sectionLBDetailsContentContainerDateHours.innerHTML = this.settings.lbWidget.settings.translation.time.hoursFull;
-    sectionLBDetailsContentContainerDateMinutes.innerHTML = this.settings.lbWidget.settings.translation.time.minutesFull;
-    sectionLBDetailsContentContainerDateSeconds.innerHTML = this.settings.lbWidget.settings.translation.time.secondsFull;
-
-    sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateMonths);
-    sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateDays);
-    sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateHours);
-    sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateMinutes);
-    sectionLBDetailsContentContainerDateHeaders.appendChild(sectionLBDetailsContentContainerDateSeconds);
-
-    sectionLBDetailsInfo.appendChild(sectionLBDetailsInfoIcon);
-    sectionLBDetailsContentContainerLabel.appendChild(sectionLBDetailsContentContainerLabelText);
-    sectionLBDetailsContentContainerLabel.appendChild(sectionLBDetailsContentContainerDate);
-    sectionLBDetailsContentContainerLabel.appendChild(sectionLBDetailsContentContainerDateHeaders);
-    sectionLBDetailsContentContainer.appendChild(sectionLBDetailsContentContainerLabel);
-    sectionLBDetails.appendChild(sectionLBDetailsInfo);
-
-    if (_this.settings.lbWidget.settings.leaderboard.layoutSettings.imageBanner) {
-      sectionLBDetails.appendChild(sectionLBDetailsImageContainer);
-    }
-
-    sectionLBDetails.appendChild(sectionLBDetailsContentContainer);
-
-    if (!_this.settings.lbWidget.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-      // sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderBack);
-      sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionHeaderTitle);
-      sectionLBDetailsDescriptionHeader.appendChild(sectionLBDetailsDescriptionInfo);
-
-      sectionLBDetailsDescriptionDateMonths.innerHTML = this.settings.lbWidget.settings.translation.time.monthsFull;
-      sectionLBDetailsDescriptionDateDays.innerHTML = this.settings.lbWidget.settings.translation.time.daysFull;
-      sectionLBDetailsDescriptionDateHours.innerHTML = this.settings.lbWidget.settings.translation.time.hoursFull;
-      sectionLBDetailsDescriptionDateMinutes.innerHTML = this.settings.lbWidget.settings.translation.time.minutesFull;
-      sectionLBDetailsDescriptionDateSeconds.innerHTML = this.settings.lbWidget.settings.translation.time.secondsFull;
-
-      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateMonths);
-      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateDays);
-      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateHours);
-      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateMinutes);
-      sectionLBDetailsDescriptionDateHeaders.appendChild(sectionLBDetailsDescriptionDateSeconds);
-
-      sectionLBDetailsDescriptionLabel.appendChild(sectionLBDetailsDescriptionLabelText);
-      sectionLBDetailsDescriptionLabel.appendChild(sectionLBDetailsDescriptionDate);
-      sectionLBDetailsDescriptionLabel.appendChild(sectionLBDetailsDescriptionDateHeaders);
-
-      sectionLBDetailsDescriptionBanner.appendChild(sectionLBDetailsDescriptionLabel);
-
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionHeader);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionBanner);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionTitle);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionTCTitle);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescription);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsTandC);
-      sectionLBDetailsDescriptionContainer.appendChild(sectionLBBrackets);
-      // sectionLBDetailsDescriptionContainer.appendChild(sectionLBDetailsDescriptionClose);
-      // sectionLBDetailsDescriptionContainer.appendChild(sectionLBMissingMemberDetails);
-      sectionLBDetails.appendChild(sectionLBDetailsDescriptionContainer);
-      sectionLBDetails.appendChild(sectionLBDetailsDescriptionClose);
-      sectionLBDetails.appendChild(sectionLBMissingMemberDetails);
-    }
-
-    sectionLBLeaderboardHeader.appendChild(sectionLBLeaderboardHeaderLabels);
-    sectionLBLeaderboard.appendChild(sectionLBLeaderboardHeader);
-
-    sectionLBLeaderboardResultsContainer.appendChild(sectionLBLeaderboardHeaderTopResults);
-    sectionLBLeaderboardBody.appendChild(sectionLBLeaderboardBodyResults);
-    sectionLBLeaderboardResultsContainer.appendChild(sectionLBLeaderboardBody);
-    sectionLBLeaderboard.appendChild(sectionLBLeaderboardResultsContainer);
-    sectionLBLeaderboard.appendChild(sectionLBMissingMember);
-
-    sectionLBFooter.appendChild(sectionLBFooterContent);
-
-    sectionTournamentListBody.appendChild(sectionTournamentListBodyResults);
-    sectionTournamentList.appendChild(sectionTournamentListBody);
-
-    sectionTournamentDetailsHeader.appendChild(sectionTournamentDetailsHeaderLabel);
-    sectionTournamentDetailsHeader.appendChild(sectionTournamentDetailsHeaderDate);
-    sectionTournamentDetailsContainer.appendChild(sectionTournamentDetailsHeader);
-    sectionTournamentDetailsContainer.appendChild(sectionTournamentDetailsBackBtn);
-    sectionTournamentDetailsBodyContainer.appendChild(sectionTournamentDetailsBodyImageContainer);
-    sectionTournamentDetailsBodyContainer.appendChild(sectionTournamentDetailsBody);
-    sectionTournamentDetailsContainer.appendChild(sectionTournamentDetailsBodyContainer);
-    sectionTournamentDetailsOptInContainer.appendChild(sectionTournamentDetailsOptInAction);
-    sectionTournamentDetailsContainer.appendChild(sectionTournamentDetailsOptInContainer);
-
-    sectionLBOptInContainer.appendChild(sectionLBOptInAction);
-
-    sectionLB.appendChild(sectionLBHeader);
-    sectionLB.appendChild(sectionLBDetails);
-    sectionLB.appendChild(sectionLBLeaderboard);
-    sectionLB.appendChild(sectionLBOptInContainer);
-    sectionLB.appendChild(sectionLBFooter);
-    sectionLB.appendChild(sectionTournamentDetailsContainer);
-    sectionLB.appendChild(sectionTournamentList);
+    const template = require('../templates/mainWidget/leaderboard.hbs');
+    sectionLB.innerHTML = template({
+      tournamentsLabel: this.settings.lbWidget.settings.translation.tournaments.label,
+      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
+      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
+      enterLabel: this.settings.lbWidget.settings.translation.tournaments.enter,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
+      monthsFull: this.settings.lbWidget.settings.translation.time.monthsFull,
+      daysFull: this.settings.lbWidget.settings.translation.time.daysFull,
+      hoursFull: this.settings.lbWidget.settings.translation.time.hoursFull,
+      minutesFull: this.settings.lbWidget.settings.translation.time.minutesFull,
+      secondsFull: this.settings.lbWidget.settings.translation.time.secondsFull
+    });
 
     return sectionLB;
   };
 
   this.achievementsAreaLayout = function () {
-    var _this = this;
-    var sectionACH = document.createElement('div');
+    const sectionACH = document.createElement('div');
+    sectionACH.setAttribute('class', this.settings.lbWidget.settings.navigation.achievements.containerClass + ' cl-main-section-item');
 
-    var sectionACHHeader = document.createElement('div');
-    var sectionACHHeaderLabel = document.createElement('div');
-    var sectionACHHeaderDate = document.createElement('div');
-    var sectionACHHeaderClose = document.createElement('div');
-
-    var sectionACHDetails = document.createElement('div');
-    var sectionACHDetailsInfo = document.createElement('div');
-    var sectionACHDetailsInfoIcon = document.createElement('div');
-    var sectionACHDetailsContentContainer = document.createElement('div');
-    var sectionACHDetailsContentContainerLabel = document.createElement('div');
-    var sectionACHDetailsContentContainerDate = document.createElement('div');
-
-    var sectionACHList = document.createElement('div');
-    var sectionACHListBody = document.createElement('div');
-    var sectionACHListBodyResults = document.createElement('div');
-
-    var sectionACHFooter = document.createElement('div');
-    var sectionACHFooterContent = document.createElement('div');
-
-    var sectionAchievementDetailsContainer = document.createElement('div');
-    const sectionAchievementDetailsWrapper = document.createElement('div');
-    var sectionAchievementDetailsHeader = document.createElement('div');
-    var sectionAchievementDetailsHeaderLabel = document.createElement('div');
-    var sectionAchievementDetailsHeaderDate = document.createElement('div');
-    var sectionAchievementDetailsHeaderInfo = document.createElement('div');
-    var sectionAchievementDetailsBackBtn = document.createElement('a');
-    var sectionAchievementDetailsBodyContainer = document.createElement('div');
-    var sectionAchievementDetailsBodyImageContainer = document.createElement('div');
-    var sectionAchievementDetailsBody = document.createElement('div');
-    var sectionAchievementDetailsTC = document.createElement('div');
-    var sectionAchievementDetailsBodyDescriptionTitle = document.createElement('div');
-    var sectionAchievementDetailsBodyTCTitle = document.createElement('div');
-
-    const sectionAchievementDetailsProgressionTitle = document.createElement('div');
-    const sectionAchievementDetailsProgression = document.createElement('div');
-    const sectionAchievementDetailsProgressionCont = document.createElement('div');
-    const sectionAchievementDetailsProgressionBar = document.createElement('div');
-    const sectionAchievementDetailsProgressionLabel = document.createElement('div');
-
-    var sectionAchievementDetailsOptInContainer = document.createElement('div');
-    var sectionAchievementDetailsOptInAction = document.createElement('a');
-    var sectionAchievementDetailsReward = document.createElement('div');
-
-    const leavePopupWrapp = document.createElement('div');
-    const leavePopup = document.createElement('div');
-    const leavePopupTitle = document.createElement('div');
-    const leavePopupClose = document.createElement('div');
-    const leavePopupDescription = document.createElement('div');
-    const leavePopupActionConfirm = document.createElement('div');
-    const leavePopupActionCancel = document.createElement('div');
-    const leavePopupActions = document.createElement('div');
-
-    leavePopupWrapp.setAttribute('class', 'cl-main-widget-ach-list-popup-wrapp');
-    leavePopup.setAttribute('class', 'cl-main-widget-ach-list-popup');
-    leavePopupTitle.setAttribute('class', 'cl-main-widget-ach-list-popup-title');
-    leavePopupClose.setAttribute('class', 'cl-main-widget-ach-list-popup-close');
-    leavePopupDescription.setAttribute('class', 'cl-main-widget-ach-list-popup-description');
-    leavePopupActionConfirm.setAttribute('class', 'cl-main-widget-ach-list-popup-confirm');
-    leavePopupActionCancel.setAttribute('class', 'cl-main-widget-ach-list-popup-cancel');
-    leavePopupActions.setAttribute('class', 'cl-main-widget-ach-list-popup-actions');
-
-    leavePopupTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupTitle;
-    leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
-    leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
-    leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
-    sectionAchievementDetailsHeaderInfo.innerHTML = 'i';
-    sectionAchievementDetailsBodyDescriptionTitle.innerHTML = this.settings.lbWidget.settings.translation.global.descriptionLabel;
-    sectionAchievementDetailsBodyTCTitle.innerHTML = this.settings.lbWidget.settings.translation.global.tAndCLabel;
-    sectionAchievementDetailsProgressionTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.progress;
-    sectionAchievementDetailsProgressionLabel.innerHTML = '0/100';
-
-    leavePopupActions.appendChild(leavePopupActionCancel);
-    leavePopupActions.appendChild(leavePopupActionConfirm);
-
-    leavePopup.appendChild(leavePopupTitle);
-    leavePopup.appendChild(leavePopupClose);
-    leavePopup.appendChild(leavePopupDescription);
-    leavePopup.appendChild(leavePopupActions);
-
-    leavePopupWrapp.appendChild(leavePopup);
-
-    sectionACH.setAttribute('class', _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' cl-main-section-item');
-    sectionACHHeader.setAttribute('class', 'cl-main-widget-ach-header');
-    sectionACHHeaderLabel.setAttribute('class', 'cl-main-widget-ach-header-label');
-    sectionACHHeaderDate.setAttribute('class', 'cl-main-widget-ach-header-date');
-    sectionACHHeaderClose.setAttribute('class', 'cl-main-widget-ach-header-close');
-
-    sectionACHDetails.setAttribute('class', 'cl-main-widget-ach-details');
-    sectionACHDetailsInfo.setAttribute('class', 'cl-main-widget-ach-details-info');
-    sectionACHDetailsInfoIcon.setAttribute('class', 'cl-main-widget-ach-details-info-icon');
-    sectionACHDetailsContentContainer.setAttribute('class', 'cl-main-widget-ach-details-content');
-    sectionACHDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-ach-details-content-label');
-    sectionACHDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-ach-details-content-date');
-
-    // Leaderboard result container
-    sectionACHList.setAttribute('class', 'cl-main-widget-ach-list');
-    sectionACHListBody.setAttribute('class', 'cl-main-widget-ach-list-body');
-    sectionACHListBodyResults.setAttribute('class', 'cl-main-widget-ach-list-body-res');
-
-    // footer
-    sectionACHFooter.setAttribute('class', 'cl-main-widget-ach-footer');
-    sectionACHFooterContent.setAttribute('class', 'cl-main-widget-ach-footer-content');
-
-    // details section
-    sectionAchievementDetailsContainer.setAttribute('class', 'cl-main-widget-ach-details-container');
-    sectionAchievementDetailsWrapper.setAttribute('class', 'cl-main-widget-ach-details-wrapper');
-    sectionAchievementDetailsHeader.setAttribute('class', 'cl-main-widget-ach-details-header');
-    sectionAchievementDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-ach-details-header-label');
-    sectionAchievementDetailsHeaderDate.setAttribute('class', 'cl-main-widget-ach-details-header-date');
-    sectionAchievementDetailsHeaderInfo.setAttribute('class', 'cl-main-widget-ach-details-header-info');
-    sectionAchievementDetailsBackBtn.setAttribute('class', 'cl-main-widget-ach-details-back-btn');
-    sectionAchievementDetailsBodyContainer.setAttribute('class', 'cl-main-widget-ach-details-body-container');
-    sectionAchievementDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-ach-details-body-image-cont');
-    sectionAchievementDetailsBody.setAttribute('class', 'cl-main-widget-ach-details-body');
-    sectionAchievementDetailsTC.setAttribute('class', 'cl-main-widget-ach-details-tc');
-    sectionAchievementDetailsBodyDescriptionTitle.setAttribute('class', 'cl-main-widget-ach-details-body-description-title');
-    sectionAchievementDetailsBodyTCTitle.setAttribute('class', 'cl-main-widget-ach-details-body-description-tc-title');
-    sectionAchievementDetailsOptInContainer.setAttribute('class', 'cl-main-widget-ach-details-optin-container');
-    sectionAchievementDetailsOptInAction.setAttribute('class', 'cl-main-widget-ach-details-optin-action');
-    sectionAchievementDetailsReward.setAttribute('class', 'cl-main-widget-ach-details-reward');
-
-    sectionAchievementDetailsProgressionTitle.setAttribute('class', 'cl-main-widget-ach-details-body-progress-title');
-    sectionAchievementDetailsProgression.setAttribute('class', 'cl-main-widget-ach-details-body-progress');
-    sectionAchievementDetailsProgressionCont.setAttribute('class', 'cl-main-widget-ach-details-body-progress-cont');
-    sectionAchievementDetailsProgressionBar.setAttribute('class', 'cl-main-widget-ach-details-body-progress-bar');
-    sectionAchievementDetailsProgressionLabel.setAttribute('class', 'cl-main-widget-ach-details-body-progress-label');
-
-    sectionAchievementDetailsProgressionCont.appendChild(sectionAchievementDetailsProgressionBar);
-
-    sectionAchievementDetailsProgression.appendChild(sectionAchievementDetailsProgressionCont);
-    sectionAchievementDetailsProgression.appendChild(sectionAchievementDetailsProgressionLabel);
-
-    sectionACHHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.achievements.label;
-    sectionACHFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-
-    sectionAchievementDetailsOptInAction.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.enter;
-    sectionAchievementDetailsOptInAction.href = 'javascript:void(0);';
-
-    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsReward);
-    sectionAchievementDetailsOptInContainer.appendChild(sectionAchievementDetailsOptInAction);
-
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsBackBtn);
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderLabel);
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderDate);
-    sectionAchievementDetailsHeader.appendChild(sectionAchievementDetailsHeaderInfo);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyImageContainer);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsProgressionTitle);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsProgression);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyDescriptionTitle);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBodyTCTitle);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsBody);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsTC);
-    sectionAchievementDetailsBodyContainer.appendChild(sectionAchievementDetailsOptInContainer);
-
-    sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsHeader);
-    sectionAchievementDetailsWrapper.appendChild(sectionAchievementDetailsBodyContainer);
-
-    sectionAchievementDetailsContainer.appendChild(sectionAchievementDetailsWrapper);
-
-    sectionACHHeader.appendChild(sectionACHHeaderLabel);
-    sectionACHHeader.appendChild(sectionACHHeaderDate);
-    sectionACHHeader.appendChild(sectionACHHeaderClose);
-
-    sectionACHDetailsInfo.appendChild(sectionACHDetailsInfoIcon);
-    sectionACHDetailsContentContainer.appendChild(sectionACHDetailsContentContainerLabel);
-    sectionACHDetailsContentContainer.appendChild(sectionACHDetailsContentContainerDate);
-    sectionACHDetails.appendChild(sectionACHDetailsInfo);
-    sectionACHDetails.appendChild(sectionACHDetailsContentContainer);
-
-    sectionACHListBody.appendChild(sectionACHListBodyResults);
-    sectionACHListBody.appendChild(leavePopupWrapp);
-    sectionACHList.appendChild(sectionACHListBody);
-
-    sectionACHFooter.appendChild(sectionACHFooterContent);
-
-    sectionACH.appendChild(sectionACHHeader);
-    sectionACH.appendChild(sectionACHDetails);
-    sectionACH.appendChild(sectionACHList);
-    sectionACH.appendChild(sectionACHFooter);
-    sectionACH.appendChild(sectionAchievementDetailsContainer);
+    const template = require('../templates/layouts/achievementsAreaLayout.hbs');
+    sectionACH.innerHTML = template({
+      leavePopupTitle: this.settings.lbWidget.settings.translation.achievements.leavePopupTitle,
+      leavePopupDescription: this.settings.lbWidget.settings.translation.achievements.leavePopupDescription,
+      leavePopupActionConfirm: this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm,
+      leavePopupActionCancel: this.settings.lbWidget.settings.translation.achievements.leavePopupClose,
+      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
+      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
+      progressLabel: this.settings.lbWidget.settings.translation.achievements.progress,
+      headerLabel: this.settings.lbWidget.settings.translation.achievements.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
+      enterLabel: this.settings.lbWidget.settings.translation.achievements.enter
+    });
 
     return sectionACH;
   };
 
   this.rewardsAreaLayout = function () {
-    var _this = this;
-    var sectionRewards = document.createElement('div');
+    const sectionRewards = document.createElement('div');
+    sectionRewards.setAttribute('class', this.settings.lbWidget.settings.navigation.rewards.containerClass + ' cl-main-section-item');
 
-    var sectionRewardsHeader = document.createElement('div');
-    const sectionRewardsHeaderBack = document.createElement('div');
-    var sectionRewardsHeaderLabel = document.createElement('div');
-    var sectionRewardsHeaderDate = document.createElement('div');
-    var sectionRewardsHeaderClose = document.createElement('div');
-
-    var sectionRewardsDetails = document.createElement('div');
-    var sectionRewardsDetailsInfo = document.createElement('div');
-    var sectionRewardsDetailsInfoIcon = document.createElement('div');
-    var sectionRewardsDetailsContentContainer = document.createElement('div');
-    const sectionRewardsDetailsContentWrapper = document.createElement('div');
-    var sectionRewardsDetailsContentContainerLabel = document.createElement('div');
-    var sectionRewardsDetailsContentContainerDate = document.createElement('div');
-
-    var sectionRewardsList = document.createElement('div');
-    var sectionRewardsListBody = document.createElement('div');
-    var sectionRewardsListBodyResults = document.createElement('div');
-
-    var sectionRewardsFooter = document.createElement('div');
-    var sectionRewardsFooterContent = document.createElement('div');
-
-    var sectionRewardsDetailsContainer = document.createElement('div');
-    var sectionRewardsDetailsHeader = document.createElement('div');
-    var sectionRewardsDetailsHeaderLabel = document.createElement('div');
-    var sectionRewardsDetailsHeaderDate = document.createElement('div');
-    var sectionRewardsDetailsBackBtn = document.createElement('a');
-    var sectionRewardsDetailsBodyContainer = document.createElement('div');
-    var sectionRewardsDetailsBodyImageContainer = document.createElement('div');
-    var sectionRewardsDetailsBody = document.createElement('div');
-    const sectionRewardsDetailsDescription = document.createElement('div');
-    var sectionRewardsWinningsContainer = document.createElement('div');
-    var sectionRewardsWinningsIcon = document.createElement('div');
-    var sectionRewardsWinningsValue = document.createElement('div');
-    var sectionRewardsClaimContainer = document.createElement('div');
-    var sectionRewardsClaimBtn = document.createElement('a');
-
-    sectionRewards.setAttribute('class', _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' cl-main-section-item');
-    sectionRewardsHeader.setAttribute('class', 'cl-main-widget-reward-header');
-    sectionRewardsHeaderBack.setAttribute('class', 'cl-main-widget-reward-header-back');
-    sectionRewardsHeaderLabel.setAttribute('class', 'cl-main-widget-reward-header-label');
-    sectionRewardsHeaderDate.setAttribute('class', 'cl-main-widget-reward-header-date');
-    sectionRewardsHeaderClose.setAttribute('class', 'cl-main-widget-reward-header-close');
-
-    sectionRewardsDetails.setAttribute('class', 'cl-main-widget-reward-details');
-    sectionRewardsDetailsInfo.setAttribute('class', 'cl-main-widget-reward-details-info');
-    sectionRewardsDetailsInfoIcon.setAttribute('class', 'cl-main-widget-reward-details-info-icon');
-    sectionRewardsDetailsContentContainer.setAttribute('class', 'cl-main-widget-reward-details-content');
-    sectionRewardsDetailsContentWrapper.setAttribute('class', 'cl-main-widget-reward-details-wrapper');
-    sectionRewardsDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-reward-details-content-label');
-    sectionRewardsDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-reward-details-content-date');
-
-    // Leaderboard result container
-    sectionRewardsList.setAttribute('class', 'cl-main-widget-reward-list');
-    sectionRewardsListBody.setAttribute('class', 'cl-main-widget-reward-list-body');
-    sectionRewardsListBodyResults.setAttribute('class', 'cl-main-widget-reward-list-body-res');
-
-    // footer
-    sectionRewardsFooter.setAttribute('class', 'cl-main-widget-reward-footer');
-    sectionRewardsFooterContent.setAttribute('class', 'cl-main-widget-reward-footer-content');
-
-    // details section
-    sectionRewardsDetailsContainer.setAttribute('class', 'cl-main-widget-reward-details-container');
-    sectionRewardsDetailsHeader.setAttribute('class', 'cl-main-widget-reward-details-header');
-    sectionRewardsDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-reward-details-header-label');
-    sectionRewardsDetailsHeaderDate.setAttribute('class', 'cl-main-widget-reward-details-header-date');
-    sectionRewardsDetailsBackBtn.setAttribute('class', 'cl-main-widget-reward-details-back-btn');
-    sectionRewardsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-reward-details-body-container');
-    sectionRewardsDetailsBodyImageContainer.setAttribute('class', 'cl-main-widget-reward-details-body-image-cont');
-    sectionRewardsDetailsBody.setAttribute('class', 'cl-main-widget-reward-details-body');
-    sectionRewardsDetailsDescription.setAttribute('class', 'cl-main-widget-reward-details-description');
-    sectionRewardsWinningsContainer.setAttribute('class', 'cl-main-widget-reward-winnings-container');
-    sectionRewardsWinningsIcon.setAttribute('class', 'cl-main-widget-reward-winnings-icon');
-    sectionRewardsWinningsValue.setAttribute('class', 'cl-main-widget-reward-winnings-value');
-    sectionRewardsClaimContainer.setAttribute('class', 'cl-main-widget-reward-claim-container');
-    sectionRewardsClaimBtn.setAttribute('class', 'cl-main-widget-reward-claim-btn');
-
-    sectionRewardsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.rewards.label;
-    sectionRewardsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-    sectionRewardsClaimBtn.innerHTML = _this.settings.lbWidget.settings.translation.rewards.claim;
-
-    sectionRewardsWinningsContainer.appendChild(sectionRewardsWinningsIcon);
-    sectionRewardsWinningsContainer.appendChild(sectionRewardsWinningsValue);
-    sectionRewardsClaimContainer.appendChild(sectionRewardsClaimBtn);
-
-    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsBackBtn);
-    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsHeaderLabel);
-    sectionRewardsDetailsHeader.appendChild(sectionRewardsDetailsHeaderDate);
-
-    sectionRewardsDetailsBody.appendChild(sectionRewardsWinningsContainer);
-    sectionRewardsDetailsBody.appendChild(sectionRewardsDetailsDescription);
-
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBodyImageContainer);
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsDetailsBody);
-    sectionRewardsDetailsBodyContainer.appendChild(sectionRewardsClaimContainer);
-
-    sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsHeader);
-    sectionRewardsDetailsContentWrapper.appendChild(sectionRewardsDetailsBodyContainer);
-
-    sectionRewardsDetailsContainer.appendChild(sectionRewardsDetailsContentWrapper);
-
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderBack);
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderLabel);
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderDate);
-    sectionRewardsHeader.appendChild(sectionRewardsHeaderClose);
-
-    sectionRewardsDetailsInfo.appendChild(sectionRewardsDetailsInfoIcon);
-    sectionRewardsDetailsContentContainer.appendChild(sectionRewardsDetailsContentContainerLabel);
-    sectionRewardsDetailsContentContainer.appendChild(sectionRewardsDetailsContentContainerDate);
-    sectionRewardsDetails.appendChild(sectionRewardsDetailsInfo);
-    sectionRewardsDetails.appendChild(sectionRewardsDetailsContentContainer);
-
-    sectionRewardsListBody.appendChild(sectionRewardsListBodyResults);
-    sectionRewardsList.appendChild(sectionRewardsListBody);
-
-    sectionRewardsFooter.appendChild(sectionRewardsFooterContent);
-
-    sectionRewards.appendChild(sectionRewardsHeader);
-    sectionRewards.appendChild(sectionRewardsDetails);
-    sectionRewards.appendChild(sectionRewardsList);
-    sectionRewards.appendChild(sectionRewardsFooter);
-    sectionRewards.appendChild(sectionRewardsDetailsContainer);
+    const template = require('../templates/layouts/awardsAreaLayout.hbs');
+    sectionRewards.innerHTML = template({
+      headerLabel: this.settings.lbWidget.settings.translation.rewards.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
+      claimBtn: this.settings.lbWidget.settings.translation.rewards.claim
+    });
 
     return sectionRewards;
   };
 
   this.inboxAreaLayout = function () {
-    const _this = this;
     const sectionInbox = document.createElement('div');
+    sectionInbox.setAttribute('class', this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
 
-    const sectionInboxHeader = document.createElement('div');
-    const sectionInboxHeaderLabel = document.createElement('div');
-    const sectionInboxHeaderClose = document.createElement('div');
-
-    const sectionInboxDetails = document.createElement('div');
-    const sectionInboxDetailsInfo = document.createElement('div');
-    const sectionInboxDetailsInfoIcon = document.createElement('div');
-    const sectionInboxDetailsContentContainer = document.createElement('div');
-    const sectionInboxDetailsContentContainerLabel = document.createElement('div');
-    const sectionInboxDetailsContentContainerDate = document.createElement('div');
-
-    const sectionInboxList = document.createElement('div');
-    const sectionInboxListBody = document.createElement('div');
-    const sectionInboxListBodyResults = document.createElement('div');
-
-    const sectionInboxFooter = document.createElement('div');
-    const sectionInboxFooterContent = document.createElement('div');
-
-    const sectionInboxDetailsContainer = document.createElement('div');
-    const sectionInboxDetailsWrapper = document.createElement('div');
-    const sectionInboxDetailsHeader = document.createElement('div');
-    const sectionInboxDetailsHeaderLabel = document.createElement('div');
-    const sectionInboxDetailsHeaderDate = document.createElement('div');
-    const sectionInboxDetailsBackBtn = document.createElement('a');
-    const sectionInboxDetailsBodyContainer = document.createElement('div');
-    const sectionInboxDetailsBody = document.createElement('div');
-
-    sectionInbox.setAttribute('class', _this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
-    sectionInboxHeader.setAttribute('class', 'cl-main-widget-inbox-header');
-    sectionInboxHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-header-label');
-    sectionInboxHeaderClose.setAttribute('class', 'cl-main-widget-inbox-header-close');
-
-    sectionInboxDetails.setAttribute('class', 'cl-main-widget-inbox-details');
-    sectionInboxDetailsInfo.setAttribute('class', 'cl-main-widget-inbox-details-info');
-    sectionInboxDetailsInfoIcon.setAttribute('class', 'cl-main-widget-inbox-details-info-icon');
-    sectionInboxDetailsContentContainer.setAttribute('class', 'cl-main-widget-inbox-details-content');
-    sectionInboxDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-inbox-details-content-label');
-    sectionInboxDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-inbox-details-content-date');
-
-    // Leaderboard result container
-    sectionInboxList.setAttribute('class', 'cl-main-widget-inbox-list');
-    sectionInboxListBody.setAttribute('class', 'cl-main-widget-inbox-list-body');
-    sectionInboxListBodyResults.setAttribute('class', 'cl-main-widget-inbox-list-body-res');
-
-    // footer
-    sectionInboxFooter.setAttribute('class', 'cl-main-widget-inbox-footer');
-    sectionInboxFooterContent.setAttribute('class', 'cl-main-widget-inbox-footer-content');
-
-    // details section
-    sectionInboxDetailsContainer.setAttribute('class', 'cl-main-widget-inbox-details-container');
-    sectionInboxDetailsWrapper.setAttribute('class', 'cl-main-widget-inbox-details-wrapper');
-    sectionInboxDetailsHeader.setAttribute('class', 'cl-main-widget-inbox-details-header');
-    sectionInboxDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-inbox-details-header-label');
-    sectionInboxDetailsHeaderDate.setAttribute('class', 'cl-main-widget-inbox-details-header-date');
-    sectionInboxDetailsBackBtn.setAttribute('class', 'cl-main-widget-inbox-details-back-btn');
-    sectionInboxDetailsBodyContainer.setAttribute('class', 'cl-main-widget-inbox-details-body-container');
-    sectionInboxDetailsBody.setAttribute('class', 'cl-main-widget-inbox-details-body');
-
-    sectionInboxHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.messages.label;
-    sectionInboxFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-
-    sectionInboxHeader.appendChild(sectionInboxHeaderLabel);
-    sectionInboxHeader.appendChild(sectionInboxHeaderClose);
-
-    sectionInboxDetailsInfo.appendChild(sectionInboxDetailsInfoIcon);
-    sectionInboxDetailsContentContainer.appendChild(sectionInboxDetailsContentContainerLabel);
-    sectionInboxDetailsContentContainer.appendChild(sectionInboxDetailsContentContainerDate);
-    sectionInboxDetails.appendChild(sectionInboxDetailsInfo);
-    sectionInboxDetails.appendChild(sectionInboxDetailsContentContainer);
-
-    sectionInboxListBody.appendChild(sectionInboxListBodyResults);
-    sectionInboxList.appendChild(sectionInboxListBody);
-
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsBackBtn);
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderLabel);
-    sectionInboxDetailsHeader.appendChild(sectionInboxDetailsHeaderDate);
-    sectionInboxDetailsWrapper.appendChild(sectionInboxDetailsHeader);
-    sectionInboxDetailsBodyContainer.appendChild(sectionInboxDetailsBody);
-    sectionInboxDetailsWrapper.appendChild(sectionInboxDetailsBodyContainer);
-    sectionInboxDetailsContainer.appendChild(sectionInboxDetailsWrapper);
-
-    sectionInboxFooter.appendChild(sectionInboxFooterContent);
-
-    sectionInbox.appendChild(sectionInboxHeader);
-    sectionInbox.appendChild(sectionInboxDetails);
-    sectionInbox.appendChild(sectionInboxList);
-    sectionInbox.appendChild(sectionInboxFooter);
-    sectionInbox.appendChild(sectionInboxDetailsContainer);
+    const template = require('../templates/layouts/inboxAreaLayout.hbs');
+    sectionInbox.innerHTML = template({
+      headerLabel: this.settings.lbWidget.settings.translation.messages.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy
+    });
 
     return sectionInbox;
   };
 
   this.missionsAreaLayout = function () {
-    const _this = this;
     const sectionMissions = document.createElement('div');
+    sectionMissions.setAttribute('class', this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
 
-    const sectionMissionsHeader = document.createElement('div');
-    const sectionMissionsHeaderLabel = document.createElement('div');
-    const sectionMissionsHeaderDate = document.createElement('div');
-    const sectionMissionsHeaderClose = document.createElement('div');
-    const sectionMissionsHeaderBack = document.createElement('div');
-
-    const sectionMissionsDetails = document.createElement('div');
-    const sectionMissionsDetailsInfo = document.createElement('div');
-    const sectionMissionsDetailsInfoIcon = document.createElement('div');
-    const sectionMissionsDetailsContentContainer = document.createElement('div');
-    const sectionMissionsDetailsContentContainerLabel = document.createElement('div');
-    const sectionMissionsDetailsContentContainerDate = document.createElement('div');
-
-    const sectionMissionsList = document.createElement('div');
-    const sectionMissionsListBody = document.createElement('div');
-    const sectionMissionsListBodyResults = document.createElement('div');
-
-    const sectionMissionsFooter = document.createElement('div');
-    const sectionMissionsFooterContent = document.createElement('div');
-
-    const sectionMissionsDetailsContainer = document.createElement('div');
-    const sectionMissionsDetailsContainerWrapper = document.createElement('div');
-    const sectionMissionsDetailsWrapper = document.createElement('div');
-    const sectionMissionsDetailsHeader = document.createElement('div');
-    const sectionMissionsDetailsHeaderLabel = document.createElement('div');
-    const sectionMissionsDetailsHeaderDate = document.createElement('div');
-    const sectionMissionsDetailsBackBtn = document.createElement('a');
-    const sectionMissionsDetailsInfoBtn = document.createElement('a');
-    const sectionMissionsDetailsBodyContainer = document.createElement('div');
-    const sectionMissionsDetailsBodyWrapper = document.createElement('div');
-    const sectionMissionsDetailsBodyImage = document.createElement('div');
-    const sectionMissionsDetailsDescriptionLabel = document.createElement('div');
-    const sectionMissionsDetailsTandCLabel = document.createElement('div');
-    const sectionMissionsDetailsBody = document.createElement('div');
-    const sectionMissionsDetailsTCBody = document.createElement('div');
-    const sectionMissionsDetailsPrize = document.createElement('div');
-    const sectionMissionsDetailsPrizeLabel = document.createElement('div');
-    const sectionMissionsDetailsPrizeValue = document.createElement('div');
-
-    const sectionMissionsMapContainer = document.createElement('div');
-    const sectionMissionsMapContainerWrapper = document.createElement('div');
-    const sectionMissionsMapHeader = document.createElement('div');
-    const sectionMissionsMapGraph = document.createElement('div');
-    const sectionMissionsMapGraphItemBg = document.createElement('div');
-    const sectionMissionsMapGraphItemStar3 = document.createElement('div');
-    const sectionMissionsMapGraphItemStar2 = document.createElement('div');
-    const sectionMissionsMapGraphItemStar1 = document.createElement('div');
-
-    const graphImage = document.createElement('div');
-
-    const cytoscapeContainer = document.createElement('div');
-
-    graphImage.setAttribute('class', 'cl-main-widget-missions-graph-image');
-
-    cytoscapeContainer.setAttribute('id', 'cy');
-
-    sectionMissions.setAttribute('class', _this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
-    sectionMissionsHeader.setAttribute('class', 'cl-main-widget-missions-header');
-    sectionMissionsHeaderBack.setAttribute('class', 'cl-main-widget-mission-header-back-icon');
-    sectionMissionsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-header-label');
-    sectionMissionsHeaderDate.setAttribute('class', 'cl-main-widget-missions-header-date');
-    sectionMissionsHeaderClose.setAttribute('class', 'cl-main-widget-missions-header-close');
-
-    sectionMissionsDetails.setAttribute('class', 'cl-main-widget-missions-details');
-    sectionMissionsDetailsInfo.setAttribute('class', 'cl-main-widget-missions-details-info');
-    sectionMissionsDetailsInfoIcon.setAttribute('class', 'cl-main-widget-missions-details-info-icon');
-    sectionMissionsDetailsContentContainer.setAttribute('class', 'cl-main-widget-missions-details-content');
-    sectionMissionsDetailsContentContainerLabel.setAttribute('class', 'cl-main-widget-missions-details-content-label');
-    sectionMissionsDetailsContentContainerDate.setAttribute('class', 'cl-main-widget-missions-details-content-date');
-
-    // Leaderboard result container
-    sectionMissionsList.setAttribute('class', 'cl-main-widget-missions-list');
-    sectionMissionsListBody.setAttribute('class', 'cl-main-widget-missions-list-body');
-    sectionMissionsListBodyResults.setAttribute('class', 'cl-main-widget-missions-list-body-res');
-
-    // footer
-    sectionMissionsFooter.setAttribute('class', 'cl-main-widget-missions-footer');
-    sectionMissionsFooterContent.setAttribute('class', 'cl-main-widget-missions-footer-content');
-
-    // details section
-    sectionMissionsDetailsContainer.setAttribute('class', 'cl-main-widget-missions-details-container');
-    sectionMissionsDetailsContainerWrapper.setAttribute('class', 'cl-main-widget-missions-details-container-wrapper');
-    sectionMissionsDetailsWrapper.setAttribute('class', 'cl-main-widget-missions-details-wrapper');
-    sectionMissionsDetailsHeader.setAttribute('class', 'cl-main-widget-missions-details-header');
-    sectionMissionsDetailsHeaderLabel.setAttribute('class', 'cl-main-widget-missions-details-header-label');
-    sectionMissionsDetailsHeaderDate.setAttribute('class', 'cl-main-widget-missions-details-header-date');
-    sectionMissionsDetailsBackBtn.setAttribute('class', 'cl-main-widget-missions-details-back-btn');
-    sectionMissionsDetailsInfoBtn.setAttribute('class', 'cl-main-widget-missions-details-info-btn');
-    sectionMissionsDetailsBodyContainer.setAttribute('class', 'cl-main-widget-missions-details-body-container');
-    sectionMissionsDetailsBodyWrapper.setAttribute('class', 'cl-main-widget-missions-details-body-wrapper');
-    sectionMissionsDetailsBodyImage.setAttribute('class', 'cl-main-widget-missions-details-body-image');
-    sectionMissionsDetailsDescriptionLabel.setAttribute('class', 'cl-main-widget-missions-details-description-label');
-    sectionMissionsDetailsTandCLabel.setAttribute('class', 'cl-main-widget-missions-details-tc-label');
-    sectionMissionsDetailsBody.setAttribute('class', 'cl-main-widget-missions-details-description');
-    sectionMissionsDetailsTCBody.setAttribute('class', 'cl-main-widget-missions-details-tc');
-    sectionMissionsDetailsPrize.setAttribute('class', 'cl-main-widget-missions-details-prize');
-    sectionMissionsDetailsPrizeLabel.setAttribute('class', 'cl-main-widget-missions-details-prize-label');
-    sectionMissionsDetailsPrizeValue.setAttribute('class', 'cl-main-widget-missions-details-prize-value');
-
-    // map section
-    sectionMissionsMapContainer.setAttribute('class', 'cl-main-widget-missions-map-container');
-    sectionMissionsMapContainerWrapper.setAttribute('class', 'cl-main-widget-missions-map-wrapper');
-    sectionMissionsMapHeader.setAttribute('class', 'cl-main-widget-missions-map-header');
-    sectionMissionsMapGraph.setAttribute('class', 'cl-main-widget-missions-map-graph');
-    sectionMissionsMapGraph.setAttribute('id', 'cy-map');
-    sectionMissionsMapGraphItemBg.setAttribute('class', 'cl-main-widget-missions-map-graph-item-bg');
-    sectionMissionsMapGraphItemStar3.setAttribute('class', 'cl-main-widget-missions-map-graph-item-star-3');
-    sectionMissionsMapGraphItemStar2.setAttribute('class', 'cl-main-widget-missions-map-graph-item-star-2');
-    sectionMissionsMapGraphItemStar1.setAttribute('class', 'cl-main-widget-missions-map-graph-item-star-1');
-
-    sectionMissionsHeaderLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.label;
-    sectionMissionsFooterContent.innerHTML = _this.settings.lbWidget.settings.translation.global.copy;
-    sectionMissionsDetailsInfoBtn.innerHTML = 'i';
-    sectionMissionsDetailsDescriptionLabel.innerHTML = _this.settings.lbWidget.settings.translation.global.descriptionLabel;
-    sectionMissionsDetailsTandCLabel.innerHTML = _this.settings.lbWidget.settings.translation.global.tAndCLabel;
-    sectionMissionsDetailsPrizeLabel.innerHTML = _this.settings.lbWidget.settings.translation.missions.prizeLabel + ':';
-    sectionMissionsMapHeader.innerHTML = _this.settings.lbWidget.settings.translation.missions.mapLabel;
-
-    sectionMissionsHeader.appendChild(sectionMissionsHeaderBack);
-    sectionMissionsHeader.appendChild(sectionMissionsHeaderLabel);
-    sectionMissionsHeader.appendChild(sectionMissionsHeaderDate);
-    sectionMissionsHeader.appendChild(sectionMissionsHeaderClose);
-
-    sectionMissionsDetailsPrize.appendChild(sectionMissionsDetailsPrizeLabel);
-    sectionMissionsDetailsPrize.appendChild(sectionMissionsDetailsPrizeValue);
-
-    sectionMissionsDetailsInfo.appendChild(sectionMissionsDetailsInfoIcon);
-    sectionMissionsDetailsContentContainer.appendChild(sectionMissionsDetailsContentContainerLabel);
-    sectionMissionsDetailsContentContainer.appendChild(sectionMissionsDetailsContentContainerDate);
-    sectionMissionsDetails.appendChild(sectionMissionsDetailsInfo);
-    sectionMissionsDetails.appendChild(sectionMissionsDetailsContentContainer);
-
-    sectionMissionsListBody.appendChild(sectionMissionsListBodyResults);
-    sectionMissionsList.appendChild(sectionMissionsListBody);
-
-    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsBackBtn);
-    sectionMissionsDetailsHeader.appendChild(sectionMissionsDetailsInfoBtn);
-
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsHeaderLabel);
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsDescriptionLabel);
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsTandCLabel);
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsBody);
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsTCBody);
-    sectionMissionsDetailsBodyContainer.appendChild(sectionMissionsDetailsPrize);
-
-    sectionMissionsDetailsBodyWrapper.appendChild(sectionMissionsDetailsBodyImage);
-    sectionMissionsDetailsBodyWrapper.appendChild(sectionMissionsDetailsBodyContainer);
-
-    sectionMissionsDetailsBodyContainer.appendChild(graphImage);
-
-    sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsHeader);
-    sectionMissionsDetailsWrapper.appendChild(sectionMissionsDetailsBodyWrapper);
-
-    sectionMissionsDetailsContainerWrapper.appendChild(sectionMissionsDetailsWrapper);
-    sectionMissionsDetailsContainerWrapper.appendChild(cytoscapeContainer);
-
-    sectionMissionsDetailsContainer.appendChild(sectionMissionsDetailsContainerWrapper);
-
-    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapHeader);
-    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemBg);
-    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemStar3);
-    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemStar2);
-    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraphItemStar1);
-    sectionMissionsMapContainerWrapper.appendChild(sectionMissionsMapGraph);
-    sectionMissionsMapContainer.appendChild(sectionMissionsMapContainerWrapper);
-
-    sectionMissionsFooter.appendChild(sectionMissionsFooterContent);
-
-    sectionMissions.appendChild(sectionMissionsHeader);
-    sectionMissions.appendChild(sectionMissionsDetails);
-    sectionMissions.appendChild(sectionMissionsList);
-    sectionMissions.appendChild(sectionMissionsFooter);
-    sectionMissions.appendChild(sectionMissionsDetailsContainer);
-    sectionMissions.appendChild(sectionMissionsMapContainer);
+    const template = require('../templates/layouts/missionsAreaLayout.hbs');
+    sectionMissions.innerHTML = template({
+      headerLabel: this.settings.lbWidget.settings.translation.missions.label,
+      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
+      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
+      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
+      prizeLabel: this.settings.lbWidget.settings.translation.missions.prizeLabel + ':',
+      mapHeaderLabel: this.settings.lbWidget.settings.translation.missions.mapLabel
+    });
 
     return sectionMissions;
   };
 
   this.dashboardAreaLayout = function () {
-    const _this = this;
     const sectionDashboard = document.createElement('div');
+    sectionDashboard.setAttribute('class', this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
 
-    const sectionDashboardHeader = document.createElement('div');
-    const sectionDashboardHeaderLabel = document.createElement('div');
-    const sectionDashboardHeaderClose = document.createElement('div');
-
-    const sectionDashboardBody = document.createElement('div');
-
-    const sectionDashboardInstantWins = document.createElement('div');
-    const sectionDashboardInstantWinsTitle = document.createElement('div');
-    const sectionDashboardInstantWinsWrapp = document.createElement('div');
-
-    const sectionDashboardInstantWinsWheel = document.createElement('div');
-    const sectionDashboardInstantWinsWheelImage = document.createElement('div');
-    const sectionDashboardInstantWinsWheelBody = document.createElement('div');
-    const sectionDashboardInstantWinsWheelTitle = document.createElement('div');
-    const sectionDashboardInstantWinsWheelTitleMobile = document.createElement('div');
-    const sectionDashboardInstantWinsWheelDescription = document.createElement('div');
-    const sectionDashboardInstantWinsWheelButton = document.createElement('div');
-
-    const sectionDashboardInstantWinsCards = document.createElement('div');
-    const sectionDashboardInstantWinsCardsImage = document.createElement('div');
-    const sectionDashboardInstantWinsCardsBody = document.createElement('div');
-    const sectionDashboardInstantWinsCardsTitle = document.createElement('div');
-    const sectionDashboardInstantWinsCardsTitleMobile = document.createElement('div');
-    const sectionDashboardInstantWinsCardsDescription = document.createElement('div');
-    const sectionDashboardInstantWinsCardsButton = document.createElement('div');
-
-    const sectionDashboardAchievements = document.createElement('div');
-    const sectionDashboardAchievementsTitle = document.createElement('div');
-    const sectionDashboardAchievementsWrapp = document.createElement('div');
-    const achList = document.createElement('div');
-    const achListMore = document.createElement('div');
-
-    const sectionDashboardTournaments = document.createElement('div');
-    const sectionDashboardTournamentsTitle = document.createElement('div');
-    const sectionDashboardTournamentsWrapp = document.createElement('div');
-    const tournamentsList = document.createElement('div');
-    const tournamentsListMore = document.createElement('div');
-
-    const leavePopupWrapp = document.createElement('div');
-    const leavePopup = document.createElement('div');
-    const leavePopupTitle = document.createElement('div');
-    const leavePopupClose = document.createElement('div');
-    const leavePopupDescription = document.createElement('div');
-    const leavePopupActionConfirm = document.createElement('div');
-    const leavePopupActionCancel = document.createElement('div');
-    const leavePopupActions = document.createElement('div');
-
-    leavePopupWrapp.setAttribute('class', 'cl-main-widget-ach-list-popup-wrapp');
-    leavePopup.setAttribute('class', 'cl-main-widget-ach-list-popup');
-    leavePopupTitle.setAttribute('class', 'cl-main-widget-ach-list-popup-title');
-    leavePopupClose.setAttribute('class', 'cl-main-widget-ach-list-popup-close');
-    leavePopupDescription.setAttribute('class', 'cl-main-widget-ach-list-popup-description');
-    leavePopupActionConfirm.setAttribute('class', 'cl-main-widget-ach-list-popup-confirm');
-    leavePopupActionCancel.setAttribute('class', 'cl-main-widget-ach-list-popup-cancel');
-    leavePopupActions.setAttribute('class', 'cl-main-widget-ach-list-popup-actions');
-
-    leavePopupTitle.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupTitle;
-    leavePopupDescription.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupDescription;
-    leavePopupActionConfirm.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm;
-    leavePopupActionCancel.innerHTML = this.settings.lbWidget.settings.translation.achievements.leavePopupClose;
-
-    leavePopupActions.appendChild(leavePopupActionCancel);
-    leavePopupActions.appendChild(leavePopupActionConfirm);
-
-    leavePopup.appendChild(leavePopupTitle);
-    leavePopup.appendChild(leavePopupClose);
-    leavePopup.appendChild(leavePopupDescription);
-    leavePopup.appendChild(leavePopupActions);
-
-    leavePopupWrapp.appendChild(leavePopup);
-
-    sectionDashboard.setAttribute('class', _this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
-    sectionDashboardHeader.setAttribute('class', 'cl-main-widget-dashboard-header');
-    sectionDashboardHeaderLabel.setAttribute('class', 'cl-main-widget-dashboard-header-label');
-    sectionDashboardHeaderClose.setAttribute('class', 'cl-main-widget-dashboard-header-close');
-
-    sectionDashboardBody.setAttribute('class', 'cl-main-widget-dashboard-body');
-
-    sectionDashboardInstantWins.setAttribute('class', 'cl-main-widget-dashboard-instant-wins');
-    sectionDashboardInstantWinsTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-title');
-    sectionDashboardInstantWinsWrapp.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wrapp');
-
-    sectionDashboardInstantWinsWheel.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel');
-    sectionDashboardInstantWinsWheelImage.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-image');
-    sectionDashboardInstantWinsWheelBody.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-body');
-    sectionDashboardInstantWinsWheelTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-title');
-    sectionDashboardInstantWinsWheelTitleMobile.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-title-mobile');
-    sectionDashboardInstantWinsWheelDescription.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-description');
-    sectionDashboardInstantWinsWheelButton.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel-button');
-
-    sectionDashboardInstantWinsCards.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards');
-    sectionDashboardInstantWinsCardsImage.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-image');
-    sectionDashboardInstantWinsCardsBody.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-body');
-    sectionDashboardInstantWinsCardsTitle.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-title');
-    sectionDashboardInstantWinsCardsTitleMobile.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-title-mobile');
-    sectionDashboardInstantWinsCardsDescription.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-description');
-    sectionDashboardInstantWinsCardsButton.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-cards-button');
-
-    sectionDashboardInstantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle;
-
-    sectionDashboardInstantWinsWheelTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
-    sectionDashboardInstantWinsWheelTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle;
-    sectionDashboardInstantWinsWheelDescription.innerHTML = '';
-    sectionDashboardInstantWinsWheelButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.singleWheelButton;
-
-    sectionDashboardInstantWinsCardsTitle.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
-    sectionDashboardInstantWinsCardsTitleMobile.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle;
-    sectionDashboardInstantWinsCardsDescription.innerHTML = '';
-    sectionDashboardInstantWinsCardsButton.innerHTML = _this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton;
-
-    sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelTitle);
-    sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelDescription);
-    sectionDashboardInstantWinsWheelBody.appendChild(sectionDashboardInstantWinsWheelButton);
-
-    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelTitleMobile);
-    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelImage);
-    sectionDashboardInstantWinsWheel.appendChild(sectionDashboardInstantWinsWheelBody);
-
-    sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsTitle);
-    sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsDescription);
-    sectionDashboardInstantWinsCardsBody.appendChild(sectionDashboardInstantWinsCardsButton);
-
-    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsTitleMobile);
-    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsImage);
-    sectionDashboardInstantWinsCards.appendChild(sectionDashboardInstantWinsCardsBody);
-
-    sectionDashboardInstantWinsWrapp.appendChild(sectionDashboardInstantWinsWheel);
-    sectionDashboardInstantWinsWrapp.appendChild(sectionDashboardInstantWinsCards);
-
-    sectionDashboardInstantWins.appendChild(sectionDashboardInstantWinsTitle);
-    sectionDashboardInstantWins.appendChild(sectionDashboardInstantWinsWrapp);
-
-    sectionDashboardAchievements.setAttribute('class', 'cl-main-widget-dashboard-achievements');
-    sectionDashboardAchievementsTitle.setAttribute('class', 'cl-main-widget-dashboard-achievements-title');
-    sectionDashboardAchievementsWrapp.setAttribute('class', 'cl-main-widget-dashboard-achievements-wrapp');
-    achList.setAttribute('class', 'cl-main-widget-dashboard-achievements-list');
-    achListMore.setAttribute('class', 'cl-main-widget-dashboard-achievements-list-more');
-
-    sectionDashboardAchievementsTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.achievementsTitle;
-
-    sectionDashboardHeaderLabel.innerHTML = this.settings.lbWidget.settings.translation.dashboard.label;
-
-    achListMore.innerHTML = this.settings.lbWidget.settings.translation.dashboard.seeAll;
-
-    sectionDashboardAchievementsWrapp.appendChild(achList);
-    sectionDashboardAchievementsWrapp.appendChild(achListMore);
-
-    sectionDashboardAchievements.appendChild(sectionDashboardAchievementsTitle);
-    sectionDashboardAchievements.appendChild(sectionDashboardAchievementsWrapp);
-
-    sectionDashboardTournaments.setAttribute('class', 'cl-main-widget-dashboard-tournaments');
-    sectionDashboardTournamentsTitle.setAttribute('class', 'cl-main-widget-dashboard-tournaments-title');
-    sectionDashboardTournamentsWrapp.setAttribute('class', 'cl-main-widget-dashboard-tournaments-wrapp');
-    tournamentsList.setAttribute('class', 'cl-main-widget-dashboard-tournaments-list');
-    tournamentsListMore.setAttribute('class', 'cl-main-widget-dashboard-tournaments-list-more');
-
-    tournamentsListMore.innerHTML = this.settings.lbWidget.settings.translation.dashboard.seeAll;
-
-    sectionDashboardTournamentsTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle;
-
-    sectionDashboardTournamentsWrapp.appendChild(tournamentsList);
-    sectionDashboardTournamentsWrapp.appendChild(tournamentsListMore);
-    sectionDashboardTournaments.appendChild(sectionDashboardTournamentsTitle);
-    sectionDashboardTournaments.appendChild(sectionDashboardTournamentsWrapp);
-
-    if (this.settings.lbWidget.settings.instantWins.enable) {
-      sectionDashboardBody.appendChild(sectionDashboardInstantWins);
-    }
-
-    if (this.settings.lbWidget.settings.navigation.achievements.enable) {
-      sectionDashboardBody.appendChild(leavePopupWrapp);
-      sectionDashboardBody.appendChild(sectionDashboardAchievements);
-    }
-
-    if (this.settings.lbWidget.settings.navigation.tournaments.enable) {
-      sectionDashboardBody.appendChild(sectionDashboardTournaments);
-    }
-
-    sectionDashboardHeader.appendChild(sectionDashboardHeaderLabel);
-    sectionDashboardHeader.appendChild(sectionDashboardHeaderClose);
-
-    sectionDashboard.appendChild(sectionDashboardHeader);
-    sectionDashboard.appendChild(sectionDashboardBody);
+    const template = require('../templates/layouts/dashboardAreaLayout.hbs');
+    sectionDashboard.innerHTML = template({
+      isInstantWins: this.settings.lbWidget.settings.instantWins.enable,
+      isAchievements: this.settings.lbWidget.settings.navigation.achievements.enable,
+      isTournaments: this.settings.lbWidget.settings.navigation.tournaments.enable,
+      seeAllLabel: this.settings.lbWidget.settings.translation.dashboard.seeAll,
+      headerLabel: this.settings.lbWidget.settings.translation.dashboard.label,
+      tournamentsTitle: this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle,
+      achievementsTitle: this.settings.lbWidget.settings.translation.dashboard.achievementsTitle,
+      instantWinsTitle: this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle,
+      leavePopupTitle: this.settings.lbWidget.settings.translation.achievements.leavePopupTitle,
+      leavePopupDescription: this.settings.lbWidget.settings.translation.achievements.leavePopupDescription,
+      leavePopupActionConfirm: this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm,
+      leavePopupActionCancel: this.settings.lbWidget.settings.translation.achievements.leavePopupClose,
+      instantWinsWheelTitle: this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle,
+      instantWinsWheelButton: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
+      instantWinsCardsTitle: this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle,
+      instantWinsCardsButton: this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton
+    });
 
     return sectionDashboard;
   };
@@ -1643,53 +684,31 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardRow = function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-    var _this = this;
-    var cellWrapper = document.createElement('div');
-    var rankCel = document.createElement('div');
-    var rankCelValue = document.createElement('div');
-    var iconCel = document.createElement('div');
-    var iconCelImg = document.createElement('div');
-    var nameCel = document.createElement('div');
-    var growthCel = document.createElement('div');
-    var pointsCel = document.createElement('div');
-    var memberFoundClass = (memberFound) ? ' cl-lb-member-row' : '';
-
+    const cellWrapper = document.createElement('div');
+    const memberFoundClass = (memberFound) ? ' cl-lb-member-row' : '';
     cellWrapper.setAttribute('class', 'cl-lb-row cl-lb-rank-' + rank + ' cl-lb-count-' + count + memberFoundClass);
-    rankCel.setAttribute('class', 'cl-rank-col cl-col cl-rank-' + rank);
-    rankCelValue.setAttribute('class', 'cl-rank-col-value');
-    iconCel.setAttribute('class', 'cl-icon-col cl-col');
-    iconCelImg.setAttribute('class', 'cl-icon-col-img');
-    nameCel.setAttribute('class', 'cl-name-col cl-col');
-    growthCel.setAttribute('class', 'cl-growth-col cl-col');
-    pointsCel.setAttribute('class', 'cl-points-col cl-col');
-
     cellWrapper.dataset.rank = rank;
 
-    rankCelValue.innerHTML = rank;
-    nameCel.innerHTML = name;
-    growthCel.dataset.growth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-    growthCel.dataset.change = change;
-    growthCel.innerHTML = growth;
-    pointsCel.innerHTML = points;
+    const datasetGrowth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
+    const datasetChange = change;
 
-    iconCelImg.innerHTML = icon;
+    const rewardEnabled = (typeof this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest !== null && typeof this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
 
-    rankCel.appendChild(rankCelValue);
-    cellWrapper.appendChild(rankCel);
-    iconCel.appendChild(iconCelImg);
-    cellWrapper.appendChild(iconCel);
-    cellWrapper.appendChild(nameCel);
-    cellWrapper.appendChild(growthCel);
-    cellWrapper.appendChild(pointsCel);
+    const rewardValue = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
 
-    var rewardCel = document.createElement('div');
-    var rewardEnabled = (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
-    rewardCel.setAttribute('class', 'cl-reward-col cl-col' + (rewardEnabled ? ' cl-col-reward-enabled' : ''));
-    rewardCel.innerHTML = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
-
-    addClass(cellWrapper, 'cl-reward-enabled');
-
-    cellWrapper.appendChild(rewardCel);
+    const template = require('../templates/mainWidget/leaderboardRow.hbs');
+    cellWrapper.innerHTML = template({
+      rank: rank,
+      name: name,
+      icon: icon,
+      datasetGrowth: datasetGrowth,
+      datasetChange: datasetChange,
+      growth: growth,
+      points: points,
+      rewardEnabled: rewardEnabled,
+      rewardEnabledClass: 'cl-col-reward-enabled',
+      rewardValue: rewardValue
+    });
 
     return cellWrapper;
   };
@@ -3003,99 +2022,53 @@ export const MainWidget = function (options) {
     }, 200);
   };
 
-  this.achievementItem = function (ach, achieved, perc) {
-    const _this = this;
+  this.achievementItem = function (ach) {
     const listItem = document.createElement('div');
-    const detailsContainer = document.createElement('div');
-    const detailsWrapper = document.createElement('div');
-    const icon = document.createElement('div');
-    const label = document.createElement('div');
-    const progressionWrapper = document.createElement('div');
-    const progressionCont = document.createElement('div');
-    const progressionBar = document.createElement('div');
-    const progressionLabel = document.createElement('div');
-    const actionsWrapper = document.createElement('div');
-    const actionsReward = document.createElement('div');
-    const moreButton = document.createElement('a');
-    const enterButton = document.createElement('a');
-    const leaveButton = document.createElement('a');
-    const progressionButton = document.createElement('a');
-
     listItem.setAttribute('class', 'cl-ach-list-item cl-ach-' + ach.id);
-    detailsContainer.setAttribute('class', 'cl-ach-list-details-cont');
-    icon.setAttribute('class', 'cl-ach-list-icon');
-    detailsWrapper.setAttribute('class', 'cl-ach-list-details-wrap');
-    label.setAttribute('class', 'cl-ach-list-details-label');
-    progressionWrapper.setAttribute('class', 'cl-ach-list-progression');
-    progressionCont.setAttribute('class', 'cl-ach-list-progression-cont');
-    progressionBar.setAttribute('class', 'cl-ach-list-progression-bar');
-    progressionLabel.setAttribute('class', 'cl-ach-list-progression-label');
-    actionsWrapper.setAttribute('class', 'cl-ach-list-actions');
-    actionsReward.setAttribute('class', 'cl-ach-list-actions-reward');
-    moreButton.setAttribute('class', 'cl-ach-list-more');
-    enterButton.setAttribute('class', 'cl-ach-list-enter');
-    leaveButton.setAttribute('class', 'cl-ach-list-leave');
-    progressionButton.setAttribute('class', 'cl-ach-list-in-progress');
-
-    moreButton.dataset.id = ach.id;
-    moreButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.more;
-    moreButton.href = 'javascript:void(0);';
-
-    enterButton.dataset.id = ach.id;
-    enterButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listEnterBtn;
-    enterButton.href = 'javascript:void(0);';
-
-    leaveButton.dataset.id = ach.id;
-    leaveButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listLeaveBtn;
-    leaveButton.href = 'javascript:void(0);';
-
-    progressionButton.dataset.id = ach.id;
-    progressionButton.innerHTML = _this.settings.lbWidget.settings.translation.achievements.listProgressionBtn;
-    progressionButton.href = 'javascript:void(0);';
-
     listItem.dataset.id = ach.id;
 
-    label.innerHTML = ach.name;
-
-    if (ach.iconLink) {
-      icon.setAttribute('style', 'background-image: url(' + ach.iconLink + ')');
-    }
-
-    if (ach.reward) {
-      actionsReward.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(ach.reward);
-    }
-
-    detailsContainer.appendChild(icon);
-
-    detailsContainer.appendChild(detailsWrapper);
-
-    progressionCont.appendChild(progressionBar);
-    progressionWrapper.appendChild(progressionCont);
-
-    // TODO: remove
-    progressionLabel.innerHTML = '0/100';
-    progressionWrapper.appendChild(progressionLabel);
-
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(progressionWrapper);
-
-    actionsWrapper.appendChild(actionsReward);
+    let isMore = false;
+    let isEnter = false;
+    let isLeave = false;
+    let isProgress = false;
 
     if (Array.isArray(ach.constraints) && ach.constraints.includes('optinRequiredForEntrants')) {
       if (ach.optInStatus && ach.optInStatus >= 15 && ach.optInStatus <= 35) {
-        actionsWrapper.appendChild(leaveButton);
+        isLeave = true;
       } else if (!isNaN(ach.optInStatus) && (ach.optInStatus === 10 || ach.optInStatus === 0)) {
-        actionsWrapper.appendChild(progressionButton);
+        isProgress = true;
       } else {
-        actionsWrapper.appendChild(enterButton);
+        isEnter = true;
       }
-      addClass(listItem, 'cl-ach-list-item--notentered');
     } else {
-      actionsWrapper.appendChild(moreButton);
+      isMore = true;
     }
 
-    listItem.appendChild(detailsContainer);
-    listItem.appendChild(actionsWrapper);
+    let bgImage = '';
+    if (ach.iconLink) {
+      bgImage = 'background-image: url(' + ach.iconLink + ')';
+    }
+
+    let rewardValue = '';
+    if (ach.reward) {
+      rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(ach.reward);
+    }
+
+    const template = require('../templates/mainWidget/achievementItem.hbs');
+    listItem.innerHTML = template({
+      id: ach.id,
+      title: ach.name,
+      bgImage: bgImage,
+      rewardValue: rewardValue,
+      moreLabel: this.settings.lbWidget.settings.translation.achievements.more,
+      enterLabel: this.settings.lbWidget.settings.translation.achievements.listEnterBtn,
+      leaveLabel: this.settings.lbWidget.settings.translation.achievements.listLeaveBtn,
+      progressLabel: this.settings.lbWidget.settings.translation.achievements.listProgressionBtn,
+      isMore: isMore,
+      isEnter: isEnter,
+      isLeave: isLeave,
+      isProgress: isProgress
+    });
 
     return listItem;
   };
@@ -3935,40 +2908,8 @@ export const MainWidget = function (options) {
 
   this.dashboardTournamentItem = function (tournament, isReadyStatus = false) {
     const listItem = document.createElement('div');
-    const itemBg = document.createElement('div');
-    const title = document.createElement('div');
-    const endsWrapp = document.createElement('div');
-    const endsTitle = document.createElement('div');
-    const endsValue = document.createElement('div');
-    const prizeWrapp = document.createElement('div');
-    const prizeTitle = document.createElement('div');
-    const prizeValue = document.createElement('div');
-    const btn = document.createElement('div');
-
     listItem.setAttribute('class', 'dashboard-tournament-item');
-    itemBg.setAttribute('class', 'dashboard-tournament-list-bg');
-    title.setAttribute('class', 'dashboard-tournament-list-title');
-    endsWrapp.setAttribute('class', 'dashboard-tournament-list-ends-wrapp');
-    endsTitle.setAttribute('class', 'dashboard-tournament-list-ends-title');
-    endsValue.setAttribute('class', 'dashboard-tournament-list-ends-value');
-    prizeWrapp.setAttribute('class', 'dashboard-tournament-list-prize-wrapp');
-    prizeTitle.setAttribute('class', 'dashboard-tournament-list-prize-title');
-    prizeValue.setAttribute('class', 'dashboard-tournament-list-prize-value');
-    btn.setAttribute('class', 'dashboard-tournament-list-btn');
     listItem.setAttribute('data-id', tournament.id);
-
-    title.innerHTML = tournament.name;
-    btn.innerHTML = this.settings.lbWidget.settings.translation.dashboard.tournamentBtn;
-    endsTitle.innerHTML = isReadyStatus ? this.settings.lbWidget.settings.translation.dashboard.startsTitle : this.settings.lbWidget.settings.translation.dashboard.endsTitle;
-    prizeTitle.innerHTML = this.settings.lbWidget.settings.translation.dashboard.prizeTitle;
-    const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
-    endsValue.innerHTML = date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
-
-    if (tournament.bannerLowResolutionLink) {
-      itemBg.setAttribute('style', `background-image: url(${tournament.bannerLowResolutionLink})`);
-    } else if (tournament.bannerLink) {
-      itemBg.setAttribute('style', `background-image: url(${tournament.bannerLink})`);
-    }
 
     let rewardValue = '';
 
@@ -3999,19 +2940,29 @@ export const MainWidget = function (options) {
       }
     }
 
-    prizeValue.innerHTML = rewardValue;
+    let itemBg = '';
+    if (tournament.bannerLowResolutionLink) {
+      itemBg = `background-image: url(${tournament.bannerLowResolutionLink})`;
+    } else if (tournament.bannerLink) {
+      itemBg = `background-image: url(${tournament.bannerLink})`;
+    }
 
-    endsWrapp.appendChild(endsTitle);
-    endsWrapp.appendChild(endsValue);
+    const endsLabel = isReadyStatus
+      ? this.settings.lbWidget.settings.translation.dashboard.startsTitle
+      : this.settings.lbWidget.settings.translation.dashboard.endsTitle;
 
-    prizeWrapp.appendChild(prizeTitle);
-    prizeWrapp.appendChild(prizeValue);
+    const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
 
-    listItem.appendChild(itemBg);
-    listItem.appendChild(title);
-    listItem.appendChild(endsWrapp);
-    listItem.appendChild(prizeWrapp);
-    listItem.appendChild(btn);
+    const template = require('../templates/dashboard/tournamentItem.hbs');
+    listItem.innerHTML = template({
+      title: tournament.name,
+      itemBg: itemBg,
+      endsLabel: endsLabel,
+      endsValue: date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' }),
+      prizeLabel: this.settings.lbWidget.settings.translation.dashboard.prizeTitle,
+      prizeValue: rewardValue,
+      seeMoreLabel: this.settings.lbWidget.settings.translation.dashboard.tournamentBtn
+    });
 
     return listItem;
   };
@@ -4128,95 +3079,49 @@ export const MainWidget = function (options) {
 
   this.messageItem = function (inbox) {
     const listItem = document.createElement('div');
-    const detailsContainer = document.createElement('div');
-    const detailsWrapper = document.createElement('div');
-    const label = document.createElement('div');
-    const description = document.createElement('div');
-    const date = document.createElement('div');
+    listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
+    listItem.dataset.id = inbox.id;
+
     const content = stripHtml(inbox.body);
 
-    listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
-    detailsContainer.setAttribute('class', 'cl-inbox-list-details-cont');
-    detailsWrapper.setAttribute('class', 'cl-inbox-list-details-wrap');
-    label.setAttribute('class', 'cl-inbox-list-details-label');
-    description.setAttribute('class', 'cl-inbox-list-details-description');
-    date.setAttribute('class', 'cl-inbox-list-details-date');
+    const subject = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
+    const description = (content.length > 60) ? content.substr(0, 60) + '...' : content;
+    const date = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
 
-    listItem.dataset.id = inbox.id;
-    label.innerHTML = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
-    description.innerHTML = (content.length > 60) ? content.substr(0, 60) + '...' : content;
-    date.innerHTML = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
-
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(description);
-    detailsContainer.appendChild(detailsWrapper);
-    detailsContainer.appendChild(date);
-    listItem.appendChild(detailsContainer);
+    const template = require('../templates/mainWidget/messageItem.hbs');
+    listItem.innerHTML = template({
+      id: inbox.id,
+      subject: subject,
+      description: description,
+      date: date
+    });
 
     return listItem;
   };
 
   this.missionsItem = function (mission) {
     const listItem = document.createElement('div');
-    const detailsContainer = document.createElement('div');
-    const detailsWrapper = document.createElement('div');
-    const image = document.createElement('div');
-    const date = document.createElement('div');
-    const label = document.createElement('div');
-    const progress = document.createElement('div');
-    const progressCont = document.createElement('div');
-    const progressBar = document.createElement('div');
-    const progressLabel = document.createElement('div');
-    const actions = document.createElement('div');
-    const actionsReward = document.createElement('div');
-    const actionsBtn = document.createElement('div');
-
     listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
-    detailsContainer.setAttribute('class', 'cl-missions-list-details-cont');
-    detailsWrapper.setAttribute('class', 'cl-missions-list-details-wrap');
-    image.setAttribute('class', 'cl-missions-list-details-img');
-    date.setAttribute('class', 'cl-missions-list-details-date');
-    label.setAttribute('class', 'cl-missions-list-details-label');
-    progress.setAttribute('class', 'cl-missions-list-details-progress');
-    progressCont.setAttribute('class', 'cl-missions-list-details-progress-cont');
-    progressBar.setAttribute('class', 'cl-missions-list-details-progress-bar');
-    progressLabel.setAttribute('class', 'cl-missions-list-details-progress-label');
-    actions.setAttribute('class', 'cl-missions-list-details-actions');
-    actionsReward.setAttribute('class', 'cl-missions-list-details-actions-reward');
-    actionsBtn.setAttribute('class', 'cl-missions-list-details-actions-btn');
-
     listItem.dataset.id = mission.id;
-    label.innerHTML = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
 
-    if (mission.reward) {
-      actionsReward.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward);
-    }
+    const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    const reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
+    const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
+    let bgImage = '';
     if (mission.bannerLowResolutionLink) {
-      image.setAttribute('style', `background-image: url(${mission.bannerLowResolutionLink})`);
+      bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
     } else if (mission.bannerLink) {
-      image.setAttribute('style', `background-image: url(${mission.bannerLink})`);
+      bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
-    progressLabel.innerHTML = '0/100';
-
-    progressCont.appendChild(progressBar);
-    progressCont.appendChild(progressBar);
-    progress.appendChild(progressCont);
-    progress.appendChild(progressLabel);
-
-    actionsBtn.innerHTML = this.settings.lbWidget.settings.translation.missions.btn;
-
-    actions.appendChild(actionsReward);
-    actions.appendChild(actionsBtn);
-
-    image.appendChild(date);
-    detailsWrapper.appendChild(image);
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(progress);
-    detailsWrapper.appendChild(actions);
-    detailsContainer.appendChild(detailsWrapper);
-    listItem.appendChild(detailsContainer);
+    const template = require('../templates/mainWidget/missionItem.hbs');
+    listItem.innerHTML = template({
+      name: name,
+      reward: reward,
+      actionsBtnLabel: actionsBtnLabel,
+      bgImage: bgImage
+    });
 
     return listItem;
   };

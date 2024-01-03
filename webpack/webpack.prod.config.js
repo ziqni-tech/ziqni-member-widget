@@ -84,6 +84,15 @@ module.exports = {
           limit: INLINE_CSS ? true : 8192
         }
       },
+      {
+        test: /\.hbs$/,
+        loader: 'handlebars-loader',
+        options: {
+          precompileOptions: {
+            knownHelpersOnly: false
+          }
+        }
+      }
     ]
   },
   plugins: [
