@@ -684,53 +684,31 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardRow = function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-    var _this = this;
-    var cellWrapper = document.createElement('div');
-    var rankCel = document.createElement('div');
-    var rankCelValue = document.createElement('div');
-    var iconCel = document.createElement('div');
-    var iconCelImg = document.createElement('div');
-    var nameCel = document.createElement('div');
-    var growthCel = document.createElement('div');
-    var pointsCel = document.createElement('div');
-    var memberFoundClass = (memberFound) ? ' cl-lb-member-row' : '';
-
+    const cellWrapper = document.createElement('div');
+    const memberFoundClass = (memberFound) ? ' cl-lb-member-row' : '';
     cellWrapper.setAttribute('class', 'cl-lb-row cl-lb-rank-' + rank + ' cl-lb-count-' + count + memberFoundClass);
-    rankCel.setAttribute('class', 'cl-rank-col cl-col cl-rank-' + rank);
-    rankCelValue.setAttribute('class', 'cl-rank-col-value');
-    iconCel.setAttribute('class', 'cl-icon-col cl-col');
-    iconCelImg.setAttribute('class', 'cl-icon-col-img');
-    nameCel.setAttribute('class', 'cl-name-col cl-col');
-    growthCel.setAttribute('class', 'cl-growth-col cl-col');
-    pointsCel.setAttribute('class', 'cl-points-col cl-col');
-
     cellWrapper.dataset.rank = rank;
 
-    rankCelValue.innerHTML = rank;
-    nameCel.innerHTML = name;
-    growthCel.dataset.growth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-    growthCel.dataset.change = change;
-    growthCel.innerHTML = growth;
-    pointsCel.innerHTML = points;
+    const datasetGrowth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
+    const datasetChange = change;
 
-    iconCelImg.innerHTML = icon;
+    const rewardEnabled = (typeof this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest !== null && typeof this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
 
-    rankCel.appendChild(rankCelValue);
-    cellWrapper.appendChild(rankCel);
-    iconCel.appendChild(iconCelImg);
-    cellWrapper.appendChild(iconCel);
-    cellWrapper.appendChild(nameCel);
-    cellWrapper.appendChild(growthCel);
-    cellWrapper.appendChild(pointsCel);
+    const rewardValue = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
 
-    var rewardCel = document.createElement('div');
-    var rewardEnabled = (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
-    rewardCel.setAttribute('class', 'cl-reward-col cl-col' + (rewardEnabled ? ' cl-col-reward-enabled' : ''));
-    rewardCel.innerHTML = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
-
-    addClass(cellWrapper, 'cl-reward-enabled');
-
-    cellWrapper.appendChild(rewardCel);
+    const template = require('../templates/mainWidget/leaderboardRow.hbs');
+    cellWrapper.innerHTML = template({
+      rank: rank,
+      name: name,
+      icon: icon,
+      datasetGrowth: datasetGrowth,
+      datasetChange: datasetChange,
+      growth: growth,
+      points: points,
+      rewardEnabled: rewardEnabled,
+      rewardEnabledClass: 'cl-col-reward-enabled',
+      rewardValue: rewardValue
+    });
 
     return cellWrapper;
   };
