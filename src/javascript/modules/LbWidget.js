@@ -743,6 +743,15 @@ export const LbWidget = function (options) {
           }
         });
       } else {
+        const activeContests = contests.filter(c => c.statusCode === 25);
+        if (activeContests.length) {
+          this.settings.competition.activeContest = activeContests[0];
+          this.settings.competition.activeContestId = activeContests[0].id;
+          if (typeof this.settings.competition.activeContest.rewards === 'undefined') {
+            this.settings.competition.activeContest.rewards = [];
+          }
+        }
+
         contests.forEach(contest => {
           if (contest.statusCode < 50 && contest.statusCode > 20 && this.settings.competition.activeContest === null) {
             this.settings.competition.activeContest = contest;
@@ -2367,7 +2376,11 @@ export const LbWidget = function (options) {
       });
 
       // load embedded competition details
-    } else if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage && (hasClass(el, 'cl-main-widget-lb-details-content-label') || closest(el, '.cl-main-widget-lb-details-content-label') !== null)) {
+    } else if (
+      !_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage &&
+      (hasClass(el, 'cl-main-widget-lb-details-content') ||
+        closest(el, '.cl-main-widget-lb-details-content') !== null)
+    ) {
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(function () {
         _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {
