@@ -3032,47 +3032,26 @@ export const MainWidget = function (options) {
 
   this.rewardItem = function (rew) {
     const listItem = document.createElement('div');
-    const detailsContainer = document.createElement('div');
-    const detailsWrapper = document.createElement('div');
-    const expires = document.createElement('div');
-    const icon = document.createElement('div');
-    const label = document.createElement('div');
-    const type = document.createElement('div');
-    const prize = document.createElement('div');
-    const claimBtn = document.createElement('div');
-
     listItem.setAttribute('class', 'cl-rew-list-item cl-rew-' + rew.id);
-    detailsContainer.setAttribute('class', 'cl-rew-list-details-cont');
-    detailsWrapper.setAttribute('class', 'cl-rew-list-details-wrap');
-    label.setAttribute('class', 'cl-rew-list-details-label');
-    expires.setAttribute('class', 'cl-rew-list-details-expires');
-    icon.setAttribute('class', 'cl-rew-list-details-icon');
-    type.setAttribute('class', 'cl-rew-list-details-type');
-    prize.setAttribute('class', 'cl-rew-list-details-prize');
-    claimBtn.setAttribute('class', 'cl-rew-list-details-claim');
-
-    if (rew.rewardData && rew.rewardData.iconLink) {
-      icon.setAttribute('style', `background-image: url(${rew.rewardData.iconLink})`);
-    }
-
     listItem.dataset.id = rew.id;
 
-    const labelText = stripHtml(rew.name);
-    label.innerHTML = (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText;
-    claimBtn.innerHTML = this.settings.lbWidget.settings.translation.rewards.claim;
-    type.innerHTML = rew.rewardType.key;
-    prize.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.rewardData);
-
-    detailsWrapper.appendChild(expires);
-    detailsWrapper.appendChild(icon);
-    detailsWrapper.appendChild(label);
-    detailsWrapper.appendChild(type);
-    detailsWrapper.appendChild(prize);
-    if (!rew.claimed && rew.statusCode !== 115) {
-      detailsWrapper.appendChild(claimBtn);
+    let iconLink = '';
+    if (rew.rewardData && rew.rewardData.iconLink) {
+      iconLink = `background-image: url(${rew.rewardData.iconLink})`;
     }
-    detailsContainer.appendChild(detailsWrapper);
-    listItem.appendChild(detailsContainer);
+
+    const labelText = stripHtml(rew.name);
+    const isClimeBtn = !rew.claimed && rew.statusCode !== 115;
+
+    const template = require('../templates/mainWidget/rewardItem.hbs');
+    listItem.innerHTML = template({
+      isClimeBtn: isClimeBtn,
+      claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
+      prize: this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.rewardData),
+      type: rew.rewardType.key,
+      label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
+      iconLink: iconLink
+    });
 
     return listItem;
   };
