@@ -7334,7 +7334,6 @@
       .cl-main-widget-dashboard-body {
         padding: 0 20px 0 23px;
       }
-
       .cl-main-widget-dashboard-instant-wins-wrapp {
         justify-content: space-around;
         .cl-main-widget-dashboard-instant-wins-wheel,
@@ -7352,6 +7351,9 @@
         justify-content: space-around;
         .cl-ach-list-item {
           width: 280px;
+        }
+        .cl-ach-list-details-label {
+          max-width: 150px;
         }
       }
 
@@ -7372,6 +7374,9 @@
       .cl-main-widget-section-ach {
         .cl-ach-list-item {
           width: 280px;
+        }
+        .cl-ach-list-details-label {
+          max-width: 150px;
         }
       }
     }
