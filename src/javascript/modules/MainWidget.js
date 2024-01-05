@@ -448,8 +448,10 @@ export const MainWidget = function (options) {
     const sectionDashboard = _this.dashboardAreaLayout();
 
     const mobileThemeSwitcher = document.createElement('div');
+    const landscapeClose = document.createElement('div');
 
     mobileThemeSwitcher.setAttribute('class', 'cl-mobile-theme-switcher');
+    landscapeClose.setAttribute('class', 'cl-landscape-close');
 
     const navigationItemList = [];
     mapObject(_this.settings.lbWidget.settings.navigation, function (val, key) {
@@ -508,6 +510,7 @@ export const MainWidget = function (options) {
     mainSectionContainer.appendChild(sectionMissions);
     mainSectionContainer.appendChild(sectionDashboard);
     mainSectionContainer.appendChild(preLoaderContainer);
+    mainSectionContainer.appendChild(landscapeClose);
 
     innerWrapper.appendChild(navigationContainer);
     innerWrapper.appendChild(mainSectionContainer);

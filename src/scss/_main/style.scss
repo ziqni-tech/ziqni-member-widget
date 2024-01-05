@@ -92,6 +92,10 @@
   display: none;
 }
 
+.cl-landscape-close {
+  display: none;
+}
+
 .cl-widget-ms-wrapper *, .cl-main-widget-wrapper *, .cl-widget-notif-wrapper * {
   box-sizing: border-box;
   line-height: 20px;
@@ -7610,8 +7614,57 @@
 
 @media (orientation: landscape) and (max-height: 460px) and (min-width: 600px) {
   .cl-main-widget-wrapper {
+    padding: 10px 20px 10px;
+    .cl-main-widget-section-container {
+      .cl-main-widget-dashboard-header {
+        .cl-main-widget-dashboard-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-lb-header {
+        .cl-main-widget-lb-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-ach-header {
+        .cl-main-widget-ach-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-reward-header {
+        .cl-main-widget-reward-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-inbox-header {
+        .cl-main-widget-inbox-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-missions-header {
+        .cl-main-widget-missions-header-close {
+          display: none;
+        }
+      }
+    }
+    .cl-landscape-close {
+      position: absolute;
+      display: block;
+      background-image: url(../../images/close-icon.svg);
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-size: 100%;
+      width: 50px;
+      height: 50px;
+      right: -8px;
+      bottom: -8px;
+      cursor: pointer;
+      z-index: 10;
+    }
     .cl-main-widget-navigation-container {
       width: 120px;
+      padding-top: 10px;
+      padding-bottom: 10px;
 
       .cl-main-widget-navigation-darkMode-toggle {
         display: none;
@@ -7622,8 +7675,7 @@
       }
 
       .cl-main-widget-navigation-logo {
-        width: 60px;
-        height: 60px;
+        display: none;
       }
 
       .cl-main-widget-navigation-missions-icon,
@@ -7637,7 +7689,10 @@
       }
 
       .cl-main-widget-navigation-items {
-        padding: 10px 0 0 0;
+        padding: 0;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
 
         .cl-main-widget-navigation-item {
           width: 70px;
@@ -7666,7 +7721,7 @@
       height: 32px;
       position: absolute;
       top: 26px;
-      left: 12px;
+      right: 12px;
       background: url(../../images/theme-switcher.svg) no-repeat center;
       z-index: 10;
     }
@@ -8503,14 +8558,6 @@
 @media (orientation: landscape) and (max-width: 768px) and (max-height: 600px) {
   .cl-main-widget-wrapper {
     .cl-main-widget-section-container {
-      .cl-main-widget-lb-header {
-        .cl-main-widget-lb-header-back-icon,
-        .cl-main-widget-lb-header-list-icon {
-          width: 25px;
-          height: 25px;
-          top: 10px;
-        }
-      }
       .cl-main-widget-lb-details {
         height: 40px;
       }

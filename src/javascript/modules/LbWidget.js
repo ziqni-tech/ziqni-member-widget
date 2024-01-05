@@ -2366,7 +2366,8 @@ export const LbWidget = function (options) {
       hasClass(el, 'cl-main-widget-inbox-header-close') ||
       hasClass(el, 'cl-widget-main-widget-overlay-wrapper') ||
       hasClass(el, 'cl-main-widget-dashboard-header-close') ||
-      hasClass(el, 'cl-main-widget-missions-header-close')
+      hasClass(el, 'cl-main-widget-missions-header-close') ||
+      hasClass(el, 'cl-landscape-close')
     ) {
       _this.settings.mainWidget.hide(function () {
         _this.settings.miniScoreBoard.settings.active = true;
