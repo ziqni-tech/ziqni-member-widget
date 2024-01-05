@@ -7608,7 +7608,7 @@
   }
 }
 
-@media (orientation: landscape) and (max-height: 460px) and (min-width: 769px) {
+@media (orientation: landscape) and (max-height: 460px) and (min-width: 600px) {
   .cl-main-widget-wrapper {
     .cl-main-widget-navigation-container {
       width: 120px;
@@ -7649,12 +7649,13 @@
   }
 }
 
-@media screen and (max-width: 768px) {
+@media screen and (max-width: 600px) {
   #cy {
     height: 300px;
   }
   .cl-main-widget-wrapper {
     padding: 0;
+    width: calc(100% + 1px);
     .cl-main-widget-pre-loader {
       width: 100%;
       border-radius: 20px 20px 0 0;
@@ -7665,7 +7666,7 @@
       height: 32px;
       position: absolute;
       top: 26px;
-      right: 12px;
+      left: 12px;
       background: url(../../images/theme-switcher.svg) no-repeat center;
       z-index: 10;
     }
