@@ -7720,8 +7720,8 @@
       width: 32px;
       height: 32px;
       position: absolute;
-      top: 26px;
-      right: 12px;
+      top: -16px;
+      left: 1px;
       background: url(../../images/theme-switcher.svg) no-repeat center;
       z-index: 10;
     }
@@ -7810,7 +7810,7 @@
           height: 32px;
           left: 0;
           transform: unset;
-          top: 26px;
+          top: 29px;
         }
         .cl-main-widget-lb-header-close {
           width: 32px;
@@ -7822,7 +7822,7 @@
           width: 32px;
           height: 32px;
           transform: unset;
-          top: 26px;
+          top: 29px;
         }
         .cl-main-widget-lb-header-label {
           font-size: 16px;
