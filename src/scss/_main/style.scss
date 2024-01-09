@@ -7647,6 +7647,13 @@
         }
       }
     }
+
+    .cl-main-widget-ach-list-body-res {
+      .paginator {
+        margin-right: 32px;
+      }
+    }
+
     .cl-landscape-close {
       position: absolute;
       display: block;
@@ -8006,6 +8013,14 @@
         .cl-main-widget-ach-list-body-res {
           justify-content: center;
         }
+      }
+      .cl-main-widget-inbox-list-body::-webkit-scrollbar {
+        width: 4px;
+        background: #141E28;
+      }
+      .cl-main-widget-inbox-list-body::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: #304F69;
       }
       .cl-main-widget-ach-list-body::-webkit-scrollbar {
         width: 4px;
