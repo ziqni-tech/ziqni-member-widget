@@ -383,7 +383,7 @@ export const MainWidget = function (options) {
   };
 
   this.navigationItems = function (container, navigationList) {
-    var _this = this;
+    const _this = this;
 
     // sorting navigation by order number
     navigationList.sort(_this.navigationSorter);
@@ -398,14 +398,10 @@ export const MainWidget = function (options) {
         navigationItemTitle.innerHTML = _this.settings.lbWidget.settings.translation[val.key].label;
       }
 
-      // var navigationItemCount = document.createElement('div');
-
       navigationItem.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClass + ' cl-main-widget-navigation-item' + (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item'));
       navigationItemIcon.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClassIcon + ' cl-main-navigation-item');
       navigationItemTitle.setAttribute('class', 'cl-main-navigation-item-title');
-      // navigationItemCount.setAttribute('class', 'cl-main-navigation-item-count');
 
-      // navigationItemIcon.appendChild(navigationItemCount);
       navigationItem.appendChild(navigationItemIcon);
       navigationItem.appendChild(navigationItemTitle);
       container.appendChild(navigationItem);
@@ -413,8 +409,7 @@ export const MainWidget = function (options) {
   };
 
   this.overlayLayout = function () {
-    var wrapper = document.createElement('div');
-
+    const wrapper = document.createElement('div');
     wrapper.setAttribute('class', 'cl-widget-main-widget-overlay-wrapper');
 
     return wrapper;
@@ -520,9 +515,9 @@ export const MainWidget = function (options) {
   };
 
   this.mainNavigationCheck = function () {
-    var _this = this;
-    var navItems = query(_this.settings.container, '.cl-main-widget-navigation-item');
-    var checkEnabled = 0;
+    const _this = this;
+    const navItems = query(_this.settings.container, '.cl-main-widget-navigation-item');
+    let checkEnabled = 0;
 
     objectIterator(navItems, function (navItem) {
       if (!hasClass(navItem, 'cl-hidden-navigation-item')) {
@@ -717,19 +712,19 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardRowUpdate = function (rank, icon, name, change, growth, points, reward, count, memberFound, onMissing) {
-    var _this = this;
-    var cellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + count);
+    const _this = this;
+    const cellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + count);
 
     if (cellRow === null) {
       onMissing(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
     } else {
-      var rankCel = query(cellRow, '.cl-rank-col-value');
-      var iconCel = query(cellRow, '.cl-icon-col-img');
-      var nameCel = query(cellRow, '.cl-name-col');
-      var growthCel = query(cellRow, '.cl-growth-col');
-      var pointsCel = query(cellRow, '.cl-points-col');
-      var memberFoundClass = 'cl-lb-member-row';
-      var rowHasClass = hasClass(cellRow, memberFoundClass);
+      const rankCel = query(cellRow, '.cl-rank-col-value');
+      const iconCel = query(cellRow, '.cl-icon-col-img');
+      const nameCel = query(cellRow, '.cl-name-col');
+      const growthCel = query(cellRow, '.cl-growth-col');
+      const pointsCel = query(cellRow, '.cl-points-col');
+      const memberFoundClass = 'cl-lb-member-row';
+      const rowHasClass = hasClass(cellRow, memberFoundClass);
 
       if (count > 0 && !hasClass(cellRow, 'cl-shared-rank')) {
         addClass(cellRow, 'cl-shared-rank');
@@ -769,9 +764,8 @@ export const MainWidget = function (options) {
   };
 
   this.populateLeaderboardResultsWithDefaultEntries = function (clearPrize = false) {
-    var _this = this;
-    var topResults = [];
-    var remainingResults = [];
+    const topResults = [];
+    const remainingResults = [];
 
     for (let i = 0; i < _this.settings.leaderboard.topResultSize; i++) {
       const rank = i + 1;
@@ -786,12 +780,12 @@ export const MainWidget = function (options) {
     }
 
     const emptyListLength = (
-      _this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize < _this.settings.leaderboard.defaultEmptyList
+      this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize < this.settings.leaderboard.defaultEmptyList
     )
-      ? _this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize + 1
-      : _this.settings.leaderboard.defaultEmptyList;
+      ? this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize + 1
+      : this.settings.leaderboard.defaultEmptyList;
 
-    for (let s = _this.settings.leaderboard.topResultSize; s < emptyListLength; s++) {
+    for (let s = this.settings.leaderboard.topResultSize; s < emptyListLength; s++) {
       const rank = s + 1;
 
       remainingResults.push({
@@ -803,14 +797,14 @@ export const MainWidget = function (options) {
       });
     }
 
-    _this.updateLeaderboardTopResults(topResults, clearPrize);
-    _this.updateLeaderboardResults(remainingResults, clearPrize);
+    this.updateLeaderboardTopResults(topResults, clearPrize);
+    this.updateLeaderboardResults(remainingResults, clearPrize);
   };
 
   this.updateLeaderboardTopResults = function (topResults, clearPrize = false) {
-    var _this = this;
-    var rankCheck = [];
-    var cleanupRankCheck = [];
+    const _this = this;
+    const rankCheck = [];
+    const cleanupRankCheck = [];
 
     // cleanup
     mapObject(topResults, function (lb) {
@@ -821,7 +815,7 @@ export const MainWidget = function (options) {
     });
 
     objectIterator(query(_this.settings.leaderboard.topResults, '.cl-lb-row'), function (obj) {
-      var rank = parseInt(obj.dataset.rank);
+      const rank = parseInt(obj.dataset.rank);
       if (cleanupRankCheck.indexOf(rank) === -1 && rank > _this.settings.leaderboard.defaultEmptyList) {
         remove(obj);
       }
@@ -848,7 +842,7 @@ export const MainWidget = function (options) {
       const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
 
       if (rankCheck.indexOf(lb.rank) !== -1) {
-        for (var rc = 0; rc < rankCheck.length; rc++) {
+        for (let rc = 0; rc < rankCheck.length; rc++) {
           if (lb.rank === rankCheck[rc]) {
             count++;
           }
@@ -870,8 +864,8 @@ export const MainWidget = function (options) {
         count,
         memberFound,
         function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-          var newRow = _this.leaderboardRow(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
-          var prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
+          const newRow = _this.leaderboardRow(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
+          const prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
 
           if (prevCellRow !== null && typeof prevCellRow.length === 'undefined') {
             appendNext(prevCellRow, newRow);
@@ -886,8 +880,8 @@ export const MainWidget = function (options) {
   };
 
   this.getReward = function (rank) {
-    var _this = this;
-    var rewardResponse = [];
+    const _this = this;
+    const rewardResponse = [];
 
     if (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null) {
       mapObject(_this.settings.lbWidget.settings.competition.activeContest.rewards, function (reward) {
@@ -915,9 +909,9 @@ export const MainWidget = function (options) {
   };
 
   this.updateLeaderboardResults = function (remainingResults, clearPrize = false) {
-    var _this = this;
-    var rankCheck = [];
-    var cleanupRankCheck = [];
+    const _this = this;
+    const rankCheck = [];
+    const cleanupRankCheck = [];
 
     // cleanup
     mapObject(remainingResults, function (lb) {
@@ -928,7 +922,7 @@ export const MainWidget = function (options) {
     });
 
     objectIterator(query(_this.settings.leaderboard.container, '.cl-lb-row'), function (obj) {
-      var rank = parseInt(obj.dataset.rank);
+      const rank = parseInt(obj.dataset.rank);
       if (cleanupRankCheck.indexOf(rank) === -1 && (rank > _this.settings.leaderboard.defaultEmptyList || rank === 0)) {
         remove(obj);
       }
@@ -943,19 +937,19 @@ export const MainWidget = function (options) {
       } else {
         memberLbName = lb.name;
       }
-      var count = 0;
+      let count = 0;
       const icon = memberLbName && memberLbName.length ? memberLbName[0] : '';
       const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
-      var memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
-      var memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
-      var reward = clearPrize ? '' : _this.getReward(lb.rank);
-      var change = (typeof lb.change === 'undefined') ? 0 : lb.change;
-      var growthType = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-      var growthIcon = "<span class='cl-growth-icon cl-growth-" + growthType + "'></span>";
-      var formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
+      let memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
+      const memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
+      const reward = clearPrize ? '' : _this.getReward(lb.rank);
+      const change = (typeof lb.change === 'undefined') ? 0 : lb.change;
+      const growthType = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
+      const growthIcon = "<span class='cl-growth-icon cl-growth-" + growthType + "'></span>";
+      const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
 
       if (rankCheck.indexOf(lb.rank) !== -1) {
-        for (var rc = 0; rc < rankCheck.length; rc++) {
+        for (let rc = 0; rc < rankCheck.length; rc++) {
           if (lb.rank === rankCheck[rc]) {
             count++;
           }
@@ -968,17 +962,17 @@ export const MainWidget = function (options) {
 
       _this.leaderboardRowUpdate(
         lb.rank,
-        icon, // icon
+        icon,
         memberName,
         change,
-        growthIcon, // growth
+        growthIcon,
         formattedPoints,
         reward,
         count,
         memberFound,
         function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-          var newRow = _this.leaderboardRow(rank, icon, name, name, growth, points, reward, count, memberFound);
-          var prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
+          const newRow = _this.leaderboardRow(rank, icon, name, name, growth, points, reward, count, memberFound);
+          const prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
 
           if (prevCellRow !== null && typeof prevCellRow.length === 'undefined') {
             appendNext(prevCellRow, newRow);
@@ -1013,7 +1007,6 @@ export const MainWidget = function (options) {
     const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
 
     if (member !== null) {
-      // _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
       _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
     } else {
       _this.missingMemberReset();
@@ -1401,19 +1394,17 @@ export const MainWidget = function (options) {
   };
 
   this.destroyLayout = function () {
-    var _this = this;
-
-    if (_this.settings.container !== null) {
-      remove(_this.settings.container);
-      remove(_this.settings.overlayContainer);
+    if (this.settings.container !== null) {
+      remove(this.settings.container);
+      remove(this.settings.overlayContainer);
     }
 
-    _this.settings.container = null;
-    _this.settings.overlayContainer = null;
+    this.settings.container = null;
+    this.settings.overlayContainer = null;
   };
 
   this.loadLeaderboard = function (callback, isTimeReload = false) {
-    var _this = this;
+    const _this = this;
 
     if (_this.settings.container === null) {
       _this.settings.container = _this.settings.lbWidget.settings.bindContainer.appendChild(_this.layout());
@@ -1470,19 +1461,17 @@ export const MainWidget = function (options) {
   };
 
   this.clearAll = function () {
-    var _this = this;
+    this.settings.active = false;
 
-    _this.settings.active = false;
-
-    if (_this.settings.leaderboard.timerInterval) {
-      clearTimeout(_this.settings.leaderboard.timerInterval);
+    if (this.settings.leaderboard.timerInterval) {
+      clearTimeout(this.settings.leaderboard.timerInterval);
     }
 
-    _this.settings.preLoader.preLoaderActive = false;
+    this.settings.preLoader.preLoaderActive = false;
   };
 
   this.hide = function (callback) {
-    var _this = this;
+    const _this = this;
 
     _this.clearAll();
 
@@ -1506,10 +1495,10 @@ export const MainWidget = function (options) {
   };
 
   this.missingMember = function (isVisible) {
-    var _this = this;
-    var area = query(_this.settings.container, '.cl-main-widget-lb-missing-member');
-    var areaDetails = query(_this.settings.container, '.cl-main-widget-lb-missing-member-details');
-    var member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
+    const _this = this;
+    const area = query(_this.settings.container, '.cl-main-widget-lb-missing-member');
+    const areaDetails = query(_this.settings.container, '.cl-main-widget-lb-missing-member-details');
+    let member = query(_this.settings.leaderboard.list, '.cl-lb-member-row');
     const sectionContainer = query(_this.settings.container, '.cl-main-widget-section-container');
 
     if (!member) {
@@ -1643,8 +1632,8 @@ export const MainWidget = function (options) {
   };
 
   this.competitionDetailsOptInButtonState = function () {
-    var _this = this;
-    var optIn = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-optin-action');
+    const _this = this;
+    const optIn = query(_this.settings.detailsContainer, '.cl-main-widget-lb-details-optin-action');
 
     if (typeof _this.settings.lbWidget.settings.competition.activeCompetition.optinRequired === 'boolean' && _this.settings.lbWidget.settings.competition.activeCompetition.optinRequired) {
       if (typeof _this.settings.lbWidget.settings.competition.activeCompetition.optin === 'boolean' && !_this.settings.lbWidget.settings.competition.activeCompetition.optin) {
@@ -1995,7 +1984,7 @@ export const MainWidget = function (options) {
   };
 
   this.hideCompetitionList = function (callback) {
-    var _this = this;
+    const _this = this;
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
 
@@ -2014,7 +2003,7 @@ export const MainWidget = function (options) {
   };
 
   this.hideCompetitionDetails = function (callback) {
-    var _this = this;
+    const _this = this;
 
     removeClass(_this.settings.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -2272,7 +2261,7 @@ export const MainWidget = function (options) {
   };
 
   this.hideAchievementDetails = function (callback) {
-    var _this = this;
+    const _this = this;
 
     removeClass(_this.settings.achievement.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -2283,14 +2272,14 @@ export const MainWidget = function (options) {
   };
 
   this.loadRewardDetails = function (data, callback) {
-    var _this = this;
-    var label = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-header-label');
-    var body = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-description');
-    var image = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-body-image-cont');
-    var iconWrapp = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-icon');
-    var claimBtn = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-claim-btn');
-    var icon = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-icon');
-    var value = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-value');
+    const _this = this;
+    const label = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-header-label');
+    const body = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-description');
+    const image = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-details-body-image-cont');
+    const iconWrapp = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-icon');
+    const claimBtn = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-claim-btn');
+    const icon = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-icon');
+    const value = query(_this.settings.reward.detailsContainer, '.cl-main-widget-reward-winnings-value');
 
     label.innerHTML = data.name;
     body.innerHTML = data.description ? data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>') : '';
@@ -2308,7 +2297,7 @@ export const MainWidget = function (options) {
     if (data.icon && typeof data.icon !== 'undefined') {
       icon.innerHTML = '';
 
-      var _image = new Image();
+      const _image = new Image();
       iconWrapp.style.background = 'none';
       _image.setAttribute('class', 'cl-reward-list-item-img');
 
@@ -2323,7 +2312,7 @@ export const MainWidget = function (options) {
 
     objectIterator(query(body, 'img'), function (img, key, count) {
       if (count === 0) {
-        var newImg = img.cloneNode(true);
+        const newImg = img.cloneNode(true);
         image.innerHTML = '';
         image.appendChild(newImg);
 
@@ -2763,7 +2752,7 @@ export const MainWidget = function (options) {
   };
 
   this.hideRewardDetails = function (callback) {
-    var _this = this;
+    const _this = this;
 
     removeClass(_this.settings.reward.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -2774,7 +2763,7 @@ export const MainWidget = function (options) {
   };
 
   this.hideMessageDetails = function (callback) {
-    var _this = this;
+    const _this = this;
 
     removeClass(_this.settings.messages.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -2805,10 +2794,10 @@ export const MainWidget = function (options) {
     const dashboardAchList = document.querySelector('.cl-main-widget-dashboard-achievements-list');
 
     objectIterator(query(achList, '.cl-ach-list-item'), function (ach) {
-      var id = ach.dataset.id;
-      var issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
+      const id = ach.dataset.id;
+      const issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
 
-      var perc = 0;
+      let perc = 0;
       mapObject(progression, function (pr) {
         if (pr.entityId === id) {
           perc = pr.percentageComplete ? parseInt(pr.percentageComplete) : 0;
@@ -2816,7 +2805,7 @@ export const MainWidget = function (options) {
       });
 
       if (ach !== null) {
-        var bar = query(ach, '.cl-ach-list-progression-bar');
+        const bar = query(ach, '.cl-ach-list-progression-bar');
         const barLabel = query(ach, '.cl-ach-list-progression-label');
 
         if (issuedStatus) {
@@ -2824,7 +2813,7 @@ export const MainWidget = function (options) {
           barLabel.innerHTML = '100/100';
           bar.style.width = '100%';
         } else {
-          var percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
+          const percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
           barLabel.innerHTML = perc + '/100';
           bar.style.width = percValue;
         }
@@ -2832,10 +2821,10 @@ export const MainWidget = function (options) {
     });
 
     objectIterator(query(dashboardAchList, '.cl-ach-list-item'), function (ach) {
-      var id = ach.dataset.id;
-      var issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
+      const id = ach.dataset.id;
+      const issuedStatus = (issued.findIndex(i => i.entityId === id) !== -1);
 
-      var perc = 0;
+      let perc = 0;
       mapObject(progression, function (pr) {
         if (pr.entityId === id) {
           perc = pr.percentageComplete ? parseInt(pr.percentageComplete) : 0;
@@ -2843,7 +2832,7 @@ export const MainWidget = function (options) {
       });
 
       if (ach !== null) {
-        var bar = query(ach, '.cl-ach-list-progression-bar');
+        const bar = query(ach, '.cl-ach-list-progression-bar');
         const barLabel = query(ach, '.cl-ach-list-progression-label');
 
         if (issuedStatus) {
@@ -2851,7 +2840,7 @@ export const MainWidget = function (options) {
           barLabel.innerHTML = '100/100';
           bar.style.width = '100%';
         } else {
-          var percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
+          const percValue = ((perc > 1 || perc === 0) ? perc : 1) + '%';
           barLabel.innerHTML = perc + '/100';
           bar.style.width = percValue;
         }
@@ -3462,7 +3451,7 @@ export const MainWidget = function (options) {
     messageList.innerHTML = '';
 
     mapObject(_this.settings.lbWidget.settings.messages.messages, function (inboxItem, key, count) {
-      var listItem = _this.messageItem(inboxItem);
+      const listItem = _this.messageItem(inboxItem);
       messageList.appendChild(listItem);
     });
 
@@ -3638,12 +3627,6 @@ export const MainWidget = function (options) {
 
     const singleWheel = document.createElement('div');
     const singleWheelWrapper = document.createElement('div');
-    // const singleWheelLabel = document.createElement('div');
-    // const singleWheelDescription = document.createElement('div');
-    // const singleWheelCanvas = document.createElement('div');
-    // const singleWheelPointer = document.createElement('div');
-    // const canvas = document.createElement('canvas');
-    // const singleWheelButton = document.createElement('div');
     const singleWheelPopup = document.createElement('div');
     const singleWheelPopupLabel = document.createElement('div');
     const singleWheelPopupDescription = document.createElement('div');
@@ -3661,20 +3644,6 @@ export const MainWidget = function (options) {
 
     singleWheel.classList.add('single-wheel');
     singleWheelWrapper.classList.add('single-wheel-wrapper');
-    // singleWheelLabel.classList.add('single-wheel-label');
-    // singleWheelDescription.classList.add('single-wheel-description');
-    // singleWheelCanvas.classList.add('single-wheel-canvas');
-    // singleWheelPointer.classList.add('single-wheel-pointer');
-    // singleWheelCanvas.setAttribute('id', 'wheelOfFortune');
-    // canvas.setAttribute('id', 'wheel');
-
-    // const wheelSize = isMobile ? '192' : '300';
-
-    // canvas.setAttribute('width', wheelSize);
-    // canvas.setAttribute('height', wheelSize);
-
-    // singleWheelButton.classList.add('single-wheel-button');
-    // singleWheelButton.setAttribute('id', 'spin');
 
     singleWheelPopup.classList.add('single-wheel-popup');
     singleWheelPopupLabel.classList.add('single-wheel-popup-label');
@@ -3725,10 +3694,6 @@ export const MainWidget = function (options) {
     scratchcardsGamePrizeLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.prizeLabel;
     scratchcardsGamePrizeButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.prizeButton;
 
-    // singleWheelLabel.innerHTML = 'The Single Wheel';
-    // singleWheelDescription.innerHTML = 'Ready to test your luck? Take a spin and find out!';
-    // singleWheelButton.innerHTML = 'Spin';
-
     scratchcardsGamePrizePrizesPrize1Label.innerHTML = 'First prize';
     scratchcardsGamePrizePrizesPrize2Label.innerHTML = 'Second prize';
     scratchcardsGamePrizePrizesPrize3Label.innerHTML = 'Third prize';
@@ -3760,17 +3725,9 @@ export const MainWidget = function (options) {
     scratchcardsGame.appendChild(scratchcardsGameWrapper);
     scratchcardsGame.appendChild(scratchcardsPopup);
 
-    // singleWheelCanvas.appendChild(singleWheelPointer);
-    // singleWheelCanvas.appendChild(canvas);
-
     singleWheelPopup.appendChild(singleWheelPopupLabel);
     singleWheelPopup.appendChild(singleWheelPopupDescription);
     singleWheelPopup.appendChild(singleWheelPopupButton);
-
-    // singleWheelWrapper.appendChild(singleWheelLabel);
-    // singleWheelWrapper.appendChild(singleWheelDescription);
-    // singleWheelWrapper.appendChild(singleWheelCanvas);
-    // singleWheelWrapper.appendChild(singleWheelButton);
 
     singleWheel.appendChild(singleWheelWrapper);
     singleWheel.appendChild(singleWheelPopup);
@@ -4166,8 +4123,6 @@ export const MainWidget = function (options) {
       await init();
       preLoader.hide();
     });
-
-    // init();
   };
 
   this.createSingleWheelDom = function (idx, singleWheel, isMobile) {
@@ -4221,7 +4176,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadMessages = function (pageNumber, callback, paginationArr = null) {
-    var _this = this;
+    const _this = this;
 
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
       _this.messagesListLayout(pageNumber, paginationArr);
@@ -4246,11 +4201,11 @@ export const MainWidget = function (options) {
     });
   };
 
-  var changeInterval;
-  var changeContainerInterval;
+  let changeInterval;
+  let changeContainerInterval;
   this.navigationSwitch = function (target, callback) {
-    var _this = this;
-    var preLoader = _this.preloader();
+    const _this = this;
+    const preLoader = _this.preloader();
 
     const instantWinsBackIcon = query(_this.settings.container, '.cl-main-widget-reward-header-back');
     instantWinsBackIcon.style.display = 'none';
@@ -4326,7 +4281,7 @@ export const MainWidget = function (options) {
               }, true);
             } else if (target.classList.contains('cl-main-widget-navigation-ach') || target.closest('.cl-main-widget-navigation-ach')) {
               _this.loadAchievements(1, function () {
-                var achContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.achievements.containerClass);
+                const achContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.achievements.containerClass);
 
                 _this.settings.achievement.detailsContainer.style.display = 'none';
 
@@ -4367,7 +4322,7 @@ export const MainWidget = function (options) {
               );
             } else if (target.classList.contains('cl-main-widget-navigation-inbox') || target.closest('.cl-main-widget-navigation-inbox')) {
               _this.loadMessages(1, function () {
-                var inboxContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.inbox.containerClass);
+                const inboxContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.inbox.containerClass);
 
                 inboxContainer.style.display = 'flex';
                 changeInterval = setTimeout(function () {
@@ -4406,7 +4361,7 @@ export const MainWidget = function (options) {
   };
 
   this.resetNavigation = function (callback) {
-    var _this = this;
+    const _this = this;
     const listIcon = query(_this.settings.container, '.cl-main-widget-lb-header-list-icon');
     const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
     const missionBackIcon = query(_this.settings.container, '.cl-main-widget-mission-header-back-icon');
@@ -4420,7 +4375,7 @@ export const MainWidget = function (options) {
       removeClass(obj, 'cl-main-active-section');
     });
 
-    var activeNave = false;
+    let activeNave = false;
     objectIterator(query(_this.settings.container, '.cl-main-widget-navigation-container .cl-main-widget-navigation-item'), function (navItem, key, count) {
       if (!activeNave && !hasClass(navItem, 'cl-hidden-navigation-item')) {
         _this.navigationSwitch(query(navItem, '.cl-main-navigation-item'));
@@ -4453,7 +4408,6 @@ export const MainWidget = function (options) {
 
       const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
       if (member !== null) {
-        // _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
         _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
       } else {
         _this.missingMemberReset();
