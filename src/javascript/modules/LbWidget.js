@@ -74,7 +74,6 @@ export const LbWidget = function (options) {
     debug: false,
     bindContainer: document.body,
     autoStart: true,
-    sseMessaging: null,
     notifications: null,
     miniScoreBoard: null,
     canvasAnimation: null,
