@@ -4127,40 +4127,19 @@ export const MainWidget = function (options) {
 
   this.createSingleWheelDom = function (idx, singleWheel, isMobile) {
     const sw = document.createElement('div');
-    const swLabel = document.createElement('div');
-    const swDescription = document.createElement('div');
-    const swCanvasWrapp = document.createElement('div');
-    const swPointer = document.createElement('div');
-    const swCanvas = document.createElement('canvas');
-    const swButton = document.createElement('div');
     sw.classList.add('single-wheel-element');
     sw.classList.add('single-wheel-element-' + idx);
 
-    swLabel.classList.add('single-wheel-label');
-    swDescription.classList.add('single-wheel-description');
-    swCanvasWrapp.classList.add('single-wheel-canvas');
-    swPointer.classList.add('single-wheel-pointer');
-    swButton.classList.add('single-wheel-button');
-    swCanvas.classList.add('single-wheel-relative');
-    swCanvas.setAttribute('id', 'wheel-' + idx);
-    swButton.setAttribute('id', 'spin-' + idx);
-
-    swLabel.innerHTML = singleWheel.name ?? '';
-    swDescription.innerHTML = singleWheel.description ? stripHtml(singleWheel.description) : '';
-    swButton.innerHTML = 'Spin';
-
     const wheelSize = isMobile ? '192' : '300';
 
-    swCanvas.setAttribute('width', wheelSize);
-    swCanvas.setAttribute('height', wheelSize);
-
-    swCanvasWrapp.appendChild(swPointer);
-    swCanvasWrapp.appendChild(swCanvas);
-
-    sw.appendChild(swLabel);
-    sw.appendChild(swDescription);
-    sw.appendChild(swCanvasWrapp);
-    sw.appendChild(swButton);
+    const template = require('../templates/mainWidget/singleWheelDom.hbs');
+    sw.innerHTML = template({
+      idx: idx,
+      wheelSize: wheelSize,
+      label: singleWheel.name ?? '',
+      description: singleWheel.description ? stripHtml(singleWheel.description) : '',
+      buttonLabel: 'Spin'
+    });
 
     return sw;
   };
