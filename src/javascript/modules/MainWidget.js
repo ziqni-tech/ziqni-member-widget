@@ -646,39 +646,21 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardHeader = function () {
-    var _this = this;
-    var rankCol = document.createElement('div');
-    var iconCol = document.createElement('div');
-    var nameCol = document.createElement('div');
-    var growthCol = document.createElement('div');
-    var pointsCol = document.createElement('div');
+    addClass(this.settings.leaderboard.header, 'cl-reward-enabled');
 
-    rankCol.setAttribute('class', 'cl-rank-col cl-col');
-    iconCol.setAttribute('class', 'cl-icon-col cl-col');
-    nameCol.setAttribute('class', 'cl-name-col cl-col');
-    growthCol.setAttribute('class', 'cl-growth-col cl-col');
-    pointsCol.setAttribute('class', 'cl-points-col cl-col');
+    const rewardEnabled = typeof this.settings.lbWidget.settings.competition.activeContest !== 'undefined' &&
+      this.settings.lbWidget.settings.competition.activeContest !== null &&
+      typeof this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' &&
+      this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0;
 
-    rankCol.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.rank;
-    iconCol.innerHTML = '';
-    nameCol.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.name;
-    growthCol.innerHTML = '';
-    pointsCol.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.points;
-
-    _this.settings.leaderboard.header.appendChild(rankCol);
-    _this.settings.leaderboard.header.appendChild(iconCol);
-    _this.settings.leaderboard.header.appendChild(nameCol);
-    _this.settings.leaderboard.header.appendChild(growthCol);
-    _this.settings.leaderboard.header.appendChild(pointsCol);
-
-    var rewardCol = document.createElement('div');
-    var rewardEnabled = (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
-    rewardCol.setAttribute('class', 'cl-reward-col cl-col' + (rewardEnabled ? ' cl-col-reward-enabled' : ''));
-    rewardCol.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.prize;
-
-    addClass(_this.settings.leaderboard.header, 'cl-reward-enabled');
-
-    _this.settings.leaderboard.header.appendChild(rewardCol);
+    const template = require('../templates/mainWidget/leaderboardHeader.hbs');
+    this.settings.leaderboard.header.innerHTML = template({
+      rewardEnabled: rewardEnabled,
+      rankColLabel: this.settings.lbWidget.settings.translation.leaderboard.rank,
+      nameColLabel: this.settings.lbWidget.settings.translation.leaderboard.name,
+      pointsColLabel: this.settings.lbWidget.settings.translation.leaderboard.points,
+      rewardColLabel: this.settings.lbWidget.settings.translation.leaderboard.prize
+    });
   };
 
   this.leaderboardRow = function (rank, icon, name, change, growth, points, reward, count, memberFound) {
