@@ -767,7 +767,7 @@ export const MainWidget = function (options) {
     const topResults = [];
     const remainingResults = [];
 
-    for (let i = 0; i < _this.settings.leaderboard.topResultSize; i++) {
+    for (let i = 0; i < this.settings.leaderboard.topResultSize; i++) {
       const rank = i + 1;
 
       topResults.push({
