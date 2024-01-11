@@ -5846,6 +5846,9 @@
   line-height: 17px;
   color: var(--lb3-messages-item-label-color);
   padding: 14px 12px 0;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress {
@@ -7419,7 +7422,7 @@
         height: 24px;
         position: absolute;
         top: 10px;
-        right: 42px;
+        right: 18px;
         background: url(../../images/theme-switcher.svg) no-repeat center;
         background-size: cover;
         z-index: 10;
@@ -7707,6 +7710,11 @@
           margin-bottom: 0;
         }
       }
+    }
+  }
+  .cl-main-widget-wrapper.lightTheme {
+    .cl-landscape-close {
+      background-image: url(../../images/close-icon-light.svg);
     }
   }
 }
@@ -8573,7 +8581,22 @@
       }
     }
   }
-  .lightTheme {
+  .cl-main-widget-wrapper.lightTheme {
+    .cl-main-widget-section-container {
+      .cl-main-widget-inbox-list-body::-webkit-scrollbar {
+        background: #dce6ef;
+      }
+      .cl-main-widget-inbox-list-body::-webkit-scrollbar-thumb {
+        background: #96b5cf;
+      }
+
+      .cl-main-widget-ach-list-body::-webkit-scrollbar {
+        background: #dce6ef;
+      }
+      .cl-main-widget-ach-list-body::-webkit-scrollbar-thumb {
+        background: #96b5cf;
+      }
+    }
     .cl-main-widget-dashboard-achievements-list .cl-ach-list-more {
       color: #170213 !important;
     }
