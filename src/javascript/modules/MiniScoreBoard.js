@@ -42,41 +42,23 @@ export const MiniScoreBoard = function (options) {
   }
 
   this.layout = function () {
-    var wrapper = document.createElement('div');
-    var iconWrapper = document.createElement('div');
-    var icon = document.createElement('div');
-
-    var informationWrapper = document.createElement('div');
-    var informationTopWrapper = document.createElement('div');
-    var informationWrapperClose = document.createElement('div');
-    var informationClose = document.createElement('a');
-
+    const wrapper = document.createElement('div');
     wrapper.setAttribute('class', 'cl-widget-ms-wrapper');
     if (this.settings.lbWidget.settings.defaultLightTheme) {
       wrapper.classList.add('lightTheme');
     }
-    iconWrapper.setAttribute('class', 'cl-widget-ms-icon-wrapper');
-    icon.setAttribute('class', 'cl-widget-ms-icon');
-    if (this.settings.lbWidget.settings.layout.logoUrl) {
-      icon.setAttribute('style', `background-image: url(${this.settings.lbWidget.settings.layout.logoUrl})`);
-    }
-    informationTopWrapper.setAttribute('class', 'cl-widget-ms-information-top-wrapper');
-    informationWrapper.setAttribute('class', 'cl-widget-ms-information-wrapper');
-    informationWrapperClose.setAttribute('class', 'cl-widget-ms-information-close-wrapper');
-    informationClose.setAttribute('class', 'cl-widget-ms-information-close');
 
-    informationClose.href = 'javascript:void(0);';
-    informationClose.innerHTML = 'x';
+    let logoUrl = '';
+    if (this.settings.lbWidget.settings.layout.logoUrl) {
+      logoUrl = `background-image: url(${this.settings.lbWidget.settings.layout.logoUrl})`;
+    }
+
+    const template = require('../templates/layouts/miniScoreBoardLayout.hbs');
+    wrapper.innerHTML = template({
+      logoUrl: logoUrl
+    });
 
     this.initialLayoutPosition(wrapper);
-
-    informationWrapperClose.appendChild(informationClose);
-    informationWrapper.appendChild(informationWrapperClose);
-    informationTopWrapper.appendChild(informationWrapper);
-    iconWrapper.appendChild(icon);
-    wrapper.appendChild(iconWrapper);
-    wrapper.appendChild(informationTopWrapper);
-
     return wrapper;
   };
 
