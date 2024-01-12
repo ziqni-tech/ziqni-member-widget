@@ -4162,6 +4162,15 @@ export const MainWidget = function (options) {
     });
   };
 
+  this.closeOpenedItems = function () {
+    this.hideCompetitionList();
+    this.hideAchievementDetails();
+    this.hideRewardDetails();
+    this.hideMessageDetails();
+    this.hideMissionMap();
+    this.hideMissionDetails();
+  };
+
   let changeInterval;
   let changeContainerInterval;
   this.navigationSwitch = function (target, callback) {
@@ -4183,6 +4192,8 @@ export const MainWidget = function (options) {
         preLoader.show(function () {
           if (changeInterval) clearTimeout(changeInterval);
           if (changeContainerInterval) clearTimeout(changeContainerInterval);
+
+          _this.closeOpenedItems();
 
           objectIterator(query(_this.settings.container, '.cl-main-widget-navigation-items .cl-active-nav'), function (obj) {
             removeClass(obj, 'cl-active-nav');
