@@ -495,9 +495,12 @@ export const MainWidget = function (options) {
 
     navigationContainer.appendChild(navigationLogo);
     navigationContainer.appendChild(navigationItems);
-    navigationContainer.appendChild(navigationDarkModeToggle);
 
-    mainSectionContainer.appendChild(mobileThemeSwitcher);
+    if (this.settings.lbWidget.settings.layout.showThemeSwitcher) {
+      navigationContainer.appendChild(navigationDarkModeToggle);
+      mainSectionContainer.appendChild(mobileThemeSwitcher);
+    }
+
     mainSectionContainer.appendChild(sectionLB);
     mainSectionContainer.appendChild(sectionACH);
     mainSectionContainer.appendChild(sectionRewards);
@@ -1601,17 +1604,19 @@ export const MainWidget = function (options) {
     const msContainer = document.querySelector('.cl-widget-ms-wrapper');
     const notificationContainer = document.querySelector('.cl-widget-notif-wrapper');
 
-    darkModeToggle.addEventListener('change', function () {
-      if (this.checked) {
-        mainContainer.classList.add('lightTheme');
-        msContainer.classList.add('lightTheme');
-        if (notificationContainer) notificationContainer.classList.add('lightTheme');
-      } else {
-        mainContainer.classList.remove('lightTheme');
-        msContainer.classList.remove('lightTheme');
-        if (notificationContainer) notificationContainer.classList.remove('lightTheme');
-      }
-    });
+    if (darkModeToggle) {
+      darkModeToggle.addEventListener('change', function () {
+        if (this.checked) {
+          mainContainer.classList.add('lightTheme');
+          msContainer.classList.add('lightTheme');
+          if (notificationContainer) notificationContainer.classList.add('lightTheme');
+        } else {
+          mainContainer.classList.remove('lightTheme');
+          msContainer.classList.remove('lightTheme');
+          if (notificationContainer) notificationContainer.classList.remove('lightTheme');
+        }
+      });
+    }
   };
 
   this.competitionDetailsOptInButtonState = function () {
