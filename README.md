@@ -136,6 +136,7 @@ const instance = new MemberWidget({
   },
   layout: {
     logoUrl: '',
+    showThemeSwitcher: true, // true by default
   },
   awards: {
     showExpiredAwards: false // false by default
@@ -235,10 +236,11 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
       apiKey: '<api_key>',
       memberRefId: '<member_reference_id>',
       memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken!
-      memberNameLength: 5, // The first 5 characters of the user name + '*****' will be displayed on the leaderboard
+      memberNameLength: 5, // The first 5 characters of the username + '*****' will be displayed on the leaderboard
       loadCustomTranslations: false,
       layout: {
         logoUrl: '',
+        showThemeSwitcher: true,
       },
       tournaments: {
         showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
