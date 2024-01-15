@@ -1,7 +1,7 @@
 import { ContestRequest, ContestsApiWs } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
 
-const tournamentBrackets = async (apiClientStomp, tournamentId, language, translation) => {
+const tournamentBrackets = async (apiClientStomp, tournamentId, language, translation, activeContestId) => {
   const container = document.querySelector('.cl-main-widget-lb-details-brackets');
   container.innerHTML = '';
 
@@ -60,7 +60,7 @@ const tournamentBrackets = async (apiClientStomp, tournamentId, language, transl
   title.setAttribute('class', 'cl-main-widget-lb-details-brackets-title');
   title.innerHTML = translation.brackets.title;
 
-  const html = createHtml(roundsCount, contestsByRounds, translation);
+  const html = createHtml(roundsCount, contestsByRounds, translation, activeContestId);
 
   container.appendChild(title);
   container.appendChild(html);
@@ -104,7 +104,7 @@ const drawLine = (x1, y1, x2, y2) => {
   container.innerHTML += '<div class="bracket ' + lineClass + '" style="width: ' + width + 'px; height: ' + height + 'px; ' + border + '; border-right: solid 1px #ddd; position: absolute; top: ' + y1 + 'px; left: ' + x1 + 'px;"></div>';
 };
 
-const createHtml = (roundsCount, contestsByRounds, translation) => {
+const createHtml = (roundsCount, contestsByRounds, translation, activeContestId) => {
   const container = document.createElement('div');
   container.setAttribute('class', 'connections-table_rounds');
 
@@ -124,6 +124,10 @@ const createHtml = (roundsCount, contestsByRounds, translation) => {
 
         if (contestsByRounds[i][j].entrantsFromContest && contestsByRounds[i][j].entrantsFromContest.length) {
           roundItem.classList.add('hasEntrants');
+        }
+
+        if (contestsByRounds[i][j].id === activeContestId) {
+          roundItem.classList.add('current');
         }
 
         roundItemName.setAttribute('class', 'connections-table_round-item-name');

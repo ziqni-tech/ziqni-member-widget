@@ -1278,7 +1278,8 @@ export const MainWidget = function (options) {
       this.settings.lbWidget.apiClientStomp,
       this.settings.lbWidget.settings.tournaments.activeCompetitionId,
       this.settings.lbWidget.settings.language,
-      this.settings.lbWidget.settings.translation
+      this.settings.lbWidget.settings.translation,
+      this.settings.lbWidget.settings.competition.activeContestId
     );
 
     if (typeof callback === 'function') callback();
