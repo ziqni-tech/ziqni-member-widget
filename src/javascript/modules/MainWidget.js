@@ -3314,11 +3314,12 @@ export const MainWidget = function (options) {
     }
 
     const accordionObj = _this.awardsList(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
-      const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
+      let rewardData = _this.settings.lbWidget.settings.awards[layout.type];
       if (typeof rewardData !== 'undefined') {
         if (rewardData.length === 0) {
           accordionSection.style.display = 'none';
         }
+        rewardData = rewardData.filter(r => r.rewardData);
         mapObject(rewardData, function (rew, key, count) {
           if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
             var topEntryContaineRlistItem = _this.rewardItem(rew);
