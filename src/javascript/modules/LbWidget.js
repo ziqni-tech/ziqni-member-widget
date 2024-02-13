@@ -50,7 +50,8 @@ import {
   EntityGraphRequest,
   InstantWinsApiWs,
   InstantWinRequest,
-  InstantWinPlayRequest
+  InstantWinPlayRequest,
+  StatsApiWs
 } from '@ziqni-tech/member-api-client';
 
 const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
@@ -613,6 +614,20 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function') {
       callback();
     }
+  };
+
+  this.getActiveEntitiesByProduct = async (ModelCountRequest) => {
+    if (!this.apiClientStomp) {
+      await this.initApiClientStomp();
+    }
+
+    const statsApiWs = new StatsApiWs(this.apiClientStomp);
+
+    return new Promise((resolve, reject) => {
+      statsApiWs.getActiveEntitiesCount(ModelCountRequest, (json) => {
+        resolve(json);
+      });
+    });
   };
 
   this.getCompetitionsApi = async (competitionRequest) => {
