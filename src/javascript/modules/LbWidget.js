@@ -3149,6 +3149,8 @@ export const LbWidget = function (options) {
 
       // primary widget navigation
     } else if (el.closest('.cl-main-widget-navigation-items')) {
+      if (hasClass(el, 'cl-main-widget-navigation-items')) return;
+
       _this.settings.mainWidget.navigationSwitch(el);
 
       // competition list
