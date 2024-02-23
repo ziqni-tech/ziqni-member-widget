@@ -864,6 +864,33 @@ export const MainWidget = function (options) {
     });
   };
 
+  this.getTournamentReward = function (tournament, rank) {
+    const _this = this;
+    const rewardResponse = [];
+
+    mapObject(tournament.rewards, function (reward) {
+      if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+        const rewardRankArr = reward.rewardRank.split(',');
+        rewardRankArr.forEach(r => {
+          const idx = r.indexOf('-');
+          if (idx !== -1) {
+            const start = parseInt(r);
+            const end = parseInt(r.substring(idx + 1));
+            if (rank >= start && rank <= end) {
+              rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
+            }
+          } else if (parseInt(r) === rank) {
+            rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
+          }
+        });
+      } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
+        rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
+      }
+    });
+
+    return rewardResponse.join(', ');
+  };
+
   this.getReward = function (rank) {
     const _this = this;
     const rewardResponse = [];
@@ -3110,29 +3137,10 @@ export const MainWidget = function (options) {
     period.innerHTML = startDate + ' - ' + endDate;
 
     if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.rewards && tournament.rewards.length) {
-      const idx = tournament.rewards.findIndex(reward => {
-        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-          const rewardRankArr = reward.rewardRank.split(',');
-          rewardRankArr.forEach(r => {
-            const idx = r.indexOf('-');
-            if (idx !== -1) {
-              const start = parseInt(r);
-              if (start === 1) {
-                return true;
-              }
-            } else if (parseInt(r) === 1) {
-              return true;
-            }
-            return false;
-          });
-        } else if (parseInt(reward.rewardRank) === 1) {
-          return true;
-        }
-        return false;
-      });
+      const firsReward = this.getTournamentReward(tournament, 1);
 
-      if (idx !== -1) {
-        prize.innerHTML = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(tournament.rewards[idx]);
+      if (firsReward) {
+        prize.innerHTML = firsReward;
       }
     }
 
