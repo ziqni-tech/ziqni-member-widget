@@ -131,6 +131,7 @@ const instance = new MemberWidget({
   enableNotifications: true,
   hideEmptyTabs: false,
   defaultLightTheme: false,
+  timeZone: 'Europe/London', // 'UTC' by default
   instantWins: {
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
