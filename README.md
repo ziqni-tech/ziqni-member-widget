@@ -131,6 +131,7 @@ const instance = new MemberWidget({
   enableNotifications: true,
   hideEmptyTabs: false,
   defaultLightTheme: false,
+  timeZone: 'Europe/London', // 'UTC' by default
   instantWins: {
     enable:  false // This functionality is under development; the parameter is disabled by default
   },
@@ -142,7 +143,9 @@ const instance = new MemberWidget({
     showExpiredAwards: false // false by default
   },
   tournaments: {
-    showTournamentsMenuPrizeColumn: false // Hides the Prize column in the tournament select menu; true by default
+    showTournamentsMenuPrizeColumn: false, // Hides the Prize column in the tournament select menu; true by default
+    showBannerTimer: true, // true by default
+    showDashboardTime: true // true by default
   },
   historicalData: {
     finalisedCompetitions: 30, // Days; 30 by default
