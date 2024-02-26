@@ -550,7 +550,8 @@ export const MainWidget = function (options) {
       daysFull: this.settings.lbWidget.settings.translation.time.daysFull,
       hoursFull: this.settings.lbWidget.settings.translation.time.hoursFull,
       minutesFull: this.settings.lbWidget.settings.translation.time.minutesFull,
-      secondsFull: this.settings.lbWidget.settings.translation.time.secondsFull
+      secondsFull: this.settings.lbWidget.settings.translation.time.secondsFull,
+      isBannerTimer: this.settings.lbWidget.settings.tournaments.showBannerTimer
     });
 
     return sectionLB;
@@ -1460,7 +1461,7 @@ export const MainWidget = function (options) {
       _this.settings.lbWidget.settings.competition.activeContest !== null ||
       (this.settings.lbWidget.settings.competition.activeCompetition && this.settings.lbWidget.settings.competition.activeCompetition.statusCode === 15)
     ) {
-      if (isTimeReload) {
+      if (isTimeReload && this.settings.lbWidget.settings.tournaments.showBannerTimer) {
         _this.updateLeaderboardTime();
       }
     } else {
@@ -2354,7 +2355,8 @@ export const MainWidget = function (options) {
     }
 
     label.innerHTML = data.subject;
-    date.innerHTML = (new Date(data.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+    const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
+    date.innerHTML = (new Date(data.created)).toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' });
     let bodyHtml = data.body;
     bodyHtml = bodyHtml.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
     body.innerHTML = bodyHtml;
@@ -2960,15 +2962,18 @@ export const MainWidget = function (options) {
 
     const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
 
+    const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
+
     const template = require('../templates/dashboard/tournamentItem.hbs');
     listItem.innerHTML = template({
       title: tournament.name,
       itemBg: itemBg,
       endsLabel: endsLabel,
-      endsValue: date.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' }),
+      endsValue: date.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' }),
       prizeLabel: this.settings.lbWidget.settings.translation.dashboard.prizeTitle,
       prizeValue: rewardValue,
-      seeMoreLabel: this.settings.lbWidget.settings.translation.dashboard.tournamentBtn
+      seeMoreLabel: this.settings.lbWidget.settings.translation.dashboard.tournamentBtn,
+      showDashboardTime: this.settings.lbWidget.settings.tournaments.showDashboardTime
     });
 
     return listItem;
@@ -3070,9 +3075,11 @@ export const MainWidget = function (options) {
 
     const content = stripHtml(inbox.body);
 
+    const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
+
     const subject = (inbox.subject.length > 36) ? inbox.subject.substr(0, 36) + '...' : inbox.subject;
     const description = (content.length > 60) ? content.substr(0, 60) + '...' : content;
-    const date = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+    const date = (new Date(inbox.created)).toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' });
 
     const template = require('../templates/mainWidget/messageItem.hbs');
     listItem.innerHTML = template({
@@ -3122,8 +3129,11 @@ export const MainWidget = function (options) {
 
     let startDate = new Date(tournament.actualStartDate ?? tournament.scheduledStartDate);
     let endDate = new Date(tournament.actualEndDate ?? tournament.scheduledEndDate);
-    startDate = startDate.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
-    endDate = endDate.toLocaleString('en-GB', { timeZone: 'UTC', dateStyle: 'short', timeStyle: 'short' });
+
+    const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
+
+    startDate = startDate.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' });
+    endDate = endDate.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' });
 
     listItem.setAttribute('class', 'cl-tour-list-item cl-tour-' + tournament.id);
     detailsContainer.setAttribute('class', 'cl-tour-list-details-cont');

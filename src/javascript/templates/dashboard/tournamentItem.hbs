@@ -1,9 +1,11 @@
 <div class="dashboard-tournament-list-bg" style="{{ itemBg }}"></div>
 <div class="dashboard-tournament-list-title">{{ title }}</div>
+{{#if showDashboardTime}}
 <div class="dashboard-tournament-list-ends-wrapp">
   <div class="dashboard-tournament-list-ends-title">{{ endsLabel }}</div>
   <div class="dashboard-tournament-list-ends-value">{{ endsValue }}</div>
 </div>
+{{/if}}
 <div class="dashboard-tournament-list-prize-wrapp">
   <div class="dashboard-tournament-list-prize-title">{{ prizeLabel }}</div>
   <div class="dashboard-tournament-list-prize-value">{{ prizeValue }}</div>

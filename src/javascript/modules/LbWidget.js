@@ -98,6 +98,7 @@ export const LbWidget = function (options) {
     expires: 36000000,
     member: null,
     itemsPerPage: 10,
+    timeZone: 'UTC',
     layout: {
       logoUrl: '',
       showThemeSwitcher: true,
@@ -166,6 +167,8 @@ export const LbWidget = function (options) {
       enable: false
     },
     tournaments: {
+      showBannerTimer: true,
+      showDashboardTime: true,
       showTournamentsMenuPrizeColumn: true,
       activeCompetitionId: null,
       readyCompetitions: [],
@@ -1558,8 +1561,8 @@ export const LbWidget = function (options) {
       messageFilter: {
         messageType: 'InboxItem',
         createdDateRange: {
-          before: createdDateFilter.toISOString(),
-          after: (new Date()).toISOString()
+          before: (new Date()).toISOString(),
+          after: createdDateFilter.toISOString()
         },
         sortBy: [{
           queryField: 'created',
