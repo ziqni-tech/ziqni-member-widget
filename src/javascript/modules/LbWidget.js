@@ -395,6 +395,7 @@ export const LbWidget = function (options) {
           moreThan: 20,
           lessThan: 30
         },
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -411,6 +412,7 @@ export const LbWidget = function (options) {
           moreThan: 10,
           lessThan: 20
         },
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -490,7 +492,7 @@ export const LbWidget = function (options) {
           moreThan: 10,
           lessThan: 20
         },
-        productIds: this.settings.productIds ?? [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -507,7 +509,7 @@ export const LbWidget = function (options) {
           moreThan: 20,
           lessThan: 30
         },
-        productIds: this.settings.productIds ?? [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -516,6 +518,8 @@ export const LbWidget = function (options) {
         skip: (activePageNumber - 1) * 12
       }
     }, null);
+
+    console.log('activeCompetitionRequest:', activeCompetitionRequest);
 
     const finishedDateFilter = new Date();
     finishedDateFilter.setDate(finishedDateFilter.getDate() - this.settings.historicalData.finalisedCompetitions ?? 30);
@@ -527,7 +531,7 @@ export const LbWidget = function (options) {
           moreThan: 30,
           lessThan: 50
         },
-        productIds: this.settings.productIds ?? [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
         endDateRange: {
           before: (new Date()).toISOString(),
           after: finishedDateFilter.toISOString()
@@ -951,7 +955,7 @@ export const LbWidget = function (options) {
       languageKey: this.settings.language,
       achievementFilter: {
         productTags: [],
-        productIds: this.settings.productIds ?? [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
         tags: [],
         startDate: null,
         endDate: null,
