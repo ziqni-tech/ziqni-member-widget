@@ -132,6 +132,7 @@ const instance = new MemberWidget({
   hideEmptyTabs: false,
   defaultLightTheme: false,
   timeZone: 'Europe/London', // 'UTC' by default
+  productIds: [], // ProductIds array; [] by default
   instantWins: {
     enable:  false // This functionality is under development; the parameter is disabled by default
   },

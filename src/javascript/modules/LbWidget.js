@@ -99,6 +99,7 @@ export const LbWidget = function (options) {
     member: null,
     itemsPerPage: 10,
     timeZone: 'UTC',
+    productIds: [],
     layout: {
       logoUrl: '',
       showThemeSwitcher: true,
@@ -489,6 +490,7 @@ export const LbWidget = function (options) {
           moreThan: 10,
           lessThan: 20
         },
+        productIds: this.settings.productIds ?? [],
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -505,6 +507,7 @@ export const LbWidget = function (options) {
           moreThan: 20,
           lessThan: 30
         },
+        productIds: this.settings.productIds ?? [],
         sortBy: [{
           queryField: 'created',
           order: 'Desc'
@@ -524,6 +527,7 @@ export const LbWidget = function (options) {
           moreThan: 30,
           lessThan: 50
         },
+        productIds: this.settings.productIds ?? [],
         endDateRange: {
           before: (new Date()).toISOString(),
           after: finishedDateFilter.toISOString()
@@ -947,6 +951,7 @@ export const LbWidget = function (options) {
       languageKey: this.settings.language,
       achievementFilter: {
         productTags: [],
+        productIds: this.settings.productIds ?? [],
         tags: [],
         startDate: null,
         endDate: null,
