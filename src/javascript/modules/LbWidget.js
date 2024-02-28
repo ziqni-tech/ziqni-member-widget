@@ -519,8 +519,6 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    console.log('activeCompetitionRequest:', activeCompetitionRequest);
-
     const finishedDateFilter = new Date();
     finishedDateFilter.setDate(finishedDateFilter.getDate() - this.settings.historicalData.finalisedCompetitions ?? 30);
 
