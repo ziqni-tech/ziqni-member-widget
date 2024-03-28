@@ -2114,7 +2114,7 @@ export const MainWidget = function (options) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
-    const itemsPerPage = _this.settings.lbWidget.settings.itemsPerPage;
+    const itemsPerPage = 6;
     let paginator = query(achList, '.paginator');
 
     const prev = document.createElement('span');
