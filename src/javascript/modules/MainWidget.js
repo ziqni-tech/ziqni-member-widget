@@ -2637,8 +2637,26 @@ export const MainWidget = function (options) {
     }
 
     const achIds = this.settings.missions.mission.graph.nodes.map(n => n.entityId);
-    const achievements = await this.settings.lbWidget.getAchievementsByIds(achIds);
-    const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
+
+    const subarray = [];
+    for (let i = 0; i < Math.ceil(achIds.length / 20); i++) {
+      subarray[i] = achIds.slice((i * 20), (i * 20) + 20);
+    }
+
+    const achievementsSubarray = [];
+    const statusesSubarray = [];
+
+    for (let i = 0; i < subarray.length; i++) {
+      const achievements = await this.settings.lbWidget.getAchievementsByIds(subarray[i]);
+      const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(subarray[i]);
+      achievementsSubarray.push(achievements);
+      statusesSubarray.push(statuses);
+    }
+
+    const achievements = achievementsSubarray.flat();
+    const statuses = statusesSubarray.flat();
+
+    // const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
     // statuses[1].percentageComplete = 50;
     // statuses[4].percentageComplete = 100;
     // statuses[3].percentageComplete = 70;
