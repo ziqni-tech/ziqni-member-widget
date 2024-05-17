@@ -30,7 +30,8 @@ export const MiniScoreBoard = function (options) {
     active: false,
     enableDragging: true,
     dragging: false,
-    verticalClass: 'cl-vertical-mini'
+    verticalClass: 'cl-vertical-mini',
+    timeManagementInterval: null
   };
 
   if (typeof options !== 'undefined') {
@@ -92,6 +93,10 @@ export const MiniScoreBoard = function (options) {
     return wrapper;
   };
 
+  this.clearInterval = function () {
+    this.timeManagementInterval = null;
+  };
+
   this.timeManagement = function () {
     var _this = this;
     var diff = 0;
@@ -105,12 +110,16 @@ export const MiniScoreBoard = function (options) {
       const startDate = this.settings.lbWidget.settings.competition.activeCompetition.scheduledStartDate;
       diff = moment(startDate).diff(moment());
 
-      if (diff <= 0) _this.settings.lbWidget.activeDataRefresh(() => {});
-
       label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
       date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
       dateObj = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
       inverse = false;
+
+      if (diff <= 0 && !this.timeManagementInterval) {
+        this.timeManagementInterval = setTimeout(function () {
+          _this.settings.lbWidget.activeDataRefresh(() => { _this.clearInterval(); });
+        }, 5000);
+      }
     } else if (_this.settings.lbWidget.settings.competition.activeContest !== null) {
       let startDate = _this.settings.lbWidget.settings.competition.activeContest.scheduledStart;
       if (typeof _this.settings.lbWidget.settings.competition.activeContest.actualStart !== 'undefined') {
