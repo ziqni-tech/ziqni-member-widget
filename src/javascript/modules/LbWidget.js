@@ -2039,7 +2039,7 @@ export const LbWidget = function (options) {
   this.startup = function () {
     const _this = this;
 
-    if (screen.width <= 360) {
+    if (screen.width <= 360 && this.settings.layout.miniScoreBoardOrientation !== 'auto') {
       this.settings.layout.miniScoreBoardOrientation = 'vertical';
     }
 

@@ -31,6 +31,7 @@ export const MiniScoreBoard = function (options) {
     enableDragging: true,
     dragging: false,
     verticalClass: 'cl-vertical-mini',
+    autoClass: 'cl-auto-mini',
     timeManagementInterval: null
   };
 
@@ -78,6 +79,9 @@ export const MiniScoreBoard = function (options) {
           break;
         case 'vertical':
           addClass(wrapper, _this.settings.verticalClass);
+          break;
+        case 'auto':
+          addClass(wrapper, _this.settings.autoClass);
           break;
         default:
           // default behaviour
