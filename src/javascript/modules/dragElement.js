@@ -21,14 +21,27 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
     clearTimeout(movementInterval);
   }
 
-  var onWindowChange = function () {
-    var isVertical = hasClass(elmnt, 'cl-vertical-mini');
-    var maxLeft = (isParentWindow ? window.innerWidth : container.offsetWidth);
-    var maxTop = (isParentWindow ? window.innerHeight : container.offsetHeight);
-    var offsetMaxLeft = maxLeft - parseInt(elmnt.offsetWidth + (isVertical ? draggableEl.offsetWidth / 7 : draggableEl.offsetWidth / 1.6));
-    var offsetMaxTop = maxTop - parseInt(elmnt.offsetHeight + (isVertical ? draggableEl.offsetHeight / 1.2 : draggableEl.offsetHeight / 4));
-    var elTop = parseInt(elmnt.style.top);
-    var elLeft = parseInt(elmnt.style.left);
+  const onWindowChange = function (e) {
+    const isVertical = hasClass(elmnt, 'cl-vertical-mini');
+    let maxLeft = (isParentWindow ? window.innerWidth : container.offsetWidth);
+    let maxTop = (isParentWindow ? window.innerHeight : container.offsetHeight);
+
+    if (e.target.type === 'landscape-primary') {
+      if (window.innerWidth < window.innerHeight) {
+        maxLeft = (isParentWindow ? window.innerHeight : container.offsetHeight);
+        maxTop = (isParentWindow ? window.innerWidth : container.offsetWidth);
+      }
+    } else {
+      if (window.innerWidth > window.innerHeight) {
+        maxLeft = (isParentWindow ? window.innerHeight : container.offsetHeight);
+        maxTop = (isParentWindow ? window.innerWidth : container.offsetWidth);
+      }
+    }
+
+    const offsetMaxLeft = maxLeft - parseInt(elmnt.offsetWidth + (isVertical ? draggableEl.offsetWidth / 7 : draggableEl.offsetWidth / 1.6));
+    const offsetMaxTop = maxTop - parseInt(elmnt.offsetHeight + (isVertical ? draggableEl.offsetHeight / 1.2 : draggableEl.offsetHeight / 4));
+    const elTop = parseInt(elmnt.style.top);
+    const elLeft = parseInt(elmnt.style.left);
 
     if (elTop > offsetMaxTop && offsetMaxTop > 5) {
       elmnt.style.top = offsetMaxTop + 'px';
@@ -77,9 +90,9 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
       }
     }, { passive: isiOS });
 
-    window.addEventListener('orientationchange', function (e) {
-      onWindowChange();
-    }, true);
+    screen.orientation.addEventListener('change', function (e) {
+      onWindowChange(e);
+    });
   } else {
     // if present, the header is where you move the DIV from:
     draggableEl.onmousedown = dragMouseDown;
