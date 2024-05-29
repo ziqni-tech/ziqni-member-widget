@@ -4976,6 +4976,7 @@
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-main-accordion-container-menu-item {
   padding: 6px 34px;
   cursor: pointer;
+  text-align: center;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-main-accordion-container-menu-item.active {
@@ -7821,6 +7822,17 @@
       .cl-main-widget-lb-details-description-close {
         bottom: 68px !important;
       }
+
+      .cl-main-widget-tournaments-list-body-res .cl-main-accordion-container .cl-main-accordion-container-menu{
+        width: 100%;
+        justify-content: space-around;
+      }
+      .cl-main-widget-tournaments-list-body-res .cl-main-accordion-container .cl-main-accordion-container-menu-item {
+        padding: 6px 6px;
+        width: 100%;
+        text-align: center;
+      }
+
       .cl-main-widget-lb-header {
         height: 72px;
         .cl-main-widget-lb-header-list-icon {
