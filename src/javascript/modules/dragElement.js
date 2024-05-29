@@ -26,15 +26,17 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
     let maxLeft = (isParentWindow ? window.innerWidth : container.offsetWidth);
     let maxTop = (isParentWindow ? window.innerHeight : container.offsetHeight);
 
-    if (e.target.type === 'landscape-primary') {
-      if (window.innerWidth < window.innerHeight) {
-        maxLeft = (isParentWindow ? window.innerHeight : container.offsetHeight);
-        maxTop = (isParentWindow ? window.innerWidth : container.offsetWidth);
-      }
-    } else {
-      if (window.innerWidth > window.innerHeight) {
-        maxLeft = (isParentWindow ? window.innerHeight : container.offsetHeight);
-        maxTop = (isParentWindow ? window.innerWidth : container.offsetWidth);
+    if (e) {
+      if (e.target.type === 'landscape-primary') {
+        if (window.innerWidth < window.innerHeight) {
+          maxLeft = (isParentWindow ? window.innerHeight : container.offsetHeight);
+          maxTop = (isParentWindow ? window.innerWidth : container.offsetWidth);
+        }
+      } else {
+        if (window.innerWidth > window.innerHeight) {
+          maxLeft = (isParentWindow ? window.innerHeight : container.offsetHeight);
+          maxTop = (isParentWindow ? window.innerWidth : container.offsetWidth);
+        }
       }
     }
 
