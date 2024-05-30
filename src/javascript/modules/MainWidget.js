@@ -2656,6 +2656,8 @@ export const MainWidget = function (options) {
     const achievements = achievementsSubarray.flat();
     const statuses = statusesSubarray.flat();
 
+    console.log('statuses:', statuses);
+
     // const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
     // statuses[1].percentageComplete = 50;
     // statuses[4].percentageComplete = 100;
@@ -2678,14 +2680,21 @@ export const MainWidget = function (options) {
       }
 
       let starSrc = 'none';
+      let labelBg = '#3b4284';
+      let opacity = 1;
       const statusIdx = statuses.findIndex(a => a.entityId === n.entityId);
       if (statusIdx !== -1) {
         if (statuses[statusIdx].percentageComplete >= 33 && statuses[statusIdx].percentageComplete < 66) starSrc = starEl1Src;
         if (statuses[statusIdx].percentageComplete >= 66 && statuses[statusIdx].percentageComplete < 100) starSrc = starEl2Src;
         if (statuses[statusIdx].percentageComplete === 100) starSrc = starEl3Src;
+
+        if (statuses[statusIdx].percentageComplete === 100) labelBg = '#4476f1';
+        if (statuses[statusIdx].percentageComplete > 0 && statuses[statusIdx].percentageComplete < 100) labelBg = '#e33568';
+
+        if (statuses[statusIdx].percentageComplete === 0) opacity = 0.5;
       }
 
-      nodes.push({ data: { id: n.entityId, label: n.name, images: [itemBgSrc, src, starSrc, 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bottom.svg'] } });
+      nodes.push({ data: { id: n.entityId, label: n.name, labelBg: labelBg, opacity: opacity, images: [itemBgSrc, src, starSrc, 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bottom.svg'] } });
     });
 
     this.settings.missions.mission.graph.graphs[0].edges.forEach(e => {
@@ -2751,7 +2760,13 @@ export const MainWidget = function (options) {
         {
           selector: 'node[label]',
           css: {
-            'text-margin-y': '25px'
+            'text-margin-y': '25px',
+            // 'text-outline-color': 'data(labelBg)',
+            // 'text-outline-width': 5
+            'text-background-padding': '3px',
+            'text-background-color': 'data(labelBg)',
+            'text-background-shape': 'roundrectangle',
+            'text-background-opacity': 'data(opacity)'
           }
         }
       ],
