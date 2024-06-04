@@ -2302,6 +2302,22 @@ export const MainWidget = function (options) {
       });
 
       achList.appendChild(accordionObj);
+
+      if (paginator) {
+        const paginatorItems = query(paginator, '.paginator-item');
+        paginatorItems.forEach(item => {
+          removeClass(item, 'active');
+          if (Number(item.dataset.page) === Number(pageNumber)) {
+            addClass(item, 'active');
+          }
+        });
+
+        const allAchievements = query(achList, '.cl-accordion.all');
+        if (allAchievements) {
+          const container = query(allAchievements, '.cl-accordion-list-container');
+          container.appendChild(paginator);
+        }
+      }
     } else {
       mapObject(achievementData.list, function (ach) {
         if (query(achList, '.cl-ach-' + ach.id) === null) {
@@ -2309,18 +2325,18 @@ export const MainWidget = function (options) {
           achList.appendChild(listItem);
         }
       });
-    }
 
-    if (paginator) {
-      const paginatorItems = query(paginator, '.paginator-item');
-      paginatorItems.forEach(item => {
-        removeClass(item, 'active');
-        if (Number(item.dataset.page) === Number(pageNumber)) {
-          addClass(item, 'active');
-        }
-      });
+      if (paginator) {
+        const paginatorItems = query(paginator, '.paginator-item');
+        paginatorItems.forEach(item => {
+          removeClass(item, 'active');
+          if (Number(item.dataset.page) === Number(pageNumber)) {
+            addClass(item, 'active');
+          }
+        });
 
-      achList.appendChild(paginator);
+        achList.appendChild(paginator);
+      }
     }
   };
 

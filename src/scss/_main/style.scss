@@ -3533,9 +3533,12 @@
   justify-content: space-between;
 }
 
+
+.cl-main-widget-wrapper.lightTheme .cl-main-widget-section-container .cl-main-widget-ach-list-body-res .cl-main-accordion-container .cl-shown .cl-accordion-list-container,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res .cl-main-accordion-container .cl-shown .cl-accordion-list-container {
   border: none;
   background: none;
+  border-radius: unset;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res .cl-accordion-list {
