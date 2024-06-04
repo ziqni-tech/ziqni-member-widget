@@ -25,7 +25,11 @@
         "leavePopupDescription": "Are you sure you want to leave this achievement?",
         "leavePopupClose": "Close",
         "leavePopupConfirm": "Leave",
-        "progress": "Progress"
+        "progress": "Progress",
+        "all": "All",
+        "daily": "Daily",
+        "weekly": "Weekly",
+        "monthly": "Monthly"
     },
     "tournaments": {
         "label": "Tournaments",

@@ -3533,6 +3533,17 @@
   justify-content: space-between;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res .cl-main-accordion-container .cl-shown .cl-accordion-list-container {
+  border: none;
+  background: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-body-res .cl-accordion-list {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-ach-list-popup-wrapp {
   position: absolute;
   width: 100%;

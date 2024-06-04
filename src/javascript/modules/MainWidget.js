@@ -123,6 +123,34 @@ export const MainWidget = function (options) {
         }
       ]
     },
+    achievementsSection: {
+      accordionLayout: [
+        {
+          label: 'All',
+          type: 'all',
+          show: true,
+          showTopResults: 1
+        },
+        {
+          label: 'Daily',
+          type: 'daily',
+          show: false,
+          showTopResults: 1
+        },
+        {
+          label: 'Weekly',
+          type: 'weekly',
+          show: false,
+          showTopResults: 1
+        },
+        {
+          label: 'Monthly',
+          type: 'monthly',
+          show: false,
+          showTopResults: 1
+        }
+      ]
+    },
     active: false,
     navigationSwitchLastAtempt: new Date().getTime(),
     navigationSwitchInProgress: false
@@ -340,6 +368,7 @@ export const MainWidget = function (options) {
       const readyContainer = container.querySelector('.readyCompetitions');
       readyContainer.classList.add('cl-shown');
     }
+
     if (element.classList.contains('availableAwards')) {
       const availableContainer = container.querySelector('.cl-accordion.availableAwards');
       availableContainer.classList.add('cl-shown');
@@ -354,6 +383,24 @@ export const MainWidget = function (options) {
     }
     if (element.classList.contains('instantWins')) {
       const instantWinsContainer = container.querySelector('.cl-accordion.instantWins');
+      instantWinsContainer.classList.add('cl-shown');
+    }
+
+    // Achievements
+    if (element.classList.contains('all')) {
+      const availableContainer = container.querySelector('.cl-accordion.all');
+      availableContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('daily')) {
+      const claimedContainer = container.querySelector('.cl-accordion.daily');
+      claimedContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('weekly')) {
+      const expiredContainer = container.querySelector('.cl-accordion.weekly');
+      expiredContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('monthly')) {
+      const instantWinsContainer = container.querySelector('.cl-accordion.monthly');
       instantWinsContainer.classList.add('cl-shown');
     }
   };
@@ -2110,7 +2157,85 @@ export const MainWidget = function (options) {
     barLabel.innerHTML = percentageComplete + '/100';
   };
 
-  this.achievementListLayout = function (pageNumber, achievementData, paginationArr = null) {
+  this.achievementList = function (data, onLayout) {
+    const _this = this;
+    const accordionWrapper = document.createElement('div');
+
+    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
+
+    const statusMenu = document.createElement('div');
+    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
+
+    const allTitle = document.createElement('div');
+    const dailyTitle = document.createElement('div');
+    const weeklyTitle = document.createElement('div');
+    const monthlyTitle = document.createElement('div');
+
+    allTitle.setAttribute('class', 'cl-main-accordion-container-menu-item all');
+    dailyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item daily');
+    weeklyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item weekly');
+    monthlyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item monthly');
+
+    const idx = data.findIndex(d => d.show === true);
+    if (idx !== -1) {
+      switch (data[idx].type) {
+        case 'all':
+          allTitle.classList.add('active');
+          break;
+        case 'daily':
+          dailyTitle.classList.add('active');
+          break;
+        case 'weekly':
+          weeklyTitle.classList.add('active');
+          break;
+        case 'monthly':
+          monthlyTitle.classList.add('active');
+          break;
+      }
+    }
+
+    allTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.all;
+    dailyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.daily;
+    weeklyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.weekly;
+    monthlyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.monthly;
+
+    statusMenu.appendChild(allTitle);
+    statusMenu.appendChild(dailyTitle);
+    statusMenu.appendChild(weeklyTitle);
+    statusMenu.appendChild(monthlyTitle);
+
+    accordionWrapper.appendChild(statusMenu);
+
+    mapObject(data, function (entry) {
+      const accordionSection = document.createElement('div');
+      const topShownEntry = document.createElement('div');
+      const accordionListContainer = document.createElement('div');
+      const accordionList = document.createElement('div');
+
+      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
+      topShownEntry.setAttribute('class', 'cl-accordion-entry');
+      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
+      accordionList.setAttribute('class', 'cl-accordion-list');
+
+      if (typeof onLayout === 'function') {
+        onLayout(accordionSection, accordionList, topShownEntry, entry);
+      }
+
+      accordionListContainer.appendChild(accordionList);
+
+      accordionSection.appendChild(accordionListContainer);
+
+      accordionWrapper.appendChild(accordionSection);
+    });
+
+    return accordionWrapper;
+  };
+
+  this.achievementListLayout = function (
+    pageNumber,
+    achievementData,
+    paginationArr = null
+  ) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
@@ -2165,12 +2290,26 @@ export const MainWidget = function (options) {
       paginator.appendChild(next);
     }
 
-    mapObject(achievementData, function (ach) {
-      if (query(achList, '.cl-ach-' + ach.id) === null) {
-        const listItem = _this.achievementItem(ach);
-        achList.appendChild(listItem);
-      }
-    });
+    if (this.settings.lbWidget.settings.showAchievementsFilter) {
+      const accordionObj = _this.achievementList(_this.settings.achievementsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout) {
+        const data = achievementData[layout.type];
+        if (typeof data !== 'undefined' && data.length) {
+          mapObject(data, function (rew) {
+            const listItem = _this.achievementItem(rew);
+            listContainer.appendChild(listItem);
+          });
+        }
+      });
+
+      achList.appendChild(accordionObj);
+    } else {
+      mapObject(achievementData.list, function (ach) {
+        if (query(achList, '.cl-ach-' + ach.id) === null) {
+          const listItem = _this.achievementItem(ach);
+          achList.appendChild(listItem);
+        }
+      });
+    }
 
     if (paginator) {
       const paginatorItems = query(paginator, '.paginator-item');
@@ -4270,7 +4409,7 @@ export const MainWidget = function (options) {
 
               if (_this.settings.lbWidget.settings.navigation.achievements.enable) {
                 _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {
-                  _this.loadDashboardAchievements(achievementData);
+                  _this.loadDashboardAchievements(achievementData.list);
                 });
               }
 

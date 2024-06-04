@@ -81,6 +81,7 @@ export const LbWidget = function (options) {
     enableNotifications: false,
     hideEmptyTabs: false,
     defaultLightTheme: false,
+    showAchievementsFilter: false,
     mainWidget: null,
     language: process.env.LANG,
     currency: '',
@@ -134,6 +135,10 @@ export const LbWidget = function (options) {
       limit: 100,
       totalCount: 0,
       list: [],
+      all: [],
+      daily: [],
+      weekly: [],
+      monthly: [],
       availableRewards: [],
       rewards: [],
       expiredRewards: [],
@@ -940,7 +945,7 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.checkForAvailableAchievements = function (pageNumber, callback) {
+  this.checkForAvailableAchievements = async function (pageNumber, callback) {
     const _this = this;
 
     if (!this.settings.apiWs.achievementsApiWsClient) {
@@ -972,33 +977,157 @@ export const LbWidget = function (options) {
       }
     }, null);
 
-    this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, async (json) => {
-      _this.settings.achievements.list = json.data;
-      _this.settings.achievements.totalCount = json.meta.totalRecordsFound || 0;
-      const optInAchievements = json.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
-      let optInIds = [];
-      if (optInAchievements.length) {
-        optInIds = optInAchievements.map(a => {
+    const dailyRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        productTags: [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        tags: [],
+        startDate: null,
+        endDate: null,
+        ids: [],
+        scheduleTypes: ['Daily'],
+        statusCode: {
+          moreThan: moreValue,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: (pageNumber - 1) * 6,
+        limit: 6,
+        constraints: []
+      }
+    }, null);
+
+    const weeklyRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        productTags: [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        tags: [],
+        startDate: null,
+        endDate: null,
+        ids: [],
+        scheduleTypes: ['Weekly'],
+        statusCode: {
+          moreThan: moreValue,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: (pageNumber - 1) * 6,
+        limit: 6,
+        constraints: []
+      }
+    }, null);
+
+    const monthlyRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        productTags: [],
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        tags: [],
+        startDate: null,
+        endDate: null,
+        ids: [],
+        scheduleTypes: ['Monthly'],
+        statusCode: {
+          moreThan: moreValue,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: (pageNumber - 1) * 6,
+        limit: 6,
+        constraints: []
+      }
+    }, null);
+
+    const json = await this.getAchievements(achievementRequest);
+
+    _this.settings.achievements.list = json.data;
+    _this.settings.achievements.totalCount = json.meta.totalRecordsFound || 0;
+    const optInAchievements = json.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
+    let optInIds = [];
+    if (optInAchievements.length) {
+      optInIds = optInAchievements.map(a => {
+        if (a.constraints && a.constraints.includes('optinRequiredForEntrants')) {
+          return a.id;
+        }
+      });
+    }
+
+    if (optInIds.length) {
+      const statuses = await _this.getMemberAchievementsOptInStatuses(optInIds);
+      if (statuses.length) {
+        statuses.forEach(s => {
+          const idx = _this.settings.achievements.list.findIndex(a => a.id === s.entityId);
+          if (idx !== -1) {
+            _this.settings.achievements.list[idx].optInStatus = s.statusCode;
+          }
+        });
+      }
+    }
+
+    if (_this.settings.achievements.list.length) {
+      const ids = _this.settings.achievements.list.map(a => a.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Achievement',
+          entityIds: ids
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      _this.settings.achievements.list = _this.settings.achievements.list.map(achievement => {
+        const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
+        if (idx !== -1) {
+          achievement.reward = rewardsData[idx];
+        }
+
+        return achievement;
+      });
+    }
+
+    if (this.settings.showAchievementsFilter) {
+      const dailyJson = await this.getAchievements(dailyRequest);
+      this.settings.achievements.daily = dailyJson.data;
+
+      const optInDailyAchievements = dailyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
+      let optInDailyIds = [];
+
+      if (optInDailyAchievements.length) {
+        optInDailyIds = optInDailyAchievements.map(a => {
           if (a.constraints && a.constraints.includes('optinRequiredForEntrants')) {
             return a.id;
           }
         });
       }
 
-      if (optInIds.length) {
-        const statuses = await _this.getMemberAchievementsOptInStatuses(optInIds);
-        if (statuses.length) {
-          statuses.forEach(s => {
-            const idx = _this.settings.achievements.list.findIndex(a => a.id === s.entityId);
+      if (optInDailyIds.length) {
+        const statusesDaily = await _this.getMemberAchievementsOptInStatuses(optInDailyIds);
+        if (statusesDaily.length) {
+          statusesDaily.forEach(s => {
+            const idx = this.settings.achievements.daily.findIndex(a => a.id === s.entityId);
             if (idx !== -1) {
-              _this.settings.achievements.list[idx].optInStatus = s.statusCode;
+              _this.settings.achievements.daily[idx].optInStatus = s.statusCode;
             }
           });
         }
       }
 
-      if (_this.settings.achievements.list.length) {
-        const ids = _this.settings.achievements.list.map(a => a.id);
+      if (_this.settings.achievements.daily.length) {
+        const ids = _this.settings.achievements.daily.map(a => a.id);
         const rewardRequest = {
           entityFilter: [{
             entityType: 'Achievement',
@@ -1011,7 +1140,7 @@ export const LbWidget = function (options) {
         const rewards = await this.getRewardsApi(rewardRequest);
         const rewardsData = rewards.data;
 
-        _this.settings.achievements.list = _this.settings.achievements.list.map(achievement => {
+        _this.settings.achievements.daily = _this.settings.achievements.daily.map(achievement => {
           const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
           if (idx !== -1) {
             achievement.reward = rewardsData[idx];
@@ -1021,8 +1150,118 @@ export const LbWidget = function (options) {
         });
       }
 
-      if (typeof callback === 'function') callback(_this.settings.achievements.list);
-    });
+      const weeklyJson = await this.getAchievements(weeklyRequest);
+      this.settings.achievements.weekly = weeklyJson.data;
+
+      const optInWeeklyAchievements = weeklyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
+      let optInWeeklyIds = [];
+
+      if (optInWeeklyAchievements.length) {
+        optInWeeklyIds = optInWeeklyAchievements.map(a => {
+          if (a.constraints && a.constraints.includes('optinRequiredForEntrants')) {
+            return a.id;
+          }
+        });
+      }
+
+      if (optInWeeklyIds.length) {
+        const statuses = await _this.getMemberAchievementsOptInStatuses(optInWeeklyIds);
+        if (statuses.length) {
+          statuses.forEach(s => {
+            const idx = this.settings.achievements.weekly.findIndex(a => a.id === s.entityId);
+            if (idx !== -1) {
+              _this.settings.achievements.weekly[idx].optInStatus = s.statusCode;
+            }
+          });
+        }
+      }
+
+      if (_this.settings.achievements.weekly.length) {
+        const ids = _this.settings.achievements.weekly.map(a => a.id);
+        const rewardRequest = {
+          entityFilter: [{
+            entityType: 'Achievement',
+            entityIds: ids
+          }],
+          currencyKey: this.settings.currency,
+          skip: 0,
+          limit: 20
+        };
+        const rewards = await this.getRewardsApi(rewardRequest);
+        const rewardsData = rewards.data;
+
+        _this.settings.achievements.weekly = _this.settings.achievements.weekly.map(achievement => {
+          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
+          if (idx !== -1) {
+            achievement.reward = rewardsData[idx];
+          }
+
+          return achievement;
+        });
+      }
+
+      const monthlyJson = await this.getAchievements(monthlyRequest);
+      this.settings.achievements.monthly = monthlyJson.data;
+
+      const optInMonthlyAchievements = monthlyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
+      let optInMonthlyIds = [];
+
+      if (optInMonthlyAchievements.length) {
+        optInMonthlyIds = optInMonthlyAchievements.map(a => {
+          if (a.constraints && a.constraints.includes('optinRequiredForEntrants')) {
+            return a.id;
+          }
+        });
+      }
+
+      if (optInMonthlyIds.length) {
+        const statuses = await _this.getMemberAchievementsOptInStatuses(optInWeeklyIds);
+        if (statuses.length) {
+          statuses.forEach(s => {
+            const idx = this.settings.achievements.monthly.findIndex(a => a.id === s.entityId);
+            if (idx !== -1) {
+              _this.settings.achievements.monthly[idx].optInStatus = s.statusCode;
+            }
+          });
+        }
+      }
+
+      if (_this.settings.achievements.monthly.length) {
+        const ids = _this.settings.achievements.monthly.map(a => a.id);
+        const rewardRequest = {
+          entityFilter: [{
+            entityType: 'Achievement',
+            entityIds: ids
+          }],
+          currencyKey: this.settings.currency,
+          skip: 0,
+          limit: 20
+        };
+        const rewards = await this.getRewardsApi(rewardRequest);
+        const rewardsData = rewards.data;
+
+        _this.settings.achievements.monthly = _this.settings.achievements.monthly.map(achievement => {
+          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
+          if (idx !== -1) {
+            achievement.reward = rewardsData[idx];
+          }
+
+          return achievement;
+        });
+      }
+    }
+
+    this.settings.achievements.all = this.settings.achievements.list;
+
+    const achData = {
+      list: this.settings.achievements.all,
+      all: this.settings.achievements.all,
+      daily: this.settings.achievements.daily,
+      weekly: this.settings.achievements.weekly,
+      monthly: this.settings.achievements.monthly
+    };
+
+    if (typeof callback === 'function') callback(achData);
   };
 
   this.playInstantWin = async function () {
@@ -1059,6 +1298,18 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function' && achievementData.length) {
       callback(achievementData[0]);
     }
+  };
+
+  this.getAchievements = this.getAchievements = async function (achievementRequest) {
+    if (!this.settings.apiWs.achievementsApiWsClient) {
+      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
+    }
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, (json) => {
+        resolve(json);
+      });
+    });
   };
 
   this.getAchievementsByIds = async function (achievementIds) {
@@ -1103,7 +1354,7 @@ export const LbWidget = function (options) {
         setTimeout(function () {
           if (isDashboard) {
             _this.checkForAvailableAchievements(1, function (achievementData) {
-              _this.settings.mainWidget.loadDashboardAchievements(achievementData, function () {
+              _this.settings.mainWidget.loadDashboardAchievements(achievementData.list, function () {
                 preLoader.hide();
               });
             });
@@ -2149,7 +2400,7 @@ export const LbWidget = function (options) {
 
               if (!achievementsIcon) return;
 
-              if (!achievements || !achievements.length) {
+              if (!achievements.list || !achievements.list.length) {
                 achievementsIcon.classList.add('hidden');
               } else {
                 achievementsIcon.classList.remove('hidden');
@@ -2353,7 +2604,7 @@ export const LbWidget = function (options) {
           setTimeout(function () {
             if (isDashboard) {
               _this.checkForAvailableAchievements(1, function (achievementData) {
-                _this.settings.mainWidget.loadDashboardAchievements(achievementData, function () {
+                _this.settings.mainWidget.loadDashboardAchievements(achievementData.list, function () {
                   preLoader.hide();
                 });
               });
