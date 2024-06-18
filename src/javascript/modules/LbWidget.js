@@ -2236,6 +2236,10 @@ export const LbWidget = function (options) {
   };
 
   this.loadMember = async function (callback) {
+    if (!this.apiClientStomp) {
+      await this.initApiClientStomp();
+    }
+
     if (!this.settings.apiWs.membersApiWsClient) {
       this.settings.apiWs.membersApiWsClient = new MembersApiWs(this.apiClientStomp);
     }
@@ -2249,7 +2253,8 @@ export const LbWidget = function (options) {
         'jsonClass',
         'accountId',
         'groups',
-        'created'
+        'created',
+        'tags'
       ],
       includeCustomFields: [],
       includeMetaDataFields: []
