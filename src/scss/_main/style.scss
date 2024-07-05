@@ -43,6 +43,19 @@
   height: 0;
 }
 
+.cl-widget-ms-wrapper.cl-vertical-mini.cl-hide .cl-widget-ms-information-top-wrapper {
+  width: 0;
+  height: 0;
+  margin: 0;
+  padding: 0;
+  transition: all ease-out .3s;
+
+  .cl-widget-ms-information-wrapper {
+    height: 0;
+    padding: 0;
+  }
+}
+
 .cl-widget-main-widget-overlay-wrapper {
   display: none;
   float: left;
