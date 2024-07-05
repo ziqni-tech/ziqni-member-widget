@@ -264,6 +264,7 @@ export const MiniScoreBoard = function (options) {
       lbHeadersPoints.setAttribute('class', 'cl-widget-ms-default-results-header-points');
 
       lbResultsMemEntry.setAttribute('class', 'cl-widget-ms-default-mem-entry');
+      lbResultsMemEntry.classList.add('cl-widget-ms-default-mem-self');
 
       lbDateLabel.innerHTML = label;
       lbDate.innerHTML = date;
@@ -295,6 +296,7 @@ export const MiniScoreBoard = function (options) {
         addClass(wrapperDomObj, 'cl-show');
       }, 200);
     } else {
+      lbWrapper = document.querySelector('.cl-widget-ms-default-wrapper');
       if (!hasClass(wrapperDomObj, 'cl-show')) {
         addClass(wrapperDomObj, 'cl-show');
       }
@@ -309,7 +311,7 @@ export const MiniScoreBoard = function (options) {
     }
     addClass(query(_this.settings.container, '.cl-widget-ms-default-date-wrapper'), 'cl-widget-ms-default-date-only');
 
-    if (!_this.settings.lbWidget.settings.leaderboard.leaderboardData.length && lbWrapper) {
+    if (lbWrapper) {
       const memberRankElement = query(lbWrapper, '.cl-widget-ms-default-mem-rank');
       if (memberRankElement) {
         memberRankElement.innerHTML = "<span class='cl-mem-rank-label'>" + _this.settings.lbWidget.settings.translation.leaderboard.rank + "</span><span class='cl-mem-rank'>--</span>";
