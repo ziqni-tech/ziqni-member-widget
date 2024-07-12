@@ -792,6 +792,29 @@ export const LbWidget = function (options) {
           }
         });
       }
+
+      if (this.settings.competition.activeContestId) {
+        let ranksAboveToInclude = 0;
+        let ranksBelowToInclude = 0;
+        const count = (this.settings.miniScoreBoard.settings.active) ? 0 : this.settings.leaderboard.fullLeaderboardSize;
+
+        if (this.settings.leaderboard.miniScoreBoard.enableRankings) {
+          ranksAboveToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
+          ranksBelowToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
+        }
+
+        const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+          entityId: this.settings.competition.activeContestId,
+          action: 'Subscribe',
+          leaderboardFilter: {
+            topRanksToInclude: count,
+            ranksAboveToInclude: ranksAboveToInclude,
+            ranksBelowToInclude: ranksBelowToInclude
+          }
+        });
+
+        this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then(() => {});
+      }
     }
 
     if (typeof callback === 'function') {
