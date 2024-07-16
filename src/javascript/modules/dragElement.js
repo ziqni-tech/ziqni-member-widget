@@ -92,9 +92,15 @@ const dragElement = function (elmnt, draggableEl, overlayContainer, container, d
       }
     }, { passive: isiOS });
 
-    screen.orientation.addEventListener('change', function (e) {
-      onWindowChange(e);
-    });
+    if (screen && screen.orientation) {
+      screen.orientation.addEventListener('change', function (e) {
+        onWindowChange(e);
+      });
+    } else {
+      window.addEventListener('orientationchange', function (e) {
+        onWindowChange();
+      }, true);
+    }
   } else {
     // if present, the header is where you move the DIV from:
     draggableEl.onmousedown = dragMouseDown;
