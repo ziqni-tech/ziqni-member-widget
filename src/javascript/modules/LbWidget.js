@@ -751,6 +751,7 @@ export const LbWidget = function (options) {
           moreThan: 0,
           lessThan: 100
         },
+        constraints: ['hasOptInStatus'],
         limit: 20,
         skip: 0
       }
