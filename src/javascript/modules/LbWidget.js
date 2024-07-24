@@ -736,6 +736,7 @@ export const LbWidget = function (options) {
   };
 
   this.setActiveCompetition = async function (json, callback) {
+    const _this = this;
     this.settings.competition.activeCompetition = json[0];
     this.settings.tournaments.activeCompetitionId = json[0].id;
     this.settings.competition.activeContest = null;
@@ -814,7 +815,11 @@ export const LbWidget = function (options) {
           }
         });
 
-        this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then(() => {});
+        this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
+          if (data && data.leaderboardEntries) {
+            _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
+          }
+        });
       }
     }
 

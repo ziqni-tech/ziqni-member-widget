@@ -1386,7 +1386,9 @@ export const MainWidget = function (options) {
       typeof this.settings.lbWidget.settings.competition.activeCompetition !== 'undefined' &&
       this.settings.lbWidget.settings.competition.activeCompetition !== null &&
       this.settings.lbWidget.settings.competition.activeCompetition.constraints &&
-      this.settings.lbWidget.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
+      this.settings.lbWidget.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants') &&
+      this.settings.lbWidget.settings.competition.activeCompetition.status !== 'Finalised' &&
+      this.settings.lbWidget.settings.competition.activeCompetition.status !== 'Finished'
     ) {
       const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
         this.settings.lbWidget.settings.competition.activeCompetition.id
