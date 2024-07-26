@@ -823,7 +823,11 @@ export const MiniScoreBoard = function (options) {
     var _this = this;
 
     // Strategy types: TotalCumulative, SumBest, LimitedTo, FirstTo
-    if (_this.settings.active && _this.settings.lbWidget.settings.competition.activeCompetition !== null && _this.settings.lbWidget.settings.competition.activeCompetition.statusCode < 45) {
+    if (
+      _this.settings.active &&
+      _this.settings.lbWidget.settings.competition.activeCompetition !== null &&
+      _this.settings.lbWidget.settings.competition.activeCompetition.statusCode < 35
+    ) {
       if (
         this.settings.lbWidget.settings.competition.activeCompetition.constraints &&
         this.settings.lbWidget.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
