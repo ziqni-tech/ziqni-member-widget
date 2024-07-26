@@ -822,11 +822,14 @@ export const MiniScoreBoard = function (options) {
   this.loadInfoArea = async function (callback) {
     var _this = this;
 
+    const diff = moment(_this.settings.lbWidget.settings.competition.activeCompetition.scheduledEndDate).diff(moment());
+
     // Strategy types: TotalCumulative, SumBest, LimitedTo, FirstTo
     if (
       _this.settings.active &&
       _this.settings.lbWidget.settings.competition.activeCompetition !== null &&
-      _this.settings.lbWidget.settings.competition.activeCompetition.statusCode < 35
+      _this.settings.lbWidget.settings.competition.activeCompetition.statusCode < 35 &&
+      diff > 0
     ) {
       if (
         this.settings.lbWidget.settings.competition.activeCompetition.constraints &&
