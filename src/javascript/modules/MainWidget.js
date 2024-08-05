@@ -2813,8 +2813,6 @@ export const MainWidget = function (options) {
     const achievements = achievementsSubarray.flat();
     const statuses = statusesSubarray.flat();
 
-    console.log('statuses:', statuses);
-
     // const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
     // statuses[1].percentageComplete = 50;
     // statuses[4].percentageComplete = 100;
