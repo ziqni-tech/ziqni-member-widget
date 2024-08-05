@@ -3832,7 +3832,7 @@ export const LbWidget = function (options) {
     if (!this.settings.memberToken) {
       setInterval(async () => {
         await this.initApiClientStomp();
-      }, this.settings.expires);
+      }, 5 * 60 * 1000);
     }
 
     if (this.settings.authToken) {
