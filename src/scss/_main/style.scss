@@ -11,6 +11,10 @@
   display: none;
 }
 
+ol {
+  list-style-position: inside;
+}
+
 .cl-widget-ms-wrapper, .cl-widget-notif-wrapper {
   float: left;
   width: 100%;

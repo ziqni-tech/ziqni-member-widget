@@ -3374,7 +3374,7 @@ export const LbWidget = function (options) {
               },
               1
             );
-          }, 2000);
+          }, 2500);
         });
       });
 
