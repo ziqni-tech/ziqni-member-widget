@@ -3243,11 +3243,16 @@ export const MainWidget = function (options) {
     const labelText = stripHtml(rew.name);
     const isClimeBtn = !rew.claimed && rew.statusCode !== 115;
 
+    let prize = rew.rewardValue;
+    if (rew.rewardData) {
+      prize = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.rewardData);
+    }
+
     const template = require('../templates/mainWidget/rewardItem.hbs');
     listItem.innerHTML = template({
       isClimeBtn: isClimeBtn,
       claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
-      prize: this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.rewardData),
+      prize: prize,
       type: rew.rewardType.key,
       label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
       iconLink: iconLink
@@ -3520,12 +3525,12 @@ export const MainWidget = function (options) {
     }
 
     const accordionObj = _this.awardsList(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
-      let rewardData = _this.settings.lbWidget.settings.awards[layout.type];
+      const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
       if (typeof rewardData !== 'undefined') {
         if (rewardData.length === 0) {
           accordionSection.style.display = 'none';
         }
-        rewardData = rewardData.filter(r => r.rewardData);
+        // rewardData = rewardData.filter(r => r.rewardData);
         mapObject(rewardData, function (rew, key, count) {
           if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
             var topEntryContaineRlistItem = _this.rewardItem(rew);
