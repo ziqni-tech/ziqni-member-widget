@@ -3368,12 +3368,7 @@ export const LbWidget = function (options) {
       preLoader.show(async function () {
         await _this.claimAward(awardId, function () {
           setTimeout(function () {
-            _this.settings.mainWidget.loadAwards(
-              function () {
-                preLoader.hide();
-              },
-              1
-            );
+            preLoader.hide();
           }, 3500);
         });
       });
@@ -3733,12 +3728,14 @@ export const LbWidget = function (options) {
           this.getMessage(json.entityId, function () { _this.animateIcon('Message'); }, true);
         }
         if (json && json.entityType === 'Award') {
-          _this.settings.mainWidget.loadAwards(
-            function () {
-              _this.animateIcon('Award');
-            },
-            1
-          );
+          setTimeout(async () => {
+            _this.settings.mainWidget.loadAwards(
+              function () {
+                _this.animateIcon('Award');
+              },
+              1
+            );
+          }, 2000);
         }
         if (json && json.entityType === 'Contest') {
           _this.checkForAvailableCompetitions(async function () {

@@ -3370,11 +3370,11 @@ export const MainWidget = function (options) {
     isExpired = false
   ) {
     const _this = this;
-    const rewardList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
+    const rewardList = _this.settings.section.querySelector('.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
     const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
     const itemsPerPage = 6;
-    let paginator = query(rewardList, '.paginator-available');
+    let paginator = rewardList.querySelector('.paginator-available');
 
     const prev = document.createElement('span');
     prev.setAttribute('class', 'paginator-item prev');
@@ -3416,6 +3416,9 @@ export const MainWidget = function (options) {
 
       paginator.prepend(prev);
       paginator.appendChild(next);
+    } else if (paginator && totalCount <= itemsPerPage) {
+      paginator.remove();
+      paginator = null;
     }
 
     let paginatorClaimed = query(rewardList, '.paginator-claimed');
