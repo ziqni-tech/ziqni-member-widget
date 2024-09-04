@@ -445,7 +445,13 @@ export const MainWidget = function (options) {
         navigationItemTitle.innerHTML = _this.settings.lbWidget.settings.translation[val.key].label;
       }
 
-      navigationItem.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClass + ' cl-main-widget-navigation-item' + (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item'));
+      navigationItem.setAttribute(
+        'class',
+        _this.settings.lbWidget.settings.navigation[val.key].navigationClass +
+          ' cl-main-widget-navigation-item' +
+          (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item') +
+          (_this.settings.lbWidget.settings.navigation[val.key].navigationClass !== 'cl-main-widget-navigation-dashboard' ? ' hidden' : '')
+      );
       navigationItemIcon.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClassIcon + ' cl-main-navigation-item');
       navigationItemTitle.setAttribute('class', 'cl-main-navigation-item-title');
 

@@ -2422,15 +2422,21 @@ export const LbWidget = function (options) {
         _this.settings.mainWidget.initLayout(function () {
           // load tournaments data
           if (_this.settings.navigation.tournaments.enable) {
+            const lbIcon = document.querySelector('.cl-main-widget-navigation-lb-icon').parentElement;
+            lbIcon.classList.remove('hidden');
+
             _this.activeDataRefreshSimple();
           }
 
           // load achievement data
           if (_this.settings.navigation.achievements.enable) {
+            const achievementsIcon = document.querySelector('.cl-main-widget-navigation-ach-icon').parentElement;
+            if (!_this.settings.hideEmptyTabs) {
+              achievementsIcon.classList.remove('hidden');
+            }
+
             _this.checkForAvailableAchievements(1, function (achievements) {
               if (!_this.settings.hideEmptyTabs) return;
-
-              const achievementsIcon = document.querySelector('.cl-main-widget-navigation-ach-icon').parentElement;
 
               if (!achievementsIcon) return;
 
@@ -2444,11 +2450,14 @@ export const LbWidget = function (options) {
 
           // load initial available reward data
           if (_this.settings.navigation.rewards.enable) {
+            const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards-icon').parentElement;
+            if (!_this.settings.hideEmptyTabs) {
+              awardsIcon.classList.remove('hidden');
+            }
+
             _this.checkForAvailableAwards(
               function (claimedAwards, availableAwards) {
                 if (!_this.settings.hideEmptyTabs) return;
-
-                const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards-icon').parentElement;
 
                 if (!awardsIcon) return;
 
@@ -2466,10 +2475,13 @@ export const LbWidget = function (options) {
 
           // load initial available messages data
           if (_this.settings.navigation.inbox.enable) {
+            const messagesIcon = document.querySelector('.cl-main-widget-navigation-inbox-icon').parentElement;
+            if (!_this.settings.hideEmptyTabs) {
+              messagesIcon.classList.remove('hidden');
+            }
+
             _this.checkForAvailableMessages(1, function (messages) {
               if (!_this.settings.hideEmptyTabs) return;
-
-              const messagesIcon = document.querySelector('.cl-main-widget-navigation-inbox-icon').parentElement;
 
               if (!messagesIcon) return;
 
@@ -2483,10 +2495,13 @@ export const LbWidget = function (options) {
 
           // load initial available messages data
           if (_this.settings.navigation.missions.enable) {
+            const missionsIcon = document.querySelector('.cl-main-widget-navigation-missions-icon').parentElement;
+            if (!_this.settings.hideEmptyTabs) {
+              missionsIcon.classList.remove('hidden');
+            }
+
             _this.checkForAvailableMissions(1, function (missions) {
               if (!_this.settings.hideEmptyTabs) return;
-
-              const missionsIcon = document.querySelector('.cl-main-widget-navigation-missions-icon').parentElement;
 
               if (!missionsIcon) return;
 
