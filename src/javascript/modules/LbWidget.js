@@ -644,6 +644,35 @@ export const LbWidget = function (options) {
     });
   };
 
+  this.getCompetitionsByProducts = async (productIds, statusCodeRange = { moreThan: 10, lessThan: 50 }) => {
+    if (!this.apiClientStomp) {
+      await this.initApiClientStomp();
+    }
+    if (!this.settings.apiWs.competitionsApiWsClient) {
+      this.settings.apiWs.competitionsApiWsClient = new CompetitionsApiWs(this.apiClientStomp);
+    }
+
+    const competitionRequest = CompetitionRequest.constructFromObject({
+      languageKey: this.settings.language,
+      competitionFilter: {
+        statusCode: statusCodeRange,
+        productIds: productIds,
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        limit: 20,
+        skip: 0
+      }
+    }, null);
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.competitionsApiWsClient.getCompetitions(competitionRequest, (json) => {
+        resolve(json);
+      });
+    });
+  };
+
   this.getCompetitionsApi = async (competitionRequest) => {
     if (!this.apiClientStomp) {
       await this.initApiClientStomp();
