@@ -838,6 +838,9 @@ export const MiniScoreBoard = function (options) {
         const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
           _this.settings.lbWidget.settings.competition.activeCompetition.id
         );
+
+        if (!_this.settings.active) return;
+
         if (optInStatus.length && optInStatus[0].status === 'Entrant') {
           _this.layoutDefaultOrEmpty();
         } else if (optInStatus.length && (optInStatus[0].status === 'Entering' || optInStatus[0].status === 'Processing')) {
