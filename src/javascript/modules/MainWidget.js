@@ -4457,27 +4457,28 @@ export const MainWidget = function (options) {
 
               _this.settings.navigationSwitchInProgress = false;
             } else if (target.classList.contains('cl-main-widget-navigation-lb') || target.closest('.cl-main-widget-navigation-lb')) {
-              _this.settings.lbWidget.checkForAvailableRewards(1);
-              _this.loadLeaderboard(function () {
-                const lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);
-                const missingMember = query(lbContainer, '.cl-main-widget-lb-missing-member');
-                if (missingMember) {
-                  missingMember.style.display = 'none';
-                }
+              _this.settings.lbWidget.checkForAvailableRewards(1, function () {
+                _this.loadLeaderboard(function () {
+                  const lbContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.tournaments.containerClass);
+                  const missingMember = query(lbContainer, '.cl-main-widget-lb-missing-member');
+                  if (missingMember) {
+                    missingMember.style.display = 'none';
+                  }
 
-                lbContainer.style.display = 'flex';
-                changeInterval = setTimeout(function () {
-                  addClass(lbContainer, 'cl-main-active-section');
-                }, 30);
+                  lbContainer.style.display = 'flex';
+                  changeInterval = setTimeout(function () {
+                    addClass(lbContainer, 'cl-main-active-section');
+                  }, 30);
 
-                if (typeof callback === 'function') {
-                  callback();
-                }
+                  if (typeof callback === 'function') {
+                    callback();
+                  }
 
-                preLoader.hide();
+                  preLoader.hide();
 
-                _this.settings.navigationSwitchInProgress = false;
-              }, true);
+                  _this.settings.navigationSwitchInProgress = false;
+                }, true);
+              });
             } else if (target.classList.contains('cl-main-widget-navigation-ach') || target.closest('.cl-main-widget-navigation-ach')) {
               _this.loadAchievements(1, function () {
                 const achContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.achievements.containerClass);
