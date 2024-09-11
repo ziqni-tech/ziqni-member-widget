@@ -4451,7 +4451,9 @@ export const MainWidget = function (options) {
                 addClass(dashboardContainer, 'cl-main-active-section');
               }, 30);
 
-              _this.loadAwards();
+              if (_this.settings.lbWidget.settings.instantWins.enable) {
+                _this.loadAwards();
+              }
 
               preLoader.hide();
 
