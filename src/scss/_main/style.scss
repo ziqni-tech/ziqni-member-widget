@@ -2215,7 +2215,7 @@ em {
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description-container {
   display: block;
   position: relative;
-  height: calc(100% - 68px);
+  height: calc(100% - 50px);
   overflow: auto;
   border: 1px solid #223241;
   border-radius: 10px;
@@ -7823,6 +7823,11 @@ em {
       height: calc(100% - 32px);
       padding: 0 12px;
       margin: 0;
+    }
+
+    .cl-main-widget-lb-optin-container {
+      bottom: 25px;
+      padding-right: 0;
     }
 
     .cl-main-widget-navigation-container {
