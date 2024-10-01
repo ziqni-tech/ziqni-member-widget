@@ -1350,6 +1350,54 @@ export const LbWidget = function (options) {
     }
   };
 
+  this.getSettingsFile = async function (fileName) {
+    return new Promise((resolve, reject) => {
+      const fileApiWsClient = new FilesApiWs(ApiClientStomp.instance);
+
+      const fileRequest = {
+        ids: [],
+        limit: 20,
+        skip: 0,
+        parentFolderPath: '/instant-wins',
+        repositoryId: '-7KLxoMBDhZrpIHgC4eP'
+      };
+
+      fileApiWsClient.getFiles(fileRequest, async (res) => {
+        const settingsFile = res.data.find(item => item.name.trim() === fileName);
+
+        if (settingsFile) {
+          fetch(settingsFile.uri)
+            .then((data) => {
+              return data.json();
+            })
+            .then((data) => {
+              resolve(data);
+            })
+            .catch((err) => {
+              console.log('instant win settings file err', err);
+              reject(err);
+            });
+        }
+      });
+    });
+  };
+
+  this.getFileUri = async (id) => {
+    const fileApiWsClient = new FilesApiWs(ApiClientStomp.instance);
+
+    const fileRequest = {
+      ids: [id],
+      limit: 1,
+      skip: 0
+    };
+
+    return new Promise((resolve) => {
+      fileApiWsClient.getFiles(fileRequest, (res) => {
+        resolve(res.data[0].uri);
+      });
+    });
+  };
+
   this.getAchievement = function (achievementId, callback) {
     const achievementData = this.settings.achievements.list.filter(a => a.id === achievementId);
 
@@ -3322,7 +3370,7 @@ export const LbWidget = function (options) {
       sections.forEach(s => s.classList.remove('cl-shown'));
       instantWinsSection.classList.add('cl-shown');
 
-      _this.settings.mainWidget.loadScratchCards();
+      // _this.settings.mainWidget.loadScratchCards();
 
       // dashboard competition button
     } else if (hasClass(el, 'dashboard-tournament-item') || closest(el, '.dashboard-tournament-item')) {
@@ -3403,7 +3451,7 @@ export const LbWidget = function (options) {
 
       // Single Wheel
     } else if (hasClass(el, 'scratchcards-button')) {
-      _this.settings.mainWidget.loadScratchCards();
+      // _this.settings.mainWidget.loadScratchCards();
 
       // load rewards details
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {

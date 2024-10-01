@@ -12,6 +12,8 @@ import stripHtml from '../utils/stripHtml';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import tournamentBrackets from './TournamentBrackets';
+import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
+// import { createCongratulationsModal } from '../helpers/wheelSpinner/modal';
 
 /**
  * MainWidget
@@ -3836,10 +3838,13 @@ export const MainWidget = function (options) {
 
     const singleWheel = document.createElement('div');
     const singleWheelWrapper = document.createElement('div');
-    const singleWheelPopup = document.createElement('div');
-    const singleWheelPopupLabel = document.createElement('div');
-    const singleWheelPopupDescription = document.createElement('div');
-    const singleWheelPopupButton = document.createElement('div');
+    const singleWheelContainer = document.createElement('div');
+    const singleWheelConfetti = document.createElement('canvas');
+
+    // const singleWheelPopup = document.createElement('div');
+    // const singleWheelPopupLabel = document.createElement('div');
+    // const singleWheelPopupDescription = document.createElement('div');
+    // const singleWheelPopupButton = document.createElement('div');
 
     wheel.classList.add('wheel-item');
     wheelLabel.classList.add('wheel-label');
@@ -3852,12 +3857,14 @@ export const MainWidget = function (options) {
     scratchcardsButton.classList.add('scratchcards-button');
 
     singleWheel.classList.add('single-wheel');
-    singleWheelWrapper.classList.add('single-wheel-wrapper');
+    singleWheelWrapper.classList.add('spinner-wrapper');
+    singleWheelContainer.setAttribute('id', 'spinner-container');
+    singleWheelConfetti.setAttribute('id', 'confetti');
 
-    singleWheelPopup.classList.add('single-wheel-popup');
-    singleWheelPopupLabel.classList.add('single-wheel-popup-label');
-    singleWheelPopupDescription.classList.add('single-wheel-popup-description');
-    singleWheelPopupButton.classList.add('single-wheel-popup-button');
+    // singleWheelPopup.classList.add('single-wheel-popup');
+    // singleWheelPopupLabel.classList.add('single-wheel-popup-label');
+    // singleWheelPopupDescription.classList.add('single-wheel-popup-description');
+    // singleWheelPopupButton.classList.add('single-wheel-popup-button');
 
     scratchcardsGame.classList.add('scratchcards-game');
     scratchcardsGameWrapper.classList.add('scratchcards-game-wrapper');
@@ -3893,8 +3900,8 @@ export const MainWidget = function (options) {
     wheelButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelButton;
     scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
 
-    singleWheelPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
-    singleWheelPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
+    // singleWheelPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
+    // singleWheelPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
 
     scratchcardsPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
     scratchcardsPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
@@ -3934,12 +3941,15 @@ export const MainWidget = function (options) {
     scratchcardsGame.appendChild(scratchcardsGameWrapper);
     scratchcardsGame.appendChild(scratchcardsPopup);
 
-    singleWheelPopup.appendChild(singleWheelPopupLabel);
-    singleWheelPopup.appendChild(singleWheelPopupDescription);
-    singleWheelPopup.appendChild(singleWheelPopupButton);
+    // singleWheelPopup.appendChild(singleWheelPopupLabel);
+    // singleWheelPopup.appendChild(singleWheelPopupDescription);
+    // singleWheelPopup.appendChild(singleWheelPopupButton);
+
+    singleWheelWrapper.appendChild(singleWheelContainer);
 
     singleWheel.appendChild(singleWheelWrapper);
-    singleWheel.appendChild(singleWheelPopup);
+    singleWheel.appendChild(singleWheelConfetti);
+    // singleWheel.appendChild(singleWheelPopup);
 
     wheel.appendChild(wheelLabel);
     wheel.appendChild(wheelImage);
@@ -3955,403 +3965,488 @@ export const MainWidget = function (options) {
     list.appendChild(scratchcardsGame);
   };
 
-  this.loadScratchCards = function () {
-    const isMobile = window.screen.availWidth <= 768;
-    const _this = this;
-    const scratchcardsGame = document.querySelector('.scratchcards-game');
-    const backBtn = document.querySelector('.cl-main-widget-reward-header-back');
-    const scratchAllBtn = document.querySelector('.scratchcards-game-prize-button');
-    const cardBlock = document.querySelector('.scratchcards-game-card-block');
-    const themeWrapper = document.querySelector('.cl-widget-ms-wrapper');
+  // this.loadScratchCards = function () {
+  //   const isMobile = window.screen.availWidth <= 768;
+  //   const _this = this;
+  //   const scratchcardsGame = document.querySelector('.scratchcards-game');
+  //   const backBtn = document.querySelector('.cl-main-widget-reward-header-back');
+  //   const scratchAllBtn = document.querySelector('.scratchcards-game-prize-button');
+  //   const cardBlock = document.querySelector('.scratchcards-game-card-block');
+  //   const themeWrapper = document.querySelector('.cl-widget-ms-wrapper');
+  //
+  //   const isLightTheme = themeWrapper.classList.contains('lightTheme');
+  //
+  //   cardBlock.innerHtml = '';
+  //   while (cardBlock.firstChild) {
+  //     cardBlock.removeChild(cardBlock.lastChild);
+  //   }
+  //
+  //   const prizeClasses = ['prize-1', 'prize-2', 'prize-3'];
+  //
+  //   for (let i = 0; i < 9; i++) {
+  //     const cell = document.createElement('div');
+  //     cell.classList.add('scratchcards-game-card-cell');
+  //     const randNum = Math.floor(Math.random() * 3);
+  //     cell.classList.add(prizeClasses[randNum]);
+  //     cardBlock.appendChild(cell);
+  //   }
+  //
+  //   scratchcardsGame.classList.add('cl-show');
+  //   backBtn.style.display = 'block';
+  //
+  //   const grid = [];
+  //   for (let i = 0; i < 3; i++) {
+  //     const row = [];
+  //     for (let j = 0; j < 3; j++) {
+  //       row.push({ image: getRandomImage(), scratched: false });
+  //     }
+  //     grid.push(row);
+  //   }
+  //
+  //   function getRandomImage () {
+  //     return 'https://first-space.cdn.ziqni.com/member-home-page/img/second_prize.39d8d773.png';
+  //   }
+  //
+  //   const canvas = document.querySelector('.scratchcards-game-canvas');
+  //   const ctx = canvas.getContext('2d', { willReadFrequently: true });
+  //   const cellSize = isMobile ? 60 : 80;
+  //   const spacing = isMobile ? 15 : 20;
+  //   const borderRadius = 10;
+  //   const cardSize = isMobile ? 212 : 300;
+  //
+  //   ctx.clearRect(0, 0, cardSize, cardSize);
+  //
+  //   for (let i = 0; i < 3; i++) {
+  //     for (let j = 0; j < 3; j++) {
+  //       const cell = grid[i][j];
+  //       const x = j * (cellSize + spacing) + 10;
+  //       const y = i * (cellSize + spacing) + 10;
+  //
+  //       if (cell.scratched) {
+  //         const image = new Image();
+  //         image.src = cell.image;
+  //         image.onload = () => {
+  //           ctx.save();
+  //           ctx.beginPath();
+  //           ctx.moveTo(x + borderRadius, y);
+  //           ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
+  //           ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
+  //           ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
+  //           ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+  //           ctx.closePath();
+  //           ctx.clip();
+  //
+  //           ctx.drawImage(image, x, y, cellSize, cellSize);
+  //
+  //           ctx.restore();
+  //         };
+  //       } else {
+  //         ctx.save();
+  //         ctx.beginPath();
+  //         ctx.moveTo(x + borderRadius, y);
+  //         ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
+  //         ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
+  //         ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
+  //         ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
+  //         ctx.closePath();
+  //         ctx.shadowColor = isLightTheme ? 'rgba(238, 62, 200, 0.4)' : 'rgba(64, 106, 140, 0.5)';
+  //         ctx.shadowBlur = 12;
+  //         ctx.fillStyle = isLightTheme ? '#ffffff' : '#1A202C';
+  //         ctx.fill();
+  //         ctx.strokeStyle = isLightTheme ? '#F7A1E4' : '#406A8C';
+  //         ctx.stroke();
+  //         ctx.clip();
+  //
+  //         ctx.fillStyle = '#BEE9F3';
+  //         ctx.font = '40px Syne';
+  //
+  //         const textWidth = ctx.measureText('?').width;
+  //         const textX = x + (cellSize - textWidth) / 2;
+  //         const textY = y + cellSize / 2 + 15;
+  //
+  //         ctx.fillText('?', textX, textY);
+  //
+  //         ctx.restore();
+  //       }
+  //     }
+  //   }
+  //
+  //   let isDrag = false;
+  //
+  //   canvas.addEventListener('mousedown', function (event) {
+  //     isDrag = true;
+  //     clearArc(event.offsetX, event.offsetY);
+  //     judgeVisible();
+  //   }, false);
+  //
+  //   canvas.addEventListener('mousemove', function (event) {
+  //     if (!isDrag) {
+  //       return;
+  //     }
+  //     clearArc(event.offsetX, event.offsetY);
+  //     judgeVisible();
+  //   }, false);
+  //
+  //   canvas.addEventListener('mouseup', function (event) {
+  //     isDrag = false;
+  //   }, false);
+  //
+  //   canvas.addEventListener('touchstart', function (event) {
+  //     if (event.targetTouches.length !== 1) {
+  //       return;
+  //     }
+  //
+  //     const r = canvas.getBoundingClientRect();
+  //     const currX = event.touches[0].clientX - r.left;
+  //     const currY = event.touches[0].clientY - r.top;
+  //
+  //     event.preventDefault();
+  //
+  //     isDrag = true;
+  //
+  //     clearArc(currX, currY);
+  //     judgeVisible();
+  //   }, false);
+  //
+  //   canvas.addEventListener('touchmove', function (event) {
+  //     if (!isDrag || event.targetTouches.length !== 1) {
+  //       return;
+  //     }
+  //
+  //     const r = canvas.getBoundingClientRect();
+  //     const currX = event.touches[0].clientX - r.left;
+  //     const currY = event.touches[0].clientY - r.top;
+  //
+  //     event.preventDefault();
+  //     clearArc(currX, currY);
+  //     judgeVisible();
+  //   }, false);
+  //
+  //   canvas.addEventListener('touchend', function (event) {
+  //     isDrag = false;
+  //   }, false);
+  //
+  //   function clearArc (x, y) {
+  //     ctx.globalCompositeOperation = 'destination-out';
+  //     ctx.beginPath();
+  //     ctx.arc(x, y, 30, 0, Math.PI * 2, false);
+  //     ctx.fill();
+  //   }
+  //
+  //   function judgeVisible () {
+  //     const imageData = ctx.getImageData(0, 0, 300, 300);
+  //     const pixels = imageData.data;
+  //     const result = {};
+  //     let i;
+  //     let len;
+  //
+  //     for (i = 3, len = pixels.length; i < len; i += 4) {
+  //       result[pixels[i]] || (result[pixels[i]] = 0);
+  //       result[pixels[i]]++;
+  //     }
+  //
+  //     let n = 0;
+  //     for (let i = 0; i < pixels.length; i += 100) {
+  //       if (pixels[i + 3] < 128) {
+  //         n += 100;
+  //       }
+  //     }
+  //
+  //     if (n >= pixels.length * 0.9) {
+  //       ctx.globalCompositeOperation = 'destination-over';
+  //       clearCanvas();
+  //     }
+  //   }
+  //
+  //   function clearCanvas () {
+  //     const context = canvas.getContext('2d');
+  //     context.clearRect(0, 0, canvas.width, canvas.height);
+  //     showPopup();
+  //   }
+  //
+  //   function showPopup () {
+  //     const popup = document.querySelector('.scratchcards-popup');
+  //     popup.style.display = 'flex';
+  //
+  //     const wrapp = document.querySelector('.scratchcards-game-wrapper');
+  //     wrapp.classList.add('blur');
+  //
+  //     const description = document.querySelector('.scratchcards-popup-description');
+  //     description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
+  //     description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
+  //
+  //     const climeBtn = document.querySelector('.scratchcards-popup-button');
+  //     climeBtn.addEventListener('click', () => {
+  //       const popup = document.querySelector('.scratchcards-popup');
+  //       const wrapp = document.querySelector('.scratchcards-game-wrapper');
+  //
+  //       popup.style.display = 'none';
+  //       wrapp.classList.remove('blur');
+  //     });
+  //   }
+  //
+  //   scratchAllBtn.addEventListener('click', clearCanvas, false);
+  //   document.addEventListener('DOMContentLoaded', judgeVisible, false);
+  // };
 
-    const isLightTheme = themeWrapper.classList.contains('lightTheme');
+  this.replaceImageIdsWithUris = async function (obj) {
+    const keys = Object.keys(obj);
 
-    cardBlock.innerHtml = '';
-    while (cardBlock.firstChild) {
-      cardBlock.removeChild(cardBlock.lastChild);
-    }
+    for (const key of keys) {
+      const value = obj[key];
 
-    const prizeClasses = ['prize-1', 'prize-2', 'prize-3'];
-
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.classList.add('scratchcards-game-card-cell');
-      const randNum = Math.floor(Math.random() * 3);
-      cell.classList.add(prizeClasses[randNum]);
-      cardBlock.appendChild(cell);
-    }
-
-    scratchcardsGame.classList.add('cl-show');
-    backBtn.style.display = 'block';
-
-    const grid = [];
-    for (let i = 0; i < 3; i++) {
-      const row = [];
-      for (let j = 0; j < 3; j++) {
-        row.push({ image: getRandomImage(), scratched: false });
+      if (typeof value === 'string' && value.match(/^[-\w]+$/)) {
+        // Assume this is an ID and fetch the URI
+        obj[key] = await this.settings.lbWidget.getFileUri(value);
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively process nested objects
+        await this.replaceImageIdsWithUris(value);
       }
-      grid.push(row);
     }
+  };
 
-    function getRandomImage () {
-      return 'https://first-space.cdn.ziqni.com/member-home-page/img/second_prize.39d8d773.png';
-    }
+  this.replaceImageIdsWithUris = async function (obj) {
+    const keys = Object.keys(obj);
 
-    const canvas = document.querySelector('.scratchcards-game-canvas');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    const cellSize = isMobile ? 60 : 80;
-    const spacing = isMobile ? 15 : 20;
-    const borderRadius = 10;
-    const cardSize = isMobile ? 212 : 300;
+    for (const key of keys) {
+      const value = obj[key];
 
-    ctx.clearRect(0, 0, cardSize, cardSize);
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        const cell = grid[i][j];
-        const x = j * (cellSize + spacing) + 10;
-        const y = i * (cellSize + spacing) + 10;
-
-        if (cell.scratched) {
-          const image = new Image();
-          image.src = cell.image;
-          image.onload = () => {
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(x + borderRadius, y);
-            ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
-            ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
-            ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
-            ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
-            ctx.closePath();
-            ctx.clip();
-
-            ctx.drawImage(image, x, y, cellSize, cellSize);
-
-            ctx.restore();
-          };
-        } else {
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(x + borderRadius, y);
-          ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
-          ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
-          ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
-          ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
-          ctx.closePath();
-          ctx.shadowColor = isLightTheme ? 'rgba(238, 62, 200, 0.4)' : 'rgba(64, 106, 140, 0.5)';
-          ctx.shadowBlur = 12;
-          ctx.fillStyle = isLightTheme ? '#ffffff' : '#1A202C';
-          ctx.fill();
-          ctx.strokeStyle = isLightTheme ? '#F7A1E4' : '#406A8C';
-          ctx.stroke();
-          ctx.clip();
-
-          ctx.fillStyle = '#BEE9F3';
-          ctx.font = '40px Syne';
-
-          const textWidth = ctx.measureText('?').width;
-          const textX = x + (cellSize - textWidth) / 2;
-          const textY = y + cellSize / 2 + 15;
-
-          ctx.fillText('?', textX, textY);
-
-          ctx.restore();
-        }
+      if (typeof value === 'string' && value.match(/^[-\w]+$/)) {
+        // Assume this is an ID and fetch the URI
+        obj[key] = await this.settings.lbWidget.getFileUri(value);
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively process nested objects
+        await this.replaceImageIdsWithUris(value);
       }
     }
-
-    let isDrag = false;
-
-    canvas.addEventListener('mousedown', function (event) {
-      isDrag = true;
-      clearArc(event.offsetX, event.offsetY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('mousemove', function (event) {
-      if (!isDrag) {
-        return;
-      }
-      clearArc(event.offsetX, event.offsetY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('mouseup', function (event) {
-      isDrag = false;
-    }, false);
-
-    canvas.addEventListener('touchstart', function (event) {
-      if (event.targetTouches.length !== 1) {
-        return;
-      }
-
-      const r = canvas.getBoundingClientRect();
-      const currX = event.touches[0].clientX - r.left;
-      const currY = event.touches[0].clientY - r.top;
-
-      event.preventDefault();
-
-      isDrag = true;
-
-      clearArc(currX, currY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('touchmove', function (event) {
-      if (!isDrag || event.targetTouches.length !== 1) {
-        return;
-      }
-
-      const r = canvas.getBoundingClientRect();
-      const currX = event.touches[0].clientX - r.left;
-      const currY = event.touches[0].clientY - r.top;
-
-      event.preventDefault();
-      clearArc(currX, currY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('touchend', function (event) {
-      isDrag = false;
-    }, false);
-
-    function clearArc (x, y) {
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath();
-      ctx.arc(x, y, 30, 0, Math.PI * 2, false);
-      ctx.fill();
-    }
-
-    function judgeVisible () {
-      const imageData = ctx.getImageData(0, 0, 300, 300);
-      const pixels = imageData.data;
-      const result = {};
-      let i;
-      let len;
-
-      for (i = 3, len = pixels.length; i < len; i += 4) {
-        result[pixels[i]] || (result[pixels[i]] = 0);
-        result[pixels[i]]++;
-      }
-
-      let n = 0;
-      for (let i = 0; i < pixels.length; i += 100) {
-        if (pixels[i + 3] < 128) {
-          n += 100;
-        }
-      }
-
-      if (n >= pixels.length * 0.9) {
-        ctx.globalCompositeOperation = 'destination-over';
-        clearCanvas();
-      }
-    }
-
-    function clearCanvas () {
-      const context = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      showPopup();
-    }
-
-    function showPopup () {
-      const popup = document.querySelector('.scratchcards-popup');
-      popup.style.display = 'flex';
-
-      const wrapp = document.querySelector('.scratchcards-game-wrapper');
-      wrapp.classList.add('blur');
-
-      const description = document.querySelector('.scratchcards-popup-description');
-      description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
-      description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
-
-      const climeBtn = document.querySelector('.scratchcards-popup-button');
-      climeBtn.addEventListener('click', () => {
-        const popup = document.querySelector('.scratchcards-popup');
-        const wrapp = document.querySelector('.scratchcards-game-wrapper');
-
-        popup.style.display = 'none';
-        wrapp.classList.remove('blur');
-      });
-    }
-
-    scratchAllBtn.addEventListener('click', clearCanvas, false);
-    document.addEventListener('DOMContentLoaded', judgeVisible, false);
   };
 
   this.loadSingleWheels = async function (singleWheelsData) {
-    console.log('singleWheelsData:', singleWheelsData);
-    const isMobile = window.screen.availWidth <= 768;
     const singleWheel = document.querySelector('.single-wheel');
-    const singleWheelWrapper = singleWheel.querySelector('.single-wheel-wrapper');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
     singleWheel.classList.add('cl-show');
     backBtn.style.display = 'block';
 
-    if (singleWheelsData && singleWheelsData.length) {
-      singleWheelsData.forEach((singleWheel, idx) => {
-        const swDom = this.createSingleWheelDom(idx, singleWheel, isMobile);
-        singleWheelWrapper.appendChild(swDom);
-      });
-      for (let i = 0; i < singleWheelsData.length; i++) {
-        await this.loadSingleWheel(isMobile, singleWheelsData[i], i);
+    if (!singleWheelsData && !singleWheelsData.length) return;
+
+    const instantWinData = await singleWheelsData[1];
+    const tiles = instantWinData.tiles;
+    const settingsData = await this.settings.lbWidget.getSettingsFile(instantWinData.id);
+
+    if (settingsData && settingsData.wheelSettings) {
+      await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+    }
+
+    if (settingsData && settingsData.messageSettings) {
+      await this.replaceImageIdsWithUris(settingsData.messageSettings);
+    }
+
+    const instantWin = { tiles, settingsData };
+
+    const containerId = document.querySelector('#spinner-container');
+    const messageSettings = instantWin.settingsData.messageSettings;
+    const prizeSection = 1;
+
+    const congratulationsModal = require('../helpers/wheelSpinner/modal');
+
+    const spinnerWheel = await createSpinnerWheel(
+      containerId,
+      instantWin.tiles,
+      instantWin.settingsData,
+      (giftValue) => {
+        const { isCompleted } = giftValue;
+        if (isCompleted) {
+          setTimeout(() => {
+            const reward = tiles[prizeSection - 1].reward;
+
+            const modal = document.querySelector('#congratulations-modal');
+            if (modal) return;
+            congratulationsModal.createCongratulationsModal(reward, messageSettings, spinnerWheel.resetWheel);
+          }, 1000);
+        }
+        console.log('isCompleted => ', isCompleted);
+        console.log(`Wheel stopped on prize section: ${giftValue}`);
       }
-    }
-  };
+    );
 
-  this.loadSingleWheel = async function (isMobile, singleWheel, idx) {
-    const _this = this;
-    const preLoader = _this.preloader();
-    const tiles = singleWheel.tiles;
-
-    const rand = (m, M) => Math.random() * (M - m) + m;
-    const tot = tiles.length;
-    const spinEl = document.querySelector('#spin-' + idx);
-    const climeBtn = document.querySelector('.single-wheel-popup-button');
-    const ctx = document.querySelector('#wheel-' + idx).getContext('2d');
-    const dia = ctx.canvas.width;
-    const rad = dia / 2;
-    const PI = Math.PI;
-    const TAU = 2 * PI;
-    const arc = TAU / tiles.length;
-
-    const friction = 0.991;
-    let angVel = 0;
-    let ang = 0;
-
-    const wheelFont = isMobile ? '10px sans-serif' : 'bold 15px sans-serif';
-
-    const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
-
-    const randomRgbColor = () => {
-      const r = Math.floor(Math.random() * 256); // Random between 0-255
-      const g = Math.floor(Math.random() * 256); // Random between 0-255
-      const b = Math.floor(Math.random() * 256); // Random between 0-255
-      return 'rgb(' + r + ',' + g + ',' + b + ')';
-    };
-
-    const addImageProcess = (src) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = src;
-      });
-    };
-
-    // eslint-disable-next-line no-unused-vars
-    const loadImage = async (ctx, src, rad, rot) => {
-      const img = await addImageProcess(src);
-      ctx.save();
-      ctx.resetTransform();
-      ctx.translate(rad, rad);
-      ctx.rotate(rot);
-      ctx.clip();
-      ctx.drawImage(img, 0, -75, 150, 150);
-      ctx.restore();
-    };
-
-    async function drawSector (sector, i) {
-      const ang = arc * i;
-      // eslint-disable-next-line no-unused-vars
-      const rot = ang + arc / 2;
-      ctx.save();
-      // COLOR
-      ctx.beginPath();
-      ctx.fillStyle = randomRgbColor();
-      ctx.strokeStyle = '#8D0C71';
-      ctx.moveTo(rad, rad);
-      ctx.arc(rad, rad, rad, ang, ang + arc);
-      ctx.lineTo(rad, rad);
-      ctx.fill();
-      if (sector.iconLink) {
-        await loadImage(ctx, sector.iconLink, rad, rot);
+    const buttonElement = document.querySelector('.spin-button');
+    buttonElement.addEventListener('click', () => {
+      if (spinnerWheel && spinnerWheel.spinWheel) {
+        spinnerWheel.spinWheel(3);
       }
-      ctx.stroke();
-      // TEXT
-      ctx.translate(rad, rad);
-      ctx.rotate(ang + arc / 2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#fff';
-      ctx.font = wheelFont;
-      ctx.strokeText(stripHtml(sector.text), rad - 15, 10);
-      ctx.fillText(stripHtml(sector.text), rad - 15, 10);
-      ctx.restore();
-    }
-
-    function rotate () {
-      ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
-    }
-
-    function frame () {
-      if (!angVel) return;
-      angVel *= friction;
-      if (angVel < 0.002) {
-        angVel = 0;
-        const sector = tiles[getIndex()];
-
-        const popup = document.querySelector('.single-wheel-popup');
-        popup.style.display = 'flex';
-
-        const wrapp = document.querySelector('.single-wheel-wrapper');
-        wrapp.classList.add('blur');
-
-        const description = document.querySelector('.single-wheel-popup-description');
-        description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + stripHtml(sector.text);
-      } // Bring to stop
-      ang += angVel; // Update angle
-      ang %= TAU; // Normalize angle
-      rotate();
-    }
-
-    function engine () {
-      frame();
-      requestAnimationFrame(engine);
-    }
-    async function init () {
-      for (const [i, sector] of tiles.entries()) {
-        await drawSector(sector, i);
-      }
-      // rotate();
-      engine();
-      spinEl.addEventListener('click', () => {
-        const play = _this.settings.lbWidget.playInstantWin();
-        console.log('play:', play);
-        if (!angVel) angVel = rand(0.25, 0.45);
-      });
-      climeBtn.addEventListener('click', () => {
-        const popup = document.querySelector('.single-wheel-popup');
-        popup.style.display = 'none';
-
-        const wrapp = document.querySelector('.single-wheel-wrapper');
-        wrapp.classList.remove('blur');
-      });
-    }
-
-    preLoader.show(async function () {
-      await init();
-      preLoader.hide();
-    });
-  };
-
-  this.createSingleWheelDom = function (idx, singleWheel, isMobile) {
-    const sw = document.createElement('div');
-    sw.classList.add('single-wheel-element');
-    sw.classList.add('single-wheel-element-' + idx);
-
-    const wheelSize = isMobile ? '192' : '300';
-
-    const template = require('../templates/mainWidget/singleWheelDom.hbs');
-    sw.innerHTML = template({
-      idx: idx,
-      wheelSize: wheelSize,
-      label: singleWheel.name ?? '',
-      description: singleWheel.description ? stripHtml(singleWheel.description) : '',
-      buttonLabel: 'Spin'
     });
 
-    return sw;
+    // const isMobile = window.screen.availWidth <= 768;
+    // const singleWheel = document.querySelector('.single-wheel');
+    // const singleWheelWrapper = singleWheel.querySelector('.spinner-wrapper');
+    // const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
+    // singleWheel.classList.add('cl-show');
+    // backBtn.style.display = 'block';
+    //
+    // if (singleWheelsData && singleWheelsData.length) {
+    //   singleWheelsData.forEach((singleWheel, idx) => {
+    //     const swDom = this.createSingleWheelDom(idx, singleWheel, isMobile);
+    //     singleWheelWrapper.appendChild(swDom);
+    //   });
+    //   for (let i = 0; i < singleWheelsData.length; i++) {
+    //     await this.loadSingleWheel(isMobile, singleWheelsData[i], i);
+    //   }
+    // }
   };
+
+  // this.loadSingleWheel = async function (isMobile, singleWheel, idx) {
+  //   const _this = this;
+  //   const preLoader = _this.preloader();
+  //   const tiles = singleWheel.tiles;
+  //
+  //   const rand = (m, M) => Math.random() * (M - m) + m;
+  //   const tot = tiles.length;
+  //   const spinEl = document.querySelector('#spin-' + idx);
+  //   const climeBtn = document.querySelector('.single-wheel-popup-button');
+  //   const ctx = document.querySelector('#wheel-' + idx).getContext('2d');
+  //   const dia = ctx.canvas.width;
+  //   const rad = dia / 2;
+  //   const PI = Math.PI;
+  //   const TAU = 2 * PI;
+  //   const arc = TAU / tiles.length;
+  //
+  //   const friction = 0.991;
+  //   let angVel = 0;
+  //   let ang = 0;
+  //
+  //   const wheelFont = isMobile ? '10px sans-serif' : 'bold 15px sans-serif';
+  //
+  //   const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
+  //
+  //   const randomRgbColor = () => {
+  //     const r = Math.floor(Math.random() * 256); // Random between 0-255
+  //     const g = Math.floor(Math.random() * 256); // Random between 0-255
+  //     const b = Math.floor(Math.random() * 256); // Random between 0-255
+  //     return 'rgb(' + r + ',' + g + ',' + b + ')';
+  //   };
+  //
+  //   const addImageProcess = (src) => {
+  //     return new Promise((resolve, reject) => {
+  //       const img = new Image();
+  //       img.onload = () => resolve(img);
+  //       img.onerror = reject;
+  //       img.src = src;
+  //     });
+  //   };
+  //
+  //   // eslint-disable-next-line no-unused-vars
+  //   const loadImage = async (ctx, src, rad, rot) => {
+  //     const img = await addImageProcess(src);
+  //     ctx.save();
+  //     ctx.resetTransform();
+  //     ctx.translate(rad, rad);
+  //     ctx.rotate(rot);
+  //     ctx.clip();
+  //     ctx.drawImage(img, 0, -75, 150, 150);
+  //     ctx.restore();
+  //   };
+  //
+  //   async function drawSector (sector, i) {
+  //     const ang = arc * i;
+  //     // eslint-disable-next-line no-unused-vars
+  //     const rot = ang + arc / 2;
+  //     ctx.save();
+  //     // COLOR
+  //     ctx.beginPath();
+  //     ctx.fillStyle = randomRgbColor();
+  //     ctx.strokeStyle = '#8D0C71';
+  //     ctx.moveTo(rad, rad);
+  //     ctx.arc(rad, rad, rad, ang, ang + arc);
+  //     ctx.lineTo(rad, rad);
+  //     ctx.fill();
+  //     if (sector.iconLink) {
+  //       await loadImage(ctx, sector.iconLink, rad, rot);
+  //     }
+  //     ctx.stroke();
+  //     // TEXT
+  //     ctx.translate(rad, rad);
+  //     ctx.rotate(ang + arc / 2);
+  //     ctx.textAlign = 'right';
+  //     ctx.fillStyle = '#fff';
+  //     ctx.font = wheelFont;
+  //     ctx.strokeText(stripHtml(sector.text), rad - 15, 10);
+  //     ctx.fillText(stripHtml(sector.text), rad - 15, 10);
+  //     ctx.restore();
+  //   }
+  //
+  //   function rotate () {
+  //     ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
+  //   }
+  //
+  //   function frame () {
+  //     if (!angVel) return;
+  //     angVel *= friction;
+  //     if (angVel < 0.002) {
+  //       angVel = 0;
+  //       const sector = tiles[getIndex()];
+  //
+  //       const popup = document.querySelector('.single-wheel-popup');
+  //       popup.style.display = 'flex';
+  //
+  //       const wrapp = document.querySelector('.spinner-wrapper');
+  //       wrapp.classList.add('blur');
+  //
+  //       const description = document.querySelector('.single-wheel-popup-description');
+  //       description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + stripHtml(sector.text);
+  //     } // Bring to stop
+  //     ang += angVel; // Update angle
+  //     ang %= TAU; // Normalize angle
+  //     rotate();
+  //   }
+  //
+  //   function engine () {
+  //     frame();
+  //     requestAnimationFrame(engine);
+  //   }
+  //   async function init () {
+  //     for (const [i, sector] of tiles.entries()) {
+  //       await drawSector(sector, i);
+  //     }
+  //     // rotate();
+  //     engine();
+  //     spinEl.addEventListener('click', () => {
+  //       const play = _this.settings.lbWidget.playInstantWin();
+  //       console.log('play:', play);
+  //       if (!angVel) angVel = rand(0.25, 0.45);
+  //     });
+  //     climeBtn.addEventListener('click', () => {
+  //       const popup = document.querySelector('.single-wheel-popup');
+  //       popup.style.display = 'none';
+  //
+  //       const wrapp = document.querySelector('.spinner-wrapper');
+  //       wrapp.classList.remove('blur');
+  //     });
+  //   }
+  //
+  //   preLoader.show(async function () {
+  //     await init();
+  //     preLoader.hide();
+  //   });
+  // };
+
+  // this.createSingleWheelDom = function (idx, singleWheel, isMobile) {
+  //   const sw = document.createElement('div');
+  //   sw.classList.add('single-wheel-element');
+  //   sw.classList.add('single-wheel-element-' + idx);
+  //
+  //   const wheelSize = isMobile ? '192' : '300';
+  //
+  //   const template = require('../templates/mainWidget/singleWheelDom.hbs');
+  //   sw.innerHTML = template({
+  //     idx: idx,
+  //     wheelSize: wheelSize,
+  //     label: singleWheel.name ?? '',
+  //     description: singleWheel.description ? stripHtml(singleWheel.description) : '',
+  //     buttonLabel: 'Spin'
+  //   });
+  //
+  //   return sw;
+  // };
 
   this.hideInstantWins = function () {
     const singleWheel = document.querySelector('.single-wheel');
