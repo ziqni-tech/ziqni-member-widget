@@ -13,7 +13,6 @@ import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import tournamentBrackets from './TournamentBrackets';
 import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
-// import { createCongratulationsModal } from '../helpers/wheelSpinner/modal';
 
 /**
  * MainWidget
@@ -640,6 +639,7 @@ export const MainWidget = function (options) {
     const template = require('../templates/layouts/awardsAreaLayout.hbs');
     sectionRewards.innerHTML = template({
       headerLabel: this.settings.lbWidget.settings.translation.rewards.label,
+      headerInstantWinsLabel: this.settings.lbWidget.settings.translation.rewards.instantWinsLabel,
       globalCopy: this.settings.lbWidget.settings.translation.global.copy,
       claimBtn: this.settings.lbWidget.settings.translation.rewards.claim
     });
@@ -3808,10 +3808,10 @@ export const MainWidget = function (options) {
     const wheelImage = document.createElement('div');
     const wheelButton = document.createElement('div');
 
-    const scratchcards = document.createElement('div');
-    const scratchcardsLabel = document.createElement('div');
-    const scratchcardsImage = document.createElement('div');
-    const scratchcardsButton = document.createElement('div');
+    // const scratchcards = document.createElement('div');
+    // const scratchcardsLabel = document.createElement('div');
+    // const scratchcardsImage = document.createElement('div');
+    // const scratchcardsButton = document.createElement('div');
 
     const scratchcardsGame = document.createElement('div');
     const scratchcardsGameWrapper = document.createElement('div');
@@ -3838,8 +3838,8 @@ export const MainWidget = function (options) {
 
     const singleWheel = document.createElement('div');
     const singleWheelWrapper = document.createElement('div');
-    const singleWheelContainer = document.createElement('div');
-    const singleWheelConfetti = document.createElement('canvas');
+    // const singleWheelContainer = document.createElement('div');
+    // const singleWheelConfetti = document.createElement('canvas');
 
     // const singleWheelPopup = document.createElement('div');
     // const singleWheelPopupLabel = document.createElement('div');
@@ -3851,15 +3851,15 @@ export const MainWidget = function (options) {
     wheelImage.classList.add('wheel-image');
     wheelButton.classList.add('wheel-button');
 
-    scratchcards.classList.add('scratchcards-item');
-    scratchcardsLabel.classList.add('scratchcards-label');
-    scratchcardsImage.classList.add('scratchcards-image');
-    scratchcardsButton.classList.add('scratchcards-button');
+    // scratchcards.classList.add('scratchcards-item');
+    // scratchcardsLabel.classList.add('scratchcards-label');
+    // scratchcardsImage.classList.add('scratchcards-image');
+    // scratchcardsButton.classList.add('scratchcards-button');
 
     singleWheel.classList.add('single-wheel');
     singleWheelWrapper.classList.add('spinner-wrapper');
-    singleWheelContainer.setAttribute('id', 'spinner-container');
-    singleWheelConfetti.setAttribute('id', 'confetti');
+    // singleWheelContainer.setAttribute('id', 'spinner-container');
+    // singleWheelConfetti.setAttribute('id', 'confetti');
 
     // singleWheelPopup.classList.add('single-wheel-popup');
     // singleWheelPopupLabel.classList.add('single-wheel-popup-label');
@@ -3896,9 +3896,9 @@ export const MainWidget = function (options) {
     scratchcardsPopupButton.classList.add('scratchcards-popup-button');
 
     wheelLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelLabel;
-    scratchcardsLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
+    // scratchcardsLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
     wheelButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelButton;
-    scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
+    // scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
 
     // singleWheelPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
     // singleWheelPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
@@ -3945,22 +3945,22 @@ export const MainWidget = function (options) {
     // singleWheelPopup.appendChild(singleWheelPopupDescription);
     // singleWheelPopup.appendChild(singleWheelPopupButton);
 
-    singleWheelWrapper.appendChild(singleWheelContainer);
+    // singleWheelWrapper.appendChild(singleWheelContainer);
 
     singleWheel.appendChild(singleWheelWrapper);
-    singleWheel.appendChild(singleWheelConfetti);
+    // singleWheel.appendChild(singleWheelConfetti);
     // singleWheel.appendChild(singleWheelPopup);
 
     wheel.appendChild(wheelLabel);
     wheel.appendChild(wheelImage);
     wheel.appendChild(wheelButton);
 
-    scratchcards.appendChild(scratchcardsLabel);
-    scratchcards.appendChild(scratchcardsImage);
-    scratchcards.appendChild(scratchcardsButton);
+    // scratchcards.appendChild(scratchcardsLabel);
+    // scratchcards.appendChild(scratchcardsImage);
+    // scratchcards.appendChild(scratchcardsButton);
 
     list.appendChild(wheel);
-    list.appendChild(scratchcards);
+    // list.appendChild(scratchcards);
     list.appendChild(singleWheel);
     list.appendChild(scratchcardsGame);
   };
@@ -4221,17 +4221,23 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.loadSingleWheels = async function (singleWheelsData) {
-    const singleWheel = document.querySelector('.single-wheel');
-    const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
-    singleWheel.classList.add('cl-show');
-    backBtn.style.display = 'block';
+  this.loadSingleWheel = async function (id) {
+    const singleWheelData = await this.settings.lbWidget.getSingleWheel(id);
+    const section = document.querySelector('.single-wheel');
+    const wrapper = document.createElement('div');
+    const template = require('../templates/instantWins/singleWheel.hbs');
 
-    if (!singleWheelsData && !singleWheelsData.length) return;
+    wrapper.classList.add('play-single-wheel');
 
-    const instantWinData = await singleWheelsData[1];
-    const tiles = instantWinData.tiles;
-    const settingsData = await this.settings.lbWidget.getSettingsFile(instantWinData.id);
+    wrapper.innerHTML = template({
+      title: singleWheelData[0].name,
+      buttonLabel: 'Play'
+    });
+
+    section.appendChild(wrapper);
+
+    const tiles = singleWheelData[0].tiles;
+    const settingsData = await this.settings.lbWidget.getSettingsFile(id);
 
     if (settingsData && settingsData.wheelSettings) {
       await this.replaceImageIdsWithUris(settingsData.wheelSettings);
@@ -4243,7 +4249,7 @@ export const MainWidget = function (options) {
 
     const instantWin = { tiles, settingsData };
 
-    const containerId = document.querySelector('#spinner-container');
+    const containerId = document.querySelector('#play-single-wheel');
     const messageSettings = instantWin.settingsData.messageSettings;
     const prizeSection = 1;
 
@@ -4269,12 +4275,105 @@ export const MainWidget = function (options) {
       }
     );
 
-    const buttonElement = document.querySelector('.spin-button');
+    const wheel = document.querySelector('.play-single-wheel');
+    const wheelButtonElement = wheel.querySelector('.spin-button');
+    wheelButtonElement.addEventListener('click', () => {
+      if (spinnerWheel && spinnerWheel.spinWheel) {
+        spinnerWheel.spinWheel(3);
+      }
+    });
+
+    const buttonElement = document.querySelector('.play-single-wheel-btn');
     buttonElement.addEventListener('click', () => {
       if (spinnerWheel && spinnerWheel.spinWheel) {
         spinnerWheel.spinWheel(3);
       }
     });
+  };
+
+  this.loadSingleWheels = async function (singleWheelsData) {
+    const singleWheel = document.querySelector('.single-wheel');
+    const container = singleWheel.querySelector('.spinner-wrapper');
+    const section = document.querySelector('.cl-main-widget-section-reward');
+    const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
+
+    singleWheel.classList.add('cl-show');
+    backBtn.style.display = 'block';
+    section.classList.add('instantWins');
+    container.innerHTML = '';
+
+    if (!singleWheelsData && !singleWheelsData.length) return;
+
+    for (const wheel of singleWheelsData) {
+      if (wheel.instantWinType === 2) continue;
+
+      const sw = document.createElement('div');
+      sw.classList.add('instant-wins-card');
+
+      const template = require('../templates/instantWins/wheelCard.hbs');
+      sw.innerHTML = template({
+        title: wheel.name,
+        id: wheel.id
+      });
+
+      container.appendChild(sw);
+
+      const tiles = wheel.tiles;
+      const settingsData = await this.settings.lbWidget.getSettingsFile(wheel.id);
+
+      if (settingsData && settingsData.wheelSettings) {
+        await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+      }
+
+      if (settingsData && settingsData.messageSettings) {
+        await this.replaceImageIdsWithUris(settingsData.messageSettings);
+      }
+
+      const instantWin = { tiles, settingsData };
+      const containerId = document.getElementById(wheel.id);
+
+      await createSpinnerWheel(
+        containerId,
+        instantWin.tiles,
+        instantWin.settingsData,
+        () => {},
+        true
+      );
+    }
+
+    // const instantWinData = singleWheelsData[2];
+    // const tiles = instantWinData.tiles;
+    // const settingsData = await this.settings.lbWidget.getSettingsFile(instantWinData.id);
+    //
+    // if (settingsData && settingsData.wheelSettings) {
+    //   await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+    // }
+    //
+    // if (settingsData && settingsData.messageSettings) {
+    //   await this.replaceImageIdsWithUris(settingsData.messageSettings);
+    // }
+    //
+    // const instantWin = { tiles, settingsData };
+    //
+    // const containerId = document.querySelector('#spinner-container');
+    //
+    // const spinnerWheel = await createSpinnerWheel(
+    //   containerId,
+    //   instantWin.tiles,
+    //   instantWin.settingsData,
+    //   (giftValue) => {
+    //     const { isCompleted } = giftValue;
+    //     console.log('isCompleted => ', isCompleted);
+    //     console.log(`Wheel stopped on prize section: ${giftValue}`);
+    //   }
+    // );
+    //
+    // const buttonElement = containerId.querySelector('.spin-button');
+    // buttonElement.addEventListener('click', () => {
+    //   if (spinnerWheel && spinnerWheel.spinWheel) {
+    //     spinnerWheel.spinWheel(3);
+    //   }
+    // });
 
     // const isMobile = window.screen.availWidth <= 768;
     // const singleWheel = document.querySelector('.single-wheel');
@@ -4449,13 +4548,21 @@ export const MainWidget = function (options) {
   // };
 
   this.hideInstantWins = function () {
+    const playSingleWheel = document.querySelector('.play-single-wheel');
+    if (playSingleWheel) {
+      playSingleWheel.remove();
+      return;
+    }
+
     const singleWheel = document.querySelector('.single-wheel');
     const scratchcardsGame = document.querySelector('.scratchcards-game');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
+    const section = document.querySelector('.cl-main-widget-section-reward');
 
     singleWheel.classList.remove('cl-show');
     scratchcardsGame.classList.remove('cl-show');
     backBtn.style.display = 'none';
+    section.classList.remove('instantWins');
   };
 
   this.loadMessages = function (pageNumber, callback, paginationArr = null) {
@@ -4501,6 +4608,13 @@ export const MainWidget = function (options) {
 
     const instantWinsBackIcon = query(_this.settings.container, '.cl-main-widget-reward-header-back');
     instantWinsBackIcon.style.display = 'none';
+    const awardsSection = document.querySelector('.cl-main-widget-section-reward');
+    if (awardsSection) awardsSection.classList.remove('instantWins');
+
+    const playSingleWheel = document.querySelector('.play-single-wheel');
+    if (playSingleWheel) {
+      playSingleWheel.remove();
+    }
 
     if (_this.settings.navigationSwitchInProgress && _this.settings.navigationSwitchLastAtempt + 3000 < new Date().getTime()) {
       _this.settings.navigationSwitchInProgress = false;

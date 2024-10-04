@@ -1332,6 +1332,22 @@ export const LbWidget = function (options) {
     return await this.playInstantWinsApi(request);
   };
 
+  this.getSingleWheel = async function (id) {
+    const request = InstantWinRequest.constructFromObject({
+      languageKey: this.settings.language,
+      currencyKey: this.settings.currency,
+      instantWinFilter: {
+        ids: [id],
+        limit: 1,
+        skip: 0
+      }
+    }, null);
+
+    const wheel = await this.getInstantWinsApi(request);
+
+    return wheel.data;
+  };
+
   this.getSingleWheels = async function (callback) {
     const request = InstantWinRequest.constructFromObject({
       languageKey: this.settings.language,
@@ -3448,6 +3464,11 @@ export const LbWidget = function (options) {
       await _this.getSingleWheels(function (data) {
         _this.settings.mainWidget.loadSingleWheels(data);
       });
+
+      // Single Wheel
+    } else if (hasClass(el, 'instant-wins-card-button')) {
+      const id = el.dataset.id;
+      this.settings.mainWidget.loadSingleWheel(id);
 
       // Single Wheel
     } else if (hasClass(el, 'scratchcards-button')) {

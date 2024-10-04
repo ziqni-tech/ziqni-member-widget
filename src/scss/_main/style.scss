@@ -4238,6 +4238,19 @@ em {
   font-weight: 700;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-label.instant-wins {
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .instantWins .cl-main-widget-reward-header {
+  .cl-main-widget-reward-header-label {
+    display: none;
+  }
+  .cl-main-widget-reward-header-label.instant-wins {
+    display: block;
+  }
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-header .cl-main-widget-reward-header-back {
   display: none;
   background-image: url(../../images/left-arrow.svg);
@@ -4525,7 +4538,7 @@ em {
   cursor: pointer;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .wheel-image {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .wheel-item .wheel-image {
   width: 304px;
   height: 195px;
   background-image: url(../../images/single-wheel.png);
@@ -4831,6 +4844,122 @@ em {
 //  transform: translate(-50%, -50%);
 //}
 
+.instant-wins-card {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  width: 100%;
+  max-width: 228px;
+  height: 264px;
+  background: #141e28;
+  border-radius: 10px;
+  margin: 0 0 20px 0;
+  padding: 10px 34px 13px;
+
+  .spinner-container-wrapper {
+    height: 160px;
+    .spinner-container {
+      width: 100%;
+      height: 100%;
+    }
+  }
+
+  .instant-wins-card-title {
+    width: 100%;
+    color: var(--lb3-rewards-item-label-color);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    margin-bottom: 12px;
+  }
+
+  .instant-wins-card-button {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 36px;
+    background: #ee3ec8;
+    border-radius: 10px;
+    color: var(--lb3-rewards-item-label-color);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+    margin-top: 14px;
+  }
+}
+
+.play-single-wheel {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  background: #141e28;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  max-width: 833px;
+  max-height: 662px;
+  top: 16px;
+  padding: 20px;
+  border-radius: 10px;
+  border: 1px solid #223241;
+
+  .play-single-wheel-title {
+    color: var(--lb3-rewards-item-label-color);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 28px;
+    line-height: 28px;
+    margin-bottom: 20px;
+  }
+
+  .play-single-wheel-body {
+    width: 480px;
+    height: 480px;
+  }
+
+  .play-single-wheel-spinner {
+    width: 100%;
+    height: 100%;
+  }
+
+  .play-single-wheel-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 36px;
+    width: 240px;
+    background: #ee3ec8;
+    border-radius: 10px;
+    color: var(--lb3-rewards-item-label-color);
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 14px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    cursor: pointer;
+  }
+
+  #confetti {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    border-radius: 50%;
+    z-index: 5;
+    display: none;
+  }
+}
+
 #spinner-container {
   width: 100%;
   height: 100%;
@@ -5039,9 +5168,6 @@ em {
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .spinner-wrapper {
-  display: flex;
-  flex-direction: column;
-  align-items: center;
   border: 1px solid #223241;
   border-radius: 10px;
   width: 100%;
@@ -5049,7 +5175,14 @@ em {
   max-width: 833px;
   max-height: 662px;
   margin-top: 16px;
+  padding: 20px 16px 0 16px;
   overflow: auto;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  grid-gap: 15px;
+  margin-bottom: 30px;
+  transition: opacity .5s ease-in-out;
+  position: relative;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .spinner-wrapper::-webkit-scrollbar {

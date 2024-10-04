@@ -69,6 +69,7 @@
     },
     "rewards": {
         "label": "Awards",
+        "instantWinsLabel": "Instant Wins",
         "claim": "Claim",
         "claimed": "Claimed",
         "expired": "Expired",
