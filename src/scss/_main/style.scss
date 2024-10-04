@@ -4899,19 +4899,30 @@ em {
 
 .play-single-wheel {
   position: absolute;
-  width: 100%;
-  height: 100%;
+  width: calc(100% - 40px);
+  height: calc(100% - 16px);
   background: #141e28;
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  max-width: 833px;
-  max-height: 662px;
   top: 16px;
+  left: 40px;
   padding: 20px;
   border-radius: 10px;
   border: 1px solid #223241;
+
+  .play-single-wheel-back-btn {
+    background-image: url(../../images/small-left-arrow.svg);
+    background-repeat: no-repeat;
+    width: 30px;
+    height: 30px;
+    background-size: 100%;
+    cursor: pointer;
+    position: absolute;
+    top: 20px;
+    left: 20px;
+  }
 
   .play-single-wheel-title {
     color: var(--lb3-rewards-item-label-color);
@@ -4923,8 +4934,8 @@ em {
   }
 
   .play-single-wheel-body {
-    width: 480px;
-    height: 480px;
+    width: 470px;
+    height: 470px;
   }
 
   .play-single-wheel-spinner {
@@ -4938,6 +4949,7 @@ em {
     justify-content: center;
     height: 36px;
     width: 240px;
+    margin-top: 20px;
     background: #ee3ec8;
     border-radius: 10px;
     color: var(--lb3-rewards-item-label-color);
@@ -5395,6 +5407,7 @@ em {
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion {
   width: 100%;
+  position: relative;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-accordion.cl-shown {

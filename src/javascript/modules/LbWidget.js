@@ -1322,14 +1322,22 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function') callback(achData);
   };
 
-  this.playInstantWin = async function () {
+  this.playInstantWin = async function (id) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
     const request = InstantWinPlayRequest.constructFromObject({
-      awardId: '',
+      instantWinId: id,
       languageKey: this.settings.language,
       currencyKey: this.settings.currency
     }, null);
 
-    return await this.playInstantWinsApi(request);
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.playInstantWin(request, (json) => {
+        resolve(json);
+      });
+    });
   };
 
   this.getSingleWheel = async function (id) {
@@ -1364,12 +1372,16 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function') {
       callback(singleWheels.data);
     }
+
+    return singleWheels.data;
   };
 
   this.getSettingsFile = async function (fileName) {
-    return new Promise((resolve, reject) => {
-      const fileApiWsClient = new FilesApiWs(ApiClientStomp.instance);
+    if (!this.settings.apiWs.filesApiWsClient) {
+      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
+    }
 
+    return new Promise((resolve, reject) => {
       const fileRequest = {
         ids: [],
         limit: 20,
@@ -1378,7 +1390,7 @@ export const LbWidget = function (options) {
         repositoryId: '-7KLxoMBDhZrpIHgC4eP'
       };
 
-      fileApiWsClient.getFiles(fileRequest, async (res) => {
+      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, async (res) => {
         const settingsFile = res.data.find(item => item.name.trim() === fileName);
 
         if (settingsFile) {
@@ -1399,7 +1411,9 @@ export const LbWidget = function (options) {
   };
 
   this.getFileUri = async (id) => {
-    const fileApiWsClient = new FilesApiWs(ApiClientStomp.instance);
+    if (!this.settings.apiWs.filesApiWsClient) {
+      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
+    }
 
     const fileRequest = {
       ids: [id],
@@ -1408,7 +1422,7 @@ export const LbWidget = function (options) {
     };
 
     return new Promise((resolve) => {
-      fileApiWsClient.getFiles(fileRequest, (res) => {
+      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, (res) => {
         resolve(res.data[0].uri);
       });
     });
@@ -1903,18 +1917,6 @@ export const LbWidget = function (options) {
     }
     return new Promise((resolve, reject) => {
       this.settings.apiWs.rewardsApiWsClient.getRewards(rewardRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
-  this.playInstantWinsApi = async function (playRequest) {
-    if (!this.settings.apiWs.instantWinsApiWsClient) {
-      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.instantWinsApiWsClient.playInstantWin(playRequest, (json) => {
         resolve(json);
       });
     });
@@ -3357,9 +3359,7 @@ export const LbWidget = function (options) {
       sections.forEach(s => s.classList.remove('cl-shown'));
       instantWinsSection.classList.add('cl-shown');
 
-      await _this.getSingleWheels(function (data) {
-        _this.settings.mainWidget.loadSingleWheels(data);
-      });
+      _this.settings.mainWidget.loadInstantWins();
 
       // dashboard scratchcards button
     } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-cards-button')) {
@@ -3436,6 +3436,10 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-main-widget-reward-details-back-btn')) {
       _this.settings.mainWidget.hideRewardDetails(function () {
       });
+
+      // play spinner back button
+    } else if (hasClass(el, 'play-single-wheel-back-btn')) {
+      _this.settings.mainWidget.hideSingleWheel();
 
       // messages details back button
     } else if (hasClass(el, 'cl-main-widget-inbox-details-back-btn')) {
