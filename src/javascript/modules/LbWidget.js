@@ -3335,7 +3335,7 @@ export const LbWidget = function (options) {
       }
 
       // dashboard wheel button
-    } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-wheel-button')) {
+    } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-more') || hasClass(el, '.cl-main-widget-dashboard-instant-wins-wheel-button')) {
       const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
       const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
       const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
@@ -3360,6 +3360,11 @@ export const LbWidget = function (options) {
       instantWinsSection.classList.add('cl-shown');
 
       _this.settings.mainWidget.loadInstantWins();
+
+      if (hasClass(el, '.cl-main-widget-dashboard-instant-wins-wheel-button')) {
+        const id = el.dataset.id;
+        this.settings.mainWidget.loadSingleWheel(id);
+      }
 
       // dashboard scratchcards button
     } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-cards-button')) {

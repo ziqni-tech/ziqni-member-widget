@@ -3178,6 +3178,58 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
+  this.loadDashboardInstantWins = async function () {
+    const list = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins-wrapp');
+    list.innerHTML = '';
+
+    const awardsList = document.querySelector('.cl-accordion.instantWins');
+    if (awardsList) awardsList.innerHTML = '';
+
+    const items = await this.settings.lbWidget.getSingleWheels();
+    if (items && items.length) {
+      let wheels = items.filter(item => item.instantWinType === 1);
+      if (wheels.length > 2) {
+        wheels = wheels.slice(0, 2);
+      }
+
+      for (const wheel of wheels) {
+        const listItem = document.createElement('div');
+        listItem.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel');
+
+        const template = require('../templates/dashboard/wheel.hbs');
+        listItem.innerHTML = template({
+          title: wheel.name,
+          button: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
+          id: wheel.id
+        });
+
+        list.appendChild(listItem);
+
+        const tiles = wheel.tiles;
+        const settingsData = await this.settings.lbWidget.getSettingsFile(wheel.id);
+
+        if (settingsData && settingsData.wheelSettings) {
+          await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+        }
+
+        if (settingsData && settingsData.messageSettings) {
+          await this.replaceImageIdsWithUris(settingsData.messageSettings);
+        }
+
+        const instantWin = { tiles, settingsData };
+        const containerId = document.getElementById(wheel.id);
+
+        await createSpinnerWheel(
+          containerId,
+          instantWin.tiles,
+          instantWin.settingsData,
+          () => {},
+          true
+        );
+      }
+    }
+  };
+
   this.loadDashboardTournaments = async function () {
     const tournamentsList = query(this.settings.section, '.cl-main-widget-dashboard-tournaments-list');
     const tournamentsContainer = query(this.settings.section, '.cl-main-widget-dashboard-tournaments');
@@ -4255,11 +4307,15 @@ export const MainWidget = function (options) {
             obj.style.display = 'none';
           });
 
-          changeContainerInterval = setTimeout(function () {
+          changeContainerInterval = setTimeout(async function () {
             if (target.classList.contains('cl-main-widget-navigation-dashboard') || target.closest('.cl-main-widget-navigation-dashboard')) {
               const dashboardContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.dashboard.containerClass);
 
               dashboardContainer.style.display = 'flex';
+
+              if (_this.settings.lbWidget.settings.instantWins.enable) {
+                _this.loadDashboardInstantWins();
+              }
 
               if (_this.settings.lbWidget.settings.navigation.achievements.enable) {
                 _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {

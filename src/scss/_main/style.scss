@@ -1588,13 +1588,13 @@ em {
   border-radius: 10px;
   padding: 10px;
   width: 340px;
+  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-wrapp .cl-main-widget-dashboard-instant-wins-wheel-image {
   width: 163px;
   height: 142px;
   background-color: #0f1921;
-  background-image: url(../../images/single-wheel.png);
   background-size: cover;
   background-position: center;
   border-radius: 10px;
@@ -1825,6 +1825,7 @@ em {
   justify-content: space-between;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-more,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list-more,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-achievements-list-more {
   font-size: 14px;
