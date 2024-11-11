@@ -51,6 +51,7 @@ import {
   InstantWinsApiWs,
   InstantWinRequest,
   InstantWinPlayRequest,
+  InstantWinAvailablePlaysRequest,
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
 
@@ -1328,9 +1329,7 @@ export const LbWidget = function (options) {
     }
 
     const request = InstantWinPlayRequest.constructFromObject({
-      instantWinId: id,
-      languageKey: this.settings.language,
-      currencyKey: this.settings.currency
+      instantWinId: id
     }, null);
 
     return new Promise((resolve, reject) => {
@@ -1374,6 +1373,22 @@ export const LbWidget = function (options) {
     }
 
     return singleWheels.data;
+  };
+
+  this.getInstantWinAvailablePlays = async function (id) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
+    const request = InstantWinAvailablePlaysRequest.constructFromObject({
+      instantWinIds: [id]
+    }, null);
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
+        resolve(json);
+      });
+    });
   };
 
   this.getSettingsFile = async function (fileName) {

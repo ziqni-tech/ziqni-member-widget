@@ -1245,7 +1245,9 @@ export const MainWidget = function (options) {
       } else if (this.settings.lbWidget.settings.competition.activeContest.bannerLink) {
         bannerImage = this.settings.lbWidget.settings.competition.activeContest.bannerLink;
       }
-    } else if (this.settings.lbWidget.settings.competition.activeCompetition) {
+    }
+
+    if (this.settings.lbWidget.settings.competition.activeCompetition && !bannerImage) {
       if (this.settings.lbWidget.settings.competition.activeCompetition.bannerHighResolutionLink) {
         bannerImage = this.settings.lbWidget.settings.competition.activeCompetition.bannerHighResolutionLink;
       } else if (this.settings.lbWidget.settings.competition.activeCompetition.bannerLink) {
@@ -3861,7 +3863,8 @@ export const MainWidget = function (options) {
 
         if (!singleWheelsData && !singleWheelsData.length) return;
 
-        for (const wheel of singleWheelsData) {
+        // eslint-disable-next-line no-unused-vars
+        for (const [index, wheel] of singleWheelsData.entries()) {
           if (wheel.instantWinType === 2) continue;
 
           const sw = document.createElement('div');
@@ -3876,27 +3879,32 @@ export const MainWidget = function (options) {
           list.appendChild(sw);
 
           const tiles = wheel.tiles;
-          this.settings.lbWidget.getSettingsFile(wheel.id)
-            .then(async (settingsData) => {
-              if (settingsData && settingsData.wheelSettings) {
-                await this.replaceImageIdsWithUris(settingsData.wheelSettings);
-              }
 
-              if (settingsData && settingsData.messageSettings) {
-                await this.replaceImageIdsWithUris(settingsData.messageSettings);
-              }
+          const settingsData = await this.settings.lbWidget.getSettingsFile(wheel.id);
 
-              const instantWin = { tiles, settingsData };
-              const containerId = document.getElementById(wheel.id);
+          if (settingsData && settingsData.wheelSettings) {
+            await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+          }
 
-              createSpinnerWheel(
-                containerId,
-                instantWin.tiles,
-                instantWin.settingsData,
-                () => {},
-                true
-              ).then(() => {});
-            });
+          if (settingsData && settingsData.messageSettings) {
+            await this.replaceImageIdsWithUris(settingsData.messageSettings);
+          }
+
+          const instantWin = { tiles, settingsData };
+          const containerId = document.getElementById(wheel.id);
+
+          await createSpinnerWheel(
+            containerId,
+            instantWin.tiles,
+            instantWin.settingsData,
+            () => {},
+            true
+          );
+
+          // console.log(index);
+          // if (index === singleWheelsData.length - 1) {
+          //   console.log('end');
+          // }
         }
       });
   };
@@ -3906,6 +3914,11 @@ export const MainWidget = function (options) {
     const section = document.querySelector('.cl-accordion.instantWins');
     const wrapper = document.createElement('div');
     const template = require('../templates/instantWins/singleWheel.hbs');
+
+    this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id)
+      .then((availablePlays) => {
+        console.log('availablePlays: ', availablePlays);
+      });
 
     wrapper.classList.add('play-single-wheel');
 
