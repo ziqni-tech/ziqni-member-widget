@@ -8,5 +8,5 @@
 <div class="cl-growth-col cl-col" data-growth="{{ datasetGrowth }}" data-change="{{ datasetChange }}">
   <span class="cl-growth-icon cl-growth-same"></span>
 </div>
-<div class="cl-points-col cl-col">--</div>
+<div class="cl-points-col cl-col">{{#if points}} {{ points }} {{else}} -- {{/if}}</div>
 <div class="cl-reward-col cl-col {{#if rewardEnabled}} {{ rewardEnabledClass }} {{/if}}">{{ rewardValue }}</div>
