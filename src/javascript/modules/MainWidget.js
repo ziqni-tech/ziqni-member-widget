@@ -860,7 +860,7 @@ export const MainWidget = function (options) {
 
     objectIterator(query(_this.settings.leaderboard.topResults, '.cl-lb-row'), function (obj) {
       const rank = parseInt(obj.dataset.rank);
-      if (cleanupRankCheck.indexOf(rank) === -1 && rank > _this.settings.leaderboard.defaultEmptyList) {
+      if (cleanupRankCheck.indexOf(rank) === -1 && rank > _this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize) {
         remove(obj);
       }
     });
@@ -994,7 +994,7 @@ export const MainWidget = function (options) {
 
     objectIterator(query(_this.settings.leaderboard.container, '.cl-lb-row'), function (obj) {
       const rank = parseInt(obj.dataset.rank);
-      if (cleanupRankCheck.indexOf(rank) === -1 && (rank > _this.settings.leaderboard.defaultEmptyList || rank === 0)) {
+      if (cleanupRankCheck.indexOf(rank) === -1 && (rank > _this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize || rank === 0)) {
         remove(obj);
       }
     });
