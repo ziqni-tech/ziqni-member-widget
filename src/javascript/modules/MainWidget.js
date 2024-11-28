@@ -152,6 +152,9 @@ export const MainWidget = function (options) {
         }
       ]
     },
+    instantWinsSection: {
+      receivedAward: null
+    },
     active: false,
     navigationSwitchLastAtempt: new Date().getTime(),
     navigationSwitchInProgress: false
@@ -3185,7 +3188,10 @@ export const MainWidget = function (options) {
     list.innerHTML = '';
 
     const awardsList = document.querySelector('.cl-accordion.instantWins');
-    if (awardsList) awardsList.innerHTML = '';
+    if (awardsList) {
+      const list = awardsList.querySelector('.cl-accordion-list');
+      list.innerHTML = '';
+    }
 
     const items = await this.settings.lbWidget.getSingleWheels();
     if (items && items.length) {
@@ -3592,26 +3598,29 @@ export const MainWidget = function (options) {
       }
     }
 
-    const accordionObj = _this.awardsList(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
-      const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
-      if (typeof rewardData !== 'undefined') {
-        if (rewardData.length === 0) {
-          accordionSection.style.display = 'none';
-        }
-        // rewardData = rewardData.filter(r => r.rewardData);
-        mapObject(rewardData, function (rew, key, count) {
-          if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
-            var topEntryContaineRlistItem = _this.rewardItem(rew);
-            topEntryContainer.appendChild(topEntryContaineRlistItem);
+    const accordionObj = _this.awardsList(
+      _this.settings.rewardsSection.accordionLayout,
+      function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
+        const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
+        if (typeof rewardData !== 'undefined') {
+          if (rewardData.length === 0) {
+            accordionSection.style.display = 'none';
           }
+          // rewardData = rewardData.filter(r => r.rewardData);
+          mapObject(rewardData, function (rew, key, count) {
+            if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
+              var topEntryContaineRlistItem = _this.rewardItem(rew);
+              topEntryContainer.appendChild(topEntryContaineRlistItem);
+            }
 
-          if (query(listContainer, '.cl-reward-' + rew.id) === null) {
-            var listItem = _this.rewardItem(rew);
-            listContainer.appendChild(listItem);
-          }
-        });
+            if (query(listContainer, '.cl-reward-' + rew.id) === null) {
+              var listItem = _this.rewardItem(rew);
+              listContainer.appendChild(listItem);
+            }
+          });
+        }
       }
-    });
+    );
 
     rewardList.innerHTML = '';
     rewardList.appendChild(accordionObj);
@@ -3836,18 +3845,44 @@ export const MainWidget = function (options) {
     }, 1000);
   };
 
-  this.loadAwards = function (callback, pageNumber, claimedPageNumber, expiredPageNumber, paginationArr = null, isClaimed = false, isExpired = false) {
+  this.loadAwards = function (
+    callback = null,
+    pageNumber = 1,
+    claimedPageNumber = 1,
+    expiredPageNumber = 1,
+    paginationArr = null,
+    isClaimed = false,
+    isExpired = false
+  ) {
     const _this = this;
+
+    const instantMenuItem = document.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+    if (instantMenuItem && instantMenuItem.classList.contains('active')) {
+      _this.settings.lbWidget.checkForAvailableAwards(null);
+      if (typeof callback === 'function') {
+        callback();
+      }
+      _this.loadInstantWins();
+      return;
+    }
+
     _this.settings.lbWidget.checkForAvailableAwards(
       function (rewards, availableRewards, expiredRewards) {
-        // _this.settings.lbWidget.updateRewardsNavigationCounts();
-        _this.rewardsListLayout(pageNumber, claimedPageNumber, expiredPageNumber, rewards, availableRewards, expiredRewards, paginationArr, isClaimed, isExpired);
+        _this.rewardsListLayout(
+          pageNumber,
+          claimedPageNumber,
+          expiredPageNumber,
+          rewards,
+          availableRewards,
+          expiredRewards,
+          paginationArr,
+          isClaimed,
+          isExpired
+        );
 
         if (typeof callback === 'function') {
           callback();
         }
-
-        // _this.loadInstantWins();
       },
       pageNumber,
       claimedPageNumber
@@ -3859,6 +3894,7 @@ export const MainWidget = function (options) {
       .then(async (singleWheelsData) => {
         const container = document.querySelector('.cl-accordion.instantWins');
         const list = container.querySelector('.cl-accordion-list');
+        if (!list) return;
         list.innerHTML = '';
 
         if (!singleWheelsData && !singleWheelsData.length) return;
@@ -3880,51 +3916,47 @@ export const MainWidget = function (options) {
 
           const tiles = wheel.tiles;
 
-          const settingsData = await this.settings.lbWidget.getSettingsFile(wheel.id);
+          this.settings.lbWidget.getSettingsFile(wheel.id)
+            .then(async (settingsData) => {
+              if (settingsData && settingsData.wheelSettings) {
+                await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+              }
 
-          if (settingsData && settingsData.wheelSettings) {
-            await this.replaceImageIdsWithUris(settingsData.wheelSettings);
-          }
+              if (settingsData && settingsData.messageSettings) {
+                await this.replaceImageIdsWithUris(settingsData.messageSettings);
+              }
 
-          if (settingsData && settingsData.messageSettings) {
-            await this.replaceImageIdsWithUris(settingsData.messageSettings);
-          }
+              const instantWin = { tiles, settingsData };
+              const containerId = document.getElementById(wheel.id);
 
-          const instantWin = { tiles, settingsData };
-          const containerId = document.getElementById(wheel.id);
-
-          await createSpinnerWheel(
-            containerId,
-            instantWin.tiles,
-            instantWin.settingsData,
-            () => {},
-            true
-          );
-
-          // console.log(index);
-          // if (index === singleWheelsData.length - 1) {
-          //   console.log('end');
-          // }
+              createSpinnerWheel(
+                containerId,
+                instantWin.tiles,
+                instantWin.settingsData,
+                () => {},
+                true
+              ).then(() => {});
+            });
         }
       });
   };
 
   this.loadSingleWheel = async function (id) {
     const singleWheelData = await this.settings.lbWidget.getSingleWheel(id);
+    const availablePlays = await this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id);
+    const remainingPlays = availablePlays[0].remainingPlays;
+
     const section = document.querySelector('.cl-accordion.instantWins');
     const wrapper = document.createElement('div');
     const template = require('../templates/instantWins/singleWheel.hbs');
-
-    this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id)
-      .then((availablePlays) => {
-        console.log('availablePlays: ', availablePlays);
-      });
 
     wrapper.classList.add('play-single-wheel');
 
     wrapper.innerHTML = template({
       title: singleWheelData[0].name,
-      buttonLabel: 'Play'
+      buttonLabel: this.settings.lbWidget.settings.translation.wof.buttonLabel,
+      remainingPlays: remainingPlays,
+      remainingPlaysLabel: this.settings.lbWidget.settings.translation.wof.remainingPlays
     });
 
     section.appendChild(wrapper);
@@ -3944,7 +3976,6 @@ export const MainWidget = function (options) {
 
     const containerId = document.querySelector('#play-single-wheel');
     const messageSettings = instantWin.settingsData.messageSettings;
-    const prizeSection = 1;
 
     const congratulationsModal = require('../helpers/wheelSpinner/modal');
 
@@ -3955,40 +3986,90 @@ export const MainWidget = function (options) {
       (giftValue) => {
         const { isCompleted } = giftValue;
         if (isCompleted) {
-          setTimeout(() => {
-            const reward = tiles[prizeSection - 1].reward;
+          setTimeout(async () => {
+            const availablePlays = await this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id);
+            const remainingValueEl = document.querySelector('.play-single-wheel-available-value');
+            remainingValueEl.innerHTML = availablePlays[0].remainingPlays;
+
+            if (availablePlays[0].remainingPlays) {
+              const wheel = document.querySelector('.play-single-wheel');
+              const wheelButtonElement = wheel.querySelector('.spin-button');
+              const buttonElement = document.querySelector('.play-single-wheel-btn');
+
+              buttonElement.classList.remove('disabled');
+              wheelButtonElement.classList.remove('disabled');
+            }
 
             const modal = document.querySelector('#congratulations-modal');
             if (modal) return;
-            congratulationsModal.createCongratulationsModal(reward, messageSettings, spinnerWheel.resetWheel);
+            congratulationsModal.createCongratulationsModal(
+              this.settings.instantWinsSection.receivedAward,
+              messageSettings
+            );
+
+            setTimeout(() => {
+              const climeBtn = document.querySelector('#congratulations-modal .claim-reward-btn');
+              climeBtn.addEventListener('click', async () => {
+                const awardId = climeBtn.dataset.id;
+                if (awardId) {
+                  this.settings.lbWidget.claimAward(awardId);
+                }
+                spinnerWheel.resetWheel();
+                const modal = document.getElementById('congratulations-modal');
+                modal.remove();
+              });
+            }, 300);
           }, 1000);
         }
-        console.log('isCompleted => ', isCompleted);
-        console.log(`Wheel stopped on prize section: ${giftValue}`);
       }
     );
 
     const wheel = document.querySelector('.play-single-wheel');
     const wheelButtonElement = wheel.querySelector('.spin-button');
-    wheelButtonElement.addEventListener('click', () => {
-      if (spinnerWheel && spinnerWheel.spinWheel) {
-        spinnerWheel.spinWheel(3);
-      }
-    });
-
     const buttonElement = document.querySelector('.play-single-wheel-btn');
-    buttonElement.addEventListener('click', async () => {
-      const requestStartTime = Date.now();
 
-      console.log('start');
-      const playData = await this.settings.lbWidget.playInstantWin(id);
+    if (remainingPlays) {
+      wheelButtonElement.addEventListener('click', async () => {
+        buttonElement.classList.add('disabled');
+        wheelButtonElement.classList.add('disabled');
 
-      const responseTime = Date.now();
-      const responseDuration = responseTime - requestStartTime;
-      const responseDurationInSeconds = responseDuration / 1000;
-      console.log(`Duration: (${responseDurationInSeconds.toFixed(2)} sec)`);
-      console.log('playData:', playData);
-    });
+        const playData = await this.settings.lbWidget.playInstantWin(id);
+        const playDataResults = playData[0].results;
+
+        if (playData && playData[0] && playData[0].results && playData[0].results.tiles[0] && playData[0].results.tiles[0].location) {
+          const winSection = playData[0].results.tiles[0].location.col;
+          this.settings.instantWinsSection.receivedAward = playDataResults.awards && playDataResults.awards[0]
+            ? { ...playDataResults.tiles[0].reward, awardId: playDataResults.awards[0].awardId }
+            : null;
+
+          if (spinnerWheel && spinnerWheel.spinWheel) {
+            spinnerWheel.spinWheel(winSection);
+          }
+        }
+      });
+
+      buttonElement.addEventListener('click', async () => {
+        buttonElement.classList.add('disabled');
+        wheelButtonElement.classList.add('disabled');
+
+        const playData = await this.settings.lbWidget.playInstantWin(id);
+        const playDataResults = playData[0].results;
+
+        if (playData && playData[0] && playData[0].results && playData[0].results.tiles[0] && playData[0].results.tiles[0].location) {
+          const winSection = playData[0].results.tiles[0].location.col;
+          this.settings.instantWinsSection.receivedAward = playDataResults.awards && playDataResults.awards[0]
+            ? { ...playDataResults.tiles[0].reward, awardId: playDataResults.awards[0].awardId }
+            : null;
+
+          if (spinnerWheel && spinnerWheel.spinWheel) {
+            spinnerWheel.spinWheel(winSection);
+          }
+        }
+      });
+    } else {
+      buttonElement.classList.add('disabled');
+      wheelButtonElement.classList.add('disabled');
+    }
   };
 
   this.hideSingleWheel = function () {
@@ -4027,205 +4108,6 @@ export const MainWidget = function (options) {
       }
     }
   };
-
-  // this.loadSingleWheels = async function (singleWheelsData) {
-  //   const container = document.querySelector('.cl-accordion.instantWins');
-  //   const list = container.querySelector('.cl-accordion-list');
-  //   list.innerHTML = '';
-  //
-  //   if (!singleWheelsData && !singleWheelsData.length) return;
-  //
-  //   for (const wheel of singleWheelsData) {
-  //     if (wheel.instantWinType === 2) continue;
-  //
-  //     const sw = document.createElement('div');
-  //     sw.classList.add('instant-wins-card');
-  //
-  //     const template = require('../templates/instantWins/wheelCard.hbs');
-  //     sw.innerHTML = template({
-  //       title: wheel.name,
-  //       id: wheel.id
-  //     });
-  //
-  //     list.appendChild(sw);
-  //
-  //     const tiles = wheel.tiles;
-  //     const settingsData = await this.settings.lbWidget.getSettingsFile(wheel.id);
-  //
-  //     if (settingsData && settingsData.wheelSettings) {
-  //       await this.replaceImageIdsWithUris(settingsData.wheelSettings);
-  //     }
-  //
-  //     if (settingsData && settingsData.messageSettings) {
-  //       await this.replaceImageIdsWithUris(settingsData.messageSettings);
-  //     }
-  //
-  //     const instantWin = { tiles, settingsData };
-  //     const containerId = document.getElementById(wheel.id);
-  //
-  //     await createSpinnerWheel(
-  //       containerId,
-  //       instantWin.tiles,
-  //       instantWin.settingsData,
-  //       () => {},
-  //       true
-  //     );
-  //   }
-  // };
-
-  // this.loadSingleWheel = async function (isMobile, singleWheel, idx) {
-  //   const _this = this;
-  //   const preLoader = _this.preloader();
-  //   const tiles = singleWheel.tiles;
-  //
-  //   const rand = (m, M) => Math.random() * (M - m) + m;
-  //   const tot = tiles.length;
-  //   const spinEl = document.querySelector('#spin-' + idx);
-  //   const climeBtn = document.querySelector('.single-wheel-popup-button');
-  //   const ctx = document.querySelector('#wheel-' + idx).getContext('2d');
-  //   const dia = ctx.canvas.width;
-  //   const rad = dia / 2;
-  //   const PI = Math.PI;
-  //   const TAU = 2 * PI;
-  //   const arc = TAU / tiles.length;
-  //
-  //   const friction = 0.991;
-  //   let angVel = 0;
-  //   let ang = 0;
-  //
-  //   const wheelFont = isMobile ? '10px sans-serif' : 'bold 15px sans-serif';
-  //
-  //   const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
-  //
-  //   const randomRgbColor = () => {
-  //     const r = Math.floor(Math.random() * 256); // Random between 0-255
-  //     const g = Math.floor(Math.random() * 256); // Random between 0-255
-  //     const b = Math.floor(Math.random() * 256); // Random between 0-255
-  //     return 'rgb(' + r + ',' + g + ',' + b + ')';
-  //   };
-  //
-  //   const addImageProcess = (src) => {
-  //     return new Promise((resolve, reject) => {
-  //       const img = new Image();
-  //       img.onload = () => resolve(img);
-  //       img.onerror = reject;
-  //       img.src = src;
-  //     });
-  //   };
-  //
-  //   // eslint-disable-next-line no-unused-vars
-  //   const loadImage = async (ctx, src, rad, rot) => {
-  //     const img = await addImageProcess(src);
-  //     ctx.save();
-  //     ctx.resetTransform();
-  //     ctx.translate(rad, rad);
-  //     ctx.rotate(rot);
-  //     ctx.clip();
-  //     ctx.drawImage(img, 0, -75, 150, 150);
-  //     ctx.restore();
-  //   };
-  //
-  //   async function drawSector (sector, i) {
-  //     const ang = arc * i;
-  //     // eslint-disable-next-line no-unused-vars
-  //     const rot = ang + arc / 2;
-  //     ctx.save();
-  //     // COLOR
-  //     ctx.beginPath();
-  //     ctx.fillStyle = randomRgbColor();
-  //     ctx.strokeStyle = '#8D0C71';
-  //     ctx.moveTo(rad, rad);
-  //     ctx.arc(rad, rad, rad, ang, ang + arc);
-  //     ctx.lineTo(rad, rad);
-  //     ctx.fill();
-  //     if (sector.iconLink) {
-  //       await loadImage(ctx, sector.iconLink, rad, rot);
-  //     }
-  //     ctx.stroke();
-  //     // TEXT
-  //     ctx.translate(rad, rad);
-  //     ctx.rotate(ang + arc / 2);
-  //     ctx.textAlign = 'right';
-  //     ctx.fillStyle = '#fff';
-  //     ctx.font = wheelFont;
-  //     ctx.strokeText(stripHtml(sector.text), rad - 15, 10);
-  //     ctx.fillText(stripHtml(sector.text), rad - 15, 10);
-  //     ctx.restore();
-  //   }
-  //
-  //   function rotate () {
-  //     ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
-  //   }
-  //
-  //   function frame () {
-  //     if (!angVel) return;
-  //     angVel *= friction;
-  //     if (angVel < 0.002) {
-  //       angVel = 0;
-  //       const sector = tiles[getIndex()];
-  //
-  //       const popup = document.querySelector('.single-wheel-popup');
-  //       popup.style.display = 'flex';
-  //
-  //       const wrapp = document.querySelector('.spinner-wrapper');
-  //       wrapp.classList.add('blur');
-  //
-  //       const description = document.querySelector('.single-wheel-popup-description');
-  //       description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + stripHtml(sector.text);
-  //     } // Bring to stop
-  //     ang += angVel; // Update angle
-  //     ang %= TAU; // Normalize angle
-  //     rotate();
-  //   }
-  //
-  //   function engine () {
-  //     frame();
-  //     requestAnimationFrame(engine);
-  //   }
-  //   async function init () {
-  //     for (const [i, sector] of tiles.entries()) {
-  //       await drawSector(sector, i);
-  //     }
-  //     // rotate();
-  //     engine();
-  //     spinEl.addEventListener('click', () => {
-  //       const play = _this.settings.lbWidget.playInstantWin();
-  //       console.log('play:', play);
-  //       if (!angVel) angVel = rand(0.25, 0.45);
-  //     });
-  //     climeBtn.addEventListener('click', () => {
-  //       const popup = document.querySelector('.single-wheel-popup');
-  //       popup.style.display = 'none';
-  //
-  //       const wrapp = document.querySelector('.spinner-wrapper');
-  //       wrapp.classList.remove('blur');
-  //     });
-  //   }
-  //
-  //   preLoader.show(async function () {
-  //     await init();
-  //     preLoader.hide();
-  //   });
-  // };
-
-  // this.createSingleWheelDom = function (idx, singleWheel, isMobile) {
-  //   const sw = document.createElement('div');
-  //   sw.classList.add('single-wheel-element');
-  //   sw.classList.add('single-wheel-element-' + idx);
-  //
-  //   const wheelSize = isMobile ? '192' : '300';
-  //
-  //   const template = require('../templates/mainWidget/singleWheelDom.hbs');
-  //   sw.innerHTML = template({
-  //     idx: idx,
-  //     wheelSize: wheelSize,
-  //     label: singleWheel.name ?? '',
-  //     description: singleWheel.description ? stripHtml(singleWheel.description) : '',
-  //     buttonLabel: 'Spin'
-  //   });
-  //
-  //   return sw;
-  // };
 
   this.hideInstantWins = function () {
     const playSingleWheel = document.querySelector('.play-single-wheel');
@@ -4343,10 +4225,6 @@ export const MainWidget = function (options) {
               changeInterval = setTimeout(function () {
                 addClass(dashboardContainer, 'cl-main-active-section');
               }, 30);
-
-              if (_this.settings.lbWidget.settings.instantWins.enable) {
-                _this.loadAwards();
-              }
 
               preLoader.hide();
 

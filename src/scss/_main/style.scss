@@ -3179,7 +3179,7 @@ em {
   position: absolute;
   right: 0;
   top: 0;
-  width: calc(100% - 148px);
+  width: 100%;
   height: 100%;
   background: rgba(0, 0, 0, 0.3);
   opacity: 0;
@@ -4931,7 +4931,15 @@ em {
     font-weight: 700;
     font-size: 28px;
     line-height: 28px;
-    margin-bottom: 20px;
+    margin-bottom: 0;
+  }
+
+  .play-single-wheel-available {
+    color: var(--lb3-rewards-item-label-color);
+    font-style: normal;
+    font-weight: 700;
+    font-size: 14px;
+    line-height: 28px;
   }
 
   .play-single-wheel-body {
@@ -4950,7 +4958,6 @@ em {
     justify-content: center;
     height: 36px;
     width: 240px;
-    margin-top: 20px;
     background: #ee3ec8;
     border-radius: 10px;
     color: var(--lb3-rewards-item-label-color);
@@ -4961,6 +4968,12 @@ em {
     overflow: hidden;
     text-overflow: ellipsis;
     cursor: pointer;
+
+    &.disabled {
+      cursor: not-allowed;
+      pointer-events: none;
+      opacity: 0.4;
+    }
   }
 
   #confetti {
@@ -4983,6 +4996,10 @@ em {
 
 .spin-button {
   cursor: pointer !important;
+  &.disabled {
+    cursor: not-allowed;
+    pointer-events: none;
+  }
 }
 
 #congratulations-modal {
@@ -4997,6 +5014,7 @@ em {
   align-items: center;
   justify-content: center;
   z-index: 1001;
+  border-radius: 0 30px 30px 0;
 
   .modal-header {
     display: flex;
@@ -5004,6 +5022,9 @@ em {
     align-items: center;
 
     .reward-title {
+      font-size: 20px;
+      font-weight: 700;
+      color: #BEE9F3;
       em {
         font-size: 20px;
         font-weight: 700;
@@ -5021,6 +5042,9 @@ em {
 
   .modal-subtitle {
     margin-top: 10px;
+    font-size: 14px;
+    font-weight: 500;
+    color: #E6E6E6;
     em {
       font-size: 14px;
       font-weight: 500;
@@ -5068,19 +5092,19 @@ em {
 
   .prize-data {
     display: flex;
-    flex-direction: column;
-    align-items: flex-start;
+    justify-content: center;
+    margin-top: 12px;
   }
 
   .quantity {
     font-weight: 600;
-    font-size: 32px;
+    font-size: 18px;
     color: #FFFFFF;
   }
 
   .prize-name {
     font-weight: 600;
-    font-size: 28px;
+    font-size: 18px;
     color: #FFFFFF;
   }
 

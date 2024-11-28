@@ -1334,7 +1334,7 @@ export const LbWidget = function (options) {
 
     return new Promise((resolve, reject) => {
       this.settings.apiWs.instantWinsApiWsClient.playInstantWin(request, (json) => {
-        resolve(json);
+        resolve(json.data);
       });
     });
   };
@@ -1386,7 +1386,7 @@ export const LbWidget = function (options) {
 
     return new Promise((resolve, reject) => {
       this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
-        resolve(json);
+        resolve(json.data);
       });
     });
   };
@@ -3354,6 +3354,7 @@ export const LbWidget = function (options) {
       const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
       const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
       const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
+      const preLoader = _this.settings.mainWidget.preloader();
 
       dashboard.style.display = 'none';
       dashboardIcon.classList.remove('cl-active-nav');
@@ -3361,25 +3362,32 @@ export const LbWidget = function (options) {
 
       const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
       rewardsContainer.style.display = 'flex';
-      addClass(rewardsContainer, 'cl-main-active-section');
 
-      const container = document.querySelector('.cl-main-widget-reward-list-body-res');
-      const sections = container.querySelectorAll('.cl-accordion');
-      const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
-      const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
-      const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+      preLoader.show(async function () {
+        await _this.settings.mainWidget.loadAwards(
+          async function () {
+            _this.settings.mainWidget.loadInstantWins();
 
-      menuItems.forEach(i => i.classList.remove('active'));
-      instantMenuItem.classList.add('active');
-      sections.forEach(s => s.classList.remove('cl-shown'));
-      instantWinsSection.classList.add('cl-shown');
+            const container = document.querySelector('.cl-main-widget-reward-list-body-res');
+            const sections = container.querySelectorAll('.cl-accordion');
+            const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
+            const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
+            const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
 
-      _this.settings.mainWidget.loadInstantWins();
+            menuItems.forEach(i => i.classList.remove('active'));
+            instantMenuItem.classList.add('active');
+            sections.forEach(s => s.classList.remove('cl-shown'));
+            instantWinsSection.classList.add('cl-shown');
 
-      if (hasClass(el, '.cl-main-widget-dashboard-instant-wins-wheel-button')) {
-        const id = el.dataset.id;
-        this.settings.mainWidget.loadSingleWheel(id);
-      }
+            if (hasClass(el, '.cl-main-widget-dashboard-instant-wins-wheel-button')) {
+              const id = el.dataset.id;
+              await _this.settings.mainWidget.loadSingleWheel(id);
+            }
+            addClass(rewardsContainer, 'cl-main-active-section');
+            preLoader.hide();
+          }
+        );
+      });
 
       // dashboard scratchcards button
     } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-cards-button')) {
@@ -3918,20 +3926,18 @@ export const LbWidget = function (options) {
         member: this.settings.memberRefId,
         apiKey: this.settings.apiKey,
         isReferenceId: true,
-        expires: this.settings.expires,
-        resource: 'ziqni-gapi'
+        expires: this.settings.expires
       };
     } else {
       memberTokenRequest = {
         member: 'PUBLIC',
         apiKey: this.settings.apiKey,
         isReferenceId: false,
-        expires: this.settings.expires,
-        resource: 'ziqni-gapi'
+        expires: this.settings.expires
       };
     }
 
-    const response = await fetch('https://api.ziqni.com/member-token', {
+    const response = await fetch('https://member-api.ziqni.com/member-token', {
       method: 'post',
       body: JSON.stringify(memberTokenRequest),
       headers: {

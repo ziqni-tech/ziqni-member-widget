@@ -112,6 +112,10 @@
         "prizeLabel": "Prize",
         "mapLabel": "Mission map"
     },
+    "wof": {
+        "remainingPlays": "x spin available",
+        "buttonLabel": "Play"
+    },
     "global": {
         "copy": "Powered By Ziqni",
         "descriptionLabel": "Description",
