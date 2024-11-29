@@ -8608,6 +8608,41 @@ em {
               height: 100px;
             }
           }
+
+          .instant-wins-card {
+            max-width: 144px;
+            height: 200px;
+            padding: 10px 6px;
+
+            .instant-wins-card-title {
+              text-align: center;
+            }
+
+            .spinner-container-wrapper {
+              height: 84px;
+            }
+
+            .spinner-container {
+              width: 132px;
+              height: 84px;
+            }
+
+            .instant-wins-card-title {
+              font-size: 12px;
+            }
+          }
+
+          .play-single-wheel {
+            width: 100%;
+            left: 0;
+
+            .play-single-wheel-body {
+              aspect-ratio : 1 / 1;
+              width: 100%;
+              max-width: 450px;
+            }
+          }
+
           .wheel-label, .scratchcards-label {
             font-size: 12px;
             line-height: 38px;
@@ -8616,7 +8651,7 @@ em {
             width: 144px;
             height: 180px;
           }
-          .wheel-image, .scratchcards-image {
+          .scratchcards-image {
             width: 130px;
             height: 80px;
             background-size: contain;
@@ -8970,6 +9005,7 @@ em {
         .cl-main-widget-dashboard-instant-wins-wrapp {
           justify-content: space-around;
           padding-top: 10px;
+          margin-bottom: 20px;
         }
         .cl-main-widget-dashboard-instant-wins-wheel-image {
           width: 132px;

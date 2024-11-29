@@ -3214,26 +3214,27 @@ export const MainWidget = function (options) {
         list.appendChild(listItem);
 
         const tiles = wheel.tiles;
-        const settingsData = await this.settings.lbWidget.getSettingsFile(wheel.id);
+        this.settings.lbWidget.getSettingsFile(wheel.id)
+          .then(async (settingsData) => {
+            if (settingsData && settingsData.wheelSettings) {
+              await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+            }
 
-        if (settingsData && settingsData.wheelSettings) {
-          await this.replaceImageIdsWithUris(settingsData.wheelSettings);
-        }
+            if (settingsData && settingsData.messageSettings) {
+              await this.replaceImageIdsWithUris(settingsData.messageSettings);
+            }
 
-        if (settingsData && settingsData.messageSettings) {
-          await this.replaceImageIdsWithUris(settingsData.messageSettings);
-        }
+            const instantWin = { tiles, settingsData };
+            const containerId = document.getElementById(wheel.id);
 
-        const instantWin = { tiles, settingsData };
-        const containerId = document.getElementById(wheel.id);
-
-        await createSpinnerWheel(
-          containerId,
-          instantWin.tiles,
-          instantWin.settingsData,
-          () => {},
-          true
-        );
+            createSpinnerWheel(
+              containerId,
+              instantWin.tiles,
+              instantWin.settingsData,
+              () => {},
+              true
+            );
+          });
       }
     }
   };
@@ -3927,7 +3928,8 @@ export const MainWidget = function (options) {
               }
 
               const instantWin = { tiles, settingsData };
-              const containerId = document.getElementById(wheel.id);
+              const container = document.querySelector('.cl-accordion.instantWins');
+              const containerId = container.querySelector(`div[id='${wheel.id}']`);
 
               createSpinnerWheel(
                 containerId,
