@@ -8670,7 +8670,6 @@ em {
             .play-single-wheel-title {
               padding-left: 20px;
               padding-right: 20px;
-              margin-top: 40px;
             }
 
             .play-single-wheel-body {
@@ -9230,6 +9229,26 @@ em {
         }
         .cl-name-col {
           min-width: 50px;
+        }
+      }
+    }
+  }
+}
+
+@media screen and (max-height: 760px) {
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-reward-list {
+        .cl-main-widget-reward-list-body-res {
+          .play-single-wheel {
+            .play-single-wheel-body {
+              aspect-ratio: 1 / 1;
+              width: 100%;
+              height: auto;
+              max-width: 300px;
+              flex-shrink: 1;
+            }
+          }
         }
       }
     }
