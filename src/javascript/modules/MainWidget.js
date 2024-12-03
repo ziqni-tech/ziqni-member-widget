@@ -3984,7 +3984,7 @@ export const MainWidget = function (options) {
     let arrowOptions = { width: 70, height: 70, position: 'middle' };
     const isMobile = window.screen.availWidth < 768;
     if (isMobile) {
-      arrowOptions = { width: 60, height: 60, position: 'middle' };
+      arrowOptions = { width: 50, height: 50, position: 'middle' };
     }
 
     const spinnerWheel = await createSpinnerWheel(
