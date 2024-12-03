@@ -8635,11 +8635,22 @@ em {
           .play-single-wheel {
             width: 100%;
             left: 0;
+            padding-left: 0;
+            padding-right: 0;
+
+            .play-single-wheel-title {
+              padding-left: 20px;
+              padding-right: 20px;
+            }
 
             .play-single-wheel-body {
               aspect-ratio : 1 / 1;
               width: 100%;
               max-width: 450px;
+
+              .spin-button {
+                transform: scale(0.9);
+              }
             }
           }
 

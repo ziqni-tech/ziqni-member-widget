@@ -3981,6 +3981,12 @@ export const MainWidget = function (options) {
 
     const congratulationsModal = require('../helpers/wheelSpinner/modal');
 
+    let arrowOptions = { width: 80, height: 80, position: 'middle' };
+    const isMobile = window.screen.availWidth < 768;
+    if (isMobile) {
+      arrowOptions = { width: 60, height: 60, position: 'middle' };
+    }
+
     const spinnerWheel = await createSpinnerWheel(
       containerId,
       instantWin.tiles,
@@ -4023,7 +4029,10 @@ export const MainWidget = function (options) {
             }, 300);
           }, 1000);
         }
-      }
+      },
+      false,
+      false,
+      arrowOptions
     );
 
     const wheel = document.querySelector('.play-single-wheel');
