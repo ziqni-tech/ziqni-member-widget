@@ -13,7 +13,7 @@ export function createCongratulationsModal (reward, messageSettings) {
   // Merge defaultSettings with messageSettings
   messageSettings = { ...defaultSettings, ...messageSettings };
 
-  const sectionContainer = document.querySelector('.cl-main-widget-section-container');
+  const sectionContainer = document.querySelector('.play-single-wheel');
 
   if (modalContainer) modalContainer = null;
 
