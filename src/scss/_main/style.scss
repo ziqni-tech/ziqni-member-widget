@@ -4954,6 +4954,7 @@ em {
 
   .play-single-wheel-btn {
     display: flex;
+    flex-shrink: 0;
     align-items: center;
     justify-content: center;
     height: 36px;
@@ -5009,7 +5010,7 @@ em {
   transform: translate(-50%, -50%);
   width: 100%;
   height: 100%;
-  background: rgba(20, 20, 20, 0.9);
+  background: rgba(0, 0, 0, .3);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -7430,6 +7431,27 @@ em {
         border: 1px solid #F7A1E4;
         box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
       }
+
+      .instant-wins-card {
+        background: #dce6ef;
+
+        .instant-wins-card-button {
+          color: #ffffff;
+        }
+      }
+
+      .play-single-wheel {
+        background: #dce6ef;
+        border: none;
+
+        .play-single-wheel-back-btn {
+          background-image: url(../../images/small-left-arrow-black.svg);
+        }
+
+        .play-single-wheel-btn {
+          color: #ffffff;
+        }
+      }
     }
     .cl-main-widget-reward-header {
       .cl-main-widget-reward-header-label {
@@ -7613,6 +7635,12 @@ em {
     .cl-main-widget-lb-details-content-date,
     .cl-main-widget-lb-details-description-date {
       color: #ffffff;
+    }
+
+    #congratulations-modal {
+      .win-card {
+        background: #dce6ef;
+      }
     }
   }
   .cl-main-widget-inner-wrapper {
@@ -8637,16 +8665,20 @@ em {
             left: 0;
             padding-left: 0;
             padding-right: 0;
+            overflow: auto;
 
             .play-single-wheel-title {
               padding-left: 20px;
               padding-right: 20px;
+              margin-top: 40px;
             }
 
             .play-single-wheel-body {
               aspect-ratio : 1 / 1;
               width: 100%;
+              height: auto;
               max-width: 450px;
+              flex-shrink: 1;
 
               .spin-button {
                 transform: scale(0.9);
