@@ -3982,7 +3982,7 @@ export const MainWidget = function (options) {
     const congratulationsModal = require('../helpers/wheelSpinner/modal');
 
     let arrowOptions = { width: 70, height: 70, position: 'middle' };
-    const isMobile = window.screen.availWidth < 768;
+    const isMobile = window.screen.availWidth < 768 || window.screen.availHeight < 500;
     if (isMobile) {
       arrowOptions = { width: 50, height: 50, position: 'middle' };
     }

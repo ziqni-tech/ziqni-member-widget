@@ -4925,6 +4925,12 @@ em {
     left: 20px;
   }
 
+  .play-single-wheel-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+
   .play-single-wheel-title {
     color: var(--lb3-rewards-item-label-color);
     font-style: normal;
@@ -8086,6 +8092,25 @@ em {
         margin: 0 16px 0 0;
       }
     }
+
+    .play-single-wheel {
+      flex-direction: row;
+
+      .play-single-wheel-btn {
+        display: none;
+      }
+
+      .play-single-wheel-header {
+        width: 50%;
+        padding: 0 20px;
+      }
+
+      .play-single-wheel-body {
+        aspect-ratio: 1 / 1;
+        max-width: 50%;
+        height: 100%;
+      }
+    }
   }
 }
 
@@ -8093,6 +8118,35 @@ em {
   .cl-main-widget-wrapper {
     padding: 10px 20px 10px;
     .cl-main-widget-section-container {
+      .cl-main-widget-reward-list {
+        .cl-main-widget-reward-list-body-res {
+          .instantWins {
+            .play-single-wheel {
+              flex-direction: row;
+
+              .play-single-wheel-btn {
+                display: none;
+              }
+
+              .play-single-wheel-header {
+                width: 50%;
+                padding: 0 20px;
+              }
+
+              .play-single-wheel-body {
+                aspect-ratio: 1 / 1;
+                max-width: 50%;
+                height: 100%;
+
+                .spin-button {
+                  transform: scale(0.8);
+                }
+              }
+            }
+          }
+        }
+      }
+
       .cl-main-widget-navigation-darkMode-toggle {
         display: none;
       }
