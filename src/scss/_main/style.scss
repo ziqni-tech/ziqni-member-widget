@@ -4953,6 +4953,11 @@ em {
     height: 470px;
   }
 
+  .play-single-wheel-body.disabled {
+    opacity: 0.5;
+    cursor: not-allowed;
+  }
+
   .play-single-wheel-spinner {
     width: 100%;
     height: 100%;
@@ -8137,10 +8142,6 @@ em {
                 aspect-ratio: 1 / 1;
                 max-width: 50%;
                 height: 100%;
-
-                .spin-button {
-                  transform: scale(0.8);
-                }
               }
             }
           }
@@ -8732,10 +8733,6 @@ em {
               height: auto;
               max-width: 450px;
               flex-shrink: 1;
-
-              .spin-button {
-                transform: scale(0.9);
-              }
             }
           }
 

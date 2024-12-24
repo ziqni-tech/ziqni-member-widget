@@ -4036,6 +4036,7 @@ export const MainWidget = function (options) {
     );
 
     const wheel = document.querySelector('.play-single-wheel');
+    const wheelBody = wheel.querySelector('.play-single-wheel-body');
     const wheelButtonElement = wheel.querySelector('.spin-button');
     const buttonElement = document.querySelector('.play-single-wheel-btn');
 
@@ -4080,6 +4081,7 @@ export const MainWidget = function (options) {
     } else {
       buttonElement.classList.add('disabled');
       wheelButtonElement.classList.add('disabled');
+      wheelBody.classList.add('disabled');
     }
   };
 
