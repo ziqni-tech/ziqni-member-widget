@@ -773,6 +773,16 @@ export const LbWidget = function (options) {
     this.settings.competition.contests = null;
     this.settings.competition.activeContestId = null;
 
+    const optInStatus = await this.getCompetitionOptInStatus(
+      this.settings.competition.activeCompetition.id
+    );
+
+    this.settings.competition.activeCompetition.optInStatus = optInStatus;
+
+    if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
+      this.settings.competition.activeCompetition.optin = true;
+    }
+
     const contestRequest = ContestRequest.constructFromObject({
       languageKey: this.settings.language,
       contestFilter: {
@@ -2129,6 +2139,10 @@ export const LbWidget = function (options) {
         callback();
       }
     });
+
+    this.settings.competition.activeCompetition.optInStatus = await this.getCompetitionOptInStatus(
+      this.settings.competition.activeCompetition.id
+    );
   };
 
   var revalidationCount = 0;
@@ -2159,26 +2173,26 @@ export const LbWidget = function (options) {
       clearTimeout(_this.settings.leaderboard.refreshLbDataInterval);
     }
 
-    if (
-      _this.settings.competition.activeCompetition.constraints &&
-      _this.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
-    ) {
-      if (
-        !_this.settings.competition.activeCompetition.optin ||
-        (
-          typeof _this.settings.competition.activeCompetition.optin === 'boolean' &&
-          !_this.settings.competition.activeCompetition.optin
-        )
-      ) {
-        const optInStatus = await this.getCompetitionOptInStatus(
-          this.settings.competition.activeCompetition.id
-        );
-
-        if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
-          this.settings.competition.activeCompetition.optin = true;
-        }
-      }
-    }
+    // if (
+    //   _this.settings.competition.activeCompetition.constraints &&
+    //   _this.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
+    // ) {
+    //   if (
+    //     !_this.settings.competition.activeCompetition.optin ||
+    //     (
+    //       typeof _this.settings.competition.activeCompetition.optin === 'boolean' &&
+    //       !_this.settings.competition.activeCompetition.optin
+    //     )
+    //   ) {
+    //     const optInStatus = await this.getCompetitionOptInStatus(
+    //       this.settings.competition.activeCompetition.id
+    //     );
+    //
+    //     if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
+    //       this.settings.competition.activeCompetition.optin = true;
+    //     }
+    //   }
+    // }
 
     if (
       (

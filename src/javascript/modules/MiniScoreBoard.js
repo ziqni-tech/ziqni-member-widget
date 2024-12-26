@@ -835,9 +835,16 @@ export const MiniScoreBoard = function (options) {
         this.settings.lbWidget.settings.competition.activeCompetition.constraints &&
         this.settings.lbWidget.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
       ) {
-        const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
-          _this.settings.lbWidget.settings.competition.activeCompetition.id
-        );
+        let optInStatus = this.settings.lbWidget.settings.competition.activeCompetition.optInStatus;
+        // const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
+        //   _this.settings.lbWidget.settings.competition.activeCompetition.id
+        // );
+        if (optInStatus.length && (optInStatus[0].status === 'Entering' || optInStatus[0].status === 'Processing')) {
+          optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
+            _this.settings.lbWidget.settings.competition.activeCompetition.id
+          );
+          this.settings.lbWidget.settings.competition.activeCompetition.optInStatus = optInStatus;
+        }
 
         if (!_this.settings.active) return;
 

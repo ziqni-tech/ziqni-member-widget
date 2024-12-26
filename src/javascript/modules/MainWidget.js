@@ -1406,9 +1406,7 @@ export const MainWidget = function (options) {
       this.settings.lbWidget.settings.competition.activeCompetition.status !== 'Finalised' &&
       this.settings.lbWidget.settings.competition.activeCompetition.status !== 'Finished'
     ) {
-      const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
-        this.settings.lbWidget.settings.competition.activeCompetition.id
-      );
+      const optInStatus = this.settings.lbWidget.settings.competition.activeCompetition.optInStatus;
 
       if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
         optIn.parentNode.style.display = 'none';
@@ -1416,6 +1414,10 @@ export const MainWidget = function (options) {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.processing;
         addClass(optIn, 'checking');
         optIn.parentNode.style.display = 'flex';
+
+        this.settings.lbWidget.settings.competition.activeCompetition.optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
+          this.settings.lbWidget.settings.competition.activeCompetition.id
+        );
       } else {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.enter;
         optIn.parentNode.style.display = 'flex';
