@@ -3543,13 +3543,26 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'scratchcards-button')) {
       // _this.settings.mainWidget.loadScratchCards();
 
-      // load rewards details
+      // claim award
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {
       const awardId = closest(el, '.cl-rew-list-item').dataset.id;
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
         await _this.claimAward(awardId, function () {
           setTimeout(function () {
+            preLoader.hide();
+          }, 3500);
+        });
+      });
+
+      // claim dashboard award
+    } else if (hasClass(el, 'cl-rew-dashboard-details-claim')) {
+      const awardId = closest(el, '.dashboard-award-item').dataset.id;
+      const preLoader = _this.settings.mainWidget.preloader();
+      preLoader.show(async function () {
+        await _this.claimAward(awardId, function () {
+          setTimeout(function () {
+            _this.settings.mainWidget.loadDashboardAwards();
             preLoader.hide();
           }, 3500);
         });
@@ -3911,6 +3924,11 @@ export const LbWidget = function (options) {
         }
         if (json && json.entityType === 'Award') {
           setTimeout(async () => {
+            const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+            if (dashboard && dashboard.classList.contains('cl-main-active-section')) {
+              _this.settings.mainWidget.loadDashboardAwards();
+            }
+
             _this.settings.mainWidget.loadAwards(
               function () {
                 _this.animateIcon('Award');
