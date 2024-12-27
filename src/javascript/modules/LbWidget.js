@@ -393,6 +393,29 @@ export const LbWidget = function (options) {
     return '<div class="banner-date">' + monthsElem + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
   };
 
+  this.getDashboardAwards = async function () {
+    const availableAwardRequest = AwardRequest.constructFromObject({
+      languageKey: this.settings.language,
+      awardFilter: {
+        statusCode: {
+          moreThan: 14,
+          lessThan: 16
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: 0,
+        limit: 2
+      },
+      currencyKey: this.settings.currency
+    });
+
+    const awards = await this.getAwardsApi(availableAwardRequest);
+
+    return awards.data;
+  };
+
   this.getDashboardCompetitions = async function () {
     const activeRequest = CompetitionRequest.constructFromObject({
       languageKey: this.settings.language,

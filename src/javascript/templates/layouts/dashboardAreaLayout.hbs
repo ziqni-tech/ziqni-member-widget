@@ -3,6 +3,15 @@
   <div class="cl-main-widget-dashboard-header-close"></div>
 </div>
 <div class="cl-main-widget-dashboard-body">
+  {{#if isAwards}}
+    <div class="cl-main-widget-dashboard-awards hidden">
+      <div class="cl-main-widget-dashboard-awards-title">Available Awards</div>
+      <div class="cl-main-widget-dashboard-awards-wrapp">
+        <div class="cl-main-widget-dashboard-awards-list"></div>
+        <div class="cl-main-widget-dashboard-awards-list-more">{{ seeAllLabel }}</div>
+      </div>
+    </div>
+  {{/if}}
   {{#if isInstantWins}}
     <div class="cl-main-widget-dashboard-instant-wins">
       <div class="cl-main-widget-dashboard-instant-wins-title">{{ instantWinsTitle }}</div>

@@ -689,6 +689,7 @@ export const MainWidget = function (options) {
 
     const template = require('../templates/layouts/dashboardAreaLayout.hbs');
     sectionDashboard.innerHTML = template({
+      isAwards: this.settings.lbWidget.settings.navigation.rewards.enable,
       isInstantWins: this.settings.lbWidget.settings.instantWins.enable,
       isAchievements: this.settings.lbWidget.settings.navigation.achievements.enable,
       isTournaments: this.settings.lbWidget.settings.navigation.tournaments.enable,
@@ -3241,6 +3242,41 @@ export const MainWidget = function (options) {
     }
   };
 
+  this.dashboardAwardItem = function (award) {
+    const listItem = document.createElement('div');
+    listItem.setAttribute('class', 'dashboard-award-item');
+    listItem.setAttribute('data-id', award.id);
+
+    const labelText = stripHtml(award.name);
+
+    const template = require('../templates/mainWidget/dashboardAwardItem.hbs');
+    listItem.innerHTML = template({
+      claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
+      prize: award.rewardValue,
+      type: award.rewardType.key,
+      label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
+      iconLink: ''
+    });
+
+    return listItem;
+  };
+
+  this.loadDashboardAwards = async function () {
+    const awardsList = query(this.settings.section, '.cl-main-widget-dashboard-awards-list');
+    const awardsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-awards');
+    awardsList.innerHTML = '';
+
+    const awards = await this.settings.lbWidget.getDashboardAwards();
+
+    if (awards && awards.length) {
+      awardsWrapp.classList.remove('hidden');
+      awards.forEach(t => {
+        const listItem = this.dashboardAwardItem(t);
+        awardsList.appendChild(listItem);
+      });
+    }
+  };
+
   this.loadDashboardTournaments = async function () {
     const tournamentsList = query(this.settings.section, '.cl-main-widget-dashboard-tournaments-list');
     const tournamentsContainer = query(this.settings.section, '.cl-main-widget-dashboard-tournaments');
@@ -4222,6 +4258,10 @@ export const MainWidget = function (options) {
               const dashboardContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.dashboard.containerClass);
 
               dashboardContainer.style.display = 'flex';
+
+              if (_this.settings.lbWidget.settings.navigation.rewards.enable) {
+                _this.loadDashboardAwards();
+              }
 
               if (_this.settings.lbWidget.settings.instantWins.enable) {
                 _this.loadDashboardInstantWins();
