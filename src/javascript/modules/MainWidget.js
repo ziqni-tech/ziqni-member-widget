@@ -3188,6 +3188,7 @@ export const MainWidget = function (options) {
 
   this.loadDashboardInstantWins = async function () {
     const list = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins-wrapp');
+    const container = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins');
     list.innerHTML = '';
 
     const awardsList = document.querySelector('.cl-accordion.instantWins');
@@ -3198,6 +3199,8 @@ export const MainWidget = function (options) {
 
     const items = await this.settings.lbWidget.getSingleWheels();
     if (items && items.length) {
+      container.classList.remove('hidden');
+
       let wheels = items.filter(item => item.instantWinType === 1);
       if (wheels.length > 2) {
         wheels = wheels.slice(0, 2);
@@ -3264,9 +3267,9 @@ export const MainWidget = function (options) {
   this.loadDashboardAwards = async function () {
     const awardsList = query(this.settings.section, '.cl-main-widget-dashboard-awards-list');
     const awardsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-awards');
-    awardsList.innerHTML = '';
 
     const awards = await this.settings.lbWidget.getDashboardAwards();
+    awardsList.innerHTML = '';
 
     if (awards && awards.length) {
       awardsWrapp.classList.remove('hidden');
@@ -3274,6 +3277,8 @@ export const MainWidget = function (options) {
         const listItem = this.dashboardAwardItem(t);
         awardsList.appendChild(listItem);
       });
+    } else {
+      awardsWrapp.classList.add('hidden');
     }
   };
 
@@ -4044,6 +4049,8 @@ export const MainWidget = function (options) {
 
               buttonElement.classList.remove('disabled');
               wheelButtonElement.classList.remove('disabled');
+            } else {
+              wheelBody.classList.add('disabled');
             }
 
             const modal = document.querySelector('#congratulations-modal');
@@ -4259,21 +4266,33 @@ export const MainWidget = function (options) {
 
               dashboardContainer.style.display = 'flex';
 
-              if (_this.settings.lbWidget.settings.navigation.rewards.enable) {
+              if (
+                _this.settings.lbWidget.settings.navigation.rewards.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showAvailableAwards
+              ) {
                 _this.loadDashboardAwards();
               }
 
-              if (_this.settings.lbWidget.settings.instantWins.enable) {
+              if (
+                _this.settings.lbWidget.settings.instantWins.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showInstantWins
+              ) {
                 _this.loadDashboardInstantWins();
               }
 
-              if (_this.settings.lbWidget.settings.navigation.achievements.enable) {
+              if (
+                _this.settings.lbWidget.settings.navigation.achievements.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showAchievements
+              ) {
                 _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {
                   _this.loadDashboardAchievements(achievementData.list);
                 });
               }
 
-              if (_this.settings.lbWidget.settings.navigation.tournaments.enable) {
+              if (
+                _this.settings.lbWidget.settings.navigation.tournaments.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showTournaments
+              ) {
                 _this.loadDashboardTournaments();
               }
 

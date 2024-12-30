@@ -154,7 +154,13 @@ const instance = new MemberWidget({
     messagesForTheLast: 30 // Days; 30 by default
   },
   navigation: {
-    dashboard: {enable: true},
+    dashboard: {
+      enable: true, // true by default
+      showAvailableAwards: true, // true by default
+      showInstantWins: true, // true by default
+      showAchievements: true, // true by default
+      showTournaments: true // true by default
+    },
     tournaments: {
       enable: true,
       showFinishedTournaments: true

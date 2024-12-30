@@ -209,6 +209,10 @@ export const LbWidget = function (options) {
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
       dashboard: {
         enable: true,
+        showAvailableAwards: true,
+        showInstantWins: true,
+        showAchievements: true,
+        showTournaments: true,
         navigationClass: 'cl-main-widget-navigation-dashboard',
         navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
         containerClass: 'cl-main-widget-section-dashboard',
@@ -3296,6 +3300,32 @@ export const LbWidget = function (options) {
           _this.settings.mainWidget.loadCompetitionList(preLoader.hide(), 1, pageNumber, 1, paginationArr, false, true, false);
         });
       }
+
+      // load dashboard awards
+    } else if (hasClass(el, 'cl-main-widget-dashboard-awards-list-more')) {
+      const preLoader = _this.settings.mainWidget.preloader();
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
+
+      preLoader.show(function () {
+        awardsIcon.classList.add('cl-active-nav');
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+
+        _this.settings.mainWidget.loadAwards(function () {
+          const awardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+
+          _this.settings.mainWidget.settings.achievement.detailsContainer.style.display = 'none';
+
+          awardsContainer.style.display = 'flex';
+          setTimeout(function () {
+            addClass(awardsContainer, 'cl-main-active-section');
+          }, 30);
+
+          preLoader.hide();
+        });
+      });
 
       // load dashboard achievements
     } else if (hasClass(el, 'cl-main-widget-dashboard-achievements-list-more')) {
