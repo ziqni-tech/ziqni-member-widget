@@ -759,6 +759,14 @@ export const MainWidget = function (options) {
     return cellWrapper;
   };
 
+  this.clearLeaderboard = function () {
+    const lbContainer = document.querySelector('.cl-main-widget-lb-leaderboard-res-container');
+    const lbRows = lbContainer.querySelectorAll('.cl-lb-row');
+    if (lbRows && lbRows.length) {
+      lbRows.forEach(row => row.remove());
+    }
+  };
+
   this.leaderboardRowUpdate = function (rank, icon, name, change, growth, points, reward, count, memberFound, onMissing) {
     const _this = this;
     const cellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + count);

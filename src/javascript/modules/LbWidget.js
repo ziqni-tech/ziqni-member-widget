@@ -209,7 +209,7 @@ export const LbWidget = function (options) {
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
       dashboard: {
         enable: true,
-        showAvailableAwards: true,
+        showAvailableAwards: false,
         showInstantWins: true,
         showAchievements: true,
         showTournaments: true,
@@ -3498,6 +3498,7 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
 
       preLoader.show(function () {
+        _this.settings.mainWidget.clearLeaderboard();
         _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
@@ -3681,6 +3682,7 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
 
       preLoader.show(function () {
+        _this.settings.mainWidget.clearLeaderboard();
         _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
