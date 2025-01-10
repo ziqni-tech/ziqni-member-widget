@@ -2481,14 +2481,37 @@ em {
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
-  padding-bottom: 14px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description-title-wrapp {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding-bottom: 8px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-description-gotolb {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 20px;
+  background: #ee3ec8;
+  border-radius: 10px;
+  color: var(--lb3-rewards-item-label-color);
+  font-weight: 700;
+  font-size: 14px;
+  line-height: 14px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: pointer;
+  padding: 0 14px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container.cl-main-active-embedded-description .cl-main-widget-lb-details-tc-title {
   font-size: 14px;
   font-weight: 700;
   line-height: 14px;
-  padding-bottom: 14px;
   display: none;
 }
 

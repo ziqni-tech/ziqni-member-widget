@@ -605,6 +605,7 @@ export const MainWidget = function (options) {
       descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
       tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
       enterLabel: this.settings.lbWidget.settings.translation.tournaments.enter,
+      gotolbLabel: this.settings.lbWidget.settings.translation.tournaments.goToLbLabel,
       globalCopy: this.settings.lbWidget.settings.translation.global.copy,
       monthsFull: this.settings.lbWidget.settings.translation.time.monthsFull,
       daysFull: this.settings.lbWidget.settings.translation.time.daysFull,

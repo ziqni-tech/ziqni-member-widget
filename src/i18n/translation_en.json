@@ -42,7 +42,8 @@
         "finished": "Finished",
         "registered": "Registered",
         "noAvailableCompetitions": "No available competition",
-        "date": "Date"
+        "date": "Date",
+        "goToLbLabel": "Go to leaderboard"
     },
     "leaderboard": {
         "rank": "Rank",

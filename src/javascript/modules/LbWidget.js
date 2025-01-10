@@ -2944,7 +2944,8 @@ export const LbWidget = function (options) {
       (
         hasClass(el, 'cl-main-widget-lb-details-description-close') ||
         hasClass(el, 'cl-main-widget-lb-header-back-icon') ||
-        hasClass(el, 'cl-main-widget-lb-details-description-header-back')
+        hasClass(el, 'cl-main-widget-lb-details-description-header-back') ||
+        hasClass(el, 'cl-main-widget-lb-details-description-gotolb')
       )
     ) {
       const missingMember = document.querySelector('.cl-main-widget-lb-missing-member');
