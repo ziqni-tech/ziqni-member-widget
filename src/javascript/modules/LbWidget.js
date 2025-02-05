@@ -1404,12 +1404,37 @@ export const LbWidget = function (options) {
     }, null);
 
     const singleWheels = await this.getInstantWinsApi(request);
+    let singleWheelsData = singleWheels.data;
+
+    const ids = singleWheelsData.map(s => s.id);
+    let availablePlays = await this.getInstantWinsAvailablePlays(ids);
+
+    availablePlays = availablePlays.filter(a => a.remainingPlays > 0);
+    const availablePlayIds = availablePlays.map(a => a.instantWinId);
+
+    singleWheelsData = singleWheelsData.filter(s => availablePlayIds.includes(s.id));
 
     if (typeof callback === 'function') {
-      callback(singleWheels.data);
+      callback(singleWheelsData);
     }
 
-    return singleWheels.data;
+    return singleWheelsData;
+  };
+
+  this.getInstantWinsAvailablePlays = async function (ids) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
+    const request = InstantWinAvailablePlaysRequest.constructFromObject({
+      instantWinIds: ids
+    }, null);
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
+        resolve(json.data);
+      });
+    });
   };
 
   this.getInstantWinAvailablePlays = async function (id) {
@@ -3595,6 +3620,14 @@ export const LbWidget = function (options) {
         await _this.claimAward(awardId, function () {
           setTimeout(function () {
             _this.settings.mainWidget.loadDashboardAwards();
+
+            if (
+              _this.settings.instantWins.enable &&
+              _this.settings.navigation.dashboard.showInstantWins
+            ) {
+              _this.settings.mainWidget.loadDashboardInstantWins();
+            }
+
             preLoader.hide();
           }, 3500);
         });

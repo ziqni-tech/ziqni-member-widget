@@ -3251,6 +3251,8 @@ export const MainWidget = function (options) {
             );
           });
       }
+    } else {
+      container.classList.add('hidden');
     }
   };
 
