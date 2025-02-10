@@ -149,6 +149,12 @@ export const MainWidget = function (options) {
           type: 'monthly',
           show: false,
           showTopResults: 1
+        },
+        {
+          label: 'Finished',
+          type: 'finishedAchievements',
+          show: false,
+          showTopResults: 1
         }
       ]
     },
@@ -395,20 +401,24 @@ export const MainWidget = function (options) {
 
     // Achievements
     if (element.classList.contains('all')) {
-      const availableContainer = container.querySelector('.cl-accordion.all');
-      availableContainer.classList.add('cl-shown');
+      const allContainer = container.querySelector('.cl-accordion.all');
+      allContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('daily')) {
-      const claimedContainer = container.querySelector('.cl-accordion.daily');
-      claimedContainer.classList.add('cl-shown');
+      const dailyContainer = container.querySelector('.cl-accordion.daily');
+      dailyContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('weekly')) {
-      const expiredContainer = container.querySelector('.cl-accordion.weekly');
-      expiredContainer.classList.add('cl-shown');
+      const weeklyContainer = container.querySelector('.cl-accordion.weekly');
+      weeklyContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('monthly')) {
-      const instantWinsContainer = container.querySelector('.cl-accordion.monthly');
-      instantWinsContainer.classList.add('cl-shown');
+      const monthlyContainer = container.querySelector('.cl-accordion.monthly');
+      monthlyContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('finishedAchievements')) {
+      const finishedContainer = container.querySelector('.cl-accordion.finishedAchievements');
+      finishedContainer.classList.add('cl-shown');
     }
   };
 
@@ -2152,7 +2162,8 @@ export const MainWidget = function (options) {
       isMore: isMore,
       isEnter: isEnter,
       isLeave: isLeave,
-      isProgress: isProgress
+      isProgress: isProgress,
+      isFinished: ach.status === 'Finished'
     });
 
     return listItem;
@@ -2200,11 +2211,13 @@ export const MainWidget = function (options) {
     const dailyTitle = document.createElement('div');
     const weeklyTitle = document.createElement('div');
     const monthlyTitle = document.createElement('div');
+    const finishedTitle = document.createElement('div');
 
     allTitle.setAttribute('class', 'cl-main-accordion-container-menu-item all');
     dailyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item daily');
     weeklyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item weekly');
     monthlyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item monthly');
+    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedAchievements');
 
     const idx = data.findIndex(d => d.show === true);
     if (idx !== -1) {
@@ -2221,6 +2234,9 @@ export const MainWidget = function (options) {
         case 'monthly':
           monthlyTitle.classList.add('active');
           break;
+        case 'finished':
+          finishedTitle.classList.add('active');
+          break;
       }
     }
 
@@ -2228,11 +2244,13 @@ export const MainWidget = function (options) {
     dailyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.daily;
     weeklyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.weekly;
     monthlyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.monthly;
+    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.finished;
 
     statusMenu.appendChild(allTitle);
     statusMenu.appendChild(dailyTitle);
     statusMenu.appendChild(weeklyTitle);
     statusMenu.appendChild(monthlyTitle);
+    statusMenu.appendChild(finishedTitle);
 
     accordionWrapper.appendChild(statusMenu);
 
@@ -2321,15 +2339,18 @@ export const MainWidget = function (options) {
     }
 
     if (this.settings.lbWidget.settings.showAchievementsFilter) {
-      const accordionObj = _this.achievementList(_this.settings.achievementsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout) {
-        const data = achievementData[layout.type];
-        if (typeof data !== 'undefined' && data.length) {
-          mapObject(data, function (rew) {
-            const listItem = _this.achievementItem(rew);
-            listContainer.appendChild(listItem);
-          });
+      const accordionObj = _this.achievementList(
+        _this.settings.achievementsSection.accordionLayout,
+        function (accordionSection, listContainer, topEntryContainer, layout) {
+          const data = achievementData[layout.type];
+          if (typeof data !== 'undefined' && data.length) {
+            mapObject(data, function (rew) {
+              const listItem = _this.achievementItem(rew);
+              listContainer.appendChild(listItem);
+            });
+          }
         }
-      });
+      );
 
       achList.appendChild(accordionObj);
 
@@ -3085,7 +3106,6 @@ export const MainWidget = function (options) {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableAchievements(pageNumber, function (achievementData) {
-      // _this.settings.lbWidget.updateAchievementNavigationCounts();
       _this.achievementListLayout(pageNumber, achievementData, paginationArr);
 
       const idList = _this.settings.lbWidget.settings.achievements.list.map(a => a.id);

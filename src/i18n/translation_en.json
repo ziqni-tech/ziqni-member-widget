@@ -29,7 +29,8 @@
         "all": "All",
         "daily": "Daily",
         "weekly": "Weekly",
-        "monthly": "Monthly"
+        "monthly": "Monthly",
+        "finished": "Finished"
     },
     "tournaments": {
         "label": "Tournaments",

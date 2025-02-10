@@ -135,11 +135,13 @@ export const LbWidget = function (options) {
       activeAchievementId: null,
       limit: 100,
       totalCount: 0,
+      finishedTotalCount: 0,
       list: [],
       all: [],
       daily: [],
       weekly: [],
       monthly: [],
+      finished: [],
       availableRewards: [],
       rewards: [],
       expiredRewards: [],
@@ -1073,6 +1075,30 @@ export const LbWidget = function (options) {
       }
     }, null);
 
+    const finishedDateFilter = new Date();
+    finishedDateFilter.setDate(finishedDateFilter.getDate() - 14);
+
+    const finishedAchievementsRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        endDate: {
+          before: (new Date()).toISOString(),
+          after: finishedDateFilter.toISOString()
+        },
+        statusCode: {
+          moreThan: 30,
+          lessThan: 40
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: 0,
+        limit: 20
+      }
+    }, null);
+
     const dailyRequest = AchievementRequest.constructFromObject({
       languageKey: this.settings.language,
       achievementFilter: {
@@ -1345,6 +1371,34 @@ export const LbWidget = function (options) {
           return achievement;
         });
       }
+
+      const finishedJson = await this.getAchievements(finishedAchievementsRequest);
+      this.settings.achievements.finished = finishedJson.data;
+      this.settings.achievements.finishedTotalCount = finishedJson.meta.totalRecordsFound || 0;
+
+      if (_this.settings.achievements.finished.length) {
+        const ids = _this.settings.achievements.finished.map(a => a.id);
+        const rewardRequest = {
+          entityFilter: [{
+            entityType: 'Achievement',
+            entityIds: ids
+          }],
+          currencyKey: this.settings.currency,
+          skip: 0,
+          limit: 20
+        };
+        const rewards = await this.getRewardsApi(rewardRequest);
+        const rewardsData = rewards.data;
+
+        _this.settings.achievements.finished = _this.settings.achievements.finished.map(achievement => {
+          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
+          if (idx !== -1) {
+            achievement.reward = rewardsData[idx];
+          }
+
+          return achievement;
+        });
+      }
     }
 
     this.settings.achievements.all = this.settings.achievements.list;
@@ -1354,7 +1408,8 @@ export const LbWidget = function (options) {
       all: this.settings.achievements.all,
       daily: this.settings.achievements.daily,
       weekly: this.settings.achievements.weekly,
-      monthly: this.settings.achievements.monthly
+      monthly: this.settings.achievements.monthly,
+      finishedAchievements: this.settings.achievements.finished
     };
 
     if (typeof callback === 'function') callback(achData);
