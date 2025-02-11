@@ -2198,7 +2198,7 @@ export const MainWidget = function (options) {
     barLabel.innerHTML = percentageComplete + '/100';
   };
 
-  this.achievementList = function (data, onLayout) {
+  this.achievementList = function (data, onLayout, achievementsData) {
     const _this = this;
     const accordionWrapper = document.createElement('div');
 
@@ -2247,10 +2247,10 @@ export const MainWidget = function (options) {
     finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.finished;
 
     statusMenu.appendChild(allTitle);
-    statusMenu.appendChild(dailyTitle);
-    statusMenu.appendChild(weeklyTitle);
-    statusMenu.appendChild(monthlyTitle);
-    statusMenu.appendChild(finishedTitle);
+    if (achievementsData.daily && achievementsData.daily.length) statusMenu.appendChild(dailyTitle);
+    if (achievementsData.weekly && achievementsData.weekly.length) statusMenu.appendChild(weeklyTitle);
+    if (achievementsData.monthly && achievementsData.monthly.length) statusMenu.appendChild(monthlyTitle);
+    if (achievementsData.finishedAchievements && achievementsData.finishedAchievements.length) statusMenu.appendChild(finishedTitle);
 
     accordionWrapper.appendChild(statusMenu);
 
@@ -2349,7 +2349,8 @@ export const MainWidget = function (options) {
               listContainer.appendChild(listItem);
             });
           }
-        }
+        },
+        achievementData
       );
 
       achList.appendChild(accordionObj);
