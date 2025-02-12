@@ -9541,6 +9541,16 @@ em {
   }
 }
 
+@media screen and (max-width: 760px) {
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-main-accordion-container-menu {
+    min-height: 32px;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+}
+
 @media screen and (max-height: 760px) {
   .cl-main-widget-wrapper {
     .cl-main-widget-section-container {

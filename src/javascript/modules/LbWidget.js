@@ -82,7 +82,7 @@ export const LbWidget = function (options) {
     enableNotifications: false,
     hideEmptyTabs: false,
     defaultLightTheme: false,
-    showAchievementsFilter: false,
+    showAchievementsFilter: true,
     mainWidget: null,
     language: process.env.LANG,
     currency: '',
