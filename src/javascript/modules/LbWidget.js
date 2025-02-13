@@ -1043,8 +1043,14 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.checkForAvailableAchievements = async function (pageNumber, callback) {
+  this.checkForAvailableAchievements = async function (pageNumber, callback, current = 'all') {
     const _this = this;
+
+    let allPageNumber = 1;
+    let finishedPageNumber = 1;
+
+    if (current === 'all') allPageNumber = pageNumber;
+    if (current === 'finished') finishedPageNumber = pageNumber;
 
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
@@ -1069,14 +1075,14 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 6,
+        skip: (allPageNumber - 1) * 6,
         limit: 6,
         constraints: []
       }
     }, null);
 
     const finishedDateFilter = new Date();
-    finishedDateFilter.setDate(finishedDateFilter.getDate() - 14);
+    finishedDateFilter.setDate(finishedDateFilter.getDate() - 30);
 
     const finishedAchievementsRequest = AchievementRequest.constructFromObject({
       languageKey: this.settings.language,
@@ -1094,8 +1100,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: 0,
-        limit: 20
+        skip: (finishedPageNumber - 1) * 6,
+        limit: 6
       }
     }, null);
 
@@ -3050,45 +3056,87 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'paginator-item')) {
       const preLoader = _this.settings.mainWidget.preloader();
       if (el.closest('.cl-main-widget-ach-list-body-res')) {
-        let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
-        let isPrev = false;
-        let isNext = false;
+        if (el.closest('.paginator-finished')) {
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.achievements.finishedTotalCount / 6);
+          let isPrev = false;
+          let isNext = false;
 
-        if (el.dataset && el.dataset.page === '...') {
-          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-            isPrev = true;
-          } else {
-            isNext = true;
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
           }
-        }
 
-        if (el.classList.contains('prev') || isPrev) {
-          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-          if (activePage > 1) {
-            pageNumber = activePage - 1;
+          if (el.classList.contains('prev') || isPrev) {
+            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              return;
+            }
+          } else if (el.classList.contains('next') || isNext) {
+            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              return;
+            }
           } else {
-            return;
+            pageNumber = Number(el.dataset.page);
           }
-        } else if (el.classList.contains('next') || isNext) {
-          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-          if (activePage < pagesCount) {
-            pageNumber = activePage + 1;
-          } else {
-            return;
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
           }
+
+          preLoader.show(async function () {
+            _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr, 'finished');
+          });
         } else {
-          pageNumber = Number(el.dataset.page);
-        }
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
+          let isPrev = false;
+          let isNext = false;
 
-        let paginationArr = null;
-        if (pagesCount > 7) {
-          paginationArr = pagination(6, pageNumber, pagesCount);
-        }
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
 
-        preLoader.show(async function () {
-          _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr);
-        });
+          if (el.classList.contains('prev') || isPrev) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              return;
+            }
+          } else if (el.classList.contains('next') || isNext) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              return;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
+          preLoader.show(async function () {
+            _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr);
+          });
+        }
       }
       if (el.closest('.cl-main-widget-reward-list-body-res')) {
         if (el.closest('.paginator-claimed')) {

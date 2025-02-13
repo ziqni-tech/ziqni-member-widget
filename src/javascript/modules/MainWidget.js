@@ -2234,7 +2234,7 @@ export const MainWidget = function (options) {
         case 'monthly':
           monthlyTitle.classList.add('active');
           break;
-        case 'finished':
+        case 'finishedAchievements':
           finishedTitle.classList.add('active');
           break;
       }
@@ -2282,13 +2282,16 @@ export const MainWidget = function (options) {
   this.achievementListLayout = function (
     pageNumber,
     achievementData,
-    paginationArr = null
+    paginationArr = null,
+    currentPage = 'all'
   ) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
+    const finishedTotalCount = _this.settings.lbWidget.settings.achievements.finishedTotalCount;
     const itemsPerPage = 6;
     let paginator = query(achList, '.paginator');
+    let finishedPaginator = query(achList, '.paginator-finished');
 
     const prev = document.createElement('span');
     prev.setAttribute('class', 'paginator-item prev');
@@ -2296,6 +2299,14 @@ export const MainWidget = function (options) {
     next.setAttribute('class', 'paginator-item next');
 
     achList.innerHTML = '';
+
+    if (currentPage === 'finished') {
+      _this.settings.achievementsSection.accordionLayout[0].show = false;
+      _this.settings.achievementsSection.accordionLayout[4].show = true;
+    } else {
+      _this.settings.achievementsSection.accordionLayout[0].show = true;
+      _this.settings.achievementsSection.accordionLayout[4].show = false;
+    }
 
     if (paginationArr && paginationArr.length) {
       let page = '';
@@ -2338,6 +2349,41 @@ export const MainWidget = function (options) {
       paginator.appendChild(next);
     }
 
+    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(finishedTotalCount / 6);
+      finishedPaginator = document.createElement('div');
+      finishedPaginator.setAttribute('class', 'paginator-finished');
+
+      let page = '';
+      const isEllipsis = pagesCount > 7;
+
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
+        }
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
+      }
+
+      finishedPaginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      finishedPaginator.prepend(prev);
+      finishedPaginator.appendChild(next);
+    }
+
     if (this.settings.lbWidget.settings.showAchievementsFilter) {
       const accordionObj = _this.achievementList(
         _this.settings.achievementsSection.accordionLayout,
@@ -2357,9 +2403,12 @@ export const MainWidget = function (options) {
 
       if (paginator) {
         const paginatorItems = query(paginator, '.paginator-item');
+        let allPage = 1;
+        if (currentPage === 'all') allPage = pageNumber;
+
         paginatorItems.forEach(item => {
           removeClass(item, 'active');
-          if (Number(item.dataset.page) === Number(pageNumber)) {
+          if (Number(item.dataset.page) === Number(allPage)) {
             addClass(item, 'active');
           }
         });
@@ -2368,6 +2417,25 @@ export const MainWidget = function (options) {
         if (allAchievements) {
           const container = query(allAchievements, '.cl-accordion-list-container');
           container.appendChild(paginator);
+        }
+      }
+
+      if (finishedPaginator) {
+        const paginatorItems = query(finishedPaginator, '.paginator-item');
+        let finishedPage = 1;
+        if (currentPage === 'finished') finishedPage = pageNumber;
+
+        paginatorItems.forEach(item => {
+          removeClass(item, 'active');
+          if (Number(item.dataset.page) === Number(finishedPage)) {
+            addClass(item, 'active');
+          }
+        });
+
+        const finishedAchievements = query(achList, '.cl-accordion.finishedAchievements');
+        if (finishedAchievements) {
+          const container = query(finishedAchievements, '.cl-accordion-list-container');
+          container.appendChild(finishedPaginator);
         }
       }
     } else {
@@ -3103,11 +3171,11 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.loadAchievements = function (pageNumber, callback, paginationArr = null) {
+  this.loadAchievements = function (pageNumber, callback, paginationArr = null, currentPage = 'all') {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableAchievements(pageNumber, function (achievementData) {
-      _this.achievementListLayout(pageNumber, achievementData, paginationArr);
+      _this.achievementListLayout(pageNumber, achievementData, paginationArr, currentPage);
 
       const idList = _this.settings.lbWidget.settings.achievements.list.map(a => a.id);
 
@@ -3118,7 +3186,7 @@ export const MainWidget = function (options) {
       if (typeof callback === 'function') {
         callback();
       }
-    });
+    }, currentPage);
   };
 
   this.showLeaveAchievementPopup = function (activeAchievementId, isDashboard = false) {

@@ -3777,6 +3777,14 @@ em {
   display: flex;
   flex-wrap: wrap;
   justify-content: space-between;
+
+  .paginator-finished {
+    margin-top: 10px;
+    margin-right: 0;
+    display: flex;
+    justify-content: flex-end;
+    width: 100%;
+  }
 }
 
 
