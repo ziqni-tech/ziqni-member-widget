@@ -74,6 +74,7 @@ export const LbWidget = function (options) {
    */
   this.settings = {
     debug: false,
+    isStaging: false,
     bindContainer: document.body,
     autoStart: true,
     notifications: null,
@@ -4075,6 +4076,15 @@ export const LbWidget = function (options) {
 
     if (this.settings.authToken) {
       this.apiClientStomp = ApiClientStomp.instance;
+
+      if (this.settings.isStaging) {
+        ApiClientStomp.updateInstancePaths(
+          'wss://member-api.staging.ziqni.io/ws',
+          'https://member-api.staging.ziqni.io/ws'
+        );
+        this.apiClientStomp = ApiClientStomp.instance;
+      }
+
       if (!this.settings.debug) {
         this.apiClientStomp.client.debug = () => {};
       }
@@ -4183,7 +4193,12 @@ export const LbWidget = function (options) {
       };
     }
 
-    const response = await fetch('https://member-api.ziqni.com/member-token', {
+    let tokenUrl = ' https://member-api.ziqni.com/member-token';
+    if (this.settings.isStaging) {
+      tokenUrl = 'https://member-api.staging.ziqni.io/member-token';
+    }
+
+    const response = await fetch(tokenUrl, {
       method: 'post',
       body: JSON.stringify(memberTokenRequest),
       headers: {
