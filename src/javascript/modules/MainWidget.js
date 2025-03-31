@@ -3298,6 +3298,7 @@ export const MainWidget = function (options) {
     const items = await this.settings.lbWidget.getSingleWheels();
     if (items && items.length) {
       container.classList.remove('hidden');
+      list.innerHTML = '';
 
       let wheels = items.filter(item => item.instantWinType === 1);
       if (wheels.length > 2) {
@@ -3364,7 +3365,7 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
-  this.loadDashboardAwards = async function () {
+  this.loadDashboardAwards = async function (callback = null) {
     const awardsList = query(this.settings.section, '.cl-main-widget-dashboard-awards-list');
     const awardsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-awards');
 
@@ -3379,6 +3380,10 @@ export const MainWidget = function (options) {
       });
     } else {
       awardsWrapp.classList.add('hidden');
+    }
+
+    if (typeof callback === 'function') {
+      callback();
     }
   };
 

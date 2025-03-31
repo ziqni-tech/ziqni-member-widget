@@ -1467,6 +1467,9 @@ export const LbWidget = function (options) {
     const singleWheels = await this.getInstantWinsApi(request);
     let singleWheelsData = singleWheels.data;
 
+    // TODO: remove after InstantWinRequest update
+    singleWheelsData = singleWheelsData.filter(s => s.statusCode === 25);
+
     const ids = singleWheelsData.map(s => s.id);
     let availablePlays = await this.getInstantWinsAvailablePlays(ids);
 
@@ -4092,18 +4095,37 @@ export const LbWidget = function (options) {
           this.getMessage(json.entityId, function () { _this.animateIcon('Message'); }, true);
         }
         if (json && json.entityType === 'Award') {
+          const awardRequest = AwardRequest.constructFromObject({
+            languageKey: this.settings.language,
+            awardFilter: {
+              ids: [json.entityId],
+              skip: 0,
+              limit: 1
+            },
+            currencyKey: this.settings.currency
+          });
+
           setTimeout(async () => {
             const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
-            if (dashboard && dashboard.classList.contains('cl-main-active-section')) {
-              _this.settings.mainWidget.loadDashboardAwards();
-            }
+            const awardData = await _this.getAwardsApi(awardRequest);
 
-            _this.settings.mainWidget.loadAwards(
-              function () {
-                _this.animateIcon('Award');
-              },
-              1
-            );
+            if (
+              awardData.data &&
+              awardData.data.length &&
+              awardData.data[0].rewardType.key.startsWith('$iw')
+            ) {
+              if (!['Claimed', 'Expired'].includes(awardData.data[0].status)) {
+                const iwAward = awardData.data[0];
+                await _this.claimAward(iwAward.id, () => {});
+                setTimeout(async () => {
+                  await _this.settings.mainWidget.loadDashboardInstantWins();
+                }, 2000);
+              }
+            } else if (dashboard && dashboard.classList.contains('cl-main-active-section')) {
+              await _this.settings.mainWidget.loadDashboardAwards(function () { _this.animateIcon('Award'); });
+            } else {
+              _this.settings.mainWidget.loadAwards(function () { _this.animateIcon('Award'); }, 1);
+            }
           }, 2000);
         }
         if (json && json.entityType === 'Contest') {
