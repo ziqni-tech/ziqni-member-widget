@@ -1768,6 +1768,19 @@ export const LbWidget = function (options) {
     }
   };
 
+  this.updateMessageStatus = async function (messageIds, status) {
+    if (!this.settings.apiWs.messagesApiWsClient) {
+      this.settings.apiWs.messagesApiWsClient = new MessagesApiWs(this.apiClientStomp);
+    }
+
+    const payload = [{
+      id: messageIds,
+      status: status
+    }];
+
+    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => {});
+  };
+
   this.claimAward = async function (rewardId, callback) {
     if (!this.settings.apiWs.awardsApiWsClient) {
       this.settings.apiWs.awardsApiWsClient = new AwardsApiWs(this.apiClientStomp);
@@ -2085,6 +2098,7 @@ export const LbWidget = function (options) {
       languageKey: this.settings.language,
       messageFilter: {
         messageType: 'InboxItem',
+        status: ['New', 'Read'],
         createdDateRange: {
           before: (new Date()).toISOString(),
           after: createdDateFilter.toISOString()
@@ -4107,7 +4121,13 @@ export const LbWidget = function (options) {
           }
         }
         if (json && json.entityType === 'Message') {
-          this.getMessage(json.entityId, function () { _this.animateIcon('Message'); }, true);
+          const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
+          if (json.typeOffChange === 1) {
+            _this.animateIcon('Message');
+            if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
+              _this.settings.mainWidget.loadMessages(1, () => {});
+            }
+          }
         }
         if (json && json.entityType === 'Award') {
           const awardRequest = AwardRequest.constructFromObject({
