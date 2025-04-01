@@ -322,7 +322,8 @@ export const LbWidget = function (options) {
     },
     callbacks: {
       onContestStatusChanged: function (contestId, currentState, previousState) {},
-      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {}
+      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {},
+      onStompError: function () {}
     },
     callback: null
   };
@@ -4090,6 +4091,10 @@ export const LbWidget = function (options) {
       }
       await this.apiClientStomp.connect({ token: this.settings.authToken });
       this.apiClientStomp.sendSys('', {}, (json, headers) => {
+        if (headers && headers.objectType === 'Error') {
+          this.settings.callbacks.onStompError(json);
+        }
+
         if (headers && headers.objectType === 'Leaderboard') {
           if (json.id && json.id === this.settings.competition.activeContestId) {
             const leaderboardEntries = json.leaderboardEntries ?? [];
