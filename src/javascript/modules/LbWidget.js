@@ -3687,8 +3687,7 @@ export const LbWidget = function (options) {
 
       // messages details back button
     } else if (hasClass(el, 'cl-main-widget-inbox-details-back-btn')) {
-      _this.settings.mainWidget.hideMessageDetails(function () {
-      });
+      _this.settings.mainWidget.hideMessageDetails(() => {}, true);
 
       // mission details back button
     } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
@@ -3767,8 +3766,8 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-inbox-list-item') || closest(el, '.cl-inbox-list-item') !== null) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
-        _this.settings.mainWidget.loadMessageDetails(data, function () {
-        });
+        _this.settings.mainWidget.loadMessageDetails(data, function () {});
+        _this.updateMessageStatus([messageId], 'Read');
       });
 
       // load mission details

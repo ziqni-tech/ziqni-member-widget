@@ -3085,8 +3085,12 @@ export const MainWidget = function (options) {
     }, 200);
   };
 
-  this.hideMessageDetails = function (callback) {
+  this.hideMessageDetails = function (callback, isBack = false) {
     const _this = this;
+
+    if (isBack) {
+      this.loadMessages(1, () => {});
+    }
 
     removeClass(_this.settings.messages.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -3485,6 +3489,10 @@ export const MainWidget = function (options) {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
     listItem.dataset.id = inbox.id;
+
+    if (inbox.status === 'Read') {
+      listItem.classList.add('read');
+    }
 
     const content = stripHtml(inbox.body);
 

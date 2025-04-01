@@ -6220,6 +6220,12 @@ em {
   font-size: 14px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .read .cl-inbox-list-details-date,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .read .cl-inbox-list-details-description,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .read .cl-inbox-list-details-label {
+  color: rgba(255, 255, 255, 0.5);
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-inbox-list-body-res .cl-inbox-list-details-description {
   float: left;
   width: 100%;
