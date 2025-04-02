@@ -4300,10 +4300,27 @@ export const MainWidget = function (options) {
 
   this.loadMessages = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
+    const deleteSelected = document.querySelector('.cl-main-widget-inbox-list-delete-selected');
 
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
       _this.messagesListLayout(pageNumber, paginationArr);
-      // _this.settings.lbWidget.updateMessagesNavigationCounts();
+      const messages = document.querySelectorAll('input[name="checkMessage"]');
+
+      if (messages && messages.length) {
+        messages.forEach(message => {
+          message.addEventListener('change', (event) => {
+            const isChecked = event.currentTarget.checked;
+            if (isChecked) {
+              deleteSelected.style.display = 'flex';
+            } else {
+              const hasChecked = Array.from(messages).some(message => message.checked);
+              if (!hasChecked) {
+                deleteSelected.style.display = 'none';
+              }
+            }
+          });
+        });
+      }
 
       if (typeof callback === 'function') {
         callback();

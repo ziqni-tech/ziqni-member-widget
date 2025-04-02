@@ -3763,11 +3763,36 @@ export const LbWidget = function (options) {
       });
 
       // load inbox details
-    } else if (hasClass(el, 'cl-inbox-list-item') || closest(el, '.cl-inbox-list-item') !== null) {
+    } else if (
+      (hasClass(el, 'cl-inbox-list-item') || closest(el, '.cl-inbox-list-item') !== null) &&
+      !closest(el, '.checkbox-container')
+    ) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
         _this.settings.mainWidget.loadMessageDetails(data, function () {});
         _this.updateMessageStatus([messageId], 'Read');
+      });
+
+      // delete selected messages
+    } else if (el.classList.contains('cl-main-widget-inbox-list-delete-selected')) {
+      const checkedMessages = document.querySelectorAll('input[name="checkMessage"]:checked');
+      const deleteSelected = document.querySelector('.cl-main-widget-inbox-list-delete-selected');
+      const ids = [];
+      const preLoader = _this.settings.mainWidget.preloader();
+
+      if (checkedMessages && checkedMessages.length) {
+        checkedMessages.forEach((message) => {
+          const messageId = message.closest('.cl-inbox-list-item').dataset.id;
+          ids.push(messageId);
+        });
+      }
+
+      preLoader.show(async () => {
+        await _this.updateMessageStatus(ids, 'Deleted');
+        deleteSelected.style.display = 'none';
+        setTimeout(function () {
+          _this.settings.mainWidget.loadMessages(1, () => { preLoader.hide(); });
+        }, 2500);
       });
 
       // load mission details
