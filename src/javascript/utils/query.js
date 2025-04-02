@@ -1,4 +1,3 @@
-import cLabs from '../modules/cLabs';
 import trim from './trim';
 
 /**
@@ -17,6 +16,12 @@ import trim from './trim';
  * @returns {(Object|null|Array)} depending on the provided selector results can vary (null, node, NodeList array)
  */
 const query = function (doc, selector) {
+  const selectors = {
+    classSelector: /^\.([\w-]+)$/, // class string expression check
+    idSelector: /^#[\w\d\-\_\&\!\@\*]+$/, // ID string expression check
+    tagSelector: /^[\w-]+$/ // TAG string expression check
+  };
+
   var result;
 
   var tmpDoc = doc; var tmpSelector = selector; // used for debug only
@@ -30,11 +35,11 @@ const query = function (doc, selector) {
     if (doc !== null) {
       selector = trim(selector); //
 
-      if (selector.match(cLabs.classSelector)) {
+      if (selector.match(selectors.classSelector)) {
         result = doc.getElementsByClassName(selector.replace('.', ''));
-      } else if (selector.match(cLabs.idSelector)) {
+      } else if (selector.match(selectors.idSelector)) {
         result = document.getElementById(selector.replace('#', ''));
-      } else if (selector.match(cLabs.tagSelector)) {
+      } else if (selector.match(selectors.tagSelector)) {
         result = doc.getElementsByTagName(selector);
       } else {
         result = doc.querySelectorAll(selector);

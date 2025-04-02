@@ -17,8 +17,6 @@ import pagination from '../utils/paginator';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
-import cLabs from './cLabs';
-
 import { Notifications } from './Notifications';
 import { MiniScoreBoard } from './MiniScoreBoard';
 import { MainWidget } from './MainWidget';
@@ -274,7 +272,6 @@ export const LbWidget = function (options) {
       instantWinsApiWsClient: null
     },
     uri: {
-      gatewayDomain: cLabs.api.url,
       assets: '/assets/attachments/:attachmentId',
       memberSSE: '/api/v1/:space/sse/reference/:id',
       memberSSEHeartbeat: '/api/v1/:space/sse/reference/:id/heartbeat',
@@ -2555,7 +2552,7 @@ export const LbWidget = function (options) {
     const _this = this;
 
     if (typeof _this.settings.uri.translationPath === 'string' && _this.settings.uri.translationPath.length > 0 && _this.settings.loadCustomTranslations) {
-      const url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : _this.settings.uri.gatewayDomain + _this.settings.uri.translationPath.replace(':language', _this.settings.language);
+      const url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : '';
 
       fetch(url, { method: 'GET' })
         .then(response => response.json())
