@@ -1719,6 +1719,7 @@ export const LbWidget = function (options) {
           limit: 1
         }
       };
+
       await this.settings.apiWs.messagesApiWsClient.getMessages(messageRequest, (json) => {
         if (json.data && json.data.length) {
           if (json.data[0].messageType === 'Notification') {
@@ -4141,15 +4142,20 @@ export const LbWidget = function (options) {
             this.settings.mainWidget.loadLeaderboard(() => {}, false);
           }
         }
+
         if (json && json.entityType === 'Message') {
+          setTimeout(async () => {
+            await _this.getMessage(json.entityId, () => {}, true);
+          }, 2000);
+
           const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
           if (json.typeOffChange === 1) {
-            _this.animateIcon('Message');
             if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
               _this.settings.mainWidget.loadMessages(1, () => {});
             }
           }
         }
+
         if (json && json.entityType === 'Award') {
           const awardRequest = AwardRequest.constructFromObject({
             languageKey: this.settings.language,
@@ -4184,6 +4190,7 @@ export const LbWidget = function (options) {
             }
           }, 2000);
         }
+
         if (json && json.entityType === 'Contest') {
           _this.checkForAvailableCompetitions(async function () {
             // _this.updateLeaderboardNavigationCounts();
@@ -4196,6 +4203,7 @@ export const LbWidget = function (options) {
             }
           }
         }
+
         if (json && json.entityType === 'Competition') {
           _this.checkForAvailableCompetitions(async function () {
             // _this.updateLeaderboardNavigationCounts();
@@ -4208,6 +4216,7 @@ export const LbWidget = function (options) {
             }
           }
         }
+
         if (json && json.entityType === 'Achievement') {
           if (headers.callback === 'optinStatus') {
             _this.settings.mainWidget.achievementItemUpdateProgression(json.entityId, json.percentageComplete);

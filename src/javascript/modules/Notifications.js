@@ -98,8 +98,8 @@ export const Notifications = function (options) {
     const description = query(_this.settings.detailsContainer, '.cl-widget-notif-information-details-description');
     const descriptionText = stripHtml(data.body);
 
-    label.innerHTML = (data.subject.length > 23) ? data.subject.substr(0, 23) + '...' : data.subject;
-    description.innerHTML = (descriptionText.length > 60) ? descriptionText.substr(0, 60) + '...' : descriptionText;
+    label.innerHTML = data.subject;
+    description.innerHTML = descriptionText;
 
     _this.settings.detailsContainer.dataset.id = data.id;
 
