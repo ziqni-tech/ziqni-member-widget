@@ -4150,6 +4150,11 @@ export const LbWidget = function (options) {
 
           const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
           if (json.typeOffChange === 1) {
+            if (_this.settings.navigation.inbox.enable) {
+              const messagesIcon = document.querySelector('.cl-main-widget-navigation-inbox-icon').parentElement;
+              messagesIcon.classList.remove('hidden');
+            }
+
             if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
               _this.settings.mainWidget.loadMessages(1, () => {});
             }
