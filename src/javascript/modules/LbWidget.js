@@ -3908,9 +3908,11 @@ export const LbWidget = function (options) {
       if (mainContainer.classList.contains('lightTheme')) {
         mainContainer.classList.remove('lightTheme');
         msContainer.classList.remove('lightTheme');
+        localStorage.setItem('zqTheme', 'dark');
       } else {
         mainContainer.classList.add('lightTheme');
         msContainer.classList.add('lightTheme');
+        localStorage.setItem('zqTheme', 'light');
       }
     }
   };

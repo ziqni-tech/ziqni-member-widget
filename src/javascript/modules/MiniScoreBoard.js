@@ -46,7 +46,7 @@ export const MiniScoreBoard = function (options) {
   this.layout = function () {
     const wrapper = document.createElement('div');
     wrapper.setAttribute('class', 'cl-widget-ms-wrapper');
-    if (this.settings.lbWidget.settings.defaultLightTheme) {
+    if (this.settings.lbWidget.settings.defaultLightTheme || localStorage.getItem('zqTheme') === 'light') {
       wrapper.classList.add('lightTheme');
     }
 
