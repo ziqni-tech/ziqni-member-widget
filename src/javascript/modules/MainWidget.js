@@ -3359,10 +3359,12 @@ export const MainWidget = function (options) {
 
     const labelText = stripHtml(award.name);
 
+    const prize = Number.isInteger(award.rewardValue) ? award.rewardValue : Math.floor(award.rewardValue * 100) / 100;
+
     const template = require('../templates/mainWidget/dashboardAwardItem.hbs');
     listItem.innerHTML = template({
       claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
-      prize: award.rewardValue,
+      prize: prize,
       type: award.rewardType.key,
       label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
       iconLink: ''

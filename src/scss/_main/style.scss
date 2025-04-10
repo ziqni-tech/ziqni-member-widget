@@ -4617,6 +4617,7 @@ em {
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-details-label {
   width: 100%;
+  max-width: 200px;
   color: var(--lb3-rewards-item-label-color);
   font-style: normal;
   font-weight: 700;
@@ -4630,6 +4631,7 @@ em {
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-details-type {
   width: 100%;
+  max-width: 200px;
   color: var(--lb3-rewards-item-label-color);
   font-weight: 400;
   font-size: 14px;
