@@ -4098,7 +4098,7 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.initApiClientStomp = async function () {
+  this.initApiClientStomp = async function (isRefresh = false) {
     const _this = this;
     this.settings.authToken = null;
 
@@ -4128,6 +4128,34 @@ export const LbWidget = function (options) {
         this.apiClientStomp.client.debug = () => {};
       }
       await this.apiClientStomp.connect({ token: this.settings.authToken });
+
+      if (isRefresh && this.settings.competition.activeContestId) {
+        let ranksAboveToInclude = 0;
+        let ranksBelowToInclude = 0;
+        const count = (this.settings.miniScoreBoard.settings.active) ? 0 : this.settings.leaderboard.fullLeaderboardSize;
+
+        if (this.settings.leaderboard.miniScoreBoard.enableRankings) {
+          ranksAboveToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
+          ranksBelowToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
+        }
+
+        const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+          entityId: this.settings.competition.activeContestId,
+          action: 'Subscribe',
+          leaderboardFilter: {
+            topRanksToInclude: count,
+            ranksAboveToInclude: ranksAboveToInclude,
+            ranksBelowToInclude: ranksBelowToInclude
+          }
+        });
+
+        this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
+          if (data && data.leaderboardEntries) {
+            _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
+          }
+        });
+      }
+
       this.apiClientStomp.sendSys('', {}, (json, headers) => {
         if (headers && headers.objectType === 'Error') {
           this.settings.callbacks.onStompError(json);
@@ -4280,7 +4308,7 @@ export const LbWidget = function (options) {
 
   this.refreshMemberToken = async function (memberToken) {
     this.settings.memberToken = memberToken;
-    await this.initApiClientStomp();
+    await this.initApiClientStomp(true);
   };
 
   /**
@@ -4294,7 +4322,7 @@ export const LbWidget = function (options) {
 
     if (!this.settings.memberToken) {
       setInterval(async () => {
-        await this.initApiClientStomp();
+        await this.initApiClientStomp(true);
       }, 5 * 60 * 1000);
     }
 
