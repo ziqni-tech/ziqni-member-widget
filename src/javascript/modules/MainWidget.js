@@ -2646,7 +2646,7 @@ export const MainWidget = function (options) {
     }, 50);
   };
 
-  this.loadMissionDetails = function (mission, callback) {
+  this.loadMissionDetails = async function (mission, callback, id) {
     this.settings.missions.mission = mission;
     const _this = this;
     const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
@@ -2660,16 +2660,31 @@ export const MainWidget = function (options) {
       return;
     }
 
+    const idx = mission.graph.nodes.findIndex(node => node.entityId === id);
+    const stageData = mission.graph.nodes[idx];
+
+    const rewardRequest = {
+      entityFilter: [{
+        entityType: 'achievement',
+        entityIds: [id]
+      }],
+      currencyKey: this.settings.lbWidget.settings.currency,
+      skip: 0,
+      limit: 1
+    };
+    const rewards = await this.settings.lbWidget.getRewardsApi(rewardRequest);
+    stageData.reward = rewards.data && rewards.data.length ? rewards.data[0] : '';
+
     if (mission.data.iconLink) {
       icon.setAttribute('style', `background-image: url(${mission.data.iconLink})`);
       icon.classList.add('full-bg');
     }
 
-    if (mission.data.reward && mission.data.reward.rewardValue) {
-      prizeValue.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.data.reward);
+    if (stageData.reward && stageData.reward.rewardValue) {
+      prizeValue.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(stageData.reward);
     }
 
-    label.innerHTML = mission.data.name;
+    label.innerHTML = stageData.name;
     body.innerHTML = mission.data.description
       ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
       : this.settings.lbWidget.settings.translation.global.descriptionEmpty;
@@ -3061,8 +3076,9 @@ export const MainWidget = function (options) {
       }
     });
 
-    cy.on('tap', 'node', function () {
-      _this.loadMissionDetails(_this.settings.missions.mission, null);
+    cy.on('tap', 'node', function (evt) {
+      const node = evt.target;
+      _this.loadMissionDetails(_this.settings.missions.mission, null, node.id());
     });
   };
 
@@ -3102,7 +3118,7 @@ export const MainWidget = function (options) {
     }, 200);
   };
 
-  this.hideMissionDetails = function (callback) {
+  this.hideMissionDetails = function (callback, isBack = false) {
     const _this = this;
 
     const cyContainer = document.getElementById('cy');
@@ -3112,6 +3128,8 @@ export const MainWidget = function (options) {
     removeClass(_this.settings.missions.detailsContainer, 'cl-show');
     setTimeout(function () {
       _this.settings.missions.detailsContainer.style.display = 'none';
+
+      if (isBack && _this.settings?.missions?.mission) _this.loadMissionMap(_this.settings.missions.mission, null);
 
       if (typeof callback === 'function') callback();
     }, 200);

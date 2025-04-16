@@ -1576,7 +1576,7 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.getAchievements = this.getAchievements = async function (achievementRequest) {
+  this.getAchievements = async function (achievementRequest) {
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
     }
@@ -3690,7 +3690,7 @@ export const LbWidget = function (options) {
       // mission details back button
     } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
       _this.settings.mainWidget.hideMissionDetails(function () {
-      });
+      }, true);
 
       // competition details info button
     } else if (hasClass(el, 'cl-main-widget-lb-details-description-info')) {
