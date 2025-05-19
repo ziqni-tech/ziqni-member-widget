@@ -3920,6 +3920,10 @@ export const LbWidget = function (options) {
   this.eventListeners = function () {
     var _this = this;
 
+    window.addEventListener('online', async () => {
+      await this.initApiClientStomp(true);
+    });
+
     document.body.addEventListener('keyup', function (event) {
       switch (event.keyCode) {
         case 27: // on escape

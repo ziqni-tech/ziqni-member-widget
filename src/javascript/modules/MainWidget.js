@@ -3311,6 +3311,9 @@ export const MainWidget = function (options) {
   this.loadDashboardInstantWins = async function () {
     const list = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins-wrapp');
     const container = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins');
+
+    if (!list) return;
+
     list.innerHTML = '';
 
     const awardsList = document.querySelector('.cl-accordion.instantWins');
