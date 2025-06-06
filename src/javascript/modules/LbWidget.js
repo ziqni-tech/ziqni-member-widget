@@ -887,7 +887,7 @@ export const LbWidget = function (options) {
         this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
           if (data && data.leaderboardEntries) {
             _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
-            _this.settings.callbacks.onLeaderboardUpdates(data.leaderboardEntries);
+            _this.settings.callbacks.onLeaderboardUpdates(data);
           }
         });
       }
@@ -947,7 +947,7 @@ export const LbWidget = function (options) {
             this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
               _this.settings.leaderboard.leaderboardData = lbData;
             });
-            _this.settings.callbacks.onLeaderboardUpdates(leaderboardEntries);
+            _this.settings.callbacks.onLeaderboardUpdates(data);
             callback(_this.settings.leaderboard.leaderboardData);
           })
           .catch(error => {
@@ -975,7 +975,7 @@ export const LbWidget = function (options) {
           this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
             _this.settings.leaderboard.leaderboardData = lbData;
           });
-          _this.settings.callbacks.onLeaderboardUpdates(leaderboardEntries);
+          _this.settings.callbacks.onLeaderboardUpdates(data);
           callback(_this.settings.leaderboard.leaderboardData);
         })
         .catch(error => {
@@ -3033,7 +3033,7 @@ export const LbWidget = function (options) {
               _this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
                 _this.settings.leaderboard.leaderboardData = lbData;
               });
-              _this.settings.callbacks.onLeaderboardUpdates(leaderboardEntries);
+              _this.settings.callbacks.onLeaderboardUpdates(data);
               _this.settings.mainWidget.leaderboardDetailsUpdate();
               _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
               _this.checkForAvailableRewards(1);
@@ -4177,7 +4177,7 @@ export const LbWidget = function (options) {
             this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
               _this.settings.leaderboard.leaderboardData = lbData;
             });
-            _this.settings.callbacks.onLeaderboardUpdates(leaderboardEntries);
+            _this.settings.callbacks.onLeaderboardUpdates(json);
             // this.settings.miniScoreBoard.loadScoreBoard(true);
             this.settings.mainWidget.loadLeaderboard(() => {}, false);
           }
