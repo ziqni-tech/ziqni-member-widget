@@ -201,6 +201,9 @@ const instance = new MemberWidget({
     },
     onStompError: function (message) {
       console.warn('Error: ', message);
+    },
+    onLeaderboardUpdates: function(lbData) {
+      console.log('lbData:', lbData);
     }
   },
   resources: [
