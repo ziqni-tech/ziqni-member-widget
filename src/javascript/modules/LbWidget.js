@@ -711,10 +711,29 @@ export const LbWidget = function (options) {
 
     if (this.settings.navigation.tournaments.showFinishedTournaments && this.settings.tournaments.finishedCompetitions.length) {
       const ids = this.settings.tournaments.finishedCompetitions.map(a => a.id);
+
+      const contestRequest = ContestRequest.constructFromObject({
+        languageKey: this.settings.language,
+        contestFilter: {
+          sortBy: [],
+          competitionIds: ids,
+          statusCode: {
+            moreThan: 0,
+            lessThan: 100
+          },
+          limit: 20,
+          skip: 0
+        }
+      }, null);
+
+      let contests = await this.getContests(contestRequest);
+
+      const contestIds = contests.map(a => a.id);
+
       const rewardRequest = {
         entityFilter: [{
-          entityType: 'Competition',
-          entityIds: ids
+          entityType: 'Contest',
+          entityIds: contestIds
         }],
         currencyKey: this.settings.currency,
         skip: 0,
@@ -723,8 +742,14 @@ export const LbWidget = function (options) {
       const rewards = await this.getRewardsApi(rewardRequest);
       const rewardsData = rewards.data;
 
+      contests = contests.map(c => {
+        c.rewards = rewardsData.filter(r => r.entityId === c.id);
+
+        return c;
+      });
+
       this.settings.tournaments.finishedCompetitions = this.settings.tournaments.finishedCompetitions.map(comp => {
-        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+        comp.contests = contests.filter(r => r.competitionId === comp.id);
 
         return comp;
       });
