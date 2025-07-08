@@ -2671,7 +2671,13 @@ export const LbWidget = function (options) {
         });
     } else {
       if (_this.settings.language) {
-        const translation = require(`../../i18n/translation_${_this.settings.language}.json`);
+        let translation;
+        try {
+          translation = require(`../../i18n/translation_${_this.settings.language}.json`);
+        } catch (e) {
+          translation = require('../../i18n/translation_en.json');
+        }
+
         _this.settings.translation = mergeObjects(_this.settings.translation, translation);
       }
 
