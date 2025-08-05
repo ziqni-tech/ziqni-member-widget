@@ -3629,6 +3629,7 @@ export const LbWidget = function (options) {
           lbContainer.style.display = 'flex';
           setTimeout(function () {
             addClass(lbContainer, 'cl-main-active-section');
+            _this.settings.mainWidget.loadCompetitionList();
           }, 30);
 
           preLoader.hide();
