@@ -2326,7 +2326,8 @@ export const LbWidget = function (options) {
       }
 
       const tempGraphRequest = EntityGraphRequest.constructFromObject({
-        ids: [id]
+        ids: [id],
+        includes: ['iconLink', 'termsAndConditions', 'description']
       });
 
       this.getGraphApi(tempGraphRequest)

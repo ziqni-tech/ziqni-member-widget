@@ -2689,13 +2689,24 @@ export const MainWidget = function (options) {
       prizeValue.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(stageData.reward);
     }
 
+    let description = this.settings.lbWidget.settings.translation.global.descriptionEmpty;
+    let tAndC = this.settings.lbWidget.settings.translation.global.tAndCEmpty;
+
+    if (stageData.includes.description) {
+      description = stageData.includes.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    } else if (mission.data.description) {
+      description = mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+
+    if (stageData.includes.termsAndConditions) {
+      tAndC = stageData.includes.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    } else if (mission.data.termsAndConditions) {
+      tAndC = mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+
     label.innerHTML = stageData.name;
-    body.innerHTML = mission.data.description
-      ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-      : this.settings.lbWidget.settings.translation.global.descriptionEmpty;
-    tc.innerHTML = mission.data.termsAndConditions
-      ? mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-      : this.settings.lbWidget.settings.translation.global.tAndCEmpty;
+    body.innerHTML = description;
+    tc.innerHTML = tAndC;
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
@@ -3556,9 +3567,15 @@ export const MainWidget = function (options) {
     const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
     let bgImage = '';
-    if (mission.bannerLowResolutionLink) {
+    if (
+      mission.bannerLowResolutionLink &&
+      mission.bannerLowResolutionLink.length > mission.bannerLowResolutionLink.indexOf('_id/') + 4
+    ) {
       bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
-    } else if (mission.bannerLink) {
+    } else if (
+      mission.bannerLink &&
+      mission.bannerLink.length > mission.bannerLink.indexOf('_id/') + 4
+    ) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
