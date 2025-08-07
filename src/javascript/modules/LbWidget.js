@@ -214,6 +214,7 @@ export const LbWidget = function (options) {
         showInstantWins: true,
         showAchievements: true,
         showTournaments: true,
+        showMissions: true,
         navigationClass: 'cl-main-widget-navigation-dashboard',
         navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
         containerClass: 'cl-main-widget-section-dashboard',
@@ -397,6 +398,54 @@ export const LbWidget = function (options) {
     const secondsElem = '<div class="banner-seconds"><div class="banner-date-cell">' + seconds[0] + '</div><div class="banner-date-cell">' + seconds[1] + '</div></div>';
 
     return '<div class="banner-date">' + monthsElem + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
+  };
+
+  this.getDashboardMissions = async () => {
+    const missionsRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        statusCode: {
+          moreThan: 20,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: 0,
+        limit: 2,
+        constraints: ['mission']
+      }
+    }, null);
+
+    const response = await this.getAchievements(missionsRequest);
+    let missions = response.data;
+
+    if (missions.length) {
+      const ids = this.settings.missions.missions.map(m => m.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Achievement',
+          entityIds: ids
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      missions = missions.map(mission => {
+        const idx = rewardsData.findIndex(r => r.entityId === mission.id);
+        if (idx !== -1) {
+          mission.reward = rewardsData[idx];
+        }
+
+        return mission;
+      });
+    }
+
+    return missions;
   };
 
   this.getDashboardAwards = async function () {

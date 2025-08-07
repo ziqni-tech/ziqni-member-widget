@@ -704,6 +704,7 @@ export const MainWidget = function (options) {
       isInstantWins: this.settings.lbWidget.settings.instantWins.enable,
       isAchievements: this.settings.lbWidget.settings.navigation.achievements.enable,
       isTournaments: this.settings.lbWidget.settings.navigation.tournaments.enable,
+      isMissions: this.settings.lbWidget.settings.navigation.missions.enable,
       seeAllLabel: this.settings.lbWidget.settings.translation.dashboard.seeAll,
       headerLabel: this.settings.lbWidget.settings.translation.dashboard.label,
       tournamentsTitle: this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle,
@@ -3413,6 +3414,60 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
+  this.loadDashboardMissions = async () => {
+    const missionsList = query(this.settings.section, '.cl-main-widget-dashboard-missions-list');
+    const missionsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-missions');
+
+    const missions = await this.settings.lbWidget.getDashboardMissions();
+    console.log('missions:', missions);
+
+    missionsList.innerHTML = '';
+    missionsWrapp.classList.remove('hidden');
+
+    if (missions && missions.length) {
+      missionsWrapp.classList.remove('hidden');
+      missions.forEach(m => {
+        const listItem = this.dashboardMissionItem(m);
+        missionsList.appendChild(listItem);
+      });
+    } else {
+      missionsWrapp.classList.add('hidden');
+    }
+  };
+
+  this.dashboardMissionItem = (mission) => {
+    const listItem = document.createElement('div');
+    listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
+    listItem.dataset.id = mission.id;
+
+    const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    const reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
+    const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
+
+    let bgImage = '';
+    if (
+      mission.bannerLowResolutionLink &&
+      mission.bannerLowResolutionLink.length > mission.bannerLowResolutionLink.indexOf('_id/') + 4
+    ) {
+      bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
+    } else if (
+      mission.bannerLink &&
+      mission.bannerLink.length > mission.bannerLink.indexOf('_id/') + 4
+    ) {
+      bgImage = `background-image: url(${mission.bannerLink})`;
+    }
+
+    const template = require('../templates/dashboard/missionItem.hbs');
+    listItem.innerHTML = template({
+      name: name,
+      reward: reward,
+      actionsBtnLabel: actionsBtnLabel,
+      bgImage: bgImage
+    });
+
+    return listItem;
+  };
+
   this.loadDashboardAwards = async function (callback = null) {
     const awardsList = query(this.settings.section, '.cl-main-widget-dashboard-awards-list');
     const awardsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-awards');
@@ -4474,6 +4529,13 @@ export const MainWidget = function (options) {
                 _this.settings.lbWidget.settings.navigation.dashboard.showTournaments
               ) {
                 _this.loadDashboardTournaments();
+              }
+
+              if (
+                _this.settings.lbWidget.settings.navigation.missions.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showMissions
+              ) {
+                _this.loadDashboardMissions();
               }
 
               changeInterval = setTimeout(function () {

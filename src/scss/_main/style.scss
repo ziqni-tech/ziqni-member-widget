@@ -1555,6 +1555,7 @@ em {
   background: #304F69;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-missions.hidden,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins.hidden,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments.hidden,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements.hidden {
@@ -1564,12 +1565,14 @@ em {
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-awards-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title,
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title,
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-missions-title {
   color: #ffffff;
   font-size: 20px;
   font-weight: 700;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-missions-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
   padding-top: 30px;
@@ -1714,6 +1717,7 @@ em {
   margin: 0 auto;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-missions-list,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list {
   padding-top: 20px;
   display: flex;
@@ -1827,6 +1831,7 @@ em {
   justify-content: space-between;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-missions-list-more,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-awards-list-more,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-instant-wins-more,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list-more,
@@ -6556,17 +6561,17 @@ em {
   margin-bottom: 20px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-cont {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-cont {
   float: left;
   width: 100%;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-wrap {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-wrap {
   float: left;
   width: 100%;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-img {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-img {
   height: 180px;
   background-size: cover;
   background-repeat: no-repeat;
@@ -6574,13 +6579,13 @@ em {
   border-radius: 10px 10px 0 0;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(1) {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-item:nth-child(1) {
   .cl-missions-list-details-img {
     background-image: url(../../images/mission-1.png);
   }
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-item:nth-child(2) {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-item:nth-child(2) {
   .cl-missions-list-details-img {
     background-image: url(../../images/mission-2.png);
   }
@@ -6604,7 +6609,7 @@ em {
   }
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-date {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-date {
   position: absolute;
   top: 18px;
   right: -10px;
@@ -6622,7 +6627,11 @@ em {
   justify-content: center;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-label {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-missions-list .cl-missions-list-details-date {
+  display: none;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-label {
   font-style: normal;
   font-weight: 700;
   font-size: 14px;
@@ -6634,21 +6643,21 @@ em {
   text-overflow: ellipsis;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-progress {
   padding: 12px 12px 0;
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-cont {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-progress-cont {
   height: 4px;
   border-radius: 5px;
   background: #223241;
   width: 148px;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-bar {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-progress-bar {
   float: left;
   width: 0;
   height: 4px;
@@ -6661,7 +6670,7 @@ em {
   text-transform: uppercase;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-progress-label {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-progress-label {
   font-style: normal;
   font-weight: 500;
   font-size: 12px;
@@ -6669,14 +6678,14 @@ em {
   text-align: right;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-actions {
   display: flex;
   align-items: center;
   justify-content: space-between;
   padding: 12px 12px 0;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions-reward {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-actions-reward {
   display: inline-block;
   text-align: left;
   width: 100px;
@@ -6695,7 +6704,7 @@ em {
   position: relative;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions-reward::before {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-actions-reward::before {
   content: "";
   display: block;
   width: 12px;
@@ -6707,7 +6716,7 @@ em {
   background-size: contain;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-actions-btn {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-actions-btn {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -6725,7 +6734,7 @@ em {
   cursor: pointer;
 }
 
-.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-missions-list-body-res .cl-missions-list-details-description {
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-details-description {
   float: left;
   width: 100%;
   font-size: 11px;
