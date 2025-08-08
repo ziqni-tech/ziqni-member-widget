@@ -3419,7 +3419,6 @@ export const MainWidget = function (options) {
     const missionsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-missions');
 
     const missions = await this.settings.lbWidget.getDashboardMissions();
-    console.log('missions:', missions);
 
     missionsList.innerHTML = '';
     missionsWrapp.classList.remove('hidden');
@@ -3457,12 +3456,19 @@ export const MainWidget = function (options) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
+    let progressLabel = '0/100';
+    if (mission.optInStatus && mission.optInStatus.percentageComplete) {
+      progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
+    }
+
     const template = require('../templates/dashboard/missionItem.hbs');
     listItem.innerHTML = template({
       name: name,
       reward: reward,
       actionsBtnLabel: actionsBtnLabel,
-      bgImage: bgImage
+      bgImage: bgImage,
+      progressLabel: progressLabel,
+      progressValue: mission.optInStatus.percentageComplete
     });
 
     return listItem;
@@ -3634,12 +3640,19 @@ export const MainWidget = function (options) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
+    let progressLabel = '0/100';
+    if (mission.optInStatus && mission.optInStatus.percentageComplete) {
+      progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
+    }
+
     const template = require('../templates/mainWidget/missionItem.hbs');
     listItem.innerHTML = template({
       name: name,
       reward: reward,
       actionsBtnLabel: actionsBtnLabel,
-      bgImage: bgImage
+      bgImage: bgImage,
+      progressLabel: progressLabel,
+      progressValue: mission.optInStatus.percentageComplete
     });
 
     return listItem;

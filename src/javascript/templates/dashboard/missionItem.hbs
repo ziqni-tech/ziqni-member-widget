@@ -6,9 +6,9 @@
     <div class="cl-missions-list-details-label">{{ name }}</div>
     <div class="cl-missions-list-details-progress">
       <div class="cl-missions-list-details-progress-cont">
-        <div class="cl-missions-list-details-progress-bar"></div>
+        <div class="cl-missions-list-details-progress-bar" style="width: {{ progressValue }}%"></div>
       </div>
-      <div class="cl-missions-list-details-progress-label">0/100</div>
+      <div class="cl-missions-list-details-progress-label">{{ progressLabel }}</div>
     </div>
     <div class="cl-missions-list-details-actions">
       <div class="cl-missions-list-details-actions-reward">{{ reward }}</div>

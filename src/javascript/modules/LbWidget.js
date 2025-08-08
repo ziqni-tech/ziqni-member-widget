@@ -210,11 +210,11 @@ export const LbWidget = function (options) {
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
       dashboard: {
         enable: true,
-        showAvailableAwards: false,
         showInstantWins: true,
         showAchievements: true,
         showTournaments: true,
-        showMissions: true,
+        showAvailableAwards: false,
+        showMissions: false,
         navigationClass: 'cl-main-widget-navigation-dashboard',
         navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
         containerClass: 'cl-main-widget-section-dashboard',

@@ -155,11 +155,12 @@ const instance = new MemberWidget({
   },
   navigation: {
     dashboard: {
-      enable: true, // true by default
-      showAvailableAwards: true, // true by default
+      enable: true, // true by default      
       showInstantWins: true, // true by default
       showAchievements: true, // true by default
-      showTournaments: true // true by default
+      showTournaments: true, // true by default
+      showAvailableAwards: true, // false by default
+      showMissions: true, // false by default
     },
     tournaments: {
       enable: true,

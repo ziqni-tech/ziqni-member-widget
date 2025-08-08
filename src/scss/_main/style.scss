@@ -1725,6 +1725,19 @@ em {
   justify-content: space-between;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-missions-list {
+  gap: 26px;
+  justify-content: center;
+
+  .cl-missions-list-item {
+    width: 340px;
+
+    .cl-missions-list-details-progress-cont {
+      width: 236px;
+    }
+  }
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-tournaments-list .dashboard-tournament-item {
   width: 340px;
   height: 226px;
