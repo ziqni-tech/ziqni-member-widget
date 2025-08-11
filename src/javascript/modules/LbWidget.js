@@ -422,7 +422,7 @@ export const LbWidget = function (options) {
     let missions = response.data;
 
     if (missions.length) {
-      const ids = this.settings.missions.missions.map(m => m.id);
+      const ids = missions.map(m => m.id);
       const rewardRequest = {
         entityFilter: [{
           entityType: 'Achievement',
@@ -443,6 +443,41 @@ export const LbWidget = function (options) {
 
         return mission;
       });
+
+      for (const id of ids) {
+        const graph = await this.getMissionsGraph(id);
+
+        const idx = missions.findIndex(mission => mission.id === id);
+        missions[idx].dependencies = [];
+
+        if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
+          const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
+          for (const edge of filtered) {
+            const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
+            const achievement = graph.nodes[idx];
+
+            const rewardRequest = {
+              entityFilter: [{
+                entityType: 'achievement',
+                entityIds: [edge.tailEntityId]
+              }],
+              currencyKey: this.settings.currency,
+              skip: 0,
+              limit: 5
+            };
+            const rewards = await this.getRewardsApi(rewardRequest);
+            const rewardsData = rewards.data;
+
+            achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
+
+            const missionIdx = missions.findIndex(mission => mission.id === id);
+            missions[missionIdx].dependencies.push({
+              ordering: edge.ordering,
+              achievement: achievement
+            });
+          }
+        }
+      }
     }
 
     return missions;
@@ -2336,9 +2371,61 @@ export const LbWidget = function (options) {
 
           return mission;
         });
+
+        for (const id of ids) {
+          const graph = await this.getMissionsGraph(id);
+
+          const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+          this.settings.missions.missions[idx].dependencies = [];
+
+          if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
+            const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
+            for (const edge of filtered) {
+              const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
+              const achievement = graph.nodes[idx];
+
+              const rewardRequest = {
+                entityFilter: [{
+                  entityType: 'achievement',
+                  entityIds: [edge.tailEntityId]
+                }],
+                currencyKey: this.settings.currency,
+                skip: 0,
+                limit: 5
+              };
+              const rewards = await this.getRewardsApi(rewardRequest);
+              const rewardsData = rewards.data;
+
+              achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
+
+              const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+              this.settings.missions.missions[missionIdx].dependencies.push({
+                ordering: edge.ordering,
+                achievement: achievement
+              });
+            }
+          }
+        }
       }
 
       if (typeof callback === 'function') callback(this.settings.missions.missions);
+    });
+  };
+
+  this.getMissionsGraph = async function (id, isDependantId = false) {
+    if (!this.settings.apiWs.missionsApiWsClient) {
+      this.settings.apiWs.missionsApiWsClient = new GraphsApiWs(this.apiClientStomp);
+    }
+
+    const graphRequest = {
+      ids: [id],
+      isDependantId: isDependantId
+    };
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.missionsApiWsClient.getGraph(graphRequest, (json) => {
+        resolve(json.data);
+      });
     });
   };
 

@@ -3440,7 +3440,7 @@ export const MainWidget = function (options) {
     listItem.dataset.id = mission.id;
 
     const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
-    const reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
+    let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
     const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
     let bgImage = '';
@@ -3456,9 +3456,29 @@ export const MainWidget = function (options) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
+    // let progressId = mission.id;
+    let stage = null;
+    let progressValue = mission.optInStatus.percentageComplete;
     let progressLabel = '0/100';
     if (mission.optInStatus && mission.optInStatus.percentageComplete) {
       progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
+    }
+
+    if (mission.dependencies && mission.dependencies.length) {
+      let currentStage = 1;
+      if (mission.optInStatus.percentageComplete === 100) {
+        const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
+        if (idx !== -1) {
+          currentStage = mission.dependencies[idx].ordering + 1;
+          // progressId = mission.dependencies[idx].achievement.entityId;
+          progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
+          progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
+          reward = mission.dependencies[idx].achievement.reward
+            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
+            : '';
+        }
+      }
+      stage = currentStage + '/' + (mission.dependencies.length + 1);
     }
 
     const template = require('../templates/dashboard/missionItem.hbs');
@@ -3468,7 +3488,8 @@ export const MainWidget = function (options) {
       actionsBtnLabel: actionsBtnLabel,
       bgImage: bgImage,
       progressLabel: progressLabel,
-      progressValue: mission.optInStatus.percentageComplete
+      progressValue: progressValue,
+      stage: stage
     });
 
     return listItem;
@@ -3624,7 +3645,7 @@ export const MainWidget = function (options) {
     listItem.dataset.id = mission.id;
 
     const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
-    const reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
+    let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
     const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
     let bgImage = '';
@@ -3640,9 +3661,29 @@ export const MainWidget = function (options) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
+    // let progressId = mission.id;
+    let stage = null;
+    let progressValue = mission.optInStatus.percentageComplete;
     let progressLabel = '0/100';
     if (mission.optInStatus && mission.optInStatus.percentageComplete) {
       progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
+    }
+
+    if (mission.dependencies && mission.dependencies.length) {
+      let currentStage = 1;
+      if (mission.optInStatus.percentageComplete === 100) {
+        const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
+        if (idx !== -1) {
+          currentStage = mission.dependencies[idx].ordering + 1;
+          // progressId = mission.dependencies[idx].achievement.entityId;
+          progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
+          progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
+          reward = mission.dependencies[idx].achievement.reward
+            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
+            : '';
+        }
+      }
+      stage = currentStage + '/' + (mission.dependencies.length + 1);
     }
 
     const template = require('../templates/mainWidget/missionItem.hbs');
@@ -3652,7 +3693,8 @@ export const MainWidget = function (options) {
       actionsBtnLabel: actionsBtnLabel,
       bgImage: bgImage,
       progressLabel: progressLabel,
-      progressValue: mission.optInStatus.percentageComplete
+      progressValue: progressValue,
+      stage: stage
     });
 
     return listItem;
