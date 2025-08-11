@@ -154,7 +154,14 @@ const instance = new MemberWidget({
     messagesForTheLast: 30 // Days; 30 by default
   },
   navigation: {
-    dashboard: {enable: true},
+    dashboard: {
+      enable: true, // true by default      
+      showInstantWins: true, // true by default
+      showAchievements: true, // true by default
+      showTournaments: true, // true by default
+      showAvailableAwards: true, // false by default
+      showMissions: true, // false by default
+    },
     tournaments: {
       enable: true,
       showFinishedTournaments: true
@@ -193,6 +200,12 @@ const instance = new MemberWidget({
       console.log('currentState:', currentState);
       console.log('previousState:', previousState);
     },
+    onStompError: function (message) {
+      console.warn('Error: ', message);
+    },
+    onLeaderboardUpdates: function(lbData) {
+      console.log('lbData:', lbData);
+    }
   },
   resources: [
     'node_modules/@ziqni-tech/member-widget/build/css/theme/default-theme.css'
@@ -243,6 +256,7 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
       memberToken: '<member_token>', // You must specify either apiKey + memberRefId or memberToken!
       memberNameLength: 5, // The first 5 characters of the username + '*****' will be displayed on the leaderboard
       loadCustomTranslations: false,
+      hideEmptyTabs: false,
       layout: {
         logoUrl: '',
         showThemeSwitcher: true,
@@ -267,6 +281,21 @@ instance.refreshMemberToken('<New_Token>'); // If you use the memberToken parame
             return points;
           }
           return Math.round(points)
+        }
+      },
+      callbacks: {
+        onContestStatusChanged: function (contestId, currentState, previousState) {
+          console.log('contestId:', contestId);
+          console.log('currentState:', currentState);
+          console.log('previousState:', previousState);
+        },
+        onCompetitionStatusChanged: function (competitionId, currentState, previousState) {
+          console.log('competitionId:', competitionId);
+          console.log('currentState:', currentState);
+          console.log('previousState:', previousState);
+        },
+        onStompError: function (message) {
+          console.warn('Error: ', message);
         }
       },
       resources: [

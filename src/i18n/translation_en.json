@@ -29,7 +29,8 @@
         "all": "All",
         "daily": "Daily",
         "weekly": "Weekly",
-        "monthly": "Monthly"
+        "monthly": "Monthly",
+        "finished": "Finished"
     },
     "tournaments": {
         "label": "Tournaments",
@@ -42,7 +43,8 @@
         "finished": "Finished",
         "registered": "Registered",
         "noAvailableCompetitions": "No available competition",
-        "date": "Date"
+        "date": "Date",
+        "goToLbLabel": "Go to leaderboard"
     },
     "leaderboard": {
         "rank": "Rank",
@@ -69,6 +71,7 @@
     },
     "rewards": {
         "label": "Awards",
+        "instantWinsLabel": "Instant Wins",
         "claim": "Claim",
         "claimed": "Claimed",
         "expired": "Expired",
@@ -110,6 +113,10 @@
         "btn": "Go",
         "prizeLabel": "Prize",
         "mapLabel": "Mission map"
+    },
+    "wof": {
+        "remainingPlays": "x spin available",
+        "buttonLabel": "Play"
     },
     "global": {
         "copy": "Powered By Ziqni",

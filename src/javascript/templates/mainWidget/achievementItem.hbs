@@ -10,7 +10,7 @@
     </div>
   </div>
 </div>
-<div class="cl-ach-list-actions">
+<div class="cl-ach-list-actions {{#if isFinished}} finished {{/if}}">
   <div class="cl-ach-list-actions-reward">{{ rewardValue }}</div>
   {{#if isMore}}
     <a class="cl-ach-list-more" data-id="{{ id }}" href="javascript:void(0);">{{ moreLabel }}</a>

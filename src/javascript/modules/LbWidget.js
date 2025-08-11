@@ -17,8 +17,6 @@ import pagination from '../utils/paginator';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
-import cLabs from './cLabs';
-
 import { Notifications } from './Notifications';
 import { MiniScoreBoard } from './MiniScoreBoard';
 import { MainWidget } from './MainWidget';
@@ -51,6 +49,7 @@ import {
   InstantWinsApiWs,
   InstantWinRequest,
   InstantWinPlayRequest,
+  InstantWinAvailablePlaysRequest,
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
 
@@ -73,6 +72,7 @@ export const LbWidget = function (options) {
    */
   this.settings = {
     debug: false,
+    isStaging: false,
     bindContainer: document.body,
     autoStart: true,
     notifications: null,
@@ -81,7 +81,7 @@ export const LbWidget = function (options) {
     enableNotifications: false,
     hideEmptyTabs: false,
     defaultLightTheme: false,
-    showAchievementsFilter: false,
+    showAchievementsFilter: true,
     mainWidget: null,
     language: process.env.LANG,
     currency: '',
@@ -134,11 +134,13 @@ export const LbWidget = function (options) {
       activeAchievementId: null,
       limit: 100,
       totalCount: 0,
+      finishedTotalCount: 0,
       list: [],
       all: [],
       daily: [],
       weekly: [],
       monthly: [],
+      finished: [],
       availableRewards: [],
       rewards: [],
       expiredRewards: [],
@@ -208,6 +210,11 @@ export const LbWidget = function (options) {
     navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
       dashboard: {
         enable: true,
+        showInstantWins: true,
+        showAchievements: true,
+        showTournaments: true,
+        showAvailableAwards: false,
+        showMissions: false,
         navigationClass: 'cl-main-widget-navigation-dashboard',
         navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
         containerClass: 'cl-main-widget-section-dashboard',
@@ -266,7 +273,6 @@ export const LbWidget = function (options) {
       instantWinsApiWsClient: null
     },
     uri: {
-      gatewayDomain: cLabs.api.url,
       assets: '/assets/attachments/:attachmentId',
       memberSSE: '/api/v1/:space/sse/reference/:id',
       memberSSEHeartbeat: '/api/v1/:space/sse/reference/:id/heartbeat',
@@ -314,7 +320,9 @@ export const LbWidget = function (options) {
     },
     callbacks: {
       onContestStatusChanged: function (contestId, currentState, previousState) {},
-      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {}
+      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {},
+      onStompError: function () {},
+      onLeaderboardUpdates: function (leaderboardData) {}
     },
     callback: null
   };
@@ -392,6 +400,112 @@ export const LbWidget = function (options) {
     return '<div class="banner-date">' + monthsElem + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
   };
 
+  this.getDashboardMissions = async () => {
+    const missionsRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        statusCode: {
+          moreThan: 20,
+          lessThan: 30
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: 0,
+        limit: 2,
+        constraints: ['mission']
+      }
+    }, null);
+
+    const response = await this.getAchievements(missionsRequest);
+    let missions = response.data;
+
+    if (missions.length) {
+      const ids = missions.map(m => m.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Achievement',
+          entityIds: ids
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      missions = missions.map(mission => {
+        const idx = rewardsData.findIndex(r => r.entityId === mission.id);
+        if (idx !== -1) {
+          mission.reward = rewardsData[idx];
+        }
+
+        return mission;
+      });
+
+      for (const id of ids) {
+        const graph = await this.getMissionsGraph(id);
+
+        const idx = missions.findIndex(mission => mission.id === id);
+        missions[idx].dependencies = [];
+
+        if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
+          const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
+          for (const edge of filtered) {
+            const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
+            const achievement = graph.nodes[idx];
+
+            const rewardRequest = {
+              entityFilter: [{
+                entityType: 'achievement',
+                entityIds: [edge.tailEntityId]
+              }],
+              currencyKey: this.settings.currency,
+              skip: 0,
+              limit: 5
+            };
+            const rewards = await this.getRewardsApi(rewardRequest);
+            const rewardsData = rewards.data;
+
+            achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
+
+            const missionIdx = missions.findIndex(mission => mission.id === id);
+            missions[missionIdx].dependencies.push({
+              ordering: edge.ordering,
+              achievement: achievement
+            });
+          }
+        }
+      }
+    }
+
+    return missions;
+  };
+
+  this.getDashboardAwards = async function () {
+    const availableAwardRequest = AwardRequest.constructFromObject({
+      languageKey: this.settings.language,
+      awardFilter: {
+        statusCode: {
+          moreThan: 14,
+          lessThan: 16
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: 0,
+        limit: 2
+      },
+      currencyKey: this.settings.currency
+    });
+
+    const awards = await this.getAwardsApi(availableAwardRequest);
+
+    return awards.data;
+  };
+
   this.getDashboardCompetitions = async function () {
     const activeRequest = CompetitionRequest.constructFromObject({
       languageKey: this.settings.language,
@@ -434,10 +548,29 @@ export const LbWidget = function (options) {
 
     if (activeCompetitionsData) {
       const ids = activeCompetitionsData.map(a => a.id);
+
+      const contestRequest = ContestRequest.constructFromObject({
+        languageKey: this.settings.language,
+        contestFilter: {
+          sortBy: [],
+          competitionIds: ids,
+          statusCode: {
+            moreThan: 0,
+            lessThan: 100
+          },
+          limit: 20,
+          skip: 0
+        }
+      }, null);
+
+      let contests = await this.getContests(contestRequest);
+
+      const contestIds = contests.map(a => a.id);
+
       const rewardRequest = {
         entityFilter: [{
-          entityType: 'Competition',
-          entityIds: ids
+          entityType: 'Contest',
+          entityIds: contestIds
         }],
         currencyKey: this.settings.currency,
         skip: 0,
@@ -446,8 +579,14 @@ export const LbWidget = function (options) {
       const rewards = await this.getRewardsApi(rewardRequest);
       const rewardsData = rewards.data;
 
+      contests = contests.map(c => {
+        c.rewards = rewardsData.filter(r => r.entityId === c.id);
+
+        return c;
+      });
+
       activeCompetitionsData = activeCompetitionsData.map(comp => {
-        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+        comp.contests = contests.filter(c => c.competitionId === comp.id);
 
         return comp;
       });
@@ -564,10 +703,29 @@ export const LbWidget = function (options) {
 
     if (this.settings.tournaments.activeCompetitions.length) {
       const ids = this.settings.tournaments.activeCompetitions.map(a => a.id);
+
+      const contestRequest = ContestRequest.constructFromObject({
+        languageKey: this.settings.language,
+        contestFilter: {
+          sortBy: [],
+          competitionIds: ids,
+          statusCode: {
+            moreThan: 0,
+            lessThan: 100
+          },
+          limit: 20,
+          skip: 0
+        }
+      }, null);
+
+      let contests = await this.getContests(contestRequest);
+
+      const contestIds = contests.map(a => a.id);
+
       const rewardRequest = {
         entityFilter: [{
-          entityType: 'Competition',
-          entityIds: ids
+          entityType: 'Contest',
+          entityIds: contestIds
         }],
         currencyKey: this.settings.currency,
         skip: 0,
@@ -576,8 +734,14 @@ export const LbWidget = function (options) {
       const rewards = await this.getRewardsApi(rewardRequest);
       const rewardsData = rewards.data;
 
+      contests = contests.map(c => {
+        c.rewards = rewardsData.filter(r => r.entityId === c.id);
+
+        return c;
+      });
+
       this.settings.tournaments.activeCompetitions = this.settings.tournaments.activeCompetitions.map(comp => {
-        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+        comp.contests = contests.filter(r => r.competitionId === comp.id);
 
         return comp;
       });
@@ -585,10 +749,29 @@ export const LbWidget = function (options) {
 
     if (this.settings.tournaments.readyCompetitions.length) {
       const ids = this.settings.tournaments.readyCompetitions.map(a => a.id);
+
+      const contestRequest = ContestRequest.constructFromObject({
+        languageKey: this.settings.language,
+        contestFilter: {
+          sortBy: [],
+          competitionIds: ids,
+          statusCode: {
+            moreThan: 0,
+            lessThan: 100
+          },
+          limit: 20,
+          skip: 0
+        }
+      }, null);
+
+      let contests = await this.getContests(contestRequest);
+
+      const contestIds = contests.map(a => a.id);
+
       const rewardRequest = {
         entityFilter: [{
-          entityType: 'Competition',
-          entityIds: ids
+          entityType: 'Contest',
+          entityIds: contestIds
         }],
         currencyKey: this.settings.currency,
         skip: 0,
@@ -597,8 +780,14 @@ export const LbWidget = function (options) {
       const rewards = await this.getRewardsApi(rewardRequest);
       const rewardsData = rewards.data;
 
+      contests = contests.map(c => {
+        c.rewards = rewardsData.filter(r => r.entityId === c.id);
+
+        return c;
+      });
+
       this.settings.tournaments.readyCompetitions = this.settings.tournaments.readyCompetitions.map(comp => {
-        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+        comp.contests = contests.filter(r => r.competitionId === comp.id);
 
         return comp;
       });
@@ -606,10 +795,29 @@ export const LbWidget = function (options) {
 
     if (this.settings.navigation.tournaments.showFinishedTournaments && this.settings.tournaments.finishedCompetitions.length) {
       const ids = this.settings.tournaments.finishedCompetitions.map(a => a.id);
+
+      const contestRequest = ContestRequest.constructFromObject({
+        languageKey: this.settings.language,
+        contestFilter: {
+          sortBy: [],
+          competitionIds: ids,
+          statusCode: {
+            moreThan: 0,
+            lessThan: 100
+          },
+          limit: 20,
+          skip: 0
+        }
+      }, null);
+
+      let contests = await this.getContests(contestRequest);
+
+      const contestIds = contests.map(a => a.id);
+
       const rewardRequest = {
         entityFilter: [{
-          entityType: 'Competition',
-          entityIds: ids
+          entityType: 'Contest',
+          entityIds: contestIds
         }],
         currencyKey: this.settings.currency,
         skip: 0,
@@ -618,8 +826,14 @@ export const LbWidget = function (options) {
       const rewards = await this.getRewardsApi(rewardRequest);
       const rewardsData = rewards.data;
 
+      contests = contests.map(c => {
+        c.rewards = rewardsData.filter(r => r.entityId === c.id);
+
+        return c;
+      });
+
       this.settings.tournaments.finishedCompetitions = this.settings.tournaments.finishedCompetitions.map(comp => {
-        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+        comp.contests = contests.filter(r => r.competitionId === comp.id);
 
         return comp;
       });
@@ -772,6 +986,16 @@ export const LbWidget = function (options) {
     this.settings.competition.contests = null;
     this.settings.competition.activeContestId = null;
 
+    const optInStatus = await this.getCompetitionOptInStatus(
+      this.settings.competition.activeCompetition.id
+    );
+
+    this.settings.competition.activeCompetition.optInStatus = optInStatus;
+
+    if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
+      this.settings.competition.activeCompetition.optin = true;
+    }
+
     const contestRequest = ContestRequest.constructFromObject({
       languageKey: this.settings.language,
       contestFilter: {
@@ -847,6 +1071,7 @@ export const LbWidget = function (options) {
         this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
           if (data && data.leaderboardEntries) {
             _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
+            _this.settings.callbacks.onLeaderboardUpdates(data);
           }
         });
       }
@@ -906,6 +1131,7 @@ export const LbWidget = function (options) {
             this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
               _this.settings.leaderboard.leaderboardData = lbData;
             });
+            _this.settings.callbacks.onLeaderboardUpdates(data);
             callback(_this.settings.leaderboard.leaderboardData);
           })
           .catch(error => {
@@ -933,6 +1159,7 @@ export const LbWidget = function (options) {
           this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
             _this.settings.leaderboard.leaderboardData = lbData;
           });
+          _this.settings.callbacks.onLeaderboardUpdates(data);
           callback(_this.settings.leaderboard.leaderboardData);
         })
         .catch(error => {
@@ -1003,8 +1230,14 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.checkForAvailableAchievements = async function (pageNumber, callback) {
+  this.checkForAvailableAchievements = async function (pageNumber, callback, current = 'all') {
     const _this = this;
+
+    let allPageNumber = 1;
+    let finishedPageNumber = 1;
+
+    if (current === 'all') allPageNumber = pageNumber;
+    if (current === 'finished') finishedPageNumber = pageNumber;
 
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
@@ -1029,9 +1262,33 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 6,
+        skip: (allPageNumber - 1) * 6,
         limit: 6,
         constraints: []
+      }
+    }, null);
+
+    const finishedDateFilter = new Date();
+    finishedDateFilter.setDate(finishedDateFilter.getDate() - 30);
+
+    const finishedAchievementsRequest = AchievementRequest.constructFromObject({
+      languageKey: this.settings.language,
+      achievementFilter: {
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        endDate: {
+          before: (new Date()).toISOString(),
+          after: finishedDateFilter.toISOString()
+        },
+        statusCode: {
+          moreThan: 30,
+          lessThan: 40
+        },
+        sortBy: [{
+          queryField: 'created',
+          order: 'Desc'
+        }],
+        skip: (finishedPageNumber - 1) * 6,
+        limit: 6
       }
     }, null);
 
@@ -1307,6 +1564,34 @@ export const LbWidget = function (options) {
           return achievement;
         });
       }
+
+      const finishedJson = await this.getAchievements(finishedAchievementsRequest);
+      this.settings.achievements.finished = finishedJson.data;
+      this.settings.achievements.finishedTotalCount = finishedJson.meta.totalRecordsFound || 0;
+
+      if (_this.settings.achievements.finished.length) {
+        const ids = _this.settings.achievements.finished.map(a => a.id);
+        const rewardRequest = {
+          entityFilter: [{
+            entityType: 'Achievement',
+            entityIds: ids
+          }],
+          currencyKey: this.settings.currency,
+          skip: 0,
+          limit: 20
+        };
+        const rewards = await this.getRewardsApi(rewardRequest);
+        const rewardsData = rewards.data;
+
+        _this.settings.achievements.finished = _this.settings.achievements.finished.map(achievement => {
+          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
+          if (idx !== -1) {
+            achievement.reward = rewardsData[idx];
+          }
+
+          return achievement;
+        });
+      }
     }
 
     this.settings.achievements.all = this.settings.achievements.list;
@@ -1316,20 +1601,43 @@ export const LbWidget = function (options) {
       all: this.settings.achievements.all,
       daily: this.settings.achievements.daily,
       weekly: this.settings.achievements.weekly,
-      monthly: this.settings.achievements.monthly
+      monthly: this.settings.achievements.monthly,
+      finishedAchievements: this.settings.achievements.finished
     };
 
     if (typeof callback === 'function') callback(achData);
   };
 
-  this.playInstantWin = async function () {
+  this.playInstantWin = async function (id) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
     const request = InstantWinPlayRequest.constructFromObject({
-      awardId: '',
-      languageKey: this.settings.language,
-      currencyKey: this.settings.currency
+      instantWinId: id
     }, null);
 
-    return await this.playInstantWinsApi(request);
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.playInstantWin(request, (json) => {
+        resolve(json.data);
+      });
+    });
+  };
+
+  this.getSingleWheel = async function (id) {
+    const request = InstantWinRequest.constructFromObject({
+      languageKey: this.settings.language,
+      currencyKey: this.settings.currency,
+      instantWinFilter: {
+        ids: [id],
+        limit: 1,
+        skip: 0
+      }
+    }, null);
+
+    const wheel = await this.getInstantWinsApi(request);
+
+    return wheel.data;
   };
 
   this.getSingleWheels = async function (callback) {
@@ -1344,10 +1652,108 @@ export const LbWidget = function (options) {
     }, null);
 
     const singleWheels = await this.getInstantWinsApi(request);
+    let singleWheelsData = singleWheels.data;
+
+    // TODO: remove after InstantWinRequest update
+    singleWheelsData = singleWheelsData.filter(s => s.statusCode === 25);
+
+    const ids = singleWheelsData.map(s => s.id);
+    let availablePlays = await this.getInstantWinsAvailablePlays(ids);
+
+    availablePlays = availablePlays.filter(a => a.remainingPlays > 0);
+    const availablePlayIds = availablePlays.map(a => a.instantWinId);
+
+    singleWheelsData = singleWheelsData.filter(s => availablePlayIds.includes(s.id));
 
     if (typeof callback === 'function') {
-      callback(singleWheels.data);
+      callback(singleWheelsData);
     }
+
+    return singleWheelsData;
+  };
+
+  this.getInstantWinsAvailablePlays = async function (ids) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
+    const request = InstantWinAvailablePlaysRequest.constructFromObject({
+      instantWinIds: ids
+    }, null);
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
+        resolve(json.data);
+      });
+    });
+  };
+
+  this.getInstantWinAvailablePlays = async function (id) {
+    if (!this.settings.apiWs.instantWinsApiWsClient) {
+      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
+    }
+
+    const request = InstantWinAvailablePlaysRequest.constructFromObject({
+      instantWinIds: [id]
+    }, null);
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
+        resolve(json.data);
+      });
+    });
+  };
+
+  this.getSettingsFile = async function (fileName) {
+    if (!this.settings.apiWs.filesApiWsClient) {
+      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
+    }
+
+    return new Promise((resolve, reject) => {
+      const fileRequest = {
+        ids: [],
+        limit: 20,
+        skip: 0,
+        parentFolderPath: '/instant-wins',
+        repositoryId: '-7KLxoMBDhZrpIHgC4eP'
+      };
+
+      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, async (res) => {
+        const settingsFile = res.data.find(item => item.name.trim() === fileName);
+
+        if (settingsFile) {
+          fetch(settingsFile.uri)
+            .then((data) => {
+              return data.json();
+            })
+            .then((data) => {
+              resolve(data);
+            })
+            .catch((err) => {
+              console.log('instant win settings file err', err);
+              reject(err);
+            });
+        }
+      });
+    });
+  };
+
+  this.getFileUri = async (id) => {
+    if (!this.settings.apiWs.filesApiWsClient) {
+      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
+    }
+
+    const fileRequest = {
+      ids: [id],
+      limit: 1,
+      skip: 0
+    };
+
+    return new Promise((resolve) => {
+      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, (res) => {
+        resolve(res.data[0].uri);
+      });
+    });
   };
 
   this.getAchievement = function (achievementId, callback) {
@@ -1358,7 +1764,7 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.getAchievements = this.getAchievements = async function (achievementRequest) {
+  this.getAchievements = async function (achievementRequest) {
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
     }
@@ -1501,6 +1907,7 @@ export const LbWidget = function (options) {
           limit: 1
         }
       };
+
       await this.settings.apiWs.messagesApiWsClient.getMessages(messageRequest, (json) => {
         if (json.data && json.data.length) {
           if (json.data[0].messageType === 'Notification') {
@@ -1545,6 +1952,19 @@ export const LbWidget = function (options) {
         }
       });
     }
+  };
+
+  this.updateMessageStatus = async function (messageIds, status) {
+    if (!this.settings.apiWs.messagesApiWsClient) {
+      this.settings.apiWs.messagesApiWsClient = new MessagesApiWs(this.apiClientStomp);
+    }
+
+    const payload = [{
+      id: messageIds,
+      status: status
+    }];
+
+    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => {});
   };
 
   this.claimAward = async function (rewardId, callback) {
@@ -1844,18 +2264,6 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.playInstantWinsApi = async function (playRequest) {
-    if (!this.settings.apiWs.instantWinsApiWsClient) {
-      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.instantWinsApiWsClient.playInstantWin(playRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
   this.getInstantWinsApi = async function (instantWinRequest) {
     if (!this.settings.apiWs.instantWinsApiWsClient) {
       this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
@@ -1876,6 +2284,7 @@ export const LbWidget = function (options) {
       languageKey: this.settings.language,
       messageFilter: {
         messageType: 'InboxItem',
+        status: ['New', 'Read'],
         createdDateRange: {
           before: (new Date()).toISOString(),
           after: createdDateFilter.toISOString()
@@ -1962,9 +2371,61 @@ export const LbWidget = function (options) {
 
           return mission;
         });
+
+        for (const id of ids) {
+          const graph = await this.getMissionsGraph(id);
+
+          const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+          this.settings.missions.missions[idx].dependencies = [];
+
+          if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
+            const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
+            for (const edge of filtered) {
+              const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
+              const achievement = graph.nodes[idx];
+
+              const rewardRequest = {
+                entityFilter: [{
+                  entityType: 'achievement',
+                  entityIds: [edge.tailEntityId]
+                }],
+                currencyKey: this.settings.currency,
+                skip: 0,
+                limit: 5
+              };
+              const rewards = await this.getRewardsApi(rewardRequest);
+              const rewardsData = rewards.data;
+
+              achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
+
+              const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+              this.settings.missions.missions[missionIdx].dependencies.push({
+                ordering: edge.ordering,
+                achievement: achievement
+              });
+            }
+          }
+        }
       }
 
       if (typeof callback === 'function') callback(this.settings.missions.missions);
+    });
+  };
+
+  this.getMissionsGraph = async function (id, isDependantId = false) {
+    if (!this.settings.apiWs.missionsApiWsClient) {
+      this.settings.apiWs.missionsApiWsClient = new GraphsApiWs(this.apiClientStomp);
+    }
+
+    const graphRequest = {
+      ids: [id],
+      isDependantId: isDependantId
+    };
+
+    return new Promise((resolve, reject) => {
+      this.settings.apiWs.missionsApiWsClient.getGraph(graphRequest, (json) => {
+        resolve(json.data);
+      });
     });
   };
 
@@ -2001,7 +2462,8 @@ export const LbWidget = function (options) {
       }
 
       const tempGraphRequest = EntityGraphRequest.constructFromObject({
-        ids: [id]
+        ids: [id],
+        includes: ['iconLink', 'termsAndConditions', 'description']
       });
 
       this.getGraphApi(tempGraphRequest)
@@ -2048,6 +2510,10 @@ export const LbWidget = function (options) {
         callback();
       }
     });
+
+    this.settings.competition.activeCompetition.optInStatus = await this.getCompetitionOptInStatus(
+      this.settings.competition.activeCompetition.id
+    );
   };
 
   var revalidationCount = 0;
@@ -2078,26 +2544,26 @@ export const LbWidget = function (options) {
       clearTimeout(_this.settings.leaderboard.refreshLbDataInterval);
     }
 
-    if (
-      _this.settings.competition.activeCompetition.constraints &&
-      _this.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
-    ) {
-      if (
-        !_this.settings.competition.activeCompetition.optin ||
-        (
-          typeof _this.settings.competition.activeCompetition.optin === 'boolean' &&
-          !_this.settings.competition.activeCompetition.optin
-        )
-      ) {
-        const optInStatus = await this.getCompetitionOptInStatus(
-          this.settings.competition.activeCompetition.id
-        );
-
-        if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
-          this.settings.competition.activeCompetition.optin = true;
-        }
-      }
-    }
+    // if (
+    //   _this.settings.competition.activeCompetition.constraints &&
+    //   _this.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
+    // ) {
+    //   if (
+    //     !_this.settings.competition.activeCompetition.optin ||
+    //     (
+    //       typeof _this.settings.competition.activeCompetition.optin === 'boolean' &&
+    //       !_this.settings.competition.activeCompetition.optin
+    //     )
+    //   ) {
+    //     const optInStatus = await this.getCompetitionOptInStatus(
+    //       this.settings.competition.activeCompetition.id
+    //     );
+    //
+    //     if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
+    //       this.settings.competition.activeCompetition.optin = true;
+    //     }
+    //   }
+    // }
 
     if (
       (
@@ -2168,7 +2634,7 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.activeDataRefresh = function (callback, isReloadTime = false) {
+  this.activeDataRefresh = function (callback = null, isReloadTime = false) {
     var _this = this;
 
     if (_this.settings.competition.refreshInterval) {
@@ -2328,7 +2794,7 @@ export const LbWidget = function (options) {
     const _this = this;
 
     if (typeof _this.settings.uri.translationPath === 'string' && _this.settings.uri.translationPath.length > 0 && _this.settings.loadCustomTranslations) {
-      const url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : _this.settings.uri.gatewayDomain + _this.settings.uri.translationPath.replace(':language', _this.settings.language);
+      const url = (stringContains(_this.settings.uri.translationPath, 'http')) ? _this.settings.uri.translationPath.replace(':language', _this.settings.language) : '';
 
       fetch(url, { method: 'GET' })
         .then(response => response.json())
@@ -2342,7 +2808,13 @@ export const LbWidget = function (options) {
         });
     } else {
       if (_this.settings.language) {
-        const translation = require(`../../i18n/translation_${_this.settings.language}.json`);
+        let translation;
+        try {
+          translation = require(`../../i18n/translation_${_this.settings.language}.json`);
+        } catch (e) {
+          translation = require('../../i18n/translation_en.json');
+        }
+
         _this.settings.translation = mergeObjects(_this.settings.translation, translation);
       }
 
@@ -2804,6 +3276,7 @@ export const LbWidget = function (options) {
               _this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
                 _this.settings.leaderboard.leaderboardData = lbData;
               });
+              _this.settings.callbacks.onLeaderboardUpdates(data);
               _this.settings.mainWidget.leaderboardDetailsUpdate();
               _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
               _this.checkForAvailableRewards(1);
@@ -2822,7 +3295,8 @@ export const LbWidget = function (options) {
       (
         hasClass(el, 'cl-main-widget-lb-details-description-close') ||
         hasClass(el, 'cl-main-widget-lb-header-back-icon') ||
-        hasClass(el, 'cl-main-widget-lb-details-description-header-back')
+        hasClass(el, 'cl-main-widget-lb-details-description-header-back') ||
+        hasClass(el, 'cl-main-widget-lb-details-description-gotolb')
       )
     ) {
       const missingMember = document.querySelector('.cl-main-widget-lb-missing-member');
@@ -2847,45 +3321,87 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'paginator-item')) {
       const preLoader = _this.settings.mainWidget.preloader();
       if (el.closest('.cl-main-widget-ach-list-body-res')) {
-        let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
-        let isPrev = false;
-        let isNext = false;
+        if (el.closest('.paginator-finished')) {
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.achievements.finishedTotalCount / 6);
+          let isPrev = false;
+          let isNext = false;
 
-        if (el.dataset && el.dataset.page === '...') {
-          if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
-            isPrev = true;
-          } else {
-            isNext = true;
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
           }
-        }
 
-        if (el.classList.contains('prev') || isPrev) {
-          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-          if (activePage > 1) {
-            pageNumber = activePage - 1;
+          if (el.classList.contains('prev') || isPrev) {
+            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              return;
+            }
+          } else if (el.classList.contains('next') || isNext) {
+            const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              return;
+            }
           } else {
-            return;
+            pageNumber = Number(el.dataset.page);
           }
-        } else if (el.classList.contains('next') || isNext) {
-          const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
-          if (activePage < pagesCount) {
-            pageNumber = activePage + 1;
-          } else {
-            return;
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
           }
+
+          preLoader.show(async function () {
+            _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr, 'finished');
+          });
         } else {
-          pageNumber = Number(el.dataset.page);
-        }
+          let pageNumber;
+          const pagesCount = Math.ceil(_this.settings.achievements.totalCount / 6);
+          let isPrev = false;
+          let isNext = false;
 
-        let paginationArr = null;
-        if (pagesCount > 7) {
-          paginationArr = pagination(6, pageNumber, pagesCount);
-        }
+          if (el.dataset && el.dataset.page === '...') {
+            if (el.previousSibling.dataset && el.previousSibling.dataset.page && el.previousSibling.dataset.page === '1') {
+              isPrev = true;
+            } else {
+              isNext = true;
+            }
+          }
 
-        preLoader.show(async function () {
-          _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr);
-        });
+          if (el.classList.contains('prev') || isPrev) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage > 1) {
+              pageNumber = activePage - 1;
+            } else {
+              return;
+            }
+          } else if (el.classList.contains('next') || isNext) {
+            const activePage = Number(el.closest('.paginator').querySelector('.active').dataset.page);
+            if (activePage < pagesCount) {
+              pageNumber = activePage + 1;
+            } else {
+              return;
+            }
+          } else {
+            pageNumber = Number(el.dataset.page);
+          }
+
+          let paginationArr = null;
+          if (pagesCount > 7) {
+            paginationArr = pagination(6, pageNumber, pagesCount);
+          }
+
+          preLoader.show(async function () {
+            _this.settings.mainWidget.loadAchievements(pageNumber, preLoader.hide(), paginationArr);
+          });
+        }
       }
       if (el.closest('.cl-main-widget-reward-list-body-res')) {
         if (el.closest('.paginator-claimed')) {
@@ -3179,6 +3695,32 @@ export const LbWidget = function (options) {
         });
       }
 
+      // load dashboard awards
+    } else if (hasClass(el, 'cl-main-widget-dashboard-awards-list-more')) {
+      const preLoader = _this.settings.mainWidget.preloader();
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
+
+      preLoader.show(function () {
+        awardsIcon.classList.add('cl-active-nav');
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+
+        _this.settings.mainWidget.loadAwards(function () {
+          const awardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
+
+          _this.settings.mainWidget.settings.achievement.detailsContainer.style.display = 'none';
+
+          awardsContainer.style.display = 'flex';
+          setTimeout(function () {
+            addClass(awardsContainer, 'cl-main-active-section');
+          }, 30);
+
+          preLoader.hide();
+        });
+      });
+
       // load dashboard achievements
     } else if (hasClass(el, 'cl-main-widget-dashboard-achievements-list-more')) {
       const preLoader = _this.settings.mainWidget.preloader();
@@ -3224,6 +3766,7 @@ export const LbWidget = function (options) {
           lbContainer.style.display = 'flex';
           setTimeout(function () {
             addClass(lbContainer, 'cl-main-active-section');
+            _this.settings.mainWidget.loadCompetitionList();
           }, 30);
 
           preLoader.hide();
@@ -3269,10 +3812,11 @@ export const LbWidget = function (options) {
       }
 
       // dashboard wheel button
-    } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-wheel-button')) {
+    } else if (hasClass(el, 'cl-main-widget-dashboard-instant-wins-more') || hasClass(el, '.cl-main-widget-dashboard-instant-wins-wheel-button')) {
       const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
       const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
       const awardsIcon = document.querySelector('.cl-main-widget-navigation-rewards');
+      const preLoader = _this.settings.mainWidget.preloader();
 
       dashboard.style.display = 'none';
       dashboardIcon.classList.remove('cl-active-nav');
@@ -3280,21 +3824,31 @@ export const LbWidget = function (options) {
 
       const rewardsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.rewards.containerClass);
       rewardsContainer.style.display = 'flex';
-      addClass(rewardsContainer, 'cl-main-active-section');
 
-      const container = document.querySelector('.cl-main-widget-reward-list-body-res');
-      const sections = container.querySelectorAll('.cl-accordion');
-      const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
-      const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
-      const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+      preLoader.show(async function () {
+        await _this.settings.mainWidget.loadAwards(
+          async function () {
+            _this.settings.mainWidget.loadInstantWins();
 
-      menuItems.forEach(i => i.classList.remove('active'));
-      instantMenuItem.classList.add('active');
-      sections.forEach(s => s.classList.remove('cl-shown'));
-      instantWinsSection.classList.add('cl-shown');
+            const container = document.querySelector('.cl-main-widget-reward-list-body-res');
+            const sections = container.querySelectorAll('.cl-accordion');
+            const instantWinsSection = container.querySelector('.cl-accordion.instantWins');
+            const menuItems = container.querySelectorAll('.cl-main-accordion-container-menu-item');
+            const instantMenuItem = container.querySelector('.cl-main-accordion-container-menu-item.instantWins');
 
-      await _this.getSingleWheels(function (data) {
-        _this.settings.mainWidget.loadSingleWheels(data);
+            menuItems.forEach(i => i.classList.remove('active'));
+            instantMenuItem.classList.add('active');
+            sections.forEach(s => s.classList.remove('cl-shown'));
+            instantWinsSection.classList.add('cl-shown');
+
+            if (hasClass(el, '.cl-main-widget-dashboard-instant-wins-wheel-button')) {
+              const id = el.dataset.id;
+              await _this.settings.mainWidget.loadSingleWheel(id);
+            }
+            addClass(rewardsContainer, 'cl-main-active-section');
+            preLoader.hide();
+          }
+        );
       });
 
       // dashboard scratchcards button
@@ -3322,7 +3876,7 @@ export const LbWidget = function (options) {
       sections.forEach(s => s.classList.remove('cl-shown'));
       instantWinsSection.classList.add('cl-shown');
 
-      _this.settings.mainWidget.loadScratchCards();
+      // _this.settings.mainWidget.loadScratchCards();
 
       // dashboard competition button
     } else if (hasClass(el, 'dashboard-tournament-item') || closest(el, '.dashboard-tournament-item')) {
@@ -3339,6 +3893,7 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
 
       preLoader.show(function () {
+        _this.settings.mainWidget.clearLeaderboard();
         _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
@@ -3373,15 +3928,18 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hideRewardDetails(function () {
       });
 
+      // play spinner back button
+    } else if (hasClass(el, 'play-single-wheel-back-btn')) {
+      _this.settings.mainWidget.hideSingleWheel();
+
       // messages details back button
     } else if (hasClass(el, 'cl-main-widget-inbox-details-back-btn')) {
-      _this.settings.mainWidget.hideMessageDetails(function () {
-      });
+      _this.settings.mainWidget.hideMessageDetails(() => {}, true);
 
       // mission details back button
     } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
       _this.settings.mainWidget.hideMissionDetails(function () {
-      });
+      }, true);
 
       // competition details info button
     } else if (hasClass(el, 'cl-main-widget-lb-details-description-info')) {
@@ -3402,16 +3960,42 @@ export const LbWidget = function (options) {
       });
 
       // Single Wheel
-    } else if (hasClass(el, 'scratchcards-button')) {
-      _this.settings.mainWidget.loadScratchCards();
+    } else if (hasClass(el, 'instant-wins-card-button')) {
+      const id = el.dataset.id;
+      this.settings.mainWidget.loadSingleWheel(id);
 
-      // load rewards details
+      // Single Wheel
+    } else if (hasClass(el, 'scratchcards-button')) {
+      // _this.settings.mainWidget.loadScratchCards();
+
+      // claim award
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {
       const awardId = closest(el, '.cl-rew-list-item').dataset.id;
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
         await _this.claimAward(awardId, function () {
           setTimeout(function () {
+            preLoader.hide();
+          }, 3500);
+        });
+      });
+
+      // claim dashboard award
+    } else if (hasClass(el, 'cl-rew-dashboard-details-claim')) {
+      const awardId = closest(el, '.dashboard-award-item').dataset.id;
+      const preLoader = _this.settings.mainWidget.preloader();
+      preLoader.show(async function () {
+        await _this.claimAward(awardId, function () {
+          setTimeout(function () {
+            _this.settings.mainWidget.loadDashboardAwards();
+
+            if (
+              _this.settings.instantWins.enable &&
+              _this.settings.navigation.dashboard.showInstantWins
+            ) {
+              _this.settings.mainWidget.loadDashboardInstantWins();
+            }
+
             preLoader.hide();
           }, 3500);
         });
@@ -3426,11 +4010,36 @@ export const LbWidget = function (options) {
       });
 
       // load inbox details
-    } else if (hasClass(el, 'cl-inbox-list-item') || closest(el, '.cl-inbox-list-item') !== null) {
+    } else if (
+      (hasClass(el, 'cl-inbox-list-item') || closest(el, '.cl-inbox-list-item') !== null) &&
+      !closest(el, '.checkbox-container')
+    ) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
-        _this.settings.mainWidget.loadMessageDetails(data, function () {
+        _this.settings.mainWidget.loadMessageDetails(data, function () {});
+        _this.updateMessageStatus([messageId], 'Read');
+      });
+
+      // delete selected messages
+    } else if (el.classList.contains('cl-main-widget-inbox-list-delete-selected')) {
+      const checkedMessages = document.querySelectorAll('input[name="checkMessage"]:checked');
+      const deleteSelected = document.querySelector('.cl-main-widget-inbox-list-delete-selected');
+      const ids = [];
+      const preLoader = _this.settings.mainWidget.preloader();
+
+      if (checkedMessages && checkedMessages.length) {
+        checkedMessages.forEach((message) => {
+          const messageId = message.closest('.cl-inbox-list-item').dataset.id;
+          ids.push(messageId);
         });
+      }
+
+      preLoader.show(async () => {
+        await _this.updateMessageStatus(ids, 'Deleted');
+        deleteSelected.style.display = 'none';
+        setTimeout(function () {
+          _this.settings.mainWidget.loadMessages(1, () => { preLoader.hide(); });
+        }, 2500);
       });
 
       // load mission details
@@ -3500,6 +4109,7 @@ export const LbWidget = function (options) {
       const preLoader = _this.settings.mainWidget.preloader();
 
       preLoader.show(function () {
+        _this.settings.mainWidget.clearLeaderboard();
         _this.settings.mainWidget.populateLeaderboardResultsWithDefaultEntries(true);
         _this.settings.mainWidget.settings.active = true;
         _this.settings.tournaments.activeCompetitionId = tournamentId;
@@ -3547,15 +4157,21 @@ export const LbWidget = function (options) {
       if (mainContainer.classList.contains('lightTheme')) {
         mainContainer.classList.remove('lightTheme');
         msContainer.classList.remove('lightTheme');
+        localStorage.setItem('zqTheme', 'dark');
       } else {
         mainContainer.classList.add('lightTheme');
         msContainer.classList.add('lightTheme');
+        localStorage.setItem('zqTheme', 'light');
       }
     }
   };
 
   this.eventListeners = function () {
     var _this = this;
+
+    window.addEventListener('online', async () => {
+      await this.initApiClientStomp(true);
+    });
 
     document.body.addEventListener('keyup', function (event) {
       switch (event.keyCode) {
@@ -3735,7 +4351,7 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.initApiClientStomp = async function () {
+  this.initApiClientStomp = async function (isRefresh = false) {
     const _this = this;
     this.settings.authToken = null;
 
@@ -3752,11 +4368,57 @@ export const LbWidget = function (options) {
 
     if (this.settings.authToken) {
       this.apiClientStomp = ApiClientStomp.instance;
+
+      if (this.settings.isStaging) {
+        ApiClientStomp.updateInstancePaths(
+          'wss://member-api.staging.ziqni.io/ws',
+          'https://member-api.staging.ziqni.io/ws'
+        );
+        this.apiClientStomp = ApiClientStomp.instance;
+      }
+
       if (!this.settings.debug) {
         this.apiClientStomp.client.debug = () => {};
       }
       await this.apiClientStomp.connect({ token: this.settings.authToken });
+
+      if (isRefresh) {
+        if (this.settings.competition.activeContestId) {
+          let ranksAboveToInclude = 0;
+          let ranksBelowToInclude = 0;
+          const count = (this.settings.miniScoreBoard.settings.active) ? 0 : this.settings.leaderboard.fullLeaderboardSize;
+
+          if (this.settings.leaderboard.miniScoreBoard.enableRankings) {
+            ranksAboveToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
+            ranksBelowToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
+          }
+
+          const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+            entityId: this.settings.competition.activeContestId,
+            action: 'Subscribe',
+            leaderboardFilter: {
+              topRanksToInclude: count,
+              ranksAboveToInclude: ranksAboveToInclude,
+              ranksBelowToInclude: ranksBelowToInclude
+            }
+          });
+
+          this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
+            if (data && data.leaderboardEntries) {
+              _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
+              _this.settings.callbacks.onLeaderboardUpdates(data);
+            }
+          });
+        } else {
+          this.activeDataRefresh();
+        }
+      }
+
       this.apiClientStomp.sendSys('', {}, (json, headers) => {
+        if (headers && headers.objectType === 'Error') {
+          this.settings.callbacks.onStompError(json);
+        }
+
         if (headers && headers.objectType === 'Leaderboard') {
           if (json.id && json.id === this.settings.competition.activeContestId) {
             const leaderboardEntries = json.leaderboardEntries ?? [];
@@ -3764,23 +4426,65 @@ export const LbWidget = function (options) {
             this.settings.partialFunctions.leaderboardDataResponseParser(leaderboardEntries, function (lbData) {
               _this.settings.leaderboard.leaderboardData = lbData;
             });
+            _this.settings.callbacks.onLeaderboardUpdates(json);
             // this.settings.miniScoreBoard.loadScoreBoard(true);
             this.settings.mainWidget.loadLeaderboard(() => {}, false);
           }
         }
+
         if (json && json.entityType === 'Message') {
-          this.getMessage(json.entityId, function () { _this.animateIcon('Message'); }, true);
-        }
-        if (json && json.entityType === 'Award') {
           setTimeout(async () => {
-            _this.settings.mainWidget.loadAwards(
-              function () {
-                _this.animateIcon('Award');
-              },
-              1
-            );
+            await _this.getMessage(json.entityId, () => {}, true);
+          }, 2000);
+
+          const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
+          if (json.typeOffChange === 1) {
+            if (_this.settings.navigation.inbox.enable) {
+              const messagesIcon = document.querySelector('.cl-main-widget-navigation-inbox-icon').parentElement;
+              messagesIcon.classList.remove('hidden');
+            }
+
+            if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
+              _this.settings.mainWidget.loadMessages(1, () => {});
+            }
+          }
+        }
+
+        if (json && json.entityType === 'Award') {
+          const awardRequest = AwardRequest.constructFromObject({
+            languageKey: this.settings.language,
+            awardFilter: {
+              ids: [json.entityId],
+              skip: 0,
+              limit: 1
+            },
+            currencyKey: this.settings.currency
+          });
+
+          setTimeout(async () => {
+            const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+            const awardData = await _this.getAwardsApi(awardRequest);
+
+            if (
+              awardData.data &&
+              awardData.data.length &&
+              awardData.data[0].rewardType.key.startsWith('$iw')
+            ) {
+              if (!['Claimed', 'Expired'].includes(awardData.data[0].status)) {
+                const iwAward = awardData.data[0];
+                await _this.claimAward(iwAward.id, () => {});
+                setTimeout(async () => {
+                  await _this.settings.mainWidget.loadDashboardInstantWins();
+                }, 2000);
+              }
+            } else if (dashboard && dashboard.classList.contains('cl-main-active-section')) {
+              await _this.settings.mainWidget.loadDashboardAwards(function () { _this.animateIcon('Award'); });
+            } else {
+              _this.settings.mainWidget.loadAwards(function () { _this.animateIcon('Award'); }, 1);
+            }
           }, 2000);
         }
+
         if (json && json.entityType === 'Contest') {
           _this.checkForAvailableCompetitions(async function () {
             // _this.updateLeaderboardNavigationCounts();
@@ -3793,6 +4497,7 @@ export const LbWidget = function (options) {
             }
           }
         }
+
         if (json && json.entityType === 'Competition') {
           _this.checkForAvailableCompetitions(async function () {
             // _this.updateLeaderboardNavigationCounts();
@@ -3805,6 +4510,7 @@ export const LbWidget = function (options) {
             }
           }
         }
+
         if (json && json.entityType === 'Achievement') {
           if (headers.callback === 'optinStatus') {
             _this.settings.mainWidget.achievementItemUpdateProgression(json.entityId, json.percentageComplete);
@@ -3825,20 +4531,23 @@ export const LbWidget = function (options) {
         member: this.settings.memberRefId,
         apiKey: this.settings.apiKey,
         isReferenceId: true,
-        expires: this.settings.expires,
-        resource: 'ziqni-gapi'
+        expires: this.settings.expires
       };
     } else {
       memberTokenRequest = {
         member: 'PUBLIC',
         apiKey: this.settings.apiKey,
         isReferenceId: false,
-        expires: this.settings.expires,
-        resource: 'ziqni-gapi'
+        expires: this.settings.expires
       };
     }
 
-    const response = await fetch('https://api.ziqni.com/member-token', {
+    let tokenUrl = ' https://member-api.ziqni.com/member-token';
+    if (this.settings.isStaging) {
+      tokenUrl = 'https://member-api.staging.ziqni.io/member-token';
+    }
+
+    const response = await fetch(tokenUrl, {
       method: 'post',
       body: JSON.stringify(memberTokenRequest),
       headers: {
@@ -3858,7 +4567,7 @@ export const LbWidget = function (options) {
 
   this.refreshMemberToken = async function (memberToken) {
     this.settings.memberToken = memberToken;
-    await this.initApiClientStomp();
+    await this.initApiClientStomp(true);
   };
 
   /**
@@ -3872,7 +4581,7 @@ export const LbWidget = function (options) {
 
     if (!this.settings.memberToken) {
       setInterval(async () => {
-        await this.initApiClientStomp();
+        await this.initApiClientStomp(true);
       }, 5 * 60 * 1000);
     }
 

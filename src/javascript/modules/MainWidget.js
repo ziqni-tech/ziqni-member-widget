@@ -12,6 +12,7 @@ import stripHtml from '../utils/stripHtml';
 import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import tournamentBrackets from './TournamentBrackets';
+import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
 
 /**
  * MainWidget
@@ -148,8 +149,17 @@ export const MainWidget = function (options) {
           type: 'monthly',
           show: false,
           showTopResults: 1
+        },
+        {
+          label: 'Finished',
+          type: 'finishedAchievements',
+          show: false,
+          showTopResults: 1
         }
       ]
+    },
+    instantWinsSection: {
+      receivedAward: null
     },
     active: false,
     navigationSwitchLastAtempt: new Date().getTime(),
@@ -369,6 +379,8 @@ export const MainWidget = function (options) {
       readyContainer.classList.add('cl-shown');
     }
 
+    this.hideSingleWheel();
+
     if (element.classList.contains('availableAwards')) {
       const availableContainer = container.querySelector('.cl-accordion.availableAwards');
       availableContainer.classList.add('cl-shown');
@@ -384,24 +396,29 @@ export const MainWidget = function (options) {
     if (element.classList.contains('instantWins')) {
       const instantWinsContainer = container.querySelector('.cl-accordion.instantWins');
       instantWinsContainer.classList.add('cl-shown');
+      this.loadInstantWins();
     }
 
     // Achievements
     if (element.classList.contains('all')) {
-      const availableContainer = container.querySelector('.cl-accordion.all');
-      availableContainer.classList.add('cl-shown');
+      const allContainer = container.querySelector('.cl-accordion.all');
+      allContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('daily')) {
-      const claimedContainer = container.querySelector('.cl-accordion.daily');
-      claimedContainer.classList.add('cl-shown');
+      const dailyContainer = container.querySelector('.cl-accordion.daily');
+      dailyContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('weekly')) {
-      const expiredContainer = container.querySelector('.cl-accordion.weekly');
-      expiredContainer.classList.add('cl-shown');
+      const weeklyContainer = container.querySelector('.cl-accordion.weekly');
+      weeklyContainer.classList.add('cl-shown');
     }
     if (element.classList.contains('monthly')) {
-      const instantWinsContainer = container.querySelector('.cl-accordion.monthly');
-      instantWinsContainer.classList.add('cl-shown');
+      const monthlyContainer = container.querySelector('.cl-accordion.monthly');
+      monthlyContainer.classList.add('cl-shown');
+    }
+    if (element.classList.contains('finishedAchievements')) {
+      const finishedContainer = container.querySelector('.cl-accordion.finishedAchievements');
+      finishedContainer.classList.add('cl-shown');
     }
   };
 
@@ -524,7 +541,7 @@ export const MainWidget = function (options) {
     navigationDarkModeToggle.setAttribute('class', 'cl-main-widget-navigation-darkMode-toggle');
     navigationDarkModeToggleInput.setAttribute('type', 'checkbox');
     navigationDarkModeToggleInput.setAttribute('id', 'darkmode-toggle');
-    if (_this.settings.lbWidget.settings.defaultLightTheme) {
+    if (_this.settings.lbWidget.settings.defaultLightTheme || localStorage.getItem('zqTheme') === 'light') {
       wrapper.classList.add('lightTheme');
       navigationDarkModeToggleInput.checked = true;
     }
@@ -598,6 +615,7 @@ export const MainWidget = function (options) {
       descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
       tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
       enterLabel: this.settings.lbWidget.settings.translation.tournaments.enter,
+      gotolbLabel: this.settings.lbWidget.settings.translation.tournaments.goToLbLabel,
       globalCopy: this.settings.lbWidget.settings.translation.global.copy,
       monthsFull: this.settings.lbWidget.settings.translation.time.monthsFull,
       daysFull: this.settings.lbWidget.settings.translation.time.daysFull,
@@ -638,6 +656,7 @@ export const MainWidget = function (options) {
     const template = require('../templates/layouts/awardsAreaLayout.hbs');
     sectionRewards.innerHTML = template({
       headerLabel: this.settings.lbWidget.settings.translation.rewards.label,
+      headerInstantWinsLabel: this.settings.lbWidget.settings.translation.rewards.instantWinsLabel,
       globalCopy: this.settings.lbWidget.settings.translation.global.copy,
       claimBtn: this.settings.lbWidget.settings.translation.rewards.claim
     });
@@ -681,9 +700,11 @@ export const MainWidget = function (options) {
 
     const template = require('../templates/layouts/dashboardAreaLayout.hbs');
     sectionDashboard.innerHTML = template({
+      isAwards: this.settings.lbWidget.settings.navigation.rewards.enable,
       isInstantWins: this.settings.lbWidget.settings.instantWins.enable,
       isAchievements: this.settings.lbWidget.settings.navigation.achievements.enable,
       isTournaments: this.settings.lbWidget.settings.navigation.tournaments.enable,
+      isMissions: this.settings.lbWidget.settings.navigation.missions.enable,
       seeAllLabel: this.settings.lbWidget.settings.translation.dashboard.seeAll,
       headerLabel: this.settings.lbWidget.settings.translation.dashboard.label,
       tournamentsTitle: this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle,
@@ -748,6 +769,14 @@ export const MainWidget = function (options) {
     });
 
     return cellWrapper;
+  };
+
+  this.clearLeaderboard = function () {
+    const lbContainer = document.querySelector('.cl-main-widget-lb-leaderboard-res-container');
+    const lbRows = lbContainer.querySelectorAll('.cl-lb-row');
+    if (lbRows && lbRows.length) {
+      lbRows.forEach(row => row.remove());
+    }
   };
 
   this.leaderboardRowUpdate = function (rank, icon, name, change, growth, points, reward, count, memberFound, onMissing) {
@@ -921,26 +950,31 @@ export const MainWidget = function (options) {
   this.getTournamentReward = function (tournament, rank) {
     const _this = this;
     const rewardResponse = [];
+    const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
 
-    mapObject(tournament.rewards, function (reward) {
-      if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-        const rewardRankArr = reward.rewardRank.split(',');
-        rewardRankArr.forEach(r => {
-          const idx = r.indexOf('-');
-          if (idx !== -1) {
-            const start = parseInt(r);
-            const end = parseInt(r.substring(idx + 1));
-            if (rank >= start && rank <= end) {
+    if (roundFirstIdx !== -1) {
+      const roundFirst = tournament.contests[roundFirstIdx];
+
+      mapObject(roundFirst.rewards, function (reward) {
+        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+          const rewardRankArr = reward.rewardRank.split(',');
+          rewardRankArr.forEach(r => {
+            const idx = r.indexOf('-');
+            if (idx !== -1) {
+              const start = parseInt(r);
+              const end = parseInt(r.substring(idx + 1));
+              if (rank >= start && rank <= end) {
+                rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
+              }
+            } else if (parseInt(r) === rank) {
               rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
             }
-          } else if (parseInt(r) === rank) {
-            rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-          }
-        });
-      } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
-        rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-      }
-    });
+          });
+        } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
+          rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
+        }
+      });
+    }
 
     return rewardResponse.join(', ');
   };
@@ -1240,7 +1274,9 @@ export const MainWidget = function (options) {
       } else if (this.settings.lbWidget.settings.competition.activeContest.bannerLink) {
         bannerImage = this.settings.lbWidget.settings.competition.activeContest.bannerLink;
       }
-    } else if (this.settings.lbWidget.settings.competition.activeCompetition) {
+    }
+
+    if (this.settings.lbWidget.settings.competition.activeCompetition && !bannerImage) {
       if (this.settings.lbWidget.settings.competition.activeCompetition.bannerHighResolutionLink) {
         bannerImage = this.settings.lbWidget.settings.competition.activeCompetition.bannerHighResolutionLink;
       } else if (this.settings.lbWidget.settings.competition.activeCompetition.bannerLink) {
@@ -1396,9 +1432,7 @@ export const MainWidget = function (options) {
       this.settings.lbWidget.settings.competition.activeCompetition.status !== 'Finalised' &&
       this.settings.lbWidget.settings.competition.activeCompetition.status !== 'Finished'
     ) {
-      const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
-        this.settings.lbWidget.settings.competition.activeCompetition.id
-      );
+      const optInStatus = this.settings.lbWidget.settings.competition.activeCompetition.optInStatus;
 
       if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
         optIn.parentNode.style.display = 'none';
@@ -1406,6 +1440,10 @@ export const MainWidget = function (options) {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.processing;
         addClass(optIn, 'checking');
         optIn.parentNode.style.display = 'flex';
+
+        this.settings.lbWidget.settings.competition.activeCompetition.optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
+          this.settings.lbWidget.settings.competition.activeCompetition.id
+        );
       } else {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.enter;
         optIn.parentNode.style.display = 'flex';
@@ -1693,10 +1731,12 @@ export const MainWidget = function (options) {
           mainContainer.classList.add('lightTheme');
           msContainer.classList.add('lightTheme');
           if (notificationContainer) notificationContainer.classList.add('lightTheme');
+          localStorage.setItem('zqTheme', 'light');
         } else {
           mainContainer.classList.remove('lightTheme');
           msContainer.classList.remove('lightTheme');
           if (notificationContainer) notificationContainer.classList.remove('lightTheme');
+          localStorage.setItem('zqTheme', 'dark');
         }
       });
     }
@@ -2130,7 +2170,8 @@ export const MainWidget = function (options) {
       isMore: isMore,
       isEnter: isEnter,
       isLeave: isLeave,
-      isProgress: isProgress
+      isProgress: isProgress,
+      isFinished: ach.status === 'Finished'
     });
 
     return listItem;
@@ -2165,7 +2206,7 @@ export const MainWidget = function (options) {
     barLabel.innerHTML = percentageComplete + '/100';
   };
 
-  this.achievementList = function (data, onLayout) {
+  this.achievementList = function (data, onLayout, achievementsData) {
     const _this = this;
     const accordionWrapper = document.createElement('div');
 
@@ -2178,11 +2219,13 @@ export const MainWidget = function (options) {
     const dailyTitle = document.createElement('div');
     const weeklyTitle = document.createElement('div');
     const monthlyTitle = document.createElement('div');
+    const finishedTitle = document.createElement('div');
 
     allTitle.setAttribute('class', 'cl-main-accordion-container-menu-item all');
     dailyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item daily');
     weeklyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item weekly');
     monthlyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item monthly');
+    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedAchievements');
 
     const idx = data.findIndex(d => d.show === true);
     if (idx !== -1) {
@@ -2199,6 +2242,9 @@ export const MainWidget = function (options) {
         case 'monthly':
           monthlyTitle.classList.add('active');
           break;
+        case 'finishedAchievements':
+          finishedTitle.classList.add('active');
+          break;
       }
     }
 
@@ -2206,11 +2252,13 @@ export const MainWidget = function (options) {
     dailyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.daily;
     weeklyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.weekly;
     monthlyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.monthly;
+    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.finished;
 
     statusMenu.appendChild(allTitle);
-    statusMenu.appendChild(dailyTitle);
-    statusMenu.appendChild(weeklyTitle);
-    statusMenu.appendChild(monthlyTitle);
+    if (achievementsData.daily && achievementsData.daily.length) statusMenu.appendChild(dailyTitle);
+    if (achievementsData.weekly && achievementsData.weekly.length) statusMenu.appendChild(weeklyTitle);
+    if (achievementsData.monthly && achievementsData.monthly.length) statusMenu.appendChild(monthlyTitle);
+    if (achievementsData.finishedAchievements && achievementsData.finishedAchievements.length) statusMenu.appendChild(finishedTitle);
 
     accordionWrapper.appendChild(statusMenu);
 
@@ -2242,13 +2290,16 @@ export const MainWidget = function (options) {
   this.achievementListLayout = function (
     pageNumber,
     achievementData,
-    paginationArr = null
+    paginationArr = null,
+    currentPage = 'all'
   ) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
+    const finishedTotalCount = _this.settings.lbWidget.settings.achievements.finishedTotalCount;
     const itemsPerPage = 6;
     let paginator = query(achList, '.paginator');
+    let finishedPaginator = query(achList, '.paginator-finished');
 
     const prev = document.createElement('span');
     prev.setAttribute('class', 'paginator-item prev');
@@ -2256,6 +2307,14 @@ export const MainWidget = function (options) {
     next.setAttribute('class', 'paginator-item next');
 
     achList.innerHTML = '';
+
+    if (currentPage === 'finished') {
+      _this.settings.achievementsSection.accordionLayout[0].show = false;
+      _this.settings.achievementsSection.accordionLayout[4].show = true;
+    } else {
+      _this.settings.achievementsSection.accordionLayout[0].show = true;
+      _this.settings.achievementsSection.accordionLayout[4].show = false;
+    }
 
     if (paginationArr && paginationArr.length) {
       let page = '';
@@ -2298,24 +2357,66 @@ export const MainWidget = function (options) {
       paginator.appendChild(next);
     }
 
-    if (this.settings.lbWidget.settings.showAchievementsFilter) {
-      const accordionObj = _this.achievementList(_this.settings.achievementsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout) {
-        const data = achievementData[layout.type];
-        if (typeof data !== 'undefined' && data.length) {
-          mapObject(data, function (rew) {
-            const listItem = _this.achievementItem(rew);
-            listContainer.appendChild(listItem);
-          });
+    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
+      const pagesCount = Math.ceil(finishedTotalCount / 6);
+      finishedPaginator = document.createElement('div');
+      finishedPaginator.setAttribute('class', 'paginator-finished');
+
+      let page = '';
+      const isEllipsis = pagesCount > 7;
+
+      if (isEllipsis) {
+        for (let i = 0; i < 7; i++) {
+          if (i === 5) {
+            page += '<span class="paginator-item" data-page="..."\>...</span>';
+          } else if (i === 6) {
+            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
+          } else {
+            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+          }
         }
-      });
+      } else {
+        for (let i = 0; i < pagesCount; i++) {
+          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
+        }
+      }
+
+      finishedPaginator.innerHTML = page;
+
+      const prev = document.createElement('span');
+      prev.setAttribute('class', 'paginator-item prev');
+      const next = document.createElement('span');
+      next.setAttribute('class', 'paginator-item next');
+
+      finishedPaginator.prepend(prev);
+      finishedPaginator.appendChild(next);
+    }
+
+    if (this.settings.lbWidget.settings.showAchievementsFilter) {
+      const accordionObj = _this.achievementList(
+        _this.settings.achievementsSection.accordionLayout,
+        function (accordionSection, listContainer, topEntryContainer, layout) {
+          const data = achievementData[layout.type];
+          if (typeof data !== 'undefined' && data.length) {
+            mapObject(data, function (rew) {
+              const listItem = _this.achievementItem(rew);
+              listContainer.appendChild(listItem);
+            });
+          }
+        },
+        achievementData
+      );
 
       achList.appendChild(accordionObj);
 
       if (paginator) {
         const paginatorItems = query(paginator, '.paginator-item');
+        let allPage = 1;
+        if (currentPage === 'all') allPage = pageNumber;
+
         paginatorItems.forEach(item => {
           removeClass(item, 'active');
-          if (Number(item.dataset.page) === Number(pageNumber)) {
+          if (Number(item.dataset.page) === Number(allPage)) {
             addClass(item, 'active');
           }
         });
@@ -2324,6 +2425,25 @@ export const MainWidget = function (options) {
         if (allAchievements) {
           const container = query(allAchievements, '.cl-accordion-list-container');
           container.appendChild(paginator);
+        }
+      }
+
+      if (finishedPaginator) {
+        const paginatorItems = query(finishedPaginator, '.paginator-item');
+        let finishedPage = 1;
+        if (currentPage === 'finished') finishedPage = pageNumber;
+
+        paginatorItems.forEach(item => {
+          removeClass(item, 'active');
+          if (Number(item.dataset.page) === Number(finishedPage)) {
+            addClass(item, 'active');
+          }
+        });
+
+        const finishedAchievements = query(achList, '.cl-accordion.finishedAchievements');
+        if (finishedAchievements) {
+          const container = query(finishedAchievements, '.cl-accordion-list-container');
+          container.appendChild(finishedPaginator);
         }
       }
     } else {
@@ -2532,7 +2652,7 @@ export const MainWidget = function (options) {
     }, 50);
   };
 
-  this.loadMissionDetails = function (mission, callback) {
+  this.loadMissionDetails = async function (mission, callback, id) {
     this.settings.missions.mission = mission;
     const _this = this;
     const label = query(_this.settings.missions.detailsContainer, '.cl-main-widget-missions-details-header-label');
@@ -2546,22 +2666,48 @@ export const MainWidget = function (options) {
       return;
     }
 
+    const idx = mission.graph.nodes.findIndex(node => node.entityId === id);
+    const stageData = mission.graph.nodes[idx];
+
+    const rewardRequest = {
+      entityFilter: [{
+        entityType: 'achievement',
+        entityIds: [id]
+      }],
+      currencyKey: this.settings.lbWidget.settings.currency,
+      skip: 0,
+      limit: 1
+    };
+    const rewards = await this.settings.lbWidget.getRewardsApi(rewardRequest);
+    stageData.reward = rewards.data && rewards.data.length ? rewards.data[0] : '';
+
     if (mission.data.iconLink) {
       icon.setAttribute('style', `background-image: url(${mission.data.iconLink})`);
       icon.classList.add('full-bg');
     }
 
-    if (mission.data.reward && mission.data.reward.rewardValue) {
-      prizeValue.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.data.reward);
+    if (stageData.reward && stageData.reward.rewardValue) {
+      prizeValue.innerHTML = _this.settings.lbWidget.settings.partialFunctions.rewardFormatter(stageData.reward);
     }
 
-    label.innerHTML = mission.data.name;
-    body.innerHTML = mission.data.description
-      ? mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-      : this.settings.lbWidget.settings.translation.global.descriptionEmpty;
-    tc.innerHTML = mission.data.termsAndConditions
-      ? mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>')
-      : this.settings.lbWidget.settings.translation.global.tAndCEmpty;
+    let description = this.settings.lbWidget.settings.translation.global.descriptionEmpty;
+    let tAndC = this.settings.lbWidget.settings.translation.global.tAndCEmpty;
+
+    if (stageData.includes.description) {
+      description = stageData.includes.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    } else if (mission.data.description) {
+      description = mission.data.description.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+
+    if (stageData.includes.termsAndConditions) {
+      tAndC = stageData.includes.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    } else if (mission.data.termsAndConditions) {
+      tAndC = mission.data.termsAndConditions.replace(/&lt;/g, '<').replace(/&gt;/g, '>');
+    }
+
+    label.innerHTML = stageData.name;
+    body.innerHTML = description;
+    tc.innerHTML = tAndC;
 
     _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
@@ -2947,8 +3093,9 @@ export const MainWidget = function (options) {
       }
     });
 
-    cy.on('tap', 'node', function () {
-      _this.loadMissionDetails(_this.settings.missions.mission, null);
+    cy.on('tap', 'node', function (evt) {
+      const node = evt.target;
+      _this.loadMissionDetails(_this.settings.missions.mission, null, node.id());
     });
   };
 
@@ -2973,8 +3120,12 @@ export const MainWidget = function (options) {
     }, 200);
   };
 
-  this.hideMessageDetails = function (callback) {
+  this.hideMessageDetails = function (callback, isBack = false) {
     const _this = this;
+
+    if (isBack) {
+      this.loadMessages(1, () => {});
+    }
 
     removeClass(_this.settings.messages.detailsContainer, 'cl-show');
     setTimeout(function () {
@@ -2984,7 +3135,7 @@ export const MainWidget = function (options) {
     }, 200);
   };
 
-  this.hideMissionDetails = function (callback) {
+  this.hideMissionDetails = function (callback, isBack = false) {
     const _this = this;
 
     const cyContainer = document.getElementById('cy');
@@ -2994,6 +3145,8 @@ export const MainWidget = function (options) {
     removeClass(_this.settings.missions.detailsContainer, 'cl-show');
     setTimeout(function () {
       _this.settings.missions.detailsContainer.style.display = 'none';
+
+      if (isBack && _this.settings?.missions?.mission) _this.loadMissionMap(_this.settings.missions.mission, null);
 
       if (typeof callback === 'function') callback();
     }, 200);
@@ -3059,12 +3212,11 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.loadAchievements = function (pageNumber, callback, paginationArr = null) {
+  this.loadAchievements = function (pageNumber, callback, paginationArr = null, currentPage = 'all') {
     const _this = this;
 
     _this.settings.lbWidget.checkForAvailableAchievements(pageNumber, function (achievementData) {
-      // _this.settings.lbWidget.updateAchievementNavigationCounts();
-      _this.achievementListLayout(pageNumber, achievementData, paginationArr);
+      _this.achievementListLayout(pageNumber, achievementData, paginationArr, currentPage);
 
       const idList = _this.settings.lbWidget.settings.achievements.list.map(a => a.id);
 
@@ -3075,7 +3227,7 @@ export const MainWidget = function (options) {
       if (typeof callback === 'function') {
         callback();
       }
-    });
+    }, currentPage);
   };
 
   this.showLeaveAchievementPopup = function (activeAchievementId, isDashboard = false) {
@@ -3116,30 +3268,33 @@ export const MainWidget = function (options) {
 
     let rewardValue = '';
 
-    if (tournament.rewards && tournament.rewards.length) {
-      const idx = tournament.rewards.findIndex(reward => {
-        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-          const rewardRankArr = reward.rewardRank.split(',');
-          rewardRankArr.forEach(r => {
-            const idx = r.indexOf('-');
-            if (idx !== -1) {
-              const start = parseInt(r);
-              if (start === 1) {
-                return true;
-              }
-            } else if (parseInt(r) === 1) {
-              return true;
-            }
-            return false;
-          });
-        } else if (parseInt(reward.rewardRank) === 1) {
-          return true;
-        }
-        return false;
-      });
+    if (tournament.contests && tournament.contests.length) {
+      const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
 
-      if (idx !== -1) {
-        rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(tournament.rewards[idx]);
+      if (roundFirstIdx !== -1) {
+        const roundFirst = tournament.contests[roundFirstIdx];
+        roundFirst.rewards.forEach(reward => {
+          if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+            const rewardRankArr = reward.rewardRank.split(',');
+            rewardRankArr.forEach(r => {
+              const idx = r.indexOf('-');
+              if (idx !== -1) {
+                const start = parseInt(r);
+                if (start === 1) {
+                  rewardValue = reward;
+                }
+              } else if (parseInt(r) === 1) {
+                rewardValue = reward;
+              }
+            });
+          } else if (parseInt(reward.rewardRank) === 1) {
+            rewardValue = reward;
+          }
+        });
+
+        if (rewardValue) {
+          rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rewardValue);
+        }
       }
     }
 
@@ -3171,6 +3326,195 @@ export const MainWidget = function (options) {
     });
 
     return listItem;
+  };
+
+  this.loadDashboardInstantWins = async function () {
+    const list = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins-wrapp');
+    const container = query(this.settings.section, '.cl-main-widget-dashboard-instant-wins');
+
+    if (!list) return;
+
+    list.innerHTML = '';
+
+    const awardsList = document.querySelector('.cl-accordion.instantWins');
+    if (awardsList) {
+      const list = awardsList.querySelector('.cl-accordion-list');
+      list.innerHTML = '';
+    }
+
+    const items = await this.settings.lbWidget.getSingleWheels();
+    if (items && items.length) {
+      container.classList.remove('hidden');
+      list.innerHTML = '';
+
+      let wheels = items.filter(item => item.instantWinType === 1);
+      if (wheels.length > 2) {
+        wheels = wheels.slice(0, 2);
+      }
+
+      for (const wheel of wheels) {
+        const listItem = document.createElement('div');
+        listItem.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel');
+
+        const template = require('../templates/dashboard/wheel.hbs');
+        listItem.innerHTML = template({
+          title: wheel.name,
+          button: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
+          id: wheel.id
+        });
+
+        list.appendChild(listItem);
+
+        const tiles = wheel.tiles;
+        this.settings.lbWidget.getSettingsFile(wheel.id)
+          .then(async (settingsData) => {
+            if (settingsData && settingsData.wheelSettings) {
+              await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+            }
+
+            if (settingsData && settingsData.messageSettings) {
+              await this.replaceImageIdsWithUris(settingsData.messageSettings);
+            }
+
+            const instantWin = { tiles, settingsData };
+            const containerId = document.getElementById(wheel.id);
+
+            createSpinnerWheel(
+              containerId,
+              instantWin.tiles,
+              instantWin.settingsData,
+              () => {},
+              true
+            );
+          });
+      }
+    } else {
+      container.classList.add('hidden');
+    }
+  };
+
+  this.dashboardAwardItem = function (award) {
+    const listItem = document.createElement('div');
+    listItem.setAttribute('class', 'dashboard-award-item');
+    listItem.setAttribute('data-id', award.id);
+
+    const labelText = stripHtml(award.name);
+
+    const prize = Number.isInteger(award.rewardValue) ? award.rewardValue : Math.floor(award.rewardValue * 100) / 100;
+
+    const template = require('../templates/mainWidget/dashboardAwardItem.hbs');
+    listItem.innerHTML = template({
+      claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
+      prize: prize,
+      type: award.rewardType.key,
+      label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
+      iconLink: ''
+    });
+
+    return listItem;
+  };
+
+  this.loadDashboardMissions = async () => {
+    const missionsList = query(this.settings.section, '.cl-main-widget-dashboard-missions-list');
+    const missionsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-missions');
+
+    const missions = await this.settings.lbWidget.getDashboardMissions();
+
+    missionsList.innerHTML = '';
+    missionsWrapp.classList.remove('hidden');
+
+    if (missions && missions.length) {
+      missionsWrapp.classList.remove('hidden');
+      missions.forEach(m => {
+        const listItem = this.dashboardMissionItem(m);
+        missionsList.appendChild(listItem);
+      });
+    } else {
+      missionsWrapp.classList.add('hidden');
+    }
+  };
+
+  this.dashboardMissionItem = (mission) => {
+    const listItem = document.createElement('div');
+    listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
+    listItem.dataset.id = mission.id;
+
+    const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
+    const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
+
+    let bgImage = '';
+    if (
+      mission.bannerLowResolutionLink &&
+      mission.bannerLowResolutionLink.length > mission.bannerLowResolutionLink.indexOf('_id/') + 4
+    ) {
+      bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
+    } else if (
+      mission.bannerLink &&
+      mission.bannerLink.length > mission.bannerLink.indexOf('_id/') + 4
+    ) {
+      bgImage = `background-image: url(${mission.bannerLink})`;
+    }
+
+    // let progressId = mission.id;
+    let stage = null;
+    let progressValue = mission.optInStatus.percentageComplete;
+    let progressLabel = '0/100';
+    if (mission.optInStatus && mission.optInStatus.percentageComplete) {
+      progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
+    }
+
+    if (mission.dependencies && mission.dependencies.length) {
+      let currentStage = 1;
+      if (mission.optInStatus.percentageComplete === 100) {
+        const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
+        if (idx !== -1) {
+          currentStage = mission.dependencies[idx].ordering + 1;
+          // progressId = mission.dependencies[idx].achievement.entityId;
+          progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
+          progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
+          reward = mission.dependencies[idx].achievement.reward
+            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
+            : '';
+        }
+      }
+      stage = currentStage + '/' + (mission.dependencies.length + 1);
+    }
+
+    const template = require('../templates/dashboard/missionItem.hbs');
+    listItem.innerHTML = template({
+      name: name,
+      reward: reward,
+      actionsBtnLabel: actionsBtnLabel,
+      bgImage: bgImage,
+      progressLabel: progressLabel,
+      progressValue: progressValue,
+      stage: stage
+    });
+
+    return listItem;
+  };
+
+  this.loadDashboardAwards = async function (callback = null) {
+    const awardsList = query(this.settings.section, '.cl-main-widget-dashboard-awards-list');
+    const awardsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-awards');
+
+    const awards = await this.settings.lbWidget.getDashboardAwards();
+    awardsList.innerHTML = '';
+
+    if (awards && awards.length) {
+      awardsWrapp.classList.remove('hidden');
+      awards.forEach(t => {
+        const listItem = this.dashboardAwardItem(t);
+        awardsList.appendChild(listItem);
+      });
+    } else {
+      awardsWrapp.classList.add('hidden');
+    }
+
+    if (typeof callback === 'function') {
+      callback();
+    }
   };
 
   this.loadDashboardTournaments = async function () {
@@ -3272,6 +3616,10 @@ export const MainWidget = function (options) {
     listItem.setAttribute('class', 'cl-inbox-list-item cl-inbox-' + inbox.id);
     listItem.dataset.id = inbox.id;
 
+    if (inbox.status === 'Read') {
+      listItem.classList.add('read');
+    }
+
     const content = stripHtml(inbox.body);
 
     const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
@@ -3297,14 +3645,45 @@ export const MainWidget = function (options) {
     listItem.dataset.id = mission.id;
 
     const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
-    const reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
+    let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
     const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
     let bgImage = '';
-    if (mission.bannerLowResolutionLink) {
+    if (
+      mission.bannerLowResolutionLink &&
+      mission.bannerLowResolutionLink.length > mission.bannerLowResolutionLink.indexOf('_id/') + 4
+    ) {
       bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
-    } else if (mission.bannerLink) {
+    } else if (
+      mission.bannerLink &&
+      mission.bannerLink.length > mission.bannerLink.indexOf('_id/') + 4
+    ) {
       bgImage = `background-image: url(${mission.bannerLink})`;
+    }
+
+    // let progressId = mission.id;
+    let stage = null;
+    let progressValue = mission.optInStatus.percentageComplete;
+    let progressLabel = '0/100';
+    if (mission.optInStatus && mission.optInStatus.percentageComplete) {
+      progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
+    }
+
+    if (mission.dependencies && mission.dependencies.length) {
+      let currentStage = 1;
+      if (mission.optInStatus.percentageComplete === 100) {
+        const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
+        if (idx !== -1) {
+          currentStage = mission.dependencies[idx].ordering + 1;
+          // progressId = mission.dependencies[idx].achievement.entityId;
+          progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
+          progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
+          reward = mission.dependencies[idx].achievement.reward
+            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
+            : '';
+        }
+      }
+      stage = currentStage + '/' + (mission.dependencies.length + 1);
     }
 
     const template = require('../templates/mainWidget/missionItem.hbs');
@@ -3312,7 +3691,10 @@ export const MainWidget = function (options) {
       name: name,
       reward: reward,
       actionsBtnLabel: actionsBtnLabel,
-      bgImage: bgImage
+      bgImage: bgImage,
+      progressLabel: progressLabel,
+      progressValue: progressValue,
+      stage: stage
     });
 
     return listItem;
@@ -3345,7 +3727,7 @@ export const MainWidget = function (options) {
     label.innerHTML = tournament.name ?? '';
     period.innerHTML = startDate + ' - ' + endDate;
 
-    if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.rewards && tournament.rewards.length) {
+    if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.contests && tournament.contests.length) {
       const firsReward = this.getTournamentReward(tournament, 1);
 
       if (firsReward) {
@@ -3533,26 +3915,29 @@ export const MainWidget = function (options) {
       }
     }
 
-    const accordionObj = _this.awardsList(_this.settings.rewardsSection.accordionLayout, function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
-      const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
-      if (typeof rewardData !== 'undefined') {
-        if (rewardData.length === 0) {
-          accordionSection.style.display = 'none';
-        }
-        // rewardData = rewardData.filter(r => r.rewardData);
-        mapObject(rewardData, function (rew, key, count) {
-          if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
-            var topEntryContaineRlistItem = _this.rewardItem(rew);
-            topEntryContainer.appendChild(topEntryContaineRlistItem);
+    const accordionObj = _this.awardsList(
+      _this.settings.rewardsSection.accordionLayout,
+      function (accordionSection, listContainer, topEntryContainer, layout, paginator) {
+        const rewardData = _this.settings.lbWidget.settings.awards[layout.type];
+        if (typeof rewardData !== 'undefined') {
+          if (rewardData.length === 0) {
+            accordionSection.style.display = 'none';
           }
+          // rewardData = rewardData.filter(r => r.rewardData);
+          mapObject(rewardData, function (rew, key, count) {
+            if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
+              var topEntryContaineRlistItem = _this.rewardItem(rew);
+              topEntryContainer.appendChild(topEntryContaineRlistItem);
+            }
 
-          if (query(listContainer, '.cl-reward-' + rew.id) === null) {
-            var listItem = _this.rewardItem(rew);
-            listContainer.appendChild(listItem);
-          }
-        });
+            if (query(listContainer, '.cl-reward-' + rew.id) === null) {
+              var listItem = _this.rewardItem(rew);
+              listContainer.appendChild(listItem);
+            }
+          });
+        }
       }
-    });
+    );
 
     rewardList.innerHTML = '';
     rewardList.appendChild(accordionObj);
@@ -3777,18 +4162,44 @@ export const MainWidget = function (options) {
     }, 1000);
   };
 
-  this.loadAwards = function (callback, pageNumber, claimedPageNumber, expiredPageNumber, paginationArr = null, isClaimed = false, isExpired = false) {
+  this.loadAwards = function (
+    callback = null,
+    pageNumber = 1,
+    claimedPageNumber = 1,
+    expiredPageNumber = 1,
+    paginationArr = null,
+    isClaimed = false,
+    isExpired = false
+  ) {
     const _this = this;
+
+    const instantMenuItem = document.querySelector('.cl-main-accordion-container-menu-item.instantWins');
+    if (instantMenuItem && instantMenuItem.classList.contains('active')) {
+      _this.settings.lbWidget.checkForAvailableAwards(null);
+      if (typeof callback === 'function') {
+        callback();
+      }
+      _this.loadInstantWins();
+      return;
+    }
+
     _this.settings.lbWidget.checkForAvailableAwards(
       function (rewards, availableRewards, expiredRewards) {
-        // _this.settings.lbWidget.updateRewardsNavigationCounts();
-        _this.rewardsListLayout(pageNumber, claimedPageNumber, expiredPageNumber, rewards, availableRewards, expiredRewards, paginationArr, isClaimed, isExpired);
+        _this.rewardsListLayout(
+          pageNumber,
+          claimedPageNumber,
+          expiredPageNumber,
+          rewards,
+          availableRewards,
+          expiredRewards,
+          paginationArr,
+          isClaimed,
+          isExpired
+        );
 
         if (typeof callback === 'function') {
           callback();
         }
-
-        _this.loadInstantWins();
       },
       pageNumber,
       claimedPageNumber
@@ -3796,579 +4207,280 @@ export const MainWidget = function (options) {
   };
 
   this.loadInstantWins = function () {
-    const isMobile = window.screen.availWidth <= 768;
+    this.settings.lbWidget.getSingleWheels()
+      .then(async (singleWheelsData) => {
+        const container = document.querySelector('.cl-accordion.instantWins');
+        const list = container.querySelector('.cl-accordion-list');
+        if (!list) return;
+        list.innerHTML = '';
 
-    const instantWinsContainer = document.querySelector('.cl-accordion.instantWins');
-    const list = instantWinsContainer.querySelector('.cl-accordion-list');
+        if (!singleWheelsData && !singleWheelsData.length) return;
 
-    const wheel = document.createElement('div');
-    const wheelLabel = document.createElement('div');
-    const wheelImage = document.createElement('div');
-    const wheelButton = document.createElement('div');
+        // eslint-disable-next-line no-unused-vars
+        for (const [index, wheel] of singleWheelsData.entries()) {
+          if (wheel.instantWinType === 2) continue;
 
-    const scratchcards = document.createElement('div');
-    const scratchcardsLabel = document.createElement('div');
-    const scratchcardsImage = document.createElement('div');
-    const scratchcardsButton = document.createElement('div');
+          const sw = document.createElement('div');
+          sw.classList.add('instant-wins-card');
 
-    const scratchcardsGame = document.createElement('div');
-    const scratchcardsGameWrapper = document.createElement('div');
-    const scratchcardsGameLabel = document.createElement('div');
-    const scratchcardsGameContainer = document.createElement('div');
-    const scratchcardsGameCardWrapper = document.createElement('div');
-    const scratchcardsGameCardBlock = document.createElement('div');
-    const scratchcardsGameCanvas = document.createElement('canvas');
-    const scratchcardsGamePrize = document.createElement('div');
-    const scratchcardsGamePrizeLabel = document.createElement('div');
-    const scratchcardsGamePrizePrizes = document.createElement('div');
-    const scratchcardsGamePrizePrizesPrize1 = document.createElement('div');
-    const scratchcardsGamePrizePrizesPrize2 = document.createElement('div');
-    const scratchcardsGamePrizePrizesPrize3 = document.createElement('div');
-    const scratchcardsGamePrizePrizesPrize1Label = document.createElement('div');
-    const scratchcardsGamePrizePrizesPrize2Label = document.createElement('div');
-    const scratchcardsGamePrizePrizesPrize3Label = document.createElement('div');
-    const scratchcardsGamePrizeButton = document.createElement('div');
+          const template = require('../templates/instantWins/wheelCard.hbs');
+          sw.innerHTML = template({
+            title: wheel.name,
+            id: wheel.id
+          });
 
-    const scratchcardsPopup = document.createElement('div');
-    const scratchcardsPopupLabel = document.createElement('div');
-    const scratchcardsPopupDescription = document.createElement('div');
-    const scratchcardsPopupButton = document.createElement('div');
+          list.appendChild(sw);
 
-    const singleWheel = document.createElement('div');
-    const singleWheelWrapper = document.createElement('div');
-    const singleWheelPopup = document.createElement('div');
-    const singleWheelPopupLabel = document.createElement('div');
-    const singleWheelPopupDescription = document.createElement('div');
-    const singleWheelPopupButton = document.createElement('div');
+          const tiles = wheel.tiles;
 
-    wheel.classList.add('wheel-item');
-    wheelLabel.classList.add('wheel-label');
-    wheelImage.classList.add('wheel-image');
-    wheelButton.classList.add('wheel-button');
+          this.settings.lbWidget.getSettingsFile(wheel.id)
+            .then(async (settingsData) => {
+              if (settingsData && settingsData.wheelSettings) {
+                await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+              }
 
-    scratchcards.classList.add('scratchcards-item');
-    scratchcardsLabel.classList.add('scratchcards-label');
-    scratchcardsImage.classList.add('scratchcards-image');
-    scratchcardsButton.classList.add('scratchcards-button');
+              if (settingsData && settingsData.messageSettings) {
+                await this.replaceImageIdsWithUris(settingsData.messageSettings);
+              }
 
-    singleWheel.classList.add('single-wheel');
-    singleWheelWrapper.classList.add('single-wheel-wrapper');
+              const instantWin = { tiles, settingsData };
+              const container = document.querySelector('.cl-accordion.instantWins');
+              const containerId = container.querySelector(`div[id='${wheel.id}']`);
 
-    singleWheelPopup.classList.add('single-wheel-popup');
-    singleWheelPopupLabel.classList.add('single-wheel-popup-label');
-    singleWheelPopupDescription.classList.add('single-wheel-popup-description');
-    singleWheelPopupButton.classList.add('single-wheel-popup-button');
-
-    scratchcardsGame.classList.add('scratchcards-game');
-    scratchcardsGameWrapper.classList.add('scratchcards-game-wrapper');
-    scratchcardsGameLabel.classList.add('scratchcards-game-label');
-
-    scratchcardsGameContainer.classList.add('scratchcards-game-container');
-    scratchcardsGamePrize.classList.add('scratchcards-game-prize');
-    scratchcardsGamePrizeLabel.classList.add('scratchcards-game-prize-label');
-    scratchcardsGamePrizePrizes.classList.add('scratchcards-game-prize-prizes');
-    scratchcardsGamePrizePrizesPrize1.classList.add('scratchcards-game-prize-prizes-first');
-    scratchcardsGamePrizePrizesPrize2.classList.add('scratchcards-game-prize-prizes-second');
-    scratchcardsGamePrizePrizesPrize3.classList.add('scratchcards-game-prize-prizes-third');
-    scratchcardsGamePrizePrizesPrize1Label.classList.add('scratchcards-game-prize-prizes-label');
-    scratchcardsGamePrizePrizesPrize2Label.classList.add('scratchcards-game-prize-prizes-label');
-    scratchcardsGamePrizePrizesPrize3Label.classList.add('scratchcards-game-prize-prizes-label');
-    scratchcardsGamePrizeButton.classList.add('scratchcards-game-prize-button');
-    scratchcardsGameCardWrapper.classList.add('scratchcards-game-cardWrapper');
-    scratchcardsGameCardBlock.classList.add('scratchcards-game-card-block');
-
-    const wcardSize = isMobile ? '230' : '300';
-
-    scratchcardsGameCanvas.classList.add('scratchcards-game-canvas');
-    scratchcardsGameCanvas.setAttribute('width', wcardSize);
-    scratchcardsGameCanvas.setAttribute('height', wcardSize);
-
-    scratchcardsPopup.classList.add('scratchcards-popup');
-    scratchcardsPopupLabel.classList.add('scratchcards-popup-label');
-    scratchcardsPopupDescription.classList.add('scratchcards-popup-description');
-    scratchcardsPopupButton.classList.add('scratchcards-popup-button');
-
-    wheelLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelLabel;
-    scratchcardsLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
-    wheelButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.wheelButton;
-    scratchcardsButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsButton;
-
-    singleWheelPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
-    singleWheelPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
-
-    scratchcardsPopupLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinLabel;
-    scratchcardsPopupButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.singleWheelWinButton;
-
-    scratchcardsGameLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.scratchcardsLabel;
-    scratchcardsGamePrizeLabel.innerHTML = this.settings.lbWidget.settings.translation.rewards.prizeLabel;
-    scratchcardsGamePrizeButton.innerHTML = this.settings.lbWidget.settings.translation.rewards.prizeButton;
-
-    scratchcardsGamePrizePrizesPrize1Label.innerHTML = 'First prize';
-    scratchcardsGamePrizePrizesPrize2Label.innerHTML = 'Second prize';
-    scratchcardsGamePrizePrizesPrize3Label.innerHTML = 'Third prize';
-
-    scratchcardsPopup.appendChild(scratchcardsPopupLabel);
-    scratchcardsPopup.appendChild(scratchcardsPopupDescription);
-    scratchcardsPopup.appendChild(scratchcardsPopupButton);
-
-    scratchcardsGamePrizePrizesPrize1.appendChild(scratchcardsGamePrizePrizesPrize1Label);
-    scratchcardsGamePrizePrizesPrize2.appendChild(scratchcardsGamePrizePrizesPrize2Label);
-    scratchcardsGamePrizePrizesPrize3.appendChild(scratchcardsGamePrizePrizesPrize3Label);
-
-    scratchcardsGamePrizePrizes.appendChild(scratchcardsGamePrizePrizesPrize1);
-    scratchcardsGamePrizePrizes.appendChild(scratchcardsGamePrizePrizesPrize2);
-    scratchcardsGamePrizePrizes.appendChild(scratchcardsGamePrizePrizesPrize3);
-
-    scratchcardsGamePrize.appendChild(scratchcardsGamePrizeLabel);
-    scratchcardsGamePrize.appendChild(scratchcardsGamePrizePrizes);
-    scratchcardsGamePrize.appendChild(scratchcardsGamePrizeButton);
-
-    scratchcardsGameCardWrapper.appendChild(scratchcardsGameCanvas);
-    scratchcardsGameCardWrapper.appendChild(scratchcardsGameCardBlock);
-
-    scratchcardsGameContainer.appendChild(scratchcardsGameCardWrapper);
-    scratchcardsGameContainer.appendChild(scratchcardsGamePrize);
-
-    scratchcardsGameWrapper.appendChild(scratchcardsGameLabel);
-    scratchcardsGameWrapper.appendChild(scratchcardsGameContainer);
-    scratchcardsGame.appendChild(scratchcardsGameWrapper);
-    scratchcardsGame.appendChild(scratchcardsPopup);
-
-    singleWheelPopup.appendChild(singleWheelPopupLabel);
-    singleWheelPopup.appendChild(singleWheelPopupDescription);
-    singleWheelPopup.appendChild(singleWheelPopupButton);
-
-    singleWheel.appendChild(singleWheelWrapper);
-    singleWheel.appendChild(singleWheelPopup);
-
-    wheel.appendChild(wheelLabel);
-    wheel.appendChild(wheelImage);
-    wheel.appendChild(wheelButton);
-
-    scratchcards.appendChild(scratchcardsLabel);
-    scratchcards.appendChild(scratchcardsImage);
-    scratchcards.appendChild(scratchcardsButton);
-
-    list.appendChild(wheel);
-    list.appendChild(scratchcards);
-    list.appendChild(singleWheel);
-    list.appendChild(scratchcardsGame);
-  };
-
-  this.loadScratchCards = function () {
-    const isMobile = window.screen.availWidth <= 768;
-    const _this = this;
-    const scratchcardsGame = document.querySelector('.scratchcards-game');
-    const backBtn = document.querySelector('.cl-main-widget-reward-header-back');
-    const scratchAllBtn = document.querySelector('.scratchcards-game-prize-button');
-    const cardBlock = document.querySelector('.scratchcards-game-card-block');
-    const themeWrapper = document.querySelector('.cl-widget-ms-wrapper');
-
-    const isLightTheme = themeWrapper.classList.contains('lightTheme');
-
-    cardBlock.innerHtml = '';
-    while (cardBlock.firstChild) {
-      cardBlock.removeChild(cardBlock.lastChild);
-    }
-
-    const prizeClasses = ['prize-1', 'prize-2', 'prize-3'];
-
-    for (let i = 0; i < 9; i++) {
-      const cell = document.createElement('div');
-      cell.classList.add('scratchcards-game-card-cell');
-      const randNum = Math.floor(Math.random() * 3);
-      cell.classList.add(prizeClasses[randNum]);
-      cardBlock.appendChild(cell);
-    }
-
-    scratchcardsGame.classList.add('cl-show');
-    backBtn.style.display = 'block';
-
-    const grid = [];
-    for (let i = 0; i < 3; i++) {
-      const row = [];
-      for (let j = 0; j < 3; j++) {
-        row.push({ image: getRandomImage(), scratched: false });
-      }
-      grid.push(row);
-    }
-
-    function getRandomImage () {
-      return 'https://first-space.cdn.ziqni.com/member-home-page/img/second_prize.39d8d773.png';
-    }
-
-    const canvas = document.querySelector('.scratchcards-game-canvas');
-    const ctx = canvas.getContext('2d', { willReadFrequently: true });
-    const cellSize = isMobile ? 60 : 80;
-    const spacing = isMobile ? 15 : 20;
-    const borderRadius = 10;
-    const cardSize = isMobile ? 212 : 300;
-
-    ctx.clearRect(0, 0, cardSize, cardSize);
-
-    for (let i = 0; i < 3; i++) {
-      for (let j = 0; j < 3; j++) {
-        const cell = grid[i][j];
-        const x = j * (cellSize + spacing) + 10;
-        const y = i * (cellSize + spacing) + 10;
-
-        if (cell.scratched) {
-          const image = new Image();
-          image.src = cell.image;
-          image.onload = () => {
-            ctx.save();
-            ctx.beginPath();
-            ctx.moveTo(x + borderRadius, y);
-            ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
-            ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
-            ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
-            ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
-            ctx.closePath();
-            ctx.clip();
-
-            ctx.drawImage(image, x, y, cellSize, cellSize);
-
-            ctx.restore();
-          };
-        } else {
-          ctx.save();
-          ctx.beginPath();
-          ctx.moveTo(x + borderRadius, y);
-          ctx.arcTo(x + cellSize, y, x + cellSize, y + borderRadius, borderRadius);
-          ctx.arcTo(x + cellSize, y + cellSize, x + cellSize - borderRadius, y + cellSize, borderRadius);
-          ctx.arcTo(x, y + cellSize, x, y + cellSize - borderRadius, borderRadius);
-          ctx.arcTo(x, y, x + borderRadius, y, borderRadius);
-          ctx.closePath();
-          ctx.shadowColor = isLightTheme ? 'rgba(238, 62, 200, 0.4)' : 'rgba(64, 106, 140, 0.5)';
-          ctx.shadowBlur = 12;
-          ctx.fillStyle = isLightTheme ? '#ffffff' : '#1A202C';
-          ctx.fill();
-          ctx.strokeStyle = isLightTheme ? '#F7A1E4' : '#406A8C';
-          ctx.stroke();
-          ctx.clip();
-
-          ctx.fillStyle = '#BEE9F3';
-          ctx.font = '40px Syne';
-
-          const textWidth = ctx.measureText('?').width;
-          const textX = x + (cellSize - textWidth) / 2;
-          const textY = y + cellSize / 2 + 15;
-
-          ctx.fillText('?', textX, textY);
-
-          ctx.restore();
+              createSpinnerWheel(
+                containerId,
+                instantWin.tiles,
+                instantWin.settingsData,
+                () => {},
+                true
+              ).then(() => {});
+            });
         }
-      }
-    }
-
-    let isDrag = false;
-
-    canvas.addEventListener('mousedown', function (event) {
-      isDrag = true;
-      clearArc(event.offsetX, event.offsetY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('mousemove', function (event) {
-      if (!isDrag) {
-        return;
-      }
-      clearArc(event.offsetX, event.offsetY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('mouseup', function (event) {
-      isDrag = false;
-    }, false);
-
-    canvas.addEventListener('touchstart', function (event) {
-      if (event.targetTouches.length !== 1) {
-        return;
-      }
-
-      const r = canvas.getBoundingClientRect();
-      const currX = event.touches[0].clientX - r.left;
-      const currY = event.touches[0].clientY - r.top;
-
-      event.preventDefault();
-
-      isDrag = true;
-
-      clearArc(currX, currY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('touchmove', function (event) {
-      if (!isDrag || event.targetTouches.length !== 1) {
-        return;
-      }
-
-      const r = canvas.getBoundingClientRect();
-      const currX = event.touches[0].clientX - r.left;
-      const currY = event.touches[0].clientY - r.top;
-
-      event.preventDefault();
-      clearArc(currX, currY);
-      judgeVisible();
-    }, false);
-
-    canvas.addEventListener('touchend', function (event) {
-      isDrag = false;
-    }, false);
-
-    function clearArc (x, y) {
-      ctx.globalCompositeOperation = 'destination-out';
-      ctx.beginPath();
-      ctx.arc(x, y, 30, 0, Math.PI * 2, false);
-      ctx.fill();
-    }
-
-    function judgeVisible () {
-      const imageData = ctx.getImageData(0, 0, 300, 300);
-      const pixels = imageData.data;
-      const result = {};
-      let i;
-      let len;
-
-      for (i = 3, len = pixels.length; i < len; i += 4) {
-        result[pixels[i]] || (result[pixels[i]] = 0);
-        result[pixels[i]]++;
-      }
-
-      let n = 0;
-      for (let i = 0; i < pixels.length; i += 100) {
-        if (pixels[i + 3] < 128) {
-          n += 100;
-        }
-      }
-
-      if (n >= pixels.length * 0.9) {
-        ctx.globalCompositeOperation = 'destination-over';
-        clearCanvas();
-      }
-    }
-
-    function clearCanvas () {
-      const context = canvas.getContext('2d');
-      context.clearRect(0, 0, canvas.width, canvas.height);
-      showPopup();
-    }
-
-    function showPopup () {
-      const popup = document.querySelector('.scratchcards-popup');
-      popup.style.display = 'flex';
-
-      const wrapp = document.querySelector('.scratchcards-game-wrapper');
-      wrapp.classList.add('blur');
-
-      const description = document.querySelector('.scratchcards-popup-description');
-      description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
-      description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + 'First prize';
-
-      const climeBtn = document.querySelector('.scratchcards-popup-button');
-      climeBtn.addEventListener('click', () => {
-        const popup = document.querySelector('.scratchcards-popup');
-        const wrapp = document.querySelector('.scratchcards-game-wrapper');
-
-        popup.style.display = 'none';
-        wrapp.classList.remove('blur');
       });
-    }
-
-    scratchAllBtn.addEventListener('click', clearCanvas, false);
-    document.addEventListener('DOMContentLoaded', judgeVisible, false);
   };
 
-  this.loadSingleWheels = async function (singleWheelsData) {
-    console.log('singleWheelsData:', singleWheelsData);
-    const isMobile = window.screen.availWidth <= 768;
-    const singleWheel = document.querySelector('.single-wheel');
-    const singleWheelWrapper = singleWheel.querySelector('.single-wheel-wrapper');
-    const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
-    singleWheel.classList.add('cl-show');
-    backBtn.style.display = 'block';
+  this.loadSingleWheel = async function (id) {
+    const singleWheelData = await this.settings.lbWidget.getSingleWheel(id);
+    const availablePlays = await this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id);
+    const remainingPlays = availablePlays[0].remainingPlays;
 
-    if (singleWheelsData && singleWheelsData.length) {
-      singleWheelsData.forEach((singleWheel, idx) => {
-        const swDom = this.createSingleWheelDom(idx, singleWheel, isMobile);
-        singleWheelWrapper.appendChild(swDom);
-      });
-      for (let i = 0; i < singleWheelsData.length; i++) {
-        await this.loadSingleWheel(isMobile, singleWheelsData[i], i);
-      }
-    }
-  };
+    const section = document.querySelector('.cl-accordion.instantWins');
+    const wrapper = document.createElement('div');
+    const template = require('../templates/instantWins/singleWheel.hbs');
 
-  this.loadSingleWheel = async function (isMobile, singleWheel, idx) {
-    const _this = this;
-    const preLoader = _this.preloader();
-    const tiles = singleWheel.tiles;
+    wrapper.classList.add('play-single-wheel');
 
-    const rand = (m, M) => Math.random() * (M - m) + m;
-    const tot = tiles.length;
-    const spinEl = document.querySelector('#spin-' + idx);
-    const climeBtn = document.querySelector('.single-wheel-popup-button');
-    const ctx = document.querySelector('#wheel-' + idx).getContext('2d');
-    const dia = ctx.canvas.width;
-    const rad = dia / 2;
-    const PI = Math.PI;
-    const TAU = 2 * PI;
-    const arc = TAU / tiles.length;
-
-    const friction = 0.991;
-    let angVel = 0;
-    let ang = 0;
-
-    const wheelFont = isMobile ? '10px sans-serif' : 'bold 15px sans-serif';
-
-    const getIndex = () => Math.floor(tot - (ang / TAU) * tot) % tot;
-
-    const randomRgbColor = () => {
-      const r = Math.floor(Math.random() * 256); // Random between 0-255
-      const g = Math.floor(Math.random() * 256); // Random between 0-255
-      const b = Math.floor(Math.random() * 256); // Random between 0-255
-      return 'rgb(' + r + ',' + g + ',' + b + ')';
-    };
-
-    const addImageProcess = (src) => {
-      return new Promise((resolve, reject) => {
-        const img = new Image();
-        img.onload = () => resolve(img);
-        img.onerror = reject;
-        img.src = src;
-      });
-    };
-
-    // eslint-disable-next-line no-unused-vars
-    const loadImage = async (ctx, src, rad, rot) => {
-      const img = await addImageProcess(src);
-      ctx.save();
-      ctx.resetTransform();
-      ctx.translate(rad, rad);
-      ctx.rotate(rot);
-      ctx.clip();
-      ctx.drawImage(img, 0, -75, 150, 150);
-      ctx.restore();
-    };
-
-    async function drawSector (sector, i) {
-      const ang = arc * i;
-      // eslint-disable-next-line no-unused-vars
-      const rot = ang + arc / 2;
-      ctx.save();
-      // COLOR
-      ctx.beginPath();
-      ctx.fillStyle = randomRgbColor();
-      ctx.strokeStyle = '#8D0C71';
-      ctx.moveTo(rad, rad);
-      ctx.arc(rad, rad, rad, ang, ang + arc);
-      ctx.lineTo(rad, rad);
-      ctx.fill();
-      if (sector.iconLink) {
-        await loadImage(ctx, sector.iconLink, rad, rot);
-      }
-      ctx.stroke();
-      // TEXT
-      ctx.translate(rad, rad);
-      ctx.rotate(ang + arc / 2);
-      ctx.textAlign = 'right';
-      ctx.fillStyle = '#fff';
-      ctx.font = wheelFont;
-      ctx.strokeText(stripHtml(sector.text), rad - 15, 10);
-      ctx.fillText(stripHtml(sector.text), rad - 15, 10);
-      ctx.restore();
-    }
-
-    function rotate () {
-      ctx.canvas.style.transform = `rotate(${ang - PI / 2}rad)`;
-    }
-
-    function frame () {
-      if (!angVel) return;
-      angVel *= friction;
-      if (angVel < 0.002) {
-        angVel = 0;
-        const sector = tiles[getIndex()];
-
-        const popup = document.querySelector('.single-wheel-popup');
-        popup.style.display = 'flex';
-
-        const wrapp = document.querySelector('.single-wheel-wrapper');
-        wrapp.classList.add('blur');
-
-        const description = document.querySelector('.single-wheel-popup-description');
-        description.innerHTML = _this.settings.lbWidget.settings.translation.rewards.singleWheelWinDescription + ' ' + stripHtml(sector.text);
-      } // Bring to stop
-      ang += angVel; // Update angle
-      ang %= TAU; // Normalize angle
-      rotate();
-    }
-
-    function engine () {
-      frame();
-      requestAnimationFrame(engine);
-    }
-    async function init () {
-      for (const [i, sector] of tiles.entries()) {
-        await drawSector(sector, i);
-      }
-      // rotate();
-      engine();
-      spinEl.addEventListener('click', () => {
-        const play = _this.settings.lbWidget.playInstantWin();
-        console.log('play:', play);
-        if (!angVel) angVel = rand(0.25, 0.45);
-      });
-      climeBtn.addEventListener('click', () => {
-        const popup = document.querySelector('.single-wheel-popup');
-        popup.style.display = 'none';
-
-        const wrapp = document.querySelector('.single-wheel-wrapper');
-        wrapp.classList.remove('blur');
-      });
-    }
-
-    preLoader.show(async function () {
-      await init();
-      preLoader.hide();
-    });
-  };
-
-  this.createSingleWheelDom = function (idx, singleWheel, isMobile) {
-    const sw = document.createElement('div');
-    sw.classList.add('single-wheel-element');
-    sw.classList.add('single-wheel-element-' + idx);
-
-    const wheelSize = isMobile ? '192' : '300';
-
-    const template = require('../templates/mainWidget/singleWheelDom.hbs');
-    sw.innerHTML = template({
-      idx: idx,
-      wheelSize: wheelSize,
-      label: singleWheel.name ?? '',
-      description: singleWheel.description ? stripHtml(singleWheel.description) : '',
-      buttonLabel: 'Spin'
+    wrapper.innerHTML = template({
+      title: singleWheelData[0].name,
+      buttonLabel: this.settings.lbWidget.settings.translation.wof.buttonLabel,
+      remainingPlays: remainingPlays,
+      remainingPlaysLabel: this.settings.lbWidget.settings.translation.wof.remainingPlays
     });
 
-    return sw;
+    section.appendChild(wrapper);
+
+    const tiles = singleWheelData[0].tiles;
+    const settingsData = await this.settings.lbWidget.getSettingsFile(id);
+
+    if (settingsData && settingsData.wheelSettings) {
+      await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+    }
+
+    if (settingsData && settingsData.messageSettings) {
+      await this.replaceImageIdsWithUris(settingsData.messageSettings);
+    }
+
+    const instantWin = { tiles, settingsData };
+
+    const containerId = document.querySelector('#play-single-wheel');
+    const messageSettings = instantWin.settingsData.messageSettings;
+
+    const congratulationsModal = require('../helpers/wheelSpinner/modal');
+
+    let arrowOptions = { width: 70, height: 70, position: 'middle' };
+    const isMobile = window.screen.availWidth < 768 || window.screen.availHeight < 500;
+    if (isMobile) {
+      arrowOptions = { width: 50, height: 50, position: 'middle' };
+    }
+
+    const spinnerWheel = await createSpinnerWheel(
+      containerId,
+      instantWin.tiles,
+      instantWin.settingsData,
+      (giftValue) => {
+        const { isCompleted } = giftValue;
+        if (isCompleted) {
+          setTimeout(async () => {
+            const availablePlays = await this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id);
+            const remainingValueEl = document.querySelector('.play-single-wheel-available-value');
+            remainingValueEl.innerHTML = availablePlays[0].remainingPlays;
+
+            if (availablePlays[0].remainingPlays) {
+              const wheel = document.querySelector('.play-single-wheel');
+              const wheelButtonElement = wheel.querySelector('.spin-button');
+              const buttonElement = document.querySelector('.play-single-wheel-btn');
+
+              buttonElement.classList.remove('disabled');
+              wheelButtonElement.classList.remove('disabled');
+            } else {
+              wheelBody.classList.add('disabled');
+            }
+
+            const modal = document.querySelector('#congratulations-modal');
+            if (modal) return;
+            congratulationsModal.createCongratulationsModal(
+              this.settings.instantWinsSection.receivedAward,
+              messageSettings
+            );
+
+            setTimeout(() => {
+              const climeBtn = document.querySelector('#congratulations-modal .claim-reward-btn');
+              climeBtn.addEventListener('click', async () => {
+                const awardId = climeBtn.dataset.id;
+                if (awardId) {
+                  this.settings.lbWidget.claimAward(awardId);
+                }
+                spinnerWheel.resetWheel();
+                const modal = document.getElementById('congratulations-modal');
+                modal.remove();
+              });
+            }, 300);
+          }, 1000);
+        }
+      },
+      false,
+      false,
+      arrowOptions
+    );
+
+    const wheel = document.querySelector('.play-single-wheel');
+    const wheelBody = wheel.querySelector('.play-single-wheel-body');
+    const wheelButtonElement = wheel.querySelector('.spin-button');
+    const buttonElement = document.querySelector('.play-single-wheel-btn');
+
+    if (remainingPlays) {
+      wheelButtonElement.addEventListener('click', async () => {
+        buttonElement.classList.add('disabled');
+        wheelButtonElement.classList.add('disabled');
+
+        const playData = await this.settings.lbWidget.playInstantWin(id);
+        const playDataResults = playData[0].results;
+
+        if (playData && playData[0] && playData[0].results && playData[0].results.tiles[0] && playData[0].results.tiles[0].location) {
+          const winSection = playData[0].results.tiles[0].location.col;
+          this.settings.instantWinsSection.receivedAward = playDataResults.awards && playDataResults.awards[0]
+            ? { ...playDataResults.tiles[0].reward, awardId: playDataResults.awards[0].awardId }
+            : null;
+
+          if (spinnerWheel && spinnerWheel.spinWheel) {
+            spinnerWheel.spinWheel(winSection);
+          }
+        }
+      });
+
+      buttonElement.addEventListener('click', async () => {
+        buttonElement.classList.add('disabled');
+        wheelButtonElement.classList.add('disabled');
+
+        const playData = await this.settings.lbWidget.playInstantWin(id);
+        const playDataResults = playData[0].results;
+
+        if (playData && playData[0] && playData[0].results && playData[0].results.tiles[0] && playData[0].results.tiles[0].location) {
+          const winSection = playData[0].results.tiles[0].location.col;
+          this.settings.instantWinsSection.receivedAward = playDataResults.awards && playDataResults.awards[0]
+            ? { ...playDataResults.tiles[0].reward, awardId: playDataResults.awards[0].awardId }
+            : null;
+
+          if (spinnerWheel && spinnerWheel.spinWheel) {
+            spinnerWheel.spinWheel(winSection);
+          }
+        }
+      });
+    } else {
+      buttonElement.classList.add('disabled');
+      wheelButtonElement.classList.add('disabled');
+      wheelBody.classList.add('disabled');
+    }
+  };
+
+  this.hideSingleWheel = function () {
+    const singleWheel = document.querySelector('.play-single-wheel');
+    if (singleWheel) singleWheel.remove();
+  };
+
+  this.replaceImageIdsWithUris = async function (obj) {
+    const keys = Object.keys(obj);
+
+    for (const key of keys) {
+      const value = obj[key];
+
+      if (typeof value === 'string' && value.match(/^[-\w]+$/)) {
+        // Assume this is an ID and fetch the URI
+        obj[key] = await this.settings.lbWidget.getFileUri(value);
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively process nested objects
+        await this.replaceImageIdsWithUris(value);
+      }
+    }
+  };
+
+  this.replaceImageIdsWithUris = async function (obj) {
+    const keys = Object.keys(obj);
+
+    for (const key of keys) {
+      const value = obj[key];
+
+      if (typeof value === 'string' && value.match(/^[-\w]+$/)) {
+        // Assume this is an ID and fetch the URI
+        obj[key] = await this.settings.lbWidget.getFileUri(value);
+      } else if (typeof value === 'object' && value !== null) {
+        // Recursively process nested objects
+        await this.replaceImageIdsWithUris(value);
+      }
+    }
   };
 
   this.hideInstantWins = function () {
+    const playSingleWheel = document.querySelector('.play-single-wheel');
+    if (playSingleWheel) {
+      playSingleWheel.remove();
+      return;
+    }
+
     const singleWheel = document.querySelector('.single-wheel');
     const scratchcardsGame = document.querySelector('.scratchcards-game');
     const backBtn = document.querySelector('.cl-main-widget-reward-header-back ');
+    const section = document.querySelector('.cl-main-widget-section-reward');
 
     singleWheel.classList.remove('cl-show');
     scratchcardsGame.classList.remove('cl-show');
     backBtn.style.display = 'none';
+    section.classList.remove('instantWins');
   };
 
   this.loadMessages = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
+    const deleteSelected = document.querySelector('.cl-main-widget-inbox-list-delete-selected');
 
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
       _this.messagesListLayout(pageNumber, paginationArr);
-      // _this.settings.lbWidget.updateMessagesNavigationCounts();
+      const messages = document.querySelectorAll('input[name="checkMessage"]');
+
+      if (messages && messages.length) {
+        messages.forEach(message => {
+          message.addEventListener('change', (event) => {
+            const isChecked = event.currentTarget.checked;
+            if (isChecked) {
+              deleteSelected.style.display = 'flex';
+            } else {
+              const hasChecked = Array.from(messages).some(message => message.checked);
+              if (!hasChecked) {
+                deleteSelected.style.display = 'none';
+              }
+            }
+          });
+        });
+      }
 
       if (typeof callback === 'function') {
         callback();
@@ -4406,6 +4518,13 @@ export const MainWidget = function (options) {
 
     const instantWinsBackIcon = query(_this.settings.container, '.cl-main-widget-reward-header-back');
     instantWinsBackIcon.style.display = 'none';
+    const awardsSection = document.querySelector('.cl-main-widget-section-reward');
+    if (awardsSection) awardsSection.classList.remove('instantWins');
+
+    const playSingleWheel = document.querySelector('.play-single-wheel');
+    if (playSingleWheel) {
+      playSingleWheel.remove();
+    }
 
     if (_this.settings.navigationSwitchInProgress && _this.settings.navigationSwitchLastAtempt + 3000 < new Date().getTime()) {
       _this.settings.navigationSwitchInProgress = false;
@@ -4431,29 +4550,52 @@ export const MainWidget = function (options) {
             obj.style.display = 'none';
           });
 
-          changeContainerInterval = setTimeout(function () {
+          changeContainerInterval = setTimeout(async function () {
             if (target.classList.contains('cl-main-widget-navigation-dashboard') || target.closest('.cl-main-widget-navigation-dashboard')) {
               const dashboardContainer = query(_this.settings.container, '.cl-main-widget-section-container .' + _this.settings.lbWidget.settings.navigation.dashboard.containerClass);
 
               dashboardContainer.style.display = 'flex';
 
-              if (_this.settings.lbWidget.settings.navigation.achievements.enable) {
+              if (
+                _this.settings.lbWidget.settings.navigation.rewards.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showAvailableAwards
+              ) {
+                _this.loadDashboardAwards();
+              }
+
+              if (
+                _this.settings.lbWidget.settings.instantWins.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showInstantWins
+              ) {
+                _this.loadDashboardInstantWins();
+              }
+
+              if (
+                _this.settings.lbWidget.settings.navigation.achievements.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showAchievements
+              ) {
                 _this.settings.lbWidget.checkForAvailableAchievements(1, function (achievementData) {
                   _this.loadDashboardAchievements(achievementData.list);
                 });
               }
 
-              if (_this.settings.lbWidget.settings.navigation.tournaments.enable) {
+              if (
+                _this.settings.lbWidget.settings.navigation.tournaments.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showTournaments
+              ) {
                 _this.loadDashboardTournaments();
+              }
+
+              if (
+                _this.settings.lbWidget.settings.navigation.missions.enable &&
+                _this.settings.lbWidget.settings.navigation.dashboard.showMissions
+              ) {
+                _this.loadDashboardMissions();
               }
 
               changeInterval = setTimeout(function () {
                 addClass(dashboardContainer, 'cl-main-active-section');
               }, 30);
-
-              if (_this.settings.lbWidget.settings.instantWins.enable) {
-                _this.loadAwards();
-              }
 
               preLoader.hide();
 

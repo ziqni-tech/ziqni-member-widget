@@ -1,4 +1,3 @@
-import cLabs from '../modules/cLabs';
 import hasClass from './hasClass';
 
 /**
@@ -10,6 +9,12 @@ import hasClass from './hasClass';
  * @returns {null | ParentNode}
  */
 const closest = function (element, selector) {
+  const selectors = {
+    classSelector: /^\.([\w-]+)$/, // class string expression check
+    idSelector: /^#[\w\d\-\_\&\!\@\*]+$/, // ID string expression check
+    tagSelector: /^[\w-]+$/ // TAG string expression check
+  };
+
   if (typeof selector === 'object') {
     var selectorClassString = selector.getAttribute('class');
     var selectorIdString = selector.id;
@@ -32,11 +37,11 @@ const closest = function (element, selector) {
     }
 
     if (element !== null && typeof element === 'object') {
-      if (selector.match(cLabs.classSelector) && hasClass(element, selector)) {
+      if (selector.match(selectors.classSelector) && hasClass(element, selector)) {
         return element;
-      } else if (selector.match(cLabs.idSelector) && element.id === selector.replace('#', '')) {
+      } else if (selector.match(selectors.idSelector) && element.id === selector.replace('#', '')) {
         return element;
-      } else if (selector.match(cLabs.tagSelector) && element.nodeName === selector.toUpperCase()) {
+      } else if (selector.match(selectors.tagSelector) && element.nodeName === selector.toUpperCase()) {
         return element;
       } else {
         return closest(element, selector);
