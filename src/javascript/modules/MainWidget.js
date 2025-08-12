@@ -2177,6 +2177,32 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
+  this.missionItemUpdateProgression = (id, percentageComplete) => {
+    const missionList = document.querySelector('.cl-main-widget-missions-list-body-res');
+    if (!missionList) return;
+
+    const mission = missionList.querySelector('[data-id="' + id + '"]');
+    if (!mission) return;
+
+    const bar = query(mission, '.cl-missions-list-details-progress-bar');
+    const barLabel = query(mission, '.cl-missions-list-details-progress-label');
+    bar.style.width = ((percentageComplete > 1 || percentageComplete === 0) ? percentageComplete : 1) + '%';
+    barLabel.innerHTML = percentageComplete + '/100';
+  };
+
+  this.missionDashboardItemUpdateProgression = (id, percentageComplete) => {
+    const missionList = document.querySelector('.cl-main-widget-dashboard-missions-list');
+    if (!missionList) return;
+
+    const mission = missionList.querySelector('[data-id="' + id + '"]');
+    if (!mission) return;
+
+    const bar = query(mission, '.cl-missions-list-details-progress-bar');
+    const barLabel = query(mission, '.cl-missions-list-details-progress-label');
+    bar.style.width = ((percentageComplete > 1 || percentageComplete === 0) ? percentageComplete : 1) + '%';
+    barLabel.innerHTML = percentageComplete + '/100';
+  };
+
   this.achievementItemUpdateProgression = function (id, percentageComplete) {
     const achList = query(
       this.settings.section,
@@ -3437,7 +3463,7 @@ export const MainWidget = function (options) {
   this.dashboardMissionItem = (mission) => {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
-    listItem.dataset.id = mission.id;
+    let itemId = mission.id;
 
     const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
     let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
@@ -3470,7 +3496,7 @@ export const MainWidget = function (options) {
         const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
         if (idx !== -1) {
           currentStage = mission.dependencies[idx].ordering + 1;
-          // progressId = mission.dependencies[idx].achievement.entityId;
+          itemId = mission.dependencies[idx].achievement.entityId;
           progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
           progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
           reward = mission.dependencies[idx].achievement.reward
@@ -3480,6 +3506,8 @@ export const MainWidget = function (options) {
       }
       stage = currentStage + '/' + (mission.dependencies.length + 1);
     }
+
+    listItem.dataset.id = itemId;
 
     const template = require('../templates/dashboard/missionItem.hbs');
     listItem.innerHTML = template({
@@ -3642,7 +3670,7 @@ export const MainWidget = function (options) {
   this.missionsItem = function (mission) {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
-    listItem.dataset.id = mission.id;
+    let itemId = mission.id;
 
     const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
     let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
@@ -3675,7 +3703,7 @@ export const MainWidget = function (options) {
         const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
         if (idx !== -1) {
           currentStage = mission.dependencies[idx].ordering + 1;
-          // progressId = mission.dependencies[idx].achievement.entityId;
+          itemId = mission.dependencies[idx].achievement.entityId;
           progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
           progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
           reward = mission.dependencies[idx].achievement.reward
@@ -3685,6 +3713,8 @@ export const MainWidget = function (options) {
       }
       stage = currentStage + '/' + (mission.dependencies.length + 1);
     }
+
+    listItem.dataset.id = itemId;
 
     const template = require('../templates/mainWidget/missionItem.hbs');
     listItem.innerHTML = template({
