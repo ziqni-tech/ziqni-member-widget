@@ -4070,13 +4070,48 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-missions-list-item') || closest(el, '.cl-missions-list-item') !== null) {
       const missionId = (hasClass(el, 'cl-missions-list-item')) ? el.dataset.id : closest(el, '.cl-missions-list-item').dataset.id;
       const preLoader = _this.settings.mainWidget.preloader();
-      preLoader.show(function () {
-        _this.getMission(missionId, function (data) {
-          _this.settings.mainWidget.loadMissionMap(data, function () {
-            preLoader.hide();
+
+      if (el.closest('.cl-main-widget-dashboard-missions-list')) {
+        const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+        const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+        const missionsIcon = document.querySelector('.cl-main-widget-navigation-missions');
+        const detailsContainer = document.querySelector('.cl-main-widget-ach-details-container');
+
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+        missionsIcon.classList.add('cl-active-nav');
+        detailsContainer.classList.add('cl-show');
+        detailsContainer.style.display = 'block';
+
+        preLoader.show(function () {
+          missionsIcon.classList.add('cl-active-nav');
+          dashboard.style.display = 'none';
+          dashboardIcon.classList.remove('cl-active-nav');
+
+          _this.settings.mainWidget.loadMissions(1, function () {
+            const missionsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.missions.containerClass);
+
+            missionsContainer.style.display = 'flex';
+            setTimeout(function () {
+              addClass(missionsContainer, 'cl-main-active-section');
+            }, 30);
+
+            _this.getMission(missionId, function (data) {
+              _this.settings.mainWidget.loadMissionMap(data, function () {
+                preLoader.hide();
+              });
+            });
           });
         });
-      });
+      } else {
+        preLoader.show(function () {
+          _this.getMission(missionId, function (data) {
+            _this.settings.mainWidget.loadMissionMap(data, function () {
+              preLoader.hide();
+            });
+          });
+        });
+      }
 
       // claim reward
     } else if (hasClass(el, 'cl-main-widget-reward-claim-btn')) {
