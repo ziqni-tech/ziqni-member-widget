@@ -3747,6 +3747,30 @@ export const LbWidget = function (options) {
         });
       });
 
+      // load dashboard mission
+    } else if (hasClass(el, 'cl-main-widget-dashboard-missions-list-more')) {
+      const preLoader = _this.settings.mainWidget.preloader();
+      const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
+      const dashboardIcon = document.querySelector('.cl-main-widget-navigation-dashboard');
+      const missionsIcon = document.querySelector('.cl-main-widget-navigation-missions');
+
+      preLoader.show(function () {
+        missionsIcon.classList.add('cl-active-nav');
+        dashboard.style.display = 'none';
+        dashboardIcon.classList.remove('cl-active-nav');
+
+        _this.settings.mainWidget.loadMissions(1, function () {
+          const missionsContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.missions.containerClass);
+
+          missionsContainer.style.display = 'flex';
+          setTimeout(function () {
+            addClass(missionsContainer, 'cl-main-active-section');
+          }, 30);
+
+          preLoader.hide();
+        });
+      });
+
       // load dashboard competitions
     } else if (hasClass(el, 'cl-main-widget-dashboard-tournaments-list-more')) {
       const preLoader = _this.settings.mainWidget.preloader();
