@@ -8745,6 +8745,10 @@ em {
         bottom: 68px !important;
       }
 
+      .cl-main-widget-dashboard-missions-list {
+        gap: 0;
+      }
+
       .cl-main-widget-tournaments-list-body-res .cl-main-accordion-container .cl-main-accordion-container-menu{
         width: 100%;
         justify-content: space-around;
@@ -9464,6 +9468,9 @@ em {
         .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
           display: block;
         }
+
+        .cl-main-widget-dashboard-missions-title,
+        .cl-main-widget-dashboard-tournaments-title,
         .cl-main-widget-dashboard-achievements-title,
         .cl-main-widget-dashboard-instant-wins-title {
           font-size: 14px;
