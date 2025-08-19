@@ -750,6 +750,10 @@ export const MainWidget = function (options) {
     const datasetGrowth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
     const datasetChange = change;
 
+    if (rank > this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize && !memberFound) {
+      cellWrapper.classList.add('hidden');
+    }
+
     const rewardEnabled = (typeof this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest !== null && typeof this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
 
     const rewardValue = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
@@ -2987,7 +2991,6 @@ export const MainWidget = function (options) {
 
     // const achievements = achievementsSubarray.flat();
     const statuses = statusesSubarray.flat();
-    console.log('statuses:', statuses);
 
     // const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
     // statuses[1].percentageComplete = 50;
@@ -4646,6 +4649,13 @@ export const MainWidget = function (options) {
                   changeInterval = setTimeout(function () {
                     addClass(lbContainer, 'cl-main-active-section');
                   }, 30);
+
+                  const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
+                  if (member !== null) {
+                    _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
+                  } else {
+                    _this.missingMemberReset();
+                  }
 
                   if (typeof callback === 'function') {
                     callback();

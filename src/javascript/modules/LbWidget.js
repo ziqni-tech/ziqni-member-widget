@@ -3306,6 +3306,13 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
       _this.settings.mainWidget.hideCompetitionList();
 
+      const member = query(_this.settings.mainWidget.settings.leaderboard.resultContainer, '.cl-lb-member-row');
+      if (member !== null) {
+        _this.settings.mainWidget.missingMember(_this.settings.mainWidget.isElementVisibleInView(member, _this.settings.mainWidget.settings.leaderboard.resultContainer));
+      } else {
+        _this.settings.mainWidget.missingMemberReset();
+      }
+
       // hide mission map
     } else if (hasClass(el, 'cl-main-widget-mission-header-back-icon')) {
       _this.settings.mainWidget.hideMissionMap();

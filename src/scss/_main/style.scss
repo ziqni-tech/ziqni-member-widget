@@ -3208,6 +3208,10 @@ em {
   font-size: 12px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard .cl-lb-row.hidden {
+  display: none;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-lb-leaderboard .cl-lb-row.cl-lb-member-row {
   background: #2F0426 !important;
   border: 1px solid #406A8C;
