@@ -3425,6 +3425,7 @@ export const MainWidget = function (options) {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'dashboard-award-item');
     listItem.setAttribute('data-id', award.id);
+    const iconLink = award.rewardData.iconLink ? award.rewardData.iconLink : '';
 
     const labelText = stripHtml(award.name);
 
@@ -3436,7 +3437,7 @@ export const MainWidget = function (options) {
       prize: prize,
       type: award.rewardType.key,
       label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
-      iconLink: ''
+      iconLink: iconLink
     });
 
     return listItem;

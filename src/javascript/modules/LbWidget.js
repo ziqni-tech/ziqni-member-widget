@@ -502,8 +502,34 @@ export const LbWidget = function (options) {
     });
 
     const awards = await this.getAwardsApi(availableAwardRequest);
+    let awardsData = awards.data;
 
-    return awards.data;
+    const rewardIds = awardsData.map(c => c.rewardId);
+    if (rewardIds.length) {
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Reward',
+          entityIds: rewardIds
+        }],
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
+
+      awardsData = awardsData.map(award => {
+        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
+        if (idx !== -1) {
+          award.rewardData = rewardsData[idx];
+        }
+
+        return award;
+      });
+    }
+
+    return awardsData;
   };
 
   this.getDashboardCompetitions = async function () {
