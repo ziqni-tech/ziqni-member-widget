@@ -6567,7 +6567,8 @@ em {
   padding: 0 20px 0 0;
   display: flex;
   flex-wrap: wrap;
-  justify-content: space-between;
+  justify-content: flex-start;
+  gap: 30px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-missions-list-item {
