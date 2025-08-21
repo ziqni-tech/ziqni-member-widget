@@ -3469,7 +3469,13 @@ export const MainWidget = function (options) {
     const itemId = mission.id;
     let progressId = mission.id;
 
-    const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    let name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    if (mission.customFields['Global-Title']) {
+      name = (mission.customFields['Global-Title'].length > 36)
+        ? mission.customFields['Global-Title'].substr(0, 36) + '...'
+        : mission.customFields['Global-Title'];
+    }
+
     let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
     const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
@@ -3678,7 +3684,13 @@ export const MainWidget = function (options) {
     const itemId = mission.id;
     let progressId = mission.id;
 
-    const name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    let name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
+    if (mission.customFields['Global-Title']) {
+      name = (mission.customFields['Global-Title'].length > 36)
+        ? mission.customFields['Global-Title'].substr(0, 36) + '...'
+        : mission.customFields['Global-Title'];
+    }
+
     let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
     const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
 
