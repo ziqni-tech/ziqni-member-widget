@@ -7569,6 +7569,33 @@ em {
     .cl-main-widget-missions-footer-content {
       color: #141E28;
     }
+
+    .cl-missions-list-details-label {
+      color: #080d12;
+    }
+
+    .cl-missions-list-details-stage {
+      color: #080d12;
+    }
+
+    .cl-missions-list-details-actions-reward {
+      background: #edf3f7;
+      color: #223241;
+
+      &::before {
+        background: url(../../images/award-icon-dark.svg) no-repeat center;
+        background-size: contain;
+      }
+    }
+
+    .cl-missions-list-details-progress-cont {
+      background: #ffffff;
+
+      .cl-missions-list-details-progress-bar {
+
+      }
+    }
+
     .cl-main-accordion-container {
       .cl-main-accordion-container-menu {
         background: #DCE6EF;
@@ -7892,6 +7919,9 @@ em {
       .cl-missions-list-details-label {
         color: #080D12;
       }
+      .cl-missions-list-details-stage {
+        color: #080D12;
+      }
       .cl-missions-list-details-actions-reward {
         background: #EDF3F7;
         color: #223241;
@@ -7953,6 +7983,7 @@ em {
         background-image: url(../../images/close-icon-light.svg);
       }
 
+      .cl-main-widget-dashboard-missions-title,
       .cl-main-widget-dashboard-awards-title,
       .cl-main-widget-dashboard-tournaments-title,
       .cl-main-widget-dashboard-achievements-title,
@@ -9355,11 +9386,12 @@ em {
             font-size: 10px;
           }
           .cl-missions-list-item {
-            width: 144px;
-            height: 256px;
+            max-width: 340px;
+            height: 316px;
+            width: 100%;
           }
           .cl-missions-list-details-img {
-            height: 135px;
+            height: 160px;
           }
           .cl-missions-list-details-label {
             font-size: 12px;
