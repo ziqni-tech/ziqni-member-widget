@@ -179,22 +179,18 @@ export const MiniScoreBoard = function (options) {
     var lbResultsMemEntry = document.createElement('div');
     var lbResultsMemLabel = document.createElement('div');
     var lbResultsMemRank = document.createElement('div');
-    // var lbResultsMemIcon = document.createElement('div');
     var lbResultsMemImg = document.createElement('img');
     var lbResultsMemPoints = document.createElement('div');
 
     lbResultsMemEntry.setAttribute('class', 'cl-widget-ms-default-mem-entry');
     lbResultsMemLabel.setAttribute('class', 'cl-widget-ms-default-mem-label');
     lbResultsMemRank.setAttribute('class', 'cl-widget-ms-default-mem-rank');
-    // lbResultsMemIcon.setAttribute('class', 'cl-widget-ms-default-mem-icon');
     lbResultsMemImg.setAttribute('class', 'cl-widget-ms-default-mem-img');
     lbResultsMemImg.style.display = 'none';
     lbResultsMemPoints.setAttribute('class', 'cl-widget-ms-default-mem-points');
 
     lbResultsMemEntry.appendChild(lbResultsMemRank);
     lbResultsMemEntry.appendChild(lbResultsMemLabel);
-    // lbResultsMemIcon.appendChild(lbResultsMemImg);
-    // lbResultsMemEntry.appendChild(lbResultsMemIcon);
     lbResultsMemEntry.appendChild(lbResultsMemPoints);
 
     return lbResultsMemEntry;
@@ -225,14 +221,11 @@ export const MiniScoreBoard = function (options) {
     return lbResultsMemEntry;
   };
 
-  // let testLive = false;
   this.layoutDefaultOrEmpty = function () {
     var _this = this;
     var timeManagement = _this.timeManagement();
-    // var diff = timeManagement.diff;
     var label = timeManagement.label;
     var date = timeManagement.date;
-    // var dateObj = timeManagement.dateObj;
     var wrapperDomObj = _this.settings.infoContainer;
     var defaultDomObj = query(_this.settings.container, '.cl-widget-ms-default-wrapper');
     var inverse = timeManagement.inverse;
@@ -376,13 +369,8 @@ export const MiniScoreBoard = function (options) {
   this.layoutDefaultOrEmptySingleRow = function (lbEntry) {
     var _this = this;
     var lbWrapper = _this.layoutDefaultOrEmptyEntry();
-    // var img = query(lbWrapper, '.cl-widget-ms-default-mem-img');
     const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
     var formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lbEntry.score);
-
-    // img.src = icon;
-    // img.alt = '';
-    // img.style.display = 'block';
 
     if (selfMember) {
       addClass(lbWrapper, 'cl-widget-ms-default-mem-self');
@@ -434,7 +422,6 @@ export const MiniScoreBoard = function (options) {
 
       lbResultsMemEntry.setAttribute('class', 'cl-widget-ms-first-to-mem-entry');
 
-      // lbDateLabel.innerHTML = label;
       lbDate.innerHTML = label;
 
       lbDateWrapper.appendChild(lbDateLabel);
@@ -505,17 +492,12 @@ export const MiniScoreBoard = function (options) {
   this.layoutFirstToOrEmptySingleRow = function (lbEntry, strategy) {
     const _this = this;
     const lbWrapper = _this.layoutFirstToOrEmptyEntry();
-    // const img = query(lbWrapper, '.cl-widget-ms-first-to-mem-img');
     const selfMember = lbEntry.members && lbEntry.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
     const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lbEntry.score);
 
     if (selfMember) {
       addClass(lbWrapper, 'cl-widget-ms-first-to-mem-self');
     }
-
-    // img.src = icon;
-    // img.alt = '';
-    // img.style.display = 'block';
 
     query(lbWrapper, '.cl-widget-ms-first-to-mem-label').innerHTML = selfMember ? _this.settings.lbWidget.settings.translation.leaderboard.you : '';
     query(lbWrapper, '.cl-widget-ms-first-to-mem-rank').innerHTML = "<span class='cl-mem-rank-label'>" + _this.settings.lbWidget.settings.translation.leaderboard.rank + "</span><span class='cl-mem-rank'>" + lbEntry.rank + '</span>';
@@ -836,9 +818,6 @@ export const MiniScoreBoard = function (options) {
         this.settings.lbWidget.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
       ) {
         let optInStatus = this.settings.lbWidget.settings.competition.activeCompetition.optInStatus;
-        // const optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
-        //   _this.settings.lbWidget.settings.competition.activeCompetition.id
-        // );
         if (optInStatus.length && (optInStatus[0].status === 'Entering' || optInStatus[0].status === 'Processing')) {
           optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
             _this.settings.lbWidget.settings.competition.activeCompetition.id
@@ -872,6 +851,12 @@ export const MiniScoreBoard = function (options) {
       if (typeof callback === 'function') {
         callback();
       }
+    } else if (
+      _this.settings.active &&
+      _this.settings.lbWidget.settings.competition.activeCompetition !== null &&
+      _this.settings.lbWidget.settings.competition.activeCompetition.statusCode > 30
+    ) {
+      _this.layoutDefaultOrEmpty();
     } else {
       _this.clearAll();
     }
@@ -934,10 +919,6 @@ export const MiniScoreBoard = function (options) {
       _this.loadInfoArea(function () {
         _this.updateScoreBoard();
       });
-      //
-      // setTimeout(function () {
-      //   _this.updateScoreBoard();
-      // }, 1000);
     });
   };
 };
