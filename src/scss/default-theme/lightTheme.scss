@@ -1,0 +1,872 @@
+/**
+ * *************************************
+ * ********** Light theme ***********
+ * *************************************
+ */
+
+.cl-widget-notif-wrapper.lightTheme {
+  .cl-widget-notif-information-wrapper {
+    background: rgba(220, 230, 239, .95);
+    color: #223241;
+    .cl-widget-notif-information-details-label {
+      color: #223241;
+    }
+    .cl-widget-notif-information-details-description {
+      color: #223241;
+    }
+  }
+  .cl-widget-notif-information-close-wrapper {
+    background-image: url(../../images/close-icon-light.svg);
+  }
+  .cl-widget-notif-icon-wrapper {
+    .cl-widget-notif-icon {
+      background: #bccdde;
+      box-shadow: 1px 1px 3px #333;
+    }
+  }
+}
+
+.cl-widget-ms-wrapper.lightTheme {
+  * {
+    color: #141E28;
+  }
+  .cl-widget-ms-information-close-wrapper {
+    background: #B9CEDF;
+    border: 1px solid #FFFFFF;
+    .cl-widget-ms-information-close {
+      background: none;
+    }
+  }
+  .cl-widget-ms-icon-wrapper {
+    .cl-widget-ms-icon {
+      background-image: url(../../images/ziqni-logo-light.svg);
+    }
+  }
+  .cl-widget-ms-information-wrapper {
+    background: #EDF3F7;
+    border: 1px solid #B9CEDF;
+    color: #141E28;
+  }
+  .cl-widget-ms-default-mem-entry:nth-child(odd) {
+    background: #DCE6EF;
+  }
+  .cl-widget-ms-default-wrapper {
+    color: #223241;
+    .cl-widget-ms-default-results-headers {
+      .cl-widget-ms-default-results-header-rank {
+        color: #223241;
+      }
+      .cl-widget-ms-default-results-header-points {
+        color: #223241;
+      }
+    }
+  }
+  .cl-widget-ms-first-to-wrapper {
+    color: #223241;
+    .cl-widget-ms-first-to-results-headers {
+      .cl-widget-ms-first-to-results-header-rank {
+        color: #223241;
+      }
+      .cl-widget-ms-first-to-results-header-points {
+        color: #223241;
+      }
+    }
+  }
+  .cl-widget-ms-default-wrapper.cl-inverse {
+    .cl-widget-ms-default-date-only {
+      .cl-widget-ms-default-date-label {
+        color: #223241;
+      }
+      .cl-widget-ms-default-date {
+        color: #223241;
+        .time-ind {
+          color: #223241;
+        }
+      }
+    }
+  }
+  .cl-widget-ms-first-to-wrapper.cl-inverse {
+    .cl-widget-ms-first-to-date-only {
+      .cl-widget-ms-first-to-date-label {
+        color: #223241;
+      }
+      .cl-widget-ms-first-to-date {
+        color: #223241;
+        .time-ind {
+          color: #223241;
+        }
+      }
+    }
+  }
+
+  .cl-widget-ms-information-top-wrapper {
+    .cl-widget-ms-information-wrapper {
+      .cl-widget-ms-default-wrapper {
+        .cl-widget-ms-default-results-wrapper {
+          .cl-widget-ms-default-results-list {
+            .cl-widget-ms-default-mem-entry {
+              &.cl-widget-ms-default-mem-self {
+                background: #BEE9F3;
+                border: 1px solid #F7A1E4;
+                box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+              }
+            }
+          }
+        }
+      }
+      .cl-widget-ms-first-to-wrapper {
+        .cl-widget-ms-first-to-results-wrapper {
+          .cl-widget-ms-first-to-results-list {
+            .cl-widget-ms-first-to-mem-entry {
+              &.cl-widget-ms-first-to-mem-self {
+                background: #BEE9F3;
+                border: 1px solid #F7A1E4;
+                box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+.cl-main-widget-wrapper.lightTheme {
+  * {
+    color: var(--lightTheme-font-color);
+  }
+  #cy {
+    border: 1px solid #B9CEDF;
+  }
+  .cl-main-widget-missions-map-wrapper {
+    border: 1px solid #B9CEDF;
+  }
+  .cl-main-widget-lb-optin-action {
+    color: #ffffff;
+  }
+  .paginator-item {
+    border: 1px solid #cccccc;
+    color: #080D12;
+    &.active {
+      background: #BEE9F3;
+      border: 1px solid #F7A1E4;
+      box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+    }
+    &.prev {
+      background: url(../../images/arrow-left-dark.svg) no-repeat center;
+    }
+    &.next {
+      background: url(../../images/arrow-right-dark.svg) no-repeat center;
+    }
+  }
+  .cl-main-widget-tournaments-list {
+    background: #EDF3F7;
+    .cl-tour-list-item:nth-child(odd) {
+      background: #DCE6EF;
+    }
+    .cl-tour-list-details-prize,
+    .cl-tour-list-details-period,
+    .cl-tour-list-details-label {
+      color: #141E28;
+    }
+  }
+
+  .dashboard-award-item {
+    background-color: #dce6ef;
+
+    .cl-rew-list-details-prize {
+      background: #edf3f7;
+      color: #141e28;
+
+      &::before {
+        background: url(../../images/award-icon-dark.svg) no-repeat center;
+      }
+    }
+
+    .cl-rew-dashboard-details-claim {
+      color: #ffffff;
+    }
+  }
+
+  .cl-main-widget-section-container {
+    &.cl-main-active-embedded-description {
+      .cl-main-widget-lb-details-description-container {
+        border: 1px solid #B9CEDF;
+      }
+      .cl-main-widget-lb-details-description-header-back {
+        background-image: $lb3-tournament-description-back-image-black;
+      }
+    }
+    .cl-main-widget-lb-header {
+      .cl-main-widget-lb-header-back-icon {
+        background-image: $lb3-tournament-header-back-image-black;
+      }
+      .cl-main-widget-lb-header-close {
+        background-image: $lb3-tournament-header-close-light-image;
+      }
+    }
+    .cl-main-widget-lb-footer-content,
+    .cl-main-widget-ach-footer-content,
+    .cl-main-widget-reward-footer-content,
+    .cl-main-widget-inbox-footer-content,
+    .cl-main-widget-missions-footer-content {
+      color: #141E28;
+    }
+
+    .cl-missions-list-details-label {
+      color: #080d12;
+    }
+
+    .cl-missions-list-details-stage {
+      color: #080d12;
+    }
+
+    .cl-missions-list-details-actions-reward {
+      background: #edf3f7;
+      color: #223241;
+
+      &::before {
+        background: url(../../images/award-icon-dark.svg) no-repeat center;
+        background-size: contain;
+      }
+    }
+
+    .cl-missions-list-details-progress-cont {
+      background: #ffffff;
+
+      .cl-missions-list-details-progress-bar {
+
+      }
+    }
+
+    .cl-main-accordion-container {
+      .cl-main-accordion-container-menu {
+        background: #DCE6EF;
+        .cl-main-accordion-container-menu-item.active {
+          background: #BEE9F3;
+          border: 1px solid #F7A1E4;
+          box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+        }
+      }
+      .cl-shown {
+        .cl-accordion-list-container {
+          border: 1px solid #B9CEDF;
+          background-color: #edf3f7;
+        }
+      }
+    }
+    .cl-main-widget-ach-header {
+      .cl-main-widget-ach-header-label {
+        color: #0d0d0d;
+      }
+      .cl-main-widget-ach-header-close {
+        background-image: $lb3-tournament-header-close-light-image;
+      }
+    }
+    .cl-main-widget-section-ach {
+      .cl-ach-list-item {
+        background: #DCE6EF;
+      }
+      .cl-ach-list-details-cont {
+        border-bottom: solid 1px #B9CEDF;
+      }
+      .cl-ach-list-actions-reward {
+        background: #EDF3F7;
+        color: #223241;
+        &::before {
+          background: url(../../images/award-icon-dark.svg) no-repeat center;
+          background-size: contain;
+        }
+      }
+      .cl-ach-list-progression-cont {
+        background: #ffffff;
+      }
+      .cl-ach-list-progression-bar {
+        background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+      }
+      .cl-ach-list-details-label {
+        color: #141E28;
+      }
+      .cl-ach-list-more {
+        color: #170213;
+      }
+      .cl-main-widget-ach-list-popup {
+        background-color: #DCE6EF;
+      }
+      .cl-main-widget-ach-list-popup-close {
+        background-image: url(../../images/close-icon-light.svg);
+      }
+      .cl-main-widget-ach-list-popup-title {
+        color: #141e28;
+        border-bottom: solid 1px #b9cedf;
+      }
+      .cl-main-widget-ach-list-popup-description {
+        color: #141e28;
+        border-bottom: solid 1px #b9cedf;
+      }
+      .cl-main-widget-ach-list-popup-cancel {
+        color: #170213;
+      }
+    }
+    .cl-main-widget-missions-details-container {
+      background: #edf3f7;
+      .cl-main-widget-missions-details-wrapper {
+        background: #DCE6EF;
+      }
+      .cl-main-widget-missions-details-header {
+        .cl-main-widget-missions-details-back-btn {
+          background-image: url(../../images/small-left-arrow-black.svg);
+        }
+        .cl-main-widget-missions-details-info-btn {
+          color: #0D0D0D;
+          border: 1px solid #cccccc;
+        }
+      }
+      .cl-main-widget-missions-details-header-label {
+        color: #0D0D0D;
+      }
+      .cl-main-widget-missions-details-tc-label,
+      .cl-main-widget-missions-details-description,
+      .cl-main-widget-missions-details-tc,
+      .cl-main-widget-missions-details-description-label {
+        color: #0D0D0D;
+      }
+    }
+    .cl-main-widget-ach-details-container {
+      background: #edf3f7;
+      .cl-main-widget-ach-details-wrapper {
+        background: #DCE6EF;
+        .cl-main-widget-ach-details-header {
+          .cl-main-widget-ach-details-back-btn {
+            background-image: url(../../images/small-left-arrow-black.svg);
+          }
+          .cl-main-widget-ach-details-header-label {
+            color: #080D12;
+          }
+        }
+        .cl-main-widget-ach-details-optin-action {
+          color: #080D12;
+        }
+        .cl-main-widget-ach-details-reward {
+          background: #EDF3F7;
+          color: #223241;
+          &::before {
+            background: url(../../images/award-icon-dark.svg) no-repeat center;
+            background-size: contain;
+          }
+        }
+        .cl-main-widget-ach-details-tc,
+        .cl-main-widget-ach-details-body {
+          color: var(--lightTheme-font-color);
+        }
+        .cl-main-widget-ach-details-body-progress-cont {
+          background: #fff;
+        }
+        .cl-main-widget-ach-details-body-progress-bar {
+          background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+        }
+        .cl-main-widget-ach-details-header-info {
+          color: #080d12;
+          border: 1px solid #ccc;
+        }
+      }
+    }
+    .cl-main-widget-reward-list {
+      background: #edf3f7;
+      .cl-main-accordion-container {
+        .cl-shown {
+          .cl-accordion-list-container {
+            border: none;
+            &::-webkit-scrollbar {
+              background: #DCE6EF;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: #96B5CF;
+            }
+          }
+        }
+      }
+    }
+    .cl-main-widget-reward-details-container {
+      background: #edf3f7;
+      .cl-main-widget-reward-details-wrapper {
+        background: #DCE6EF;
+        box-shadow: none;
+      }
+      .cl-main-widget-reward-details-back-btn {
+        background-image: url(../../images/small-left-arrow-black.svg);
+      }
+      .cl-main-widget-reward-details-header-label {
+        color: #080D12;
+      }
+      .cl-main-widget-reward-winnings-value {
+        color: #080D12;
+      }
+      .cl-main-widget-reward-claim-btn {
+        color: #080D12;
+      }
+    }
+    .cl-main-widget-reward-list-body-res {
+      .cl-rew-list-item {
+        background: #DCE6EF;
+      }
+      .cl-rew-list-details-label {
+        color: #080D12;
+      }
+      .cl-rew-list-details-type {
+        color: #080D12;
+      }
+      .cl-rew-list-details-prize {
+        background: #EDF3F7;
+        color: #141E28;
+        &::before {
+          background: url(../../images/award-icon-dark.svg) no-repeat center;
+        }
+      }
+      .wheel-item, .scratchcards-item {
+        background: #DCE6EF;
+      }
+      .wheel-label, .scratchcards-label {
+        color: #080D12;
+      }
+      .wheel-image, .scratchcards-image {
+        background-color: #ffffff;
+      }
+      .scratchcards-image {
+        background-image: url(../../images/scratchcards-light.svg);
+        background-position: 64px 7px;
+      }
+      .single-wheel-wrapper {
+        border: 1px solid #B9CEDF;
+      }
+      .single-wheel {
+        background: #edf3f7;
+      }
+      .single-wheel-label {
+        color: #080D12;
+      }
+      .single-wheel-description {
+        color: #141E28;
+      }
+      .single-wheel-button {
+        color: #ffffff;
+      }
+      .single-wheel-canvas::after {
+        background-color: #BEE9F3;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .single-wheel-popup {
+        background: #FFFFFF;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .single-wheel-popup-label {
+        color: #304F69;
+      }
+      .single-wheel-popup-description {
+        color: #141E28;
+      }
+      .single-wheel-popup-button {
+        color: #ffffff;
+      }
+      .scratchcards-game {
+        background: #edf3f7;
+      }
+      .scratchcards-game-wrapper {
+        border: 1px solid #B9CEDF;
+      }
+      .scratchcards-game-label {
+        color: #080D12;
+      }
+      .scratchcards-game-prize-button {
+        color: #ffffff;
+      }
+      .scratchcards-game-prize-label {
+        color: #223241;
+      }
+      .scratchcards-game-prize-prizes-label {
+        color: #304F69;
+      }
+      .scratchcards-game-card-cell {
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+
+      .instant-wins-card {
+        background: #dce6ef;
+
+        .instant-wins-card-button {
+          color: #ffffff;
+        }
+      }
+
+      .play-single-wheel {
+        background: #dce6ef;
+        border: none;
+
+        .play-single-wheel-back-btn {
+          background-image: url(../../images/small-left-arrow-black.svg);
+        }
+
+        .play-single-wheel-btn {
+          color: #ffffff;
+        }
+      }
+    }
+    .cl-main-widget-reward-header {
+      .cl-main-widget-reward-header-label {
+        color: #080D12;
+      }
+      .cl-main-widget-reward-header-back {
+        background-image: url(../../images/left-arrow-black.svg);
+      }
+      .cl-main-widget-reward-header-close {
+        background-image: $lb3-tournament-header-close-light-image;
+      }
+    }
+    .cl-main-widget-inbox-header {
+      .cl-main-widget-inbox-header-label {
+        color: #080D12;
+      }
+      .cl-main-widget-inbox-header-close {
+        background-image: $lb3-tournament-header-close-light-image;
+      }
+    }
+    .cl-main-widget-missions-header {
+      .cl-main-widget-missions-header-label {
+        color: #0d0d0d;
+      }
+      .cl-main-widget-missions-header-close {
+        background-image: $lb3-tournament-header-close-light-image;
+      }
+      .cl-main-widget-mission-header-back-icon {
+        background-image: url(../../images/left-arrow-black.svg);
+      }
+    }
+    .cl-missions-list-item {
+      background: #DCE6EF;
+    }
+    .cl-main-widget-missions-list-body {
+      &::-webkit-scrollbar {
+        background: #DCE6EF;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #96B5CF;
+      }
+    }
+    .cl-main-widget-missions-map-container {
+      background: #EDF3F7;
+    }
+    .cl-main-widget-missions-list-body-res {
+      .cl-missions-list-details-label {
+        color: #080D12;
+      }
+      .cl-missions-list-details-stage {
+        color: #080D12;
+      }
+      .cl-missions-list-details-actions-reward {
+        background: #EDF3F7;
+        color: #223241;
+        &::before {
+          background: url(../../images/award-icon-dark.svg) no-repeat center;
+          background-size: contain;
+        }
+      }
+      .cl-missions-list-details-progress-cont {
+        background: #ffffff;
+      }
+      .cl-missions-list-details-progress-bar {
+        background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+      }
+    }
+
+    .cl-main-widget-lb-details-description-info {
+      color: #080D12;
+      border: 1px solid #cccccc;
+    }
+
+    .cl-main-widget-lb-details-description-container {
+      &::-webkit-scrollbar {
+        background: #DCE6EF;
+      }
+      &::-webkit-scrollbar-thumb {
+        background: #96B5CF;
+      }
+    }
+
+    .cl-main-widget-lb-details-brackets {
+      .connections-table_round-item {
+        background-color: #dce6ef;
+        .connections-table_round-item-name {
+          color: #080D12;
+        }
+        .connections-table_round-item-date-title {
+          color: #223241;
+        }
+        .connections-table_round-item-date-value {
+          color: #080D12;
+        }
+      }
+    }
+
+    .cl-main-widget-section-dashboard {
+      .cl-main-widget-dashboard-body {
+        &::-webkit-scrollbar {
+          background: #DCE6EF;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #96B5CF;
+        }
+      }
+      .cl-main-widget-dashboard-header-label {
+        color: #0d0d0d;
+      }
+      .cl-main-widget-dashboard-header-close {
+        background-image: url(../../images/close-icon-light.svg);
+      }
+
+      .cl-main-widget-dashboard-missions-title,
+      .cl-main-widget-dashboard-awards-title,
+      .cl-main-widget-dashboard-tournaments-title,
+      .cl-main-widget-dashboard-achievements-title,
+      .cl-main-widget-dashboard-instant-wins-title {
+        color: #080D12;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel,
+      .cl-main-widget-dashboard-instant-wins-cards,
+      .cl-ach-list-item {
+        background-color: #DCE6EF;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel-image,
+      .cl-main-widget-dashboard-instant-wins-cards-image {
+        background-color: #ffffff;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel-title,
+      .cl-main-widget-dashboard-instant-wins-cards-title,
+      .cl-ach-list-details-label {
+        color: #080D12;
+      }
+      .cl-main-widget-dashboard-instant-wins-wheel-description,
+      .cl-main-widget-dashboard-instant-wins-cards-description {
+        color: #141E28;
+      }
+      .cl-ach-list-actions-reward {
+        background: #edf3f7;
+        color: #223241;
+        &::before {
+          background: url(../../images/award-icon-dark.svg) no-repeat center;
+          background-size: contain;
+        }
+      }
+      .cl-ach-list-progression-cont {
+        background: #fff;
+        .cl-ach-list-progression-bar {
+          background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+        }
+      }
+      .cl-main-widget-ach-list-popup {
+        background-color: #DCE6EF;
+      }
+      .cl-main-widget-ach-list-popup-close {
+        background-image: url(../../images/close-icon-light.svg);
+      }
+      .cl-main-widget-ach-list-popup-title {
+        color: #141e28;
+        border-bottom: solid 1px #b9cedf;
+      }
+      .cl-main-widget-ach-list-popup-description {
+        color: #141e28;
+        border-bottom: solid 1px #b9cedf;
+      }
+      .cl-main-widget-ach-list-popup-cancel {
+        color: #170213;
+      }
+      .cl-main-widget-dashboard-instant-wins-cards-title-mobile,
+      .cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
+        color: #080D12;
+      }
+      .dashboard-tournament-item {
+        background-color: #dce6ef;
+      }
+      .cl-main-widget-dashboard-achievements-list {
+        .cl-ach-list-more {
+          color: #170213;
+        }
+      }
+    }
+
+    .cl-main-widget-lb-details-description-date-label,
+    .cl-main-widget-lb-details-content-date-label,
+    .cl-main-widget-lb-details-content-date,
+    .cl-main-widget-lb-details-content-date,
+    .cl-main-widget-lb-details-description-date {
+      color: #ffffff;
+    }
+
+    #congratulations-modal {
+      .win-card {
+        background: #dce6ef;
+      }
+    }
+  }
+  .cl-main-widget-inner-wrapper {
+    background: #EDF3F7;
+    .cl-main-widget-navigation-container {
+      .cl-main-widget-navigation-logo {
+        background-image: url(../../images/ziqni-logo-nav-dark.svg);
+      }
+      .cl-main-widget-navigation-dashboard-icon {
+        background-image: $lb3-dashboard-icon-black;
+      }
+      .cl-main-widget-navigation-lb-icon {
+        background-image: $lb3-tournament-icon-black;
+      }
+      .cl-main-widget-navigation-ach-icon {
+        background-image: $lb3-achievements-icon-black;
+      }
+      .cl-main-widget-navigation-rewards-icon {
+        background-image: $lb3-rewards-icon-black;
+      }
+      .cl-main-widget-navigation-inbox-icon {
+        background-image: $lb3-messages-icon-black;
+      }
+      .cl-main-widget-navigation-missions-icon {
+        background-image: $lb3-missions-icon-black;
+      }
+      .cl-active-nav {
+        .cl-main-navigation-item-title {
+          color: #ffffff;
+        }
+        .cl-main-widget-navigation-dashboard-icon {
+          background-image: $lb3-dashboard-icon;
+        }
+        .cl-main-widget-navigation-lb-icon {
+          background-image: $lb3-tournament-icon;
+        }
+        .cl-main-widget-navigation-ach-icon {
+          background-image: $lb3-achievements-icon;
+        }
+        .cl-main-widget-navigation-rewards-icon {
+          background-image: $lb3-rewards-icon;
+        }
+        .cl-main-widget-navigation-inbox-icon {
+          background-image: $lb3-messages-icon;
+        }
+        .cl-main-widget-navigation-missions-icon {
+          background-image: $lb3-missions-icon;
+        }
+      }
+    }
+    .cl-main-widget-section-container {
+      .cl-col {
+        color: #0D0D0D;
+      }
+      .cl-icon-col {
+        .cl-icon-col-img {
+          color: #ffffff;
+        }
+      }
+      .cl-main-widget-lb-details-content-label-text {
+        color: #ffffff;
+      }
+      .cl-main-widget-lb-details-content-date-headers-item {
+        color: #ffffff;
+      }
+      .banner-date {
+        .banner-date-cell {
+          color: #ffffff;
+        }
+      }
+      .cl-main-widget-lb-details-description-label-text {
+        color: #ffffff;
+      }
+      .cl-main-widget-lb-details-description-date-headers-item {
+        color: #ffffff;
+      }
+      .cl-main-widget-lb-missing-member-details {
+        background: #BEE9F3 !important;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .cl-main-widget-lb-header {
+        .cl-main-widget-lb-header-label {
+          color: #0D0D0D;
+        }
+        .cl-main-widget-lb-header-list-icon {
+          background-image: $lb3-tournament-header-list-back-image-black;
+        }
+      }
+      .cl-main-widget-lb-leaderboard {
+        border: 1px solid #B9CEDF;
+        .cl-main-widget-lb-leaderboard-header-top-res {
+          .cl-lb-row:nth-child(odd) {
+            background: #DCE6EF;
+          }
+          .cl-col {
+            color: #0D0D0D;
+          }
+        }
+        .cl-main-widget-lb-leaderboard-body-res {
+          .cl-lb-row:nth-child(even) {
+            background: #DCE6EF;
+          }
+        }
+      }
+      .cl-main-widget-lb-leaderboard-header-labels {
+        .cl-col {
+          color: #0D0D0D;
+        }
+      }
+      .cl-main-widget-lb-leaderboard-header-top-res {
+        background-color: #edf3f7;
+      }
+      .cl-lb-row.cl-lb-member-row {
+        background: #BEE9F3 !important;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .cl-main-widget-lb-missing-member {
+        background: #BEE9F3 !important;
+        border: 1px solid #F7A1E4;
+        box-shadow: 0 2px 12px rgba(238, 62, 200, 0.4);
+      }
+      .cl-main-widget-lb-leaderboard-res-container {
+        &::-webkit-scrollbar {
+          background: #DCE6EF;
+        }
+        &::-webkit-scrollbar-thumb {
+          background: #96B5CF;
+        }
+      }
+      .cl-main-widget-inbox-list-body-res {
+        .cl-inbox-list-item {
+          background: #DCE6EF;
+        }
+        .cl-inbox-list-details-label {
+          color: #080D12;
+        }
+        .cl-inbox-list-details-description {
+          color: #141E28;
+        }
+      }
+      .cl-main-widget-inbox-details-container {
+        background: #edf3f7;
+        .cl-main-widget-inbox-details-wrapper {
+          background: #DCE6EF;
+        }
+        .cl-main-widget-inbox-details-header {
+          .cl-main-widget-inbox-details-back-btn {
+            background-image: url(../../images/small-left-arrow-black.svg);
+          }
+          .cl-main-widget-inbox-details-header-label {
+            color: #080D12;
+          }
+          .cl-main-widget-inbox-details-header-date {
+            color: #141E28;
+          }
+        }
+      }
+    }
+  }
+}
