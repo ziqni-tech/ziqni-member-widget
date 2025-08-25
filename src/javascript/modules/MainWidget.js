@@ -2953,6 +2953,15 @@ export const MainWidget = function (options) {
     const isLightTheme = mainWrapper.classList.contains('lightTheme');
     const isMobile = window.screen.availWidth < 768;
 
+    const stageIcons = [
+      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/book.png',
+      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/bottle.png',
+      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/rocket(2).svg',
+      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/prize-3.png',
+      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/prize-2.png',
+      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/award%20(2).svg'
+    ];
+
     const itemBgEl = document.querySelector('.cl-main-widget-missions-map-graph-item-bg');
     const style = window.getComputedStyle(itemBgEl, false);
 
@@ -3005,7 +3014,7 @@ export const MainWidget = function (options) {
     const edges = [];
 
     this.settings.missions.mission.graph.nodes.forEach((n) => {
-      let src = 'none';
+      let src = stageIcons[Math.floor(Math.random() * 6)];
       if (n.includes && n.includes.iconLink) src = n.includes.iconLink;
       // const idx = achievements.findIndex(a => a.id === n.entityId);
       // if (idx !== -1) {
