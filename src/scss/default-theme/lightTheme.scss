@@ -849,7 +849,15 @@
         .cl-inbox-list-details-description {
           color: #141E28;
         }
+        .cl-inbox-list-details-date {
+          color: #141E28;
+        }
       }
+
+      .cl-main-widget-inbox-list-delete-selected {
+        color: #ffffff;
+      }
+
       .cl-main-widget-inbox-details-container {
         background: #edf3f7;
         .cl-main-widget-inbox-details-wrapper {
