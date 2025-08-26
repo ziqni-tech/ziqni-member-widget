@@ -1008,6 +1008,7 @@ em {
   width: 100%;
   font-size: 11px;
   line-height: 20px;
+  padding-left: 0;
 }
 
 .cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-sum-best-wrapper .cl-widget-ms-sum-best-date-wrapper {
@@ -1049,7 +1050,7 @@ em {
 .cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-sum-best-wrapper .cl-widget-ms-sum-best-last-label {
   float: left;
   width: 100%;
-  color: var(--lb3-miniscoreboard-vertical-first-to-rank-color);
+  color: #c7c7c7;
   font-size: 9px;
   text-transform: uppercase;
   text-align: center;
