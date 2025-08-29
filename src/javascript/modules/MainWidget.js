@@ -3537,8 +3537,18 @@ export const MainWidget = function (options) {
           reward = mission.dependencies[idx].achievement.reward
             ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
             : '';
+        } else {
+          const lastIdx = mission.dependencies.length - 1;
+          currentStage = mission.dependencies[lastIdx].ordering + 1;
+          progressId = mission.dependencies[lastIdx].achievement.entityId;
+          progressValue = mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete;
+          progressLabel = String(mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete) + '/100';
+          reward = mission.dependencies[lastIdx].achievement.reward
+            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[lastIdx].achievement.reward)
+            : '';
         }
       }
+
       stage = currentStage + '/' + (mission.dependencies.length + 1);
     }
 
@@ -3751,6 +3761,15 @@ export const MainWidget = function (options) {
           progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
           reward = mission.dependencies[idx].achievement.reward
             ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
+            : '';
+        } else {
+          const lastIdx = mission.dependencies.length - 1;
+          currentStage = mission.dependencies[lastIdx].ordering + 1;
+          progressId = mission.dependencies[lastIdx].achievement.entityId;
+          progressValue = mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete;
+          progressLabel = String(mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete) + '/100';
+          reward = mission.dependencies[lastIdx].achievement.reward
+            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[lastIdx].achievement.reward)
             : '';
         }
       }
