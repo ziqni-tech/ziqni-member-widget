@@ -2181,7 +2181,7 @@ export const MainWidget = function (options) {
     return listItem;
   };
 
-  this.missionItemUpdateProgression = (id, percentageComplete) => {
+  this.missionItemUpdateProgression = async (id, percentageComplete) => {
     const missionList = document.querySelector('.cl-main-widget-missions-list-body-res');
     if (!missionList) return;
 
@@ -2192,6 +2192,14 @@ export const MainWidget = function (options) {
     const barLabel = query(mission, '.cl-missions-list-details-progress-label');
     bar.style.width = ((percentageComplete > 1 || percentageComplete === 0) ? percentageComplete : 1) + '%';
     barLabel.innerHTML = percentageComplete + '/100';
+
+    if (percentageComplete === 100) {
+      setTimeout(async () => {
+        const missionData = await this.settings.lbWidget.getMissionListItemData(mission.dataset.id);
+        const missionItem = this.missionsItem(missionData);
+        mission.replaceWith(missionItem);
+      }, 1000);
+    }
   };
 
   this.missionDashboardItemUpdateProgression = (id, percentageComplete) => {
@@ -2205,6 +2213,14 @@ export const MainWidget = function (options) {
     const barLabel = query(mission, '.cl-missions-list-details-progress-label');
     bar.style.width = ((percentageComplete > 1 || percentageComplete === 0) ? percentageComplete : 1) + '%';
     barLabel.innerHTML = percentageComplete + '/100';
+
+    if (percentageComplete === 100) {
+      setTimeout(async () => {
+        const missionData = await this.settings.lbWidget.getMissionListItemData(mission.dataset.id);
+        const missionItem = this.dashboardMissionItem(missionData);
+        mission.replaceWith(missionItem);
+      }, 1000);
+    }
   };
 
   this.achievementItemUpdateProgression = function (id, percentageComplete) {
