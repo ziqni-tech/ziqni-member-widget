@@ -2152,7 +2152,7 @@ export const MainWidget = function (options) {
     }
 
     let bgImage = '';
-    if (ach.iconLink) {
+    if (ach.iconLink && ach.iconLink.split('_id')[1].length > 1) {
       bgImage = 'background-image: url(' + ach.iconLink + ')';
     }
 
