@@ -134,7 +134,8 @@ const instance = new MemberWidget({
   timeZone: 'Europe/London', // 'UTC' by default
   productIds: [], // ProductIds array; [] by default
   instantWins: {
-    enable:  false // This functionality is under development; the parameter is disabled by default
+    enable:  false, // false by default
+    showIWOnlyWithAvailPlays: true // true by default. Allows to display all instant wins, or only those in which the user has AvailablePlays.
   },
   layout: {
     logoUrl: '',
@@ -176,6 +177,8 @@ const instance = new MemberWidget({
   },
   leaderboard: {
     fullLeaderboardSize: 100,
+    topResultSize: 3, // 3 by default
+    defaultEmptyList: 20, // 20 by default
     miniScoreBoard: {
       rankingsCount: 2 // The number of positions that will be displayed before and after the current user in miniScoreBoard
     },

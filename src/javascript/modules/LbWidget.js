@@ -172,7 +172,8 @@ export const LbWidget = function (options) {
       totalCount: 0
     },
     instantWins: {
-      enable: false
+      enable: false,
+      showIWOnlyWithAvailPlays: true
     },
     tournaments: {
       showBannerTimer: true,
@@ -187,6 +188,8 @@ export const LbWidget = function (options) {
       finishedTotalCount: 0
     },
     leaderboard: {
+      topResultSize: 3,
+      defaultEmptyList: 20,
       fullLeaderboardSize: 100,
       refreshIntervalMillis: 1000000,
       refreshInterval: null,
@@ -1290,7 +1293,7 @@ export const LbWidget = function (options) {
         }],
         skip: (allPageNumber - 1) * 6,
         limit: 6,
-        constraints: []
+        constraints: [] // 'withoutMissions'
       }
     }, null);
 
@@ -1314,7 +1317,8 @@ export const LbWidget = function (options) {
           order: 'Desc'
         }],
         skip: (finishedPageNumber - 1) * 6,
-        limit: 6
+        limit: 6,
+        constraints: [] // 'withoutMissions'
       }
     }, null);
 
@@ -1338,7 +1342,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 6,
         limit: 6,
-        constraints: []
+        constraints: [] // 'withoutMissions'
       }
     }, null);
 
@@ -1362,7 +1366,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 6,
         limit: 6,
-        constraints: []
+        constraints: [] // 'withoutMissions'
       }
     }, null);
 
@@ -1386,7 +1390,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 6,
         limit: 6,
-        constraints: []
+        constraints: [] // 'withoutMissions'
       }
     }, null);
 
@@ -1683,13 +1687,15 @@ export const LbWidget = function (options) {
     // TODO: remove after InstantWinRequest update
     singleWheelsData = singleWheelsData.filter(s => s.statusCode === 25);
 
-    const ids = singleWheelsData.map(s => s.id);
-    let availablePlays = await this.getInstantWinsAvailablePlays(ids);
+    if (this.settings.instantWins.showIWOnlyWithAvailPlays) {
+      const ids = singleWheelsData.map(s => s.id);
+      let availablePlays = await this.getInstantWinsAvailablePlays(ids);
 
-    availablePlays = availablePlays.filter(a => a.remainingPlays > 0);
-    const availablePlayIds = availablePlays.map(a => a.instantWinId);
+      availablePlays = availablePlays.filter(a => a.remainingPlays > 0);
+      const availablePlayIds = availablePlays.map(a => a.instantWinId);
 
-    singleWheelsData = singleWheelsData.filter(s => availablePlayIds.includes(s.id));
+      singleWheelsData = singleWheelsData.filter(s => availablePlayIds.includes(s.id));
+    }
 
     if (typeof callback === 'function') {
       callback(singleWheelsData);
@@ -1735,32 +1741,48 @@ export const LbWidget = function (options) {
       this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
     }
 
+    // https://first-space.cdn.ziqni.com/system-resources/instant-wins/mUSsjJcB24Zl4KhqAbad
+
+    const filePath = `https://${this.settings.member.spaceName}.cdn.ziqni.com/system-resources/instant-wins/${fileName}`;
+
     return new Promise((resolve, reject) => {
-      const fileRequest = {
-        ids: [],
-        limit: 20,
-        skip: 0,
-        parentFolderPath: '/instant-wins',
-        repositoryId: '-7KLxoMBDhZrpIHgC4eP'
-      };
+      fetch(filePath)
+        .then((data) => {
+          return data.json();
+        })
+        .then((data) => {
+          resolve(data);
+        })
+        .catch((err) => {
+          console.log('instant win settings file err', err);
+          reject(err);
+        });
 
-      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, async (res) => {
-        const settingsFile = res.data.find(item => item.name.trim() === fileName);
-
-        if (settingsFile) {
-          fetch(settingsFile.uri)
-            .then((data) => {
-              return data.json();
-            })
-            .then((data) => {
-              resolve(data);
-            })
-            .catch((err) => {
-              console.log('instant win settings file err', err);
-              reject(err);
-            });
-        }
-      });
+      // const fileRequest = {
+      //   ids: [],
+      //   limit: 20,
+      //   skip: 0,
+      //   parentFolderPath: '/instant-wins',
+      //   repositoryId: '-7KLxoMBDhZrpIHgC4eP'
+      // };
+      //
+      // this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, async (res) => {
+      //   const settingsFile = res.data.find(item => item.name.trim() === fileName);
+      //
+      //   if (settingsFile) {
+      //     fetch(settingsFile.uri)
+      //       .then((data) => {
+      //         return data.json();
+      //       })
+      //       .then((data) => {
+      //         resolve(data);
+      //       })
+      //       .catch((err) => {
+      //         console.log('instant win settings file err', err);
+      //         reject(err);
+      //       });
+      //   }
+      // });
     });
   };
 
@@ -2445,7 +2467,8 @@ export const LbWidget = function (options) {
 
     const graphRequest = {
       ids: [id],
-      isDependantId: isDependantId
+      isDependantId: isDependantId,
+      includes: ['scheduling']
     };
 
     return new Promise((resolve, reject) => {
@@ -2862,7 +2885,8 @@ export const LbWidget = function (options) {
         'accountId',
         'groups',
         'created',
-        'tags'
+        'tags',
+        'spaceName'
       ],
       includeCustomFields: [],
       includeMetaDataFields: []

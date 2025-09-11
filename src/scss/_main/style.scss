@@ -1573,6 +1573,7 @@ em {
   font-weight: 700;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-instant-wins-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-missions-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-tournaments-title,
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-dashboard-body .cl-main-widget-dashboard-achievements-title {
@@ -3128,34 +3129,39 @@ em {
   line-height: 18px;
   padding: 0;
   min-height: 20px;
-  transform: translate(23px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-1 .cl-rank-col-value {
   background-image: url(../../images/gold.svg);
+  background-position: 2px 3px;
   background-repeat: no-repeat;
   height: 26px;
   width: 33px;
   font-size: 13px;
   line-height: 24px;
+  transform: translate(23px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-2 .cl-rank-col-value {
   background-image: url(../../images/silver.svg);
+  background-position: 2px 3px;
   background-repeat: no-repeat;
   height: 26px;
   width: 33px;
   font-size: 13px;
   line-height: 24px;
+  transform: translate(23px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-lb-rank-3 .cl-rank-col-value {
   background-image: url(../../images/bronze.svg);
+  background-position: 2px 3px;
   background-repeat: no-repeat;
   height: 26px;
   width: 33px;
   font-size: 13px;
   line-height: 24px;
+  transform: translate(23px, 0);
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-icon-col {
@@ -4613,7 +4619,7 @@ em {
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-item {
   display: flex;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   max-width: 228px;
   background: #141E28;
@@ -4760,7 +4766,8 @@ em {
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .instantWins .cl-accordion-list {
-  justify-content: space-around;
+  justify-content: flex-start;
+  gap: 30px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .wheel-item,
@@ -5822,7 +5829,7 @@ em {
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-accordion-list {
   display: flex;
   flex-wrap: wrap;
-  justify-content: center;
+  justify-content: flex-start;
   width: 100%;
   padding: 0 0 0 40px;
 }
@@ -7471,6 +7478,7 @@ em {
       }
       .cl-main-widget-dashboard-body {
         height: calc(100% - 56px);
+        .cl-main-widget-dashboard-awards-title,
         .cl-main-widget-dashboard-instant-wins-title,
         .cl-main-widget-dashboard-achievements-title,
         .cl-main-widget-dashboard-tournaments-title {
@@ -7918,7 +7926,7 @@ em {
       }
       .cl-main-widget-tournaments-list-body-res .cl-main-accordion-container .cl-main-accordion-container-menu-item {
         padding: 6px 6px;
-        width: 100%;
+        width: 33%;
         text-align: center;
       }
 
@@ -7950,6 +7958,7 @@ em {
       }
       .cl-main-widget-lb-details {
         margin-right: 0;
+        margin-bottom: 10px;
         height: 120px;
       }
       .cl-main-widget-lb-leaderboard {
@@ -8095,7 +8104,7 @@ em {
           }
         }
         .cl-accordion.cl-shown {
-          height: calc(100% - 25px);
+          height: calc(100% - 46px);
         }
       }
       .cl-main-widget-tournaments-list.cl-show {
@@ -8209,7 +8218,7 @@ em {
           padding: 0;
           .cl-accordion-list {
             padding: 0;
-            justify-content: space-around;
+            justify-content: flex-start;
           }
           .cl-rew-list-item {
             max-width: 144px;
@@ -8633,11 +8642,15 @@ em {
           display: block;
         }
 
+        .cl-main-widget-dashboard-awards-title,
         .cl-main-widget-dashboard-missions-title,
         .cl-main-widget-dashboard-tournaments-title,
         .cl-main-widget-dashboard-achievements-title,
         .cl-main-widget-dashboard-instant-wins-title {
           font-size: 14px;
+        }
+        .cl-main-widget-dashboard-instant-wins-title {
+          padding-top: 20px;
         }
         .cl-main-widget-dashboard-achievements-title {
           padding-top: 20px;
@@ -8786,7 +8799,13 @@ em {
         padding: 0 12px;
         .cl-rank-col {
           max-width: 100px;
-          transform: translate(24px, 0) !important;
+          transform: translate(14px, 0) !important;
+
+          &.cl-rank-1,
+          &.cl-rank-2,
+          &.cl-rank-3 {
+            transform: translate(14px, 0);
+          }
         }
         .cl-name-col {
           max-width: 124px;
@@ -8801,16 +8820,26 @@ em {
           transform: translate(28px, 0) !important;
         }
       }
-      .cl-main-widget-lb-leaderboard-header-top-res {
-        .cl-rank-col-value {
-          transform: translate(14px, 0);
-        }
-      }
+      //.cl-main-widget-lb-leaderboard-header-top-res {
+      //  .cl-rank-col-value {
+      //    transform: translate(14px, 0);
+      //  }
+      //}
       .cl-main-widget-lb-leaderboard-res-container {
         .cl-rank-col {
           max-width: 60px;
           width: 100%;
           flex-shrink: 0;
+
+          &.cl-rank-1,
+          &.cl-rank-2,
+          &.cl-rank-3 {
+            transform: translate(14px, 0);
+
+            .cl-rank-col-value {
+              transform: unset;
+            }
+          }
         }
         .cl-name-col {
           max-width: 100px;

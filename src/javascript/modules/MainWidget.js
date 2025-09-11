@@ -65,8 +65,6 @@ export const MainWidget = function (options) {
       mapContainer: null
     },
     leaderboard: {
-      defaultEmptyList: 20,
-      topResultSize: 3,
       header: null,
       container: null,
       resultContainer: null,
@@ -839,7 +837,7 @@ export const MainWidget = function (options) {
     const topResults = [];
     const remainingResults = [];
 
-    for (let i = 0; i < this.settings.leaderboard.topResultSize; i++) {
+    for (let i = 0; i < this.settings.lbWidget.settings.leaderboard.topResultSize; i++) {
       const rank = i + 1;
 
       topResults.push({
@@ -852,12 +850,12 @@ export const MainWidget = function (options) {
     }
 
     const emptyListLength = (
-      this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize < this.settings.leaderboard.defaultEmptyList
+      this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize < this.settings.lbWidget.settings.leaderboard.defaultEmptyList
     )
       ? this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize + 1
-      : this.settings.leaderboard.defaultEmptyList;
+      : this.settings.lbWidget.settings.leaderboard.defaultEmptyList;
 
-    for (let s = this.settings.leaderboard.topResultSize; s < emptyListLength; s++) {
+    for (let s = this.settings.lbWidget.settings.leaderboard.topResultSize; s < emptyListLength; s++) {
       const rank = s + 1;
 
       remainingResults.push({
@@ -1098,7 +1096,7 @@ export const MainWidget = function (options) {
     _this.populateLeaderboardResultsWithDefaultEntries();
 
     mapObject(_this.settings.lbWidget.settings.leaderboard.leaderboardData, function (lb) {
-      if (lb.rank > 0 && lb.rank <= _this.settings.leaderboard.topResultSize) {
+      if (lb.rank > 0 && lb.rank <= _this.settings.lbWidget.settings.leaderboard.topResultSize) {
         topResults.push(lb);
       } else {
         remainingResults.push(lb);
@@ -2947,6 +2945,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadMissionMap = (mission, callback) => {
+    console.log('mission:', mission);
     this.settings.missions.mission = mission;
     const _this = this;
     const backBtn = document.querySelector('.cl-main-widget-mission-header-back-icon');
@@ -2955,9 +2954,9 @@ export const MainWidget = function (options) {
 
     _this.settings.missions.mapContainer.style.display = 'block';
 
-    setTimeout(function () {
+    setTimeout(async function () {
       addClass(_this.settings.missions.mapContainer, 'cl-show');
-      _this.loadMissionMapGraph();
+      await _this.loadMissionMapGraph();
       if (typeof callback === 'function') callback();
     }, 50);
   };
@@ -4240,7 +4239,18 @@ export const MainWidget = function (options) {
 
     this.settings.lbWidget.settings.missions.missions.forEach(mission => {
       if (mission.scheduling.endDate) {
-        const diff = moment(mission.scheduling.endDate).diff(moment());
+        let endDate = mission.scheduling.endDate;
+
+        if (mission.optInStatus.percentageComplete === 100) {
+          const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
+          if (idx !== -1) {
+            if (mission.dependencies[idx].achievement.includes.scheduling.endDate) {
+              endDate = mission.dependencies[idx].achievement.includes.scheduling.endDate;
+            }
+          }
+        }
+
+        const diff = moment(endDate).diff(moment());
         const date = _this.settings.lbWidget.formatMissionDateTime(moment.duration(diff));
         const el = document.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
         if (!el) return;
