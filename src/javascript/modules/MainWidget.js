@@ -4256,7 +4256,13 @@ export const MainWidget = function (options) {
         if (!el) return;
         const dateEl = el.querySelector('.cl-missions-list-details-date');
         if (!dateEl) return;
+        dateEl.style.display = 'flex';
         dateEl.innerHTML = date;
+      } else {
+        const el = document.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
+        const dateEl = el.querySelector('.cl-missions-list-details-date');
+        if (!dateEl) return;
+        dateEl.style.display = 'none';
       }
     });
 
