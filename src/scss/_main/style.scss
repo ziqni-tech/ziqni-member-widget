@@ -5882,6 +5882,7 @@ em {
   background-color: #223241;
   background-position: 50% 50%;
   margin-left: 24px;
+  flex-shrink: 0;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-label {
@@ -5898,6 +5899,16 @@ em {
   color: var(--primary-font-color);
   max-width: 260px;
   width: 100%;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-prize {
+  color: var(--primary-font-color);
+  max-width: 200px;
+  width: 100%;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding-right: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-tournaments-list .cl-tour-list-details-description {
