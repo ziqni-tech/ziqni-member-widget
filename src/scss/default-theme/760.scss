@@ -1,0 +1,27 @@
+@media screen and (max-width: 760px) {
+  .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-accordion-container .cl-main-accordion-container-menu {
+    min-height: 32px;
+    height: auto;
+    flex-wrap: wrap;
+    justify-content: center;
+    flex-shrink: 0;
+  }
+
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-reward-list {
+        .cl-main-widget-reward-list-body-res {
+          .play-single-wheel {
+            .play-single-wheel-body {
+              aspect-ratio: 1 / 1;
+              width: 100%;
+              height: auto;
+              max-width: 300px;
+              flex-shrink: 1;
+            }
+          }
+        }
+      }
+    }
+  }
+}

@@ -1,0 +1,54 @@
+@media screen and (max-width: 1005px) {
+  .cl-main-widget-wrapper {
+    .cl-main-widget-section-container {
+      .cl-main-widget-dashboard-body {
+        padding: 0 20px 0 23px;
+      }
+      .cl-main-widget-dashboard-instant-wins-wrapp {
+        justify-content: space-around;
+        .cl-main-widget-dashboard-instant-wins-wheel,
+        .cl-main-widget-dashboard-instant-wins-cards {
+          width: 280px;
+        }
+
+        .cl-main-widget-dashboard-instant-wins-cards-image,
+        .cl-main-widget-dashboard-instant-wins-wheel-image {
+          width: 122px;
+        }
+      }
+
+      .cl-main-widget-dashboard-achievements-list {
+        justify-content: space-around;
+        .cl-ach-list-item {
+          width: 280px;
+        }
+        .cl-ach-list-details-label {
+          max-width: 150px;
+        }
+      }
+
+      .cl-main-widget-dashboard-tournaments-list {
+        justify-content: space-around;
+        .dashboard-tournament-item {
+          width: 280px;
+        }
+      }
+
+      .cl-main-widget-ach-list {
+        padding-right: 27px;
+        padding-left: 20px;
+      }
+      .cl-main-widget-ach-list-body-res {
+        justify-content: space-around;
+      }
+      .cl-main-widget-section-ach {
+        .cl-ach-list-item {
+          width: 280px;
+        }
+        .cl-ach-list-details-label {
+          max-width: 150px;
+        }
+      }
+    }
+  }
+}

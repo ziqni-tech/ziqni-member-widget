@@ -1,0 +1,142 @@
+@media (orientation: landscape) and (max-height: 460px) and (min-width: 600px) {
+  .cl-main-widget-wrapper {
+    padding: 10px 20px 10px;
+    .cl-main-widget-section-container {
+      .cl-main-widget-reward-list {
+        .cl-main-widget-reward-list-body-res {
+          .instantWins {
+            .play-single-wheel {
+              flex-direction: row;
+
+              .play-single-wheel-btn {
+                display: none;
+              }
+
+              .play-single-wheel-header {
+                width: 50%;
+                padding: 0 20px;
+              }
+
+              .play-single-wheel-body {
+                aspect-ratio: 1 / 1;
+                max-width: 50%;
+                height: 100%;
+              }
+            }
+          }
+        }
+      }
+
+      .cl-main-widget-navigation-darkMode-toggle {
+        display: none;
+      }
+      .cl-mobile-theme-switcher {
+        display: block;
+        width: 24px;
+        height: 24px;
+        position: absolute;
+        top: 10px;
+        right: 18px;
+        background: url(../../images/theme-switcher.svg) no-repeat center;
+        background-size: cover;
+        z-index: 10;
+      }
+      .cl-main-widget-dashboard-header {
+        .cl-main-widget-dashboard-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-lb-header {
+        .cl-main-widget-lb-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-ach-header {
+        .cl-main-widget-ach-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-reward-header {
+        .cl-main-widget-reward-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-inbox-header {
+        .cl-main-widget-inbox-header-close {
+          display: none;
+        }
+      }
+      .cl-main-widget-missions-header {
+        .cl-main-widget-missions-header-close {
+          display: none;
+        }
+      }
+    }
+
+    .cl-main-widget-ach-list-body-res {
+      .paginator {
+        margin-right: 32px;
+      }
+    }
+
+    .cl-landscape-close {
+      position: absolute;
+      display: block;
+      background-image: url(../../images/close-icon.svg);
+      background-repeat: no-repeat;
+      background-position: 50% 50%;
+      background-size: 100%;
+      width: 50px;
+      height: 50px;
+      right: -8px;
+      bottom: -8px;
+      cursor: pointer;
+      z-index: 10;
+    }
+    .cl-main-widget-navigation-container {
+      width: 120px;
+      padding-top: 10px;
+      padding-bottom: 10px;
+
+      .cl-main-widget-navigation-darkMode-toggle {
+        display: none;
+      }
+
+      .cl-main-navigation-item-title {
+        display: none;
+      }
+
+      .cl-main-widget-navigation-logo {
+        display: none;
+      }
+
+      .cl-main-widget-navigation-missions-icon,
+      .cl-main-widget-navigation-inbox-icon,
+      .cl-main-widget-navigation-rewards-icon,
+      .cl-main-widget-navigation-ach-icon,
+      .cl-main-widget-navigation-lb-icon,
+      .cl-main-widget-navigation-dashboard-icon {
+        height: 24px;
+        width: 24px;
+      }
+
+      .cl-main-widget-navigation-items {
+        padding: 0;
+        justify-content: space-between;
+        display: flex;
+        flex-direction: column;
+
+        .cl-main-widget-navigation-item {
+          width: 70px;
+          min-height: 36px;
+          margin-bottom: 0;
+        }
+      }
+    }
+  }
+  .cl-main-widget-wrapper.lightTheme {
+    .cl-landscape-close {
+      background-image: url(../../images/close-icon-light.svg);
+    }
+  }
+}

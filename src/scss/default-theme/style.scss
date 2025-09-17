@@ -1,6 +1,13 @@
 @import "./default-refresh-config";
 @import "../_main/style";
 @import "./lightTheme";
+@import "./1005";
+@import "./600-h-landscape";
+@import "./600";
+@import "./768-landscape";
+@import "./425";
+@import "./760";
+@import "./375";
 
 .cl-main-widget-wrapper {
   a {
@@ -88,13 +95,6 @@
       }
     }
   }
-  //.cl-main-widget-ach-details-container,
-  //.cl-main-widget-reward-details-container,
-  //.cl-main-widget-inbox-details-container {
-  //  @media (max-width: 812px) {
-  //    top: 42px;
-  //  }
-  //}
 }
 
 .cl-main-widget-wrapper .cl-main-section-image-banner-active .cl-main-widget-lb-details-image-container {
