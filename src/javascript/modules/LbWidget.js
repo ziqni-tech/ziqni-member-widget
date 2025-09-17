@@ -4328,13 +4328,16 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-mobile-theme-switcher')) {
       const mainContainer = document.querySelector('.cl-main-widget-wrapper');
       const msContainer = document.querySelector('.cl-widget-ms-wrapper');
+      const notifContainer = document.querySelector('.cl-widget-notif-wrapper');
       if (mainContainer.classList.contains('lightTheme')) {
         mainContainer.classList.remove('lightTheme');
         msContainer.classList.remove('lightTheme');
+        if (notifContainer) notifContainer.classList.remove('lightTheme');
         localStorage.setItem('zqTheme', 'dark');
       } else {
         mainContainer.classList.add('lightTheme');
         msContainer.classList.add('lightTheme');
+        if (notifContainer) notifContainer.classList.add('lightTheme');
         localStorage.setItem('zqTheme', 'light');
       }
     }
@@ -4614,8 +4617,11 @@ export const LbWidget = function (options) {
           const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
           if (json.typeOffChange === 1) {
             if (_this.settings.navigation.inbox.enable) {
-              const messagesIcon = document.querySelector('.cl-main-widget-navigation-inbox-icon').parentElement;
-              messagesIcon.classList.remove('hidden');
+              const messagesEl = document.querySelector('.cl-main-widget-navigation-inbox-icon');
+              if (messagesEl) {
+                const messagesIcon = messagesEl.parentElement;
+                messagesIcon.classList.remove('hidden');
+              }
             }
 
             if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
