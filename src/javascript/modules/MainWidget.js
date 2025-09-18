@@ -3468,6 +3468,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadDashboardMissions = async () => {
+    const _this = this;
     const missionsList = query(this.settings.section, '.cl-main-widget-dashboard-missions-list');
     const missionsWrapp = query(this.settings.section, '.cl-main-widget-dashboard-missions');
 
@@ -3485,6 +3486,10 @@ export const MainWidget = function (options) {
     } else {
       missionsWrapp.classList.add('hidden');
     }
+
+    setTimeout(function () {
+      _this.updateMissionsTime();
+    }, 1000);
   };
 
   this.dashboardMissionItem = (mission) => {
@@ -4252,17 +4257,31 @@ export const MainWidget = function (options) {
 
         const diff = moment(endDate).diff(moment());
         const date = _this.settings.lbWidget.formatMissionDateTime(moment.duration(diff));
-        const el = document.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
-        if (!el) return;
-        const dateEl = el.querySelector('.cl-missions-list-details-date');
-        if (!dateEl) return;
-        dateEl.style.display = 'flex';
-        dateEl.innerHTML = date;
+
+        const missionSection = document.querySelector('.cl-main-widget-section-missions');
+        const dashboardSection = document.querySelector('.cl-main-widget-section-dashboard');
+
+        let el = null;
+
+        if (missionSection.classList.contains('cl-main-active-section')) {
+          el = missionSection.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
+        } else {
+          el = dashboardSection.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
+        }
+
+        if (el) {
+          const dateEl = el.querySelector('.cl-missions-list-details-date');
+          if (!dateEl) return;
+          dateEl.style.display = 'flex';
+          dateEl.innerHTML = date;
+        }
       } else {
         const el = document.querySelector(`.cl-missions-list-item[data-id="${mission.id}"]`);
-        const dateEl = el.querySelector('.cl-missions-list-details-date');
-        if (!dateEl) return;
-        dateEl.style.display = 'none';
+        if (el) {
+          const dateEl = el.querySelector('.cl-missions-list-details-date');
+          if (!dateEl) return;
+          dateEl.style.display = 'none';
+        }
       }
     });
 

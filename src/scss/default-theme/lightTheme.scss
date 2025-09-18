@@ -870,6 +870,18 @@
         .cl-inbox-list-details-date {
           color: #141E28;
         }
+
+        .read {
+          .cl-inbox-list-details-date {
+            color: rgba(20, 30, 40, .4);
+          }
+          .cl-inbox-list-details-description {
+            color: rgba(20, 30, 40, .4);
+          }
+          .cl-inbox-list-details-label {
+            color: rgba(20, 30, 40, .4);
+          }
+        }
       }
 
       .cl-main-widget-inbox-list-delete-selected {
