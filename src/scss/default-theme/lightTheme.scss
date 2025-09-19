@@ -282,6 +282,19 @@
       }
     }
     .cl-main-widget-section-ach {
+      .cl-main-accordion-container {
+        .cl-shown {
+          .cl-accordion-list-container {
+            &::-webkit-scrollbar {
+              background: #DCE6EF;
+            }
+            &::-webkit-scrollbar-thumb {
+              background: #96B5CF;
+            }
+          }
+        }
+      }
+
       .cl-ach-list-item {
         background: #DCE6EF;
       }

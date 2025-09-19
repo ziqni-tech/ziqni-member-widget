@@ -329,6 +329,12 @@
         padding: 0;
         .cl-main-widget-ach-list-body-res {
           justify-content: center;
+
+          .cl-main-accordion-container {
+            .cl-main-accordion-container-menu-item {
+              padding: 6px 12px;
+            }
+          }
         }
       }
       .cl-main-widget-inbox-list-body::-webkit-scrollbar {
@@ -348,7 +354,13 @@
         background: #304F69;
       }
       .cl-main-widget-ach-list-body {
-        padding: 0 8px 0 0;
+        padding: 0;
+
+        .cl-main-widget-ach-list-body-res {
+          .cl-accordion-list {
+            padding-right: 6px;
+          }
+        }
       }
       .cl-main-widget-section-ach {
         .cl-ach-list-icon {
