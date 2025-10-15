@@ -1293,7 +1293,7 @@ export const LbWidget = function (options) {
         }],
         skip: (allPageNumber - 1) * 6,
         limit: 6,
-        constraints: [] // 'withoutMissions'
+        constraints: ['withoutMissions']
       }
     }, null);
 
@@ -1318,7 +1318,7 @@ export const LbWidget = function (options) {
         }],
         skip: (finishedPageNumber - 1) * 6,
         limit: 6,
-        constraints: [] // 'withoutMissions'
+        constraints: ['withoutMissions']
       }
     }, null);
 
@@ -1342,7 +1342,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 6,
         limit: 6,
-        constraints: [] // 'withoutMissions'
+        constraints: ['withoutMissions']
       }
     }, null);
 
@@ -1366,7 +1366,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 6,
         limit: 6,
-        constraints: [] // 'withoutMissions'
+        constraints: ['withoutMissions']
       }
     }, null);
 
@@ -1390,7 +1390,7 @@ export const LbWidget = function (options) {
         }],
         skip: (pageNumber - 1) * 6,
         limit: 6,
-        constraints: [] // 'withoutMissions'
+        constraints: ['withoutMissions']
       }
     }, null);
 
