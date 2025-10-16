@@ -179,6 +179,7 @@ export const LbWidget = function (options) {
       showBannerTimer: true,
       showDashboardTime: true,
       showTournamentsMenuPrizeColumn: true,
+      showTotalPrize: false,
       activeCompetitionId: null,
       readyCompetitions: [],
       activeCompetitions: [],

@@ -329,7 +329,7 @@ export const MainWidget = function (options) {
 
       headerLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
       headerDate.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.date;
-      headerPrize.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel;
+      headerPrize.innerHTML = _this.settings.lbWidget.settings.tournaments.showTotalPrize ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel : _this.settings.lbWidget.settings.translation.leaderboard.prize;
 
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
@@ -3323,32 +3323,61 @@ export const MainWidget = function (options) {
     };
 
     if (tournament.contests && tournament.contests.length) {
-      if (tournament.contests[0].rewards && tournament.contests[0].rewards.length) {
-        totalReward.rewardType = tournament.contests[0].rewards[0].rewardType;
-      }
-
-      tournament.contests.forEach(contest => {
-        contest.rewards.forEach(reward => {
-          if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-            const rewardRankArr = reward.rewardRank.split(',');
-            rewardRankArr.forEach(r => {
-              const idx = r.indexOf('-');
-              if (idx !== -1) {
-                const start = parseInt(r);
-                const end = parseInt(r.substring(idx + 1));
-                totalReward.rewardValue += reward.rewardValue * (end - start + 1);
-              } else if (parseInt(r) === 1) {
-                totalReward.rewardValue += reward.rewardValue;
-              }
-            });
-          } else if (parseInt(reward.rewardRank) === 1) {
-            totalReward.rewardValue += reward.rewardValue;
-          }
+      if (this.settings.lbWidget.settings.tournaments.showTotalPrize) {
+        if (tournament.contests[0].rewards && tournament.contests[0].rewards.length) {
+          totalReward.rewardType = tournament.contests[0].rewards[0].rewardType;
+        }
+        tournament.contests.forEach(contest => {
+          contest.rewards.forEach(reward => {
+            if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+              const rewardRankArr = reward.rewardRank.split(',');
+              rewardRankArr.forEach(r => {
+                const idx = r.indexOf('-');
+                if (idx !== -1) {
+                  const start = parseInt(r);
+                  const end = parseInt(r.substring(idx + 1));
+                  totalReward.rewardValue += reward.rewardValue * (end - start + 1);
+                } else if (parseInt(r) === 1) {
+                  totalReward.rewardValue += reward.rewardValue;
+                }
+              });
+            } else if (parseInt(reward.rewardRank) === 1) {
+              totalReward.rewardValue += reward.rewardValue;
+            }
+          });
         });
-      });
 
-      if (totalReward.rewardValue) {
-        rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(totalReward);
+        if (totalReward.rewardValue) {
+          rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(totalReward);
+        }
+      } else {
+        const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
+
+        if (roundFirstIdx !== -1) {
+          const roundFirst = tournament.contests[roundFirstIdx];
+          roundFirst.rewards.forEach(reward => {
+            if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
+              const rewardRankArr = reward.rewardRank.split(',');
+              rewardRankArr.forEach(r => {
+                const idx = r.indexOf('-');
+                if (idx !== -1) {
+                  const start = parseInt(r);
+                  if (start === 1) {
+                    rewardValue = reward;
+                  }
+                } else if (parseInt(r) === 1) {
+                  rewardValue = reward;
+                }
+              });
+            } else if (parseInt(reward.rewardRank) === 1) {
+              rewardValue = reward;
+            }
+          });
+
+          if (rewardValue) {
+            rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rewardValue);
+          }
+        }
       }
     }
 
@@ -3383,7 +3412,9 @@ export const MainWidget = function (options) {
       itemBg: itemBg,
       endsLabel: endsLabel,
       endsValue: date.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' }),
-      prizeLabel: this.settings.lbWidget.settings.translation.dashboard.prizeTitle,
+      prizeLabel: this.settings.lbWidget.settings.tournaments.showTotalPrize
+        ? this.settings.lbWidget.settings.translation.dashboard.totalPrizeTitle
+        : this.settings.lbWidget.settings.translation.dashboard.prizeTitle,
       prizeValue: rewardValue,
       seeMoreLabel: this.settings.lbWidget.settings.translation.dashboard.tournamentBtn,
       showDashboardTime: this.settings.lbWidget.settings.tournaments.showDashboardTime
