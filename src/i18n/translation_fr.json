@@ -36,7 +36,9 @@
         "finished": "Terminé",
         "registered": "Inscrit",
         "noAvailableCompetitions": "Aucun concours disponible",
-        "date": "Date"
+        "date": "Date",
+        "goToLbLabel": "Accéder au classement",
+        "totalPrizeLabel": "Cagnotte"
     },
     "leaderboard": {
         "rank": "Rang",

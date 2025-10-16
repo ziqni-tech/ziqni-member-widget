@@ -44,7 +44,8 @@
         "registered": "Registered",
         "noAvailableCompetitions": "No available competition",
         "date": "Date",
-        "goToLbLabel": "Go to leaderboard"
+        "goToLbLabel": "Go to leaderboard",
+        "totalPrizeLabel": "Prize pool"
     },
     "leaderboard": {
         "rank": "Rank",
@@ -101,7 +102,7 @@
         "tournamentBtn": "See more",
         "endsTitle": "Ends",
         "startsTitle": "Starts",
-        "prizeTitle": "Prize",
+        "prizeTitle": "Prize pool",
         "singleWheelTitle": "The Single Wheel",
         "singleWheelButton": "Play",
         "scratchcardsTitle": "Scratchcards",

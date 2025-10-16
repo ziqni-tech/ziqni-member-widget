@@ -329,7 +329,7 @@ export const MainWidget = function (options) {
 
       headerLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
       headerDate.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.date;
-      headerPrize.innerHTML = _this.settings.lbWidget.settings.translation.leaderboard.prize;
+      headerPrize.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel;
 
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
@@ -3313,42 +3313,52 @@ export const MainWidget = function (options) {
     confirm.addEventListener('click', leaveAchievement);
   };
 
-  this.dashboardTournamentItem = function (tournament, isReadyStatus = false) {
-    const listItem = document.createElement('div');
-    listItem.setAttribute('class', 'dashboard-tournament-item');
-    listItem.setAttribute('data-id', tournament.id);
-
+  this.getTournamentTotalPrizePool = (tournament) => {
     let rewardValue = '';
+    const totalReward = {
+      rewardValue: 0,
+      rewardType: {}
+    };
 
     if (tournament.contests && tournament.contests.length) {
-      const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
+      if (tournament.contests[0].rewards && tournament.contests[0].rewards.length) {
+        totalReward.rewardType = tournament.contests[0].rewards[0].rewardType;
+      }
 
-      if (roundFirstIdx !== -1) {
-        const roundFirst = tournament.contests[roundFirstIdx];
-        roundFirst.rewards.forEach(reward => {
+      tournament.contests.forEach(contest => {
+        contest.rewards.forEach(reward => {
           if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
             const rewardRankArr = reward.rewardRank.split(',');
             rewardRankArr.forEach(r => {
               const idx = r.indexOf('-');
               if (idx !== -1) {
                 const start = parseInt(r);
-                if (start === 1) {
-                  rewardValue = reward;
-                }
+                const end = parseInt(r.substring(idx + 1));
+                totalReward.rewardValue += reward.rewardValue * (end - start + 1);
               } else if (parseInt(r) === 1) {
-                rewardValue = reward;
+                totalReward.rewardValue += reward.rewardValue;
               }
             });
           } else if (parseInt(reward.rewardRank) === 1) {
-            rewardValue = reward;
+            totalReward.rewardValue += reward.rewardValue;
           }
         });
+      });
 
-        if (rewardValue) {
-          rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rewardValue);
-        }
+      if (totalReward.rewardValue) {
+        rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(totalReward);
       }
     }
+
+    return rewardValue;
+  };
+
+  this.dashboardTournamentItem = function (tournament, isReadyStatus = false) {
+    const listItem = document.createElement('div');
+    listItem.setAttribute('class', 'dashboard-tournament-item');
+    listItem.setAttribute('data-id', tournament.id);
+
+    const rewardValue = this.getTournamentTotalPrizePool(tournament);
 
     let itemBg = '';
     if (tournament.bannerLowResolutionLink) {
@@ -3825,10 +3835,11 @@ export const MainWidget = function (options) {
     period.innerHTML = startDate + ' - ' + endDate;
 
     if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.contests && tournament.contests.length) {
-      const firsReward = this.getTournamentReward(tournament, 1);
+      const totalPrize = this.getTournamentTotalPrizePool(tournament);
+      // const firsReward = this.getTournamentReward(tournament, 1);
 
-      if (firsReward) {
-        prize.innerHTML = firsReward;
+      if (totalPrize) {
+        prize.innerHTML = totalPrize;
       }
     }
 

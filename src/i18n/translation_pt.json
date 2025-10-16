@@ -36,7 +36,9 @@
         "registered": "Registado",
         "noAvailableCompetitions": "Sem competição disponível",
         "processing": "Em processamento...",
-        "date": "Data"
+        "date": "Data",
+        "goToLbLabel": "Classificação",
+        "totalPrizeLabel": "Prêmio total"
     },
     "leaderboard": {
         "rank": "Classificação",
@@ -91,7 +93,7 @@
         "tournamentBtn": "Ver mais",
         "endsTitle": "Termina",
         "startsTitle": "Começa",
-        "prizeTitle": "Prêmio",
+        "prizeTitle": "Prêmio total",
         "singleWheelTitle": "A Roda Única",
         "singleWheelButton": "Jogar",
         "scratchcardsTitle": "Raspadinhas",
