@@ -148,6 +148,7 @@ const instance = new MemberWidget({
     showTournamentsMenuPrizeColumn: false, // Hides the Prize column in the tournament select menu; true by default
     showBannerTimer: true, // true by default
     showDashboardTime: true, // true by default
+    showTotalPrize: false, // false by default
     activeCompetitionId: '<id>' // null by default
   },
   historicalData: {
