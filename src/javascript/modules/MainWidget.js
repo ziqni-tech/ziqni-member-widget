@@ -2725,7 +2725,10 @@ export const MainWidget = function (options) {
     const rewards = await this.settings.lbWidget.getRewardsApi(rewardRequest);
     stageData.reward = rewards.data && rewards.data.length ? rewards.data[0] : '';
 
-    if (mission.data.iconLink) {
+    if (stageData.includes.iconLink) {
+      icon.setAttribute('style', `background-image: url(${stageData.includes.iconLink})`);
+      icon.classList.add('full-bg');
+    } else if (mission.data.iconLink) {
       icon.setAttribute('style', `background-image: url(${mission.data.iconLink})`);
       icon.classList.add('full-bg');
     }
@@ -2945,7 +2948,6 @@ export const MainWidget = function (options) {
   };
 
   this.loadMissionMap = (mission, callback) => {
-    console.log('mission:', mission);
     this.settings.missions.mission = mission;
     const _this = this;
     const backBtn = document.querySelector('.cl-main-widget-mission-header-back-icon');
