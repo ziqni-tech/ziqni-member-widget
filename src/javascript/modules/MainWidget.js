@@ -2790,6 +2790,7 @@ export const MainWidget = function (options) {
   };
 
   this.loadMissionDetailsCyGraph = function () {
+    const _this = this;
     const container = document.getElementById('cy');
     const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
     const isLightTheme = mainWrapper.classList.contains('lightTheme');
@@ -2943,7 +2944,7 @@ export const MainWidget = function (options) {
 
     cy.on('tap', 'node', function (evt) {
       const node = evt.target;
-      console.log('id: ' + node.id());
+      _this.loadMissionDetails(_this.settings.missions.mission, null, node.id());
     });
   };
 
