@@ -3193,19 +3193,21 @@ export const MainWidget = function (options) {
 
   this.hideMissionDetails = function (callback, isBack = false) {
     const _this = this;
+    const preLoader = _this.preloader();
 
     const cyContainer = document.getElementById('cy');
     cyContainer.style.display = 'none';
     cyContainer.innerHTML = '';
 
-    removeClass(_this.settings.missions.detailsContainer, 'cl-show');
-    setTimeout(function () {
-      _this.settings.missions.detailsContainer.style.display = 'none';
-
-      if (isBack && _this.settings?.missions?.mission) _this.loadMissionMap(_this.settings.missions.mission, null);
-
-      if (typeof callback === 'function') callback();
-    }, 200);
+    preLoader.show(async function () {
+      setTimeout(function () {
+        removeClass(_this.settings.missions.detailsContainer, 'cl-show');
+        _this.settings.missions.detailsContainer.style.display = 'none';
+        if (isBack && _this.settings?.missions?.mission) _this.loadMissionMap(_this.settings.missions.mission, null);
+        if (typeof callback === 'function') callback();
+        preLoader.hide();
+      }, 200);
+    });
   };
 
   this.updateAchievementProgressionAndIssued = function (issued, progression) {
