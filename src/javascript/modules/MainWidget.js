@@ -2725,12 +2725,13 @@ export const MainWidget = function (options) {
     const rewards = await this.settings.lbWidget.getRewardsApi(rewardRequest);
     stageData.reward = rewards.data && rewards.data.length ? rewards.data[0] : '';
 
+    icon.removeAttribute('style');
+    icon.classList.add('full-bg');
+
     if (stageData.includes.iconLink) {
       icon.setAttribute('style', `background-image: url(${stageData.includes.iconLink})`);
-      icon.classList.add('full-bg');
     } else if (mission.data.iconLink) {
       icon.setAttribute('style', `background-image: url(${mission.data.iconLink})`);
-      icon.classList.add('full-bg');
     }
 
     if (stageData.reward && stageData.reward.rewardValue) {
