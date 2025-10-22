@@ -2757,8 +2757,8 @@ export const MainWidget = function (options) {
     body.innerHTML = description;
     tc.innerHTML = tAndC;
 
-    _this.settings.missions.detailsContainer.style.display = 'block';
     setTimeout(function () {
+      _this.settings.missions.detailsContainer.style.display = 'block';
       addClass(_this.settings.missions.detailsContainer, 'cl-show');
       _this.hideMissionMap();
 
