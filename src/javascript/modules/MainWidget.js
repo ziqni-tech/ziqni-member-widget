@@ -2795,6 +2795,8 @@ export const MainWidget = function (options) {
     const container = document.getElementById('cy');
     const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
     const isLightTheme = mainWrapper.classList.contains('lightTheme');
+    const isMobile = window.screen.availWidth < 768;
+    const graphDir = isMobile ? 'TB' : 'LR';
 
     const nodeColor = isLightTheme ? '#BEE9F3' : '#2F0426';
     const nodeBorderColor = isLightTheme ? '#F7A1E4' : '#406A8C';
@@ -2845,7 +2847,7 @@ export const MainWidget = function (options) {
     // eslint-disable-next-line
     const cy = cytoscape({
       container: document.getElementById('cy'),
-
+      userZoomingEnabled: false,
       boxSelectionEnabled: false,
       autounselectify: true,
 
@@ -2936,7 +2938,7 @@ export const MainWidget = function (options) {
       layout: {
         name: 'dagre',
         directed: true,
-        rankDir: 'LR',
+        rankDir: graphDir,
         padding: 30,
         fit: true,
         spacingFactor: 1.5
@@ -3084,7 +3086,7 @@ export const MainWidget = function (options) {
 
     const cy = cytoscape({
       container: document.getElementById('cy-map'),
-
+      userZoomingEnabled: false,
       boxSelectionEnabled: false,
       autounselectify: true,
       zoom: 1,
