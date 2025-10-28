@@ -3201,6 +3201,10 @@ export const MainWidget = function (options) {
     cyContainer.style.display = 'none';
     cyContainer.innerHTML = '';
 
+    if (!_this.settings.missions.detailsContainer.classList.contains('cl-show')) {
+      return;
+    }
+
     preLoader.show(async function () {
       setTimeout(function () {
         removeClass(_this.settings.missions.detailsContainer, 'cl-show');
