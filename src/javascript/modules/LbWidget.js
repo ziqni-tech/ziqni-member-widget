@@ -323,6 +323,8 @@ export const LbWidget = function (options) {
       availableMessagesDataResponseParser: function (availableMessagesData, callback) { callback(availableMessagesData); }
     },
     callbacks: {
+      onMainWidgetOpen: function () {},
+      onMainWidgetClose: function () {},
       onContestStatusChanged: function (contestId, currentState, previousState) {},
       onCompetitionStatusChanged: function (competitionId, currentState, previousState) {},
       onStompError: function () {},
@@ -3027,6 +3029,7 @@ export const LbWidget = function (options) {
     var _this = this;
 
     if (!_this.settings.miniScoreBoard.settings.dragging) {
+      this.settings.callbacks.onMainWidgetOpen();
       _this.deactivateCompetitionsAndLeaderboards(function () {
         _this.settings.leaderboard.leaderboardData = [];
         _this.settings.mainWidget.initLayout(function () {
@@ -3307,6 +3310,8 @@ export const LbWidget = function (options) {
       _this.settings.mainWidget.hide(function () {
         _this.settings.miniScoreBoard.settings.active = true;
         _this.settings.miniScoreBoard.settings.container.style.display = 'block';
+
+        _this.settings.callbacks.onMainWidgetClose();
 
         _this.activeDataRefresh();
       });
@@ -4334,12 +4339,10 @@ export const LbWidget = function (options) {
         mainContainer.classList.remove('lightTheme');
         msContainer.classList.remove('lightTheme');
         if (notifContainer) notifContainer.classList.remove('lightTheme');
-        localStorage.setItem('zqTheme', 'dark');
       } else {
         mainContainer.classList.add('lightTheme');
         msContainer.classList.add('lightTheme');
         if (notifContainer) notifContainer.classList.add('lightTheme');
-        localStorage.setItem('zqTheme', 'light');
       }
     }
   };

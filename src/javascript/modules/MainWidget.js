@@ -539,7 +539,7 @@ export const MainWidget = function (options) {
     navigationDarkModeToggle.setAttribute('class', 'cl-main-widget-navigation-darkMode-toggle');
     navigationDarkModeToggleInput.setAttribute('type', 'checkbox');
     navigationDarkModeToggleInput.setAttribute('id', 'darkmode-toggle');
-    if (_this.settings.lbWidget.settings.defaultLightTheme || localStorage.getItem('zqTheme') === 'light') {
+    if (_this.settings.lbWidget.settings.defaultLightTheme) {
       wrapper.classList.add('lightTheme');
       navigationDarkModeToggleInput.checked = true;
     }
@@ -1733,12 +1733,10 @@ export const MainWidget = function (options) {
           mainContainer.classList.add('lightTheme');
           msContainer.classList.add('lightTheme');
           if (notificationContainer) notificationContainer.classList.add('lightTheme');
-          localStorage.setItem('zqTheme', 'light');
         } else {
           mainContainer.classList.remove('lightTheme');
           msContainer.classList.remove('lightTheme');
           if (notificationContainer) notificationContainer.classList.remove('lightTheme');
-          localStorage.setItem('zqTheme', 'dark');
         }
       });
     }

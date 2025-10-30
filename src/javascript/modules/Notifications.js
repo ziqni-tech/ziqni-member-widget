@@ -57,8 +57,7 @@ export const Notifications = function (options) {
     const wrapper = document.createElement('div');
     wrapper.setAttribute('class', 'cl-widget-notif-wrapper');
     if (
-      (this.settings.lbWidget && this.settings.lbWidget.settings.defaultLightTheme) ||
-      localStorage.getItem('zqTheme') === 'light'
+      (this.settings.lbWidget && this.settings.lbWidget.settings.defaultLightTheme)
     ) {
       wrapper.classList.add('lightTheme');
     }
