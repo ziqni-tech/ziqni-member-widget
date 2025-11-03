@@ -325,6 +325,7 @@ export const LbWidget = function (options) {
     callbacks: {
       onMainWidgetOpen: function () {},
       onMainWidgetClose: function () {},
+      onMiniScoreBoardMinimize: function () {},
       onContestStatusChanged: function (contestId, currentState, previousState) {},
       onCompetitionStatusChanged: function (competitionId, currentState, previousState) {},
       onStompError: function () {},
@@ -3291,6 +3292,7 @@ export const LbWidget = function (options) {
       // close mini scoreboard info area
     } else if (hasClass(el, 'cl-widget-ms-information-close') && !hasClass(el, 'checking')) {
       _this.settings.miniScoreBoard.clearAll();
+      _this.settings.callbacks.onMiniScoreBoardMinimize();
 
       // close notification window
     } else if (hasClass(el, 'cl-widget-notif-information-close') && !hasClass(el, 'checking')) {
