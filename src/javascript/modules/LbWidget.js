@@ -4680,9 +4680,17 @@ export const LbWidget = function (options) {
         }
 
         if (json && json.entityType === 'Competition') {
+          const isDashboard = document.querySelector('.cl-main-widget-section-dashboard').classList.contains('cl-main-active-section');
           _this.checkForAvailableCompetitions(async function () {
-            // _this.updateLeaderboardNavigationCounts();
+            if (
+              _this.settings.navigation.tournaments.enable &&
+              _this.settings.navigation.dashboard.showTournaments &&
+              isDashboard
+            ) {
+              _this.settings.mainWidget.loadDashboardTournaments();
+            }
           });
+
           if (headers.callback && headers.callback === 'entityStateChanged') {
             if (typeof this.settings.callbacks.onCompetitionStatusChanged === 'function') {
               const currentState = competitionStatusMap[json.currentState] ?? json.currentState;
@@ -4700,6 +4708,16 @@ export const LbWidget = function (options) {
             _this.settings.mainWidget.missionItemUpdateProgression(json.entityId, json.percentageComplete);
             _this.settings.mainWidget.missionDashboardItemUpdateProgression(json.entityId, json.percentageComplete);
           } else {
+            const isDashboard = document.querySelector('.cl-main-widget-section-dashboard').classList.contains('cl-main-active-section');
+            if (
+              _this.settings.navigation.achievements.enable &&
+              _this.settings.navigation.dashboard.showAchievements &&
+              isDashboard
+            ) {
+              _this.checkForAvailableAchievements(1, function (achievementData) {
+                _this.settings.mainWidget.loadDashboardAchievements(achievementData.list);
+              });
+            }
             _this.settings.mainWidget.loadAchievements();
           }
         }
