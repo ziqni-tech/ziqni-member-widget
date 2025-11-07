@@ -209,7 +209,13 @@ const instance = new MemberWidget({
     },
     onLeaderboardUpdates: function(lbData) {
       console.log('lbData:', lbData);
-    }
+    },
+    onMainWidgetOpen: function() {
+      console.log('Main widget opened');
+    },
+    onMainWidgetClose: function() {
+      console.log('Main widget closed');
+    },
   },
   resources: [
     'node_modules/@ziqni-tech/member-widget/build/css/theme/default-theme.css'
