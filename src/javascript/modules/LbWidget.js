@@ -14,6 +14,7 @@ import closest from '../utils/closest';
 import isMobileTablet from '../utils/isMobileTablet';
 import camelToKebabCase from '../utils/camelToKebabCase';
 import pagination from '../utils/paginator';
+import { ITEMS_PER_PAGE } from './mainWidget/constants';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -673,8 +674,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 12,
-        skip: (readyPageNumber - 1) * 12
+        limit: ITEMS_PER_PAGE.TOURNAMENTS,
+        skip: (readyPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
       }
     }, null);
 
@@ -690,8 +691,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 12,
-        skip: (activePageNumber - 1) * 12
+        limit: ITEMS_PER_PAGE.TOURNAMENTS,
+        skip: (activePageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
       }
     }, null);
 
@@ -714,8 +715,8 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        limit: 12,
-        skip: (finishedPageNumber - 1) * 12
+        limit: ITEMS_PER_PAGE.TOURNAMENTS,
+        skip: (finishedPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
       }
     }, null);
 
@@ -3690,7 +3691,7 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-finished')) {
         let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+        const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
         let isPrev = false;
         let isNext = false;
 
@@ -3711,7 +3712,7 @@ export const LbWidget = function (options) {
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
-          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
@@ -3732,7 +3733,7 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-ready')) {
         let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+        const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
         let isPrev = false;
         let isNext = false;
 
@@ -3753,7 +3754,7 @@ export const LbWidget = function (options) {
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
-          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
@@ -3774,7 +3775,7 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-active')) {
         let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
+        const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / ITEMS_PER_PAGE.TOURNAMENTS);
         let isPrev = false;
         let isNext = false;
 
@@ -3795,7 +3796,7 @@ export const LbWidget = function (options) {
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
-          const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
+          const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / ITEMS_PER_PAGE.TOURNAMENTS);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {

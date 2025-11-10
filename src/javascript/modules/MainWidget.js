@@ -13,6 +13,8 @@ import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import tournamentBrackets from './TournamentBrackets';
 import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
+import { createPaginator, updatePaginatorPage, createPaginatorFromArray } from './mainWidget/paginatorUtils';
+import { ITEMS_PER_PAGE, PAGINATOR_CLASSES } from './mainWidget/constants';
 
 /**
  * MainWidget
@@ -263,6 +265,72 @@ export const MainWidget = function (options) {
     });
 
     return accordionWrapper;
+  };
+
+  this._createTournamentPaginators = function (
+    tournaments,
+    container,
+    readyPageNumber = 1,
+    activePageNumber = 1,
+    finishedPageNumber = 1,
+    paginationArr = null,
+    isReady = false,
+    isActive = true,
+    isFinished = false
+  ) {
+    const itemsPerPage = ITEMS_PER_PAGE.TOURNAMENTS;
+
+    const totalCount = tournaments && tournaments.totalCount ? tournaments.totalCount : 0;
+    const readyTotalCount = tournaments && tournaments.readyTotalCount ? tournaments.readyTotalCount : 0;
+    const finishedTotalCount = tournaments && tournaments.finishedTotalCount ? tournaments.finishedTotalCount : 0;
+
+    let activePaginator = query(container, '.' + PAGINATOR_CLASSES.ACTIVE);
+    if (!activePaginator) {
+      activePaginator = createPaginator(totalCount, itemsPerPage, activePageNumber, PAGINATOR_CLASSES.ACTIVE);
+    } else if (totalCount <= itemsPerPage) {
+      activePaginator = null;
+    }
+
+    let readyPaginator = query(container, '.' + PAGINATOR_CLASSES.READY);
+    if (!readyPaginator) {
+      readyPaginator = createPaginator(readyTotalCount, itemsPerPage, readyPageNumber, PAGINATOR_CLASSES.READY);
+    } else if (readyTotalCount <= itemsPerPage) {
+      readyPaginator = null;
+    }
+
+    let finishedPaginator = query(container, '.' + PAGINATOR_CLASSES.FINISHED);
+    if (!finishedPaginator) {
+      finishedPaginator = createPaginator(finishedTotalCount, itemsPerPage, finishedPageNumber, PAGINATOR_CLASSES.FINISHED);
+    } else if (finishedTotalCount <= itemsPerPage) {
+      finishedPaginator = null;
+    }
+
+    // Handle paginationArr - replace paginator with array-based one if provided
+    if (paginationArr && paginationArr.length) {
+      if (isReady) {
+        readyPaginator = createPaginatorFromArray(paginationArr, PAGINATOR_CLASSES.READY);
+      } else if (isFinished) {
+        finishedPaginator = createPaginatorFromArray(paginationArr, PAGINATOR_CLASSES.FINISHED);
+      } else if (isActive) {
+        activePaginator = createPaginatorFromArray(paginationArr, PAGINATOR_CLASSES.ACTIVE);
+      }
+    }
+
+    if (activePaginator) {
+      updatePaginatorPage(activePaginator, activePageNumber);
+    }
+    if (readyPaginator) {
+      updatePaginatorPage(readyPaginator, readyPageNumber);
+    }
+    if (finishedPaginator) {
+      updatePaginatorPage(finishedPaginator, finishedPageNumber);
+    }
+
+    return {
+      active: activePaginator,
+      ready: readyPaginator,
+      finished: finishedPaginator
+    };
   };
 
   this.tournamentsList = function (data, onLayout) {
@@ -1804,173 +1872,31 @@ export const MainWidget = function (options) {
     const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
     const preLoader = _this.preloader();
 
-    const totalCount = _this.settings.lbWidget.settings.tournaments.totalCount;
-    const readyTotalCount = _this.settings.lbWidget.settings.tournaments.readyTotalCount;
-    const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
-    const itemsPerPage = 12;
-
-    const prev = document.createElement('span');
-    prev.setAttribute('class', 'paginator-item prev');
-    const next = document.createElement('span');
-    next.setAttribute('class', 'paginator-item next');
-
-    let paginator = query(listResContainer, '.paginator-active');
-    if (!paginator && totalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(totalCount / itemsPerPage);
-      paginator = document.createElement('div');
-      paginator.setAttribute('class', 'paginator-active');
-      addClass(paginator, 'paginator');
-      addClass(paginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      paginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      paginator.prepend(prev);
-      paginator.appendChild(next);
-    }
-
-    let readyPaginator = query(listResContainer, '.paginator-ready');
-    if (!readyPaginator && readyTotalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(readyTotalCount / itemsPerPage);
-      readyPaginator = document.createElement('div');
-      readyPaginator.setAttribute('class', 'paginator-ready');
-      addClass(readyPaginator, 'paginator');
-      addClass(readyPaginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      readyPaginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      readyPaginator.prepend(prev);
-      readyPaginator.appendChild(next);
-    }
-
-    let finishedPaginator = query(listResContainer, '.paginator-finished');
-    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(finishedTotalCount / itemsPerPage);
-      finishedPaginator = document.createElement('div');
-      finishedPaginator.setAttribute('class', 'paginator-finished');
-      addClass(finishedPaginator, 'paginator');
-      addClass(finishedPaginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      finishedPaginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      finishedPaginator.prepend(prev);
-      finishedPaginator.appendChild(next);
-    }
-
     if (isReady) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'readyCompetitions';
       });
-      if (paginationArr && paginationArr.length) {
-        let page = '';
-        for (const i in paginationArr) {
-          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-        }
-        readyPaginator.innerHTML = page;
-
-        readyPaginator.prepend(prev);
-        readyPaginator.appendChild(next);
-      }
     } else if (isFinished) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'finishedCompetitions';
       });
-      if (paginationArr && paginationArr.length) {
-        let page = '';
-        for (const i in paginationArr) {
-          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-        }
-        finishedPaginator.innerHTML = page;
-
-        finishedPaginator.prepend(prev);
-        finishedPaginator.appendChild(next);
-      }
     } else {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'activeCompetitions';
       });
-      if (paginationArr && paginationArr.length) {
-        let page = '';
-        for (const i in paginationArr) {
-          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-        }
-        paginator.innerHTML = page;
-
-        paginator.prepend(prev);
-        paginator.appendChild(next);
-      }
     }
+
+    const paginators = _this._createTournamentPaginators(
+      _this.settings.lbWidget.settings.tournaments,
+      listResContainer,
+      readyPageNumber,
+      activePageNumber,
+      finishedPageNumber,
+      paginationArr,
+      isReady,
+      isActive,
+      isFinished
+    );
 
     preLoader.show(function () {
       listIcon.style.display = 'none';
@@ -1999,51 +1925,27 @@ export const MainWidget = function (options) {
       listResContainer.innerHTML = '';
       listResContainer.appendChild(accordionObj);
 
-      if (finishedPaginator) {
+      if (paginators.finished) {
         const finishedContainer = query(listResContainer, '.finishedCompetitions');
         if (finishedContainer) {
           const listContainer = query(finishedContainer, '.cl-accordion-list-container');
-          const paginatorItems = query(finishedPaginator, '.paginator-item');
-          paginatorItems.forEach(item => {
-            removeClass(item, 'active');
-            if (Number(item.dataset.page) === Number(finishedPageNumber)) {
-              addClass(item, 'active');
-            }
-          });
-
-          listContainer.appendChild(finishedPaginator);
+          listContainer.appendChild(paginators.finished);
         }
       }
 
-      if (readyPaginator) {
+      if (paginators.ready) {
         const readyContainer = query(listResContainer, '.readyCompetitions');
         if (readyContainer) {
           const listContainer = query(readyContainer, '.cl-accordion-list-container');
-          const paginatorItems = query(readyPaginator, '.paginator-item');
-          paginatorItems.forEach(item => {
-            removeClass(item, 'active');
-            if (Number(item.dataset.page) === Number(readyPageNumber)) {
-              addClass(item, 'active');
-            }
-          });
-
-          listContainer.appendChild(readyPaginator);
+          listContainer.appendChild(paginators.ready);
         }
       }
 
-      if (paginator) {
+      if (paginators.active) {
         const activeContainer = query(listResContainer, '.activeCompetitions');
         if (activeContainer) {
           const listContainer = query(activeContainer, '.cl-accordion-list-container');
-          const paginatorItems = query(paginator, '.paginator-item');
-          paginatorItems.forEach(item => {
-            removeClass(item, 'active');
-            if (Number(item.dataset.page) === Number(activePageNumber)) {
-              addClass(item, 'active');
-            }
-          });
-
-          listContainer.appendChild(paginator);
+          listContainer.appendChild(paginators.active);
         }
       }
 
