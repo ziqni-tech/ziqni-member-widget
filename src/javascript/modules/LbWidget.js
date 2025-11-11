@@ -1268,9 +1268,15 @@ export const LbWidget = function (options) {
 
     let allPageNumber = 1;
     let finishedPageNumber = 1;
+    let dailyPageNumber = 1;
+    let weeklyPageNumber = 1;
+    let monthlyPageNumber = 1;
 
     if (current === 'all') allPageNumber = pageNumber;
     if (current === 'finished') finishedPageNumber = pageNumber;
+    if (current === 'daily') dailyPageNumber = pageNumber;
+    if (current === 'weekly') weeklyPageNumber = pageNumber;
+    if (current === 'monthly') monthlyPageNumber = pageNumber;
 
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
@@ -1344,7 +1350,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 6,
+        skip: (dailyPageNumber - 1) * 6,
         limit: 6,
         constraints: ['withoutMissions']
       }
@@ -1368,7 +1374,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 6,
+        skip: (weeklyPageNumber - 1) * 6,
         limit: 6,
         constraints: ['withoutMissions']
       }
@@ -1392,7 +1398,7 @@ export const LbWidget = function (options) {
           queryField: 'created',
           order: 'Desc'
         }],
-        skip: (pageNumber - 1) * 6,
+        skip: (monthlyPageNumber - 1) * 6,
         limit: 6,
         constraints: ['withoutMissions']
       }
