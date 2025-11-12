@@ -943,38 +943,6 @@ export const MainWidget = function (options) {
     });
   };
 
-  this.getTournamentReward = function (tournament, rank) {
-    const _this = this;
-    const rewardResponse = [];
-    const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
-
-    if (roundFirstIdx !== -1) {
-      const roundFirst = tournament.contests[roundFirstIdx];
-
-      mapObject(roundFirst.rewards, function (reward) {
-        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-          const rewardRankArr = reward.rewardRank.split(',');
-          rewardRankArr.forEach(r => {
-            const idx = r.indexOf('-');
-            if (idx !== -1) {
-              const start = parseInt(r);
-              const end = parseInt(r.substring(idx + 1));
-              if (rank >= start && rank <= end) {
-                rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-              }
-            } else if (parseInt(r) === rank) {
-              rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-            }
-          });
-        } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
-          rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-        }
-      });
-    }
-
-    return rewardResponse.join(', ');
-  };
-
   this.getReward = function (rank) {
     const _this = this;
     const rewardResponse = [];
@@ -3612,7 +3580,6 @@ export const MainWidget = function (options) {
 
     if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.contests && tournament.contests.length) {
       const totalPrize = this.getTournamentTotalPrizePool(tournament);
-      // const firsReward = this.getTournamentReward(tournament, 1);
 
       if (totalPrize) {
         prize.innerHTML = totalPrize;
