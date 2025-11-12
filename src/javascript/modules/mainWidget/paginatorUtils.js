@@ -84,6 +84,56 @@ export function createPaginatorFromArray (paginationArr, className = 'paginator'
   return paginator;
 }
 
+export const createAwardPaginators = function (
+  awards,
+  container,
+  pageNumber = 1,
+  claimedPageNumber = 1,
+  expiredPageNumber = 1,
+  paginationArr = null,
+  isClaimed = false,
+  isExpired = false
+) {
+  const itemsPerPage = ITEMS_PER_PAGE.REWARDS;
+
+  const totalCount = awards && awards.totalCount ? awards.totalCount : 0;
+  const claimedTotalCount = awards && awards.claimedTotalCount ? awards.claimedTotalCount : 0;
+
+  let paginator = query(container, '.' + PAGINATOR_CLASSES.AVAILABLE);
+  if (!paginator) {
+    paginator = createPaginator(totalCount, itemsPerPage, pageNumber, PAGINATOR_CLASSES.AVAILABLE);
+  } else if (totalCount <= itemsPerPage) {
+    paginator = null;
+  }
+
+  let paginatorClaimed = query(container, '.' + PAGINATOR_CLASSES.CLAIMED);
+  if (!paginatorClaimed) {
+    paginatorClaimed = createPaginator(claimedTotalCount, itemsPerPage, claimedPageNumber, PAGINATOR_CLASSES.CLAIMED);
+  } else if (totalCount <= itemsPerPage) {
+    paginatorClaimed = null;
+  }
+
+  if (paginationArr && paginationArr.length) {
+    if (isClaimed) {
+      paginatorClaimed = createPaginatorFromArray(paginationArr, PAGINATOR_CLASSES.CLAIMED);
+    } else {
+      paginator = createPaginatorFromArray(paginationArr, PAGINATOR_CLASSES.AVAILABLE);
+    }
+  }
+
+  if (paginator) {
+    updatePaginatorPage(paginator, pageNumber);
+  }
+  if (paginatorClaimed) {
+    updatePaginatorPage(paginatorClaimed, claimedPageNumber);
+  }
+
+  return {
+    available: paginator,
+    claimed: paginatorClaimed
+  };
+};
+
 export const createAchievementPaginators = function (
   achievements,
   container,
