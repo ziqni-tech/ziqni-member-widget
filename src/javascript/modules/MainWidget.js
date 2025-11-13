@@ -18,6 +18,7 @@ import {
   createAwardPaginators,
   createTournamentPaginators
 } from './mainWidget/paginatorUtils';
+import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
 
 /**
  * MainWidget
@@ -2048,83 +2049,35 @@ export const MainWidget = function (options) {
 
   this.achievementList = function (data, onLayout, achievementsData) {
     const _this = this;
-    const accordionWrapper = document.createElement('div');
-
-    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
-
-    const statusMenu = document.createElement('div');
-    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
-
-    const allTitle = document.createElement('div');
-    const dailyTitle = document.createElement('div');
-    const weeklyTitle = document.createElement('div');
-    const monthlyTitle = document.createElement('div');
-    const finishedTitle = document.createElement('div');
-
-    allTitle.setAttribute('class', 'cl-main-accordion-container-menu-item all');
-    dailyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item daily');
-    weeklyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item weekly');
-    monthlyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item monthly');
-    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedAchievements');
-
     const idx = data.findIndex(d => d.show === true);
-    if (idx !== -1) {
-      switch (data[idx].type) {
-        case 'all':
-          allTitle.classList.add('active');
-          break;
-        case 'daily':
-          dailyTitle.classList.add('active');
-          break;
-        case 'weekly':
-          weeklyTitle.classList.add('active');
-          break;
-        case 'monthly':
-          monthlyTitle.classList.add('active');
-          break;
-        case 'finishedAchievements':
-          finishedTitle.classList.add('active');
-          break;
-      }
-    }
+    const menuItems = [];
 
-    allTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.all;
-    dailyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.daily;
-    weeklyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.weekly;
-    monthlyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.monthly;
-    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.finished;
-
-    statusMenu.appendChild(allTitle);
-    if (achievementsData.daily && achievementsData.daily.length) statusMenu.appendChild(dailyTitle);
-    if (achievementsData.weekly && achievementsData.weekly.length) statusMenu.appendChild(weeklyTitle);
-    if (achievementsData.monthly && achievementsData.monthly.length) statusMenu.appendChild(monthlyTitle);
-    if (achievementsData.finishedAchievements && achievementsData.finishedAchievements.length) statusMenu.appendChild(finishedTitle);
-
-    accordionWrapper.appendChild(statusMenu);
-
-    mapObject(data, function (entry) {
-      const accordionSection = document.createElement('div');
-      const topShownEntry = document.createElement('div');
-      const accordionListContainer = document.createElement('div');
-      const accordionList = document.createElement('div');
-
-      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      topShownEntry.setAttribute('class', 'cl-accordion-entry');
-      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
-      accordionList.setAttribute('class', 'cl-accordion-list');
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topShownEntry, entry);
-      }
-
-      accordionListContainer.appendChild(accordionList);
-
-      accordionSection.appendChild(accordionListContainer);
-
-      accordionWrapper.appendChild(accordionSection);
+    menuItems.push({
+      element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.all, 'all', idx !== -1 && data[idx].type === 'all')
     });
 
-    return accordionWrapper;
+    if (achievementsData.daily && achievementsData.daily.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.daily, 'daily', idx !== -1 && data[idx].type === 'daily')
+      });
+    }
+    if (achievementsData.weekly && achievementsData.weekly.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.weekly, 'weekly', idx !== -1 && data[idx].type === 'weekly')
+      });
+    }
+    if (achievementsData.monthly && achievementsData.monthly.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.monthly, 'monthly', idx !== -1 && data[idx].type === 'monthly')
+      });
+    }
+    if (achievementsData.finishedAchievements && achievementsData.finishedAchievements.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.finished, 'finishedAchievements', idx !== -1 && data[idx].type === 'finishedAchievements')
+      });
+    }
+
+    return buildAccordion(data, menuItems, onLayout);
   };
 
   this.achievementListLayout = function (
