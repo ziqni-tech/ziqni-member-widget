@@ -19,6 +19,7 @@ import {
   createTournamentPaginators
 } from './mainWidget/paginatorUtils';
 import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
+import { createElementWithClass } from './mainWidget/domUtils';
 
 /**
  * MainWidget
@@ -179,23 +180,12 @@ export const MainWidget = function (options) {
   }
 
   this.awardsList = function (data, onLayout) {
-    const _this = this;
-    const accordionWrapper = document.createElement('div');
-
-    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
-
-    const statusMenu = document.createElement('div');
-    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
-
-    const availableTitle = document.createElement('div');
-    const claimedTitle = document.createElement('div');
-    const expiredTitle = document.createElement('div');
-    const instantWinsTitle = document.createElement('div');
-
-    availableTitle.setAttribute('class', 'cl-main-accordion-container-menu-item availableAwards');
-    claimedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item claimedAwards');
-    expiredTitle.setAttribute('class', 'cl-main-accordion-container-menu-item expiredAwards');
-    instantWinsTitle.setAttribute('class', 'cl-main-accordion-container-menu-item instantWins');
+    const accordionWrapper = createElementWithClass('div', 'cl-main-accordion-container');
+    const statusMenu = createElementWithClass('div', 'cl-main-accordion-container-menu');
+    const availableTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item availableAwards', this.settings.lbWidget.settings.translation.rewards.availableRewards);
+    const claimedTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item claimedAwards', this.settings.lbWidget.settings.translation.rewards.claimed);
+    const expiredTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item expiredAwards', this.settings.lbWidget.settings.translation.rewards.expired);
+    const instantWinsTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item instantWins', this.settings.lbWidget.settings.translation.rewards.instantWins);
 
     const idx = data.findIndex(d => d.show === true);
     if (idx !== -1) {
@@ -219,11 +209,6 @@ export const MainWidget = function (options) {
       }
     }
 
-    availableTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.availableRewards;
-    claimedTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.claimed;
-    expiredTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.expired;
-    instantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.instantWins;
-
     statusMenu.appendChild(availableTitle);
     statusMenu.appendChild(claimedTitle);
     if (this.settings.lbWidget.settings.awards.showExpiredAwards) {
@@ -236,15 +221,10 @@ export const MainWidget = function (options) {
     accordionWrapper.appendChild(statusMenu);
 
     mapObject(data, function (entry) {
-      const accordionSection = document.createElement('div');
-      const topShownEntry = document.createElement('div');
-      const accordionListContainer = document.createElement('div');
-      const accordionList = document.createElement('div');
-
-      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      topShownEntry.setAttribute('class', 'cl-accordion-entry');
-      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
-      accordionList.setAttribute('class', 'cl-accordion-list');
+      const accordionSection = createElementWithClass('div', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
+      const topShownEntry = createElementWithClass('div', 'cl-accordion-entry');
+      const accordionListContainer = createElementWithClass('div', 'cl-accordion-list-container');
+      const accordionList = createElementWithClass('div', 'cl-accordion-list');
 
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
@@ -262,20 +242,11 @@ export const MainWidget = function (options) {
 
   this.tournamentsList = function (data, onLayout) {
     const _this = this;
-    const accordionWrapper = document.createElement('div');
-
-    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
-
-    const statusMenu = document.createElement('div');
-    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
-
-    const finishedTitle = document.createElement('div');
-    const activeTitle = document.createElement('div');
-    const readyTitle = document.createElement('div');
-
-    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedTournaments');
-    activeTitle.setAttribute('class', 'cl-main-accordion-container-menu-item activeTournaments');
-    readyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item readyTournaments');
+    const accordionWrapper = createElementWithClass('div', 'cl-main-accordion-container');
+    const statusMenu = createElementWithClass('div', 'cl-main-accordion-container-menu');
+    const finishedTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item finishedTournaments', _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions);
+    const activeTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item activeTournaments', _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions);
+    const readyTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item readyTournaments', _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions);
 
     const idx = data.findIndex(d => d.show === true);
     if (idx !== -1) {
@@ -292,10 +263,6 @@ export const MainWidget = function (options) {
       }
     }
 
-    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions;
-    activeTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions;
-    readyTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions;
-
     statusMenu.appendChild(finishedTitle);
     statusMenu.appendChild(activeTitle);
     statusMenu.appendChild(readyTitle);
@@ -303,28 +270,15 @@ export const MainWidget = function (options) {
     accordionWrapper.appendChild(statusMenu);
 
     mapObject(data, function (entry) {
-      const accordionSection = document.createElement('div');
-      const accordionLabel = document.createElement('div');
-      const topShownEntry = document.createElement('div');
-      const accordionListContainer = document.createElement('div');
-      const header = document.createElement('div');
-      const headerLabel = document.createElement('div');
-      const headerDate = document.createElement('div');
-      const headerPrize = document.createElement('div');
-      const accordionList = document.createElement('div');
-
-      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      topShownEntry.setAttribute('class', 'cl-accordion-entry');
-      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
-      header.setAttribute('class', 'cl-accordion-list-container-header');
-      headerLabel.setAttribute('class', 'cl-accordion-list-container-header-label');
-      headerDate.setAttribute('class', 'cl-accordion-list-container-header-date');
-      headerPrize.setAttribute('class', 'cl-accordion-list-container-header-prize');
-      accordionList.setAttribute('class', 'cl-accordion-list');
-
-      headerLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
-      headerDate.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.date;
-      headerPrize.innerHTML = _this.settings.lbWidget.settings.tournaments.showTotalPrize ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel : _this.settings.lbWidget.settings.translation.leaderboard.prize;
+      const accordionSection = createElementWithClass('div', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
+      const accordionLabel = createElementWithClass('div', '');
+      const topShownEntry = createElementWithClass('div', 'cl-accordion-entry');
+      const accordionListContainer = createElementWithClass('div', 'cl-accordion-list-container');
+      const header = createElementWithClass('div', 'cl-accordion-list-container-header');
+      const headerLabel = createElementWithClass('div', 'cl-accordion-list-container-header-label', _this.settings.lbWidget.settings.translation.tournaments.label);
+      const headerDate = createElementWithClass('div', 'cl-accordion-list-container-header-date', _this.settings.lbWidget.settings.translation.tournaments.date);
+      const headerPrize = createElementWithClass('div', 'cl-accordion-list-container-header-prize', _this.settings.lbWidget.settings.tournaments.showTotalPrize ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel : _this.settings.lbWidget.settings.translation.leaderboard.prize);
+      const accordionList = createElementWithClass('div', 'cl-accordion-list');
 
       if (typeof onLayout === 'function') {
         onLayout(accordionSection, accordionList, topShownEntry, entry);
