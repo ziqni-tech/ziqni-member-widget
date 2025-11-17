@@ -180,64 +180,27 @@ export const MainWidget = function (options) {
   }
 
   this.awardsList = function (data, onLayout) {
-    const accordionWrapper = createElementWithClass('div', 'cl-main-accordion-container');
-    const statusMenu = createElementWithClass('div', 'cl-main-accordion-container-menu');
-    const availableTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item availableAwards', this.settings.lbWidget.settings.translation.rewards.availableRewards);
-    const claimedTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item claimedAwards', this.settings.lbWidget.settings.translation.rewards.claimed);
-    const expiredTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item expiredAwards', this.settings.lbWidget.settings.translation.rewards.expired);
-    const instantWinsTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item instantWins', this.settings.lbWidget.settings.translation.rewards.instantWins);
-
     const idx = data.findIndex(d => d.show === true);
-    if (idx !== -1) {
-      switch (data[idx].type) {
-        case 'availableAwards':
-          availableTitle.classList.add('active');
-          break;
-        case 'claimedAwards':
-          claimedTitle.classList.add('active');
-          break;
-        case 'expiredAwards':
-          expiredTitle.classList.add('active');
-          break;
-        case 'instantWins':
-          if (this.settings.lbWidget.settings.instantWins.enable) {
-            instantWinsTitle.classList.add('active');
-          } else {
-            claimedTitle.classList.add('active');
-          }
-          break;
-      }
-    }
+    const menuItems = [];
 
-    statusMenu.appendChild(availableTitle);
-    statusMenu.appendChild(claimedTitle);
+    menuItems.push({
+      element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.availableRewards, 'availableAwards', idx !== -1 && data[idx].type === 'availableAwards')
+    });
+    menuItems.push({
+      element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.claimed, 'claimedAwards', idx !== -1 && data[idx].type === 'claimedAwards')
+    });
     if (this.settings.lbWidget.settings.awards.showExpiredAwards) {
-      statusMenu.appendChild(expiredTitle);
+      menuItems.push({
+        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.instantWins, 'expiredAwards', idx !== -1 && data[idx].type === 'expiredAwards')
+      });
     }
     if (this.settings.lbWidget.settings.instantWins.enable) {
-      statusMenu.appendChild(instantWinsTitle);
+      menuItems.push({
+        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.expired, 'instantWins', idx !== -1 && data[idx].type === 'instantWins')
+      });
     }
 
-    accordionWrapper.appendChild(statusMenu);
-
-    mapObject(data, function (entry) {
-      const accordionSection = createElementWithClass('div', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      const topShownEntry = createElementWithClass('div', 'cl-accordion-entry');
-      const accordionListContainer = createElementWithClass('div', 'cl-accordion-list-container');
-      const accordionList = createElementWithClass('div', 'cl-accordion-list');
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topShownEntry, entry);
-      }
-
-      accordionListContainer.appendChild(accordionList);
-
-      accordionSection.appendChild(accordionListContainer);
-
-      accordionWrapper.appendChild(accordionSection);
-    });
-
-    return accordionWrapper;
+    return buildAccordion(data, menuItems, onLayout);
   };
 
   this.tournamentsList = function (data, onLayout) {
