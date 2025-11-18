@@ -31,12 +31,12 @@ export function createAccordionSection (entry, onLayout) {
   accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
   accordionList.setAttribute('class', 'cl-accordion-list');
 
-  if (typeof onLayout === 'function') {
-    onLayout(accordionSection, accordionList, topShownEntry, entry);
-  }
-
   accordionListContainer.appendChild(accordionList);
   accordionSection.appendChild(accordionListContainer);
+
+  if (typeof onLayout === 'function') {
+    onLayout(accordionSection, accordionList, topShownEntry, entry, accordionListContainer);
+  }
 
   return accordionSection;
 }

@@ -205,47 +205,43 @@ export const MainWidget = function (options) {
 
   this.tournamentsList = function (data, onLayout) {
     const _this = this;
-    const accordionWrapper = createElementWithClass('div', 'cl-main-accordion-container');
-    const statusMenu = createElementWithClass('div', 'cl-main-accordion-container-menu');
-    const finishedTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item finishedTournaments', _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions);
-    const activeTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item activeTournaments', _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions);
-    const readyTitle = createElementWithClass('div', 'cl-main-accordion-container-menu-item readyTournaments', _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions);
-
     const idx = data.findIndex(d => d.show === true);
-    if (idx !== -1) {
-      switch (data[idx].type) {
-        case 'activeCompetitions':
-          activeTitle.classList.add('active');
-          break;
-        case 'finishedCompetitions':
-          finishedTitle.classList.add('active');
-          break;
-        case 'readyCompetitions':
-          readyTitle.classList.add('active');
-          break;
-      }
-    }
+    const menuItems = [];
 
-    statusMenu.appendChild(finishedTitle);
-    statusMenu.appendChild(activeTitle);
-    statusMenu.appendChild(readyTitle);
+    menuItems.push({
+      element: createAccordionMenuItem(
+        _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions,
+        'finishedTournaments',
+        idx !== -1 && data[idx].type === 'finishedCompetitions'
+      )
+    });
+    menuItems.push({
+      element: createAccordionMenuItem(
+        _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions,
+        'activeTournaments',
+        idx !== -1 && data[idx].type === 'activeCompetitions'
+      )
+    });
+    menuItems.push({
+      element: createAccordionMenuItem(
+        _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions,
+        'readyTournaments',
+        idx !== -1 && data[idx].type === 'readyCompetitions'
+      )
+    });
 
-    accordionWrapper.appendChild(statusMenu);
-
-    mapObject(data, function (entry) {
-      const accordionSection = createElementWithClass('div', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
+    return buildAccordion(data, menuItems, function (accordionSection, accordionList, topEntryContainer, entry, accordionListContainer) {
       const accordionLabel = createElementWithClass('div', '');
-      const topShownEntry = createElementWithClass('div', 'cl-accordion-entry');
-      const accordionListContainer = createElementWithClass('div', 'cl-accordion-list-container');
       const header = createElementWithClass('div', 'cl-accordion-list-container-header');
       const headerLabel = createElementWithClass('div', 'cl-accordion-list-container-header-label', _this.settings.lbWidget.settings.translation.tournaments.label);
       const headerDate = createElementWithClass('div', 'cl-accordion-list-container-header-date', _this.settings.lbWidget.settings.translation.tournaments.date);
-      const headerPrize = createElementWithClass('div', 'cl-accordion-list-container-header-prize', _this.settings.lbWidget.settings.tournaments.showTotalPrize ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel : _this.settings.lbWidget.settings.translation.leaderboard.prize);
-      const accordionList = createElementWithClass('div', 'cl-accordion-list');
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topShownEntry, entry);
-      }
+      const headerPrize = createElementWithClass(
+        'div',
+        'cl-accordion-list-container-header-prize',
+        _this.settings.lbWidget.settings.tournaments.showTotalPrize
+          ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel
+          : _this.settings.lbWidget.settings.translation.leaderboard.prize
+      );
 
       header.appendChild(headerLabel);
       header.appendChild(headerDate);
@@ -253,17 +249,19 @@ export const MainWidget = function (options) {
         header.appendChild(headerPrize);
       }
 
-      accordionListContainer.appendChild(header);
-      accordionListContainer.appendChild(accordionList);
+      if (accordionListContainer) {
+        accordionListContainer.insertBefore(header, accordionList);
+      }
 
-      accordionSection.appendChild(accordionLabel);
-      accordionSection.appendChild(topShownEntry);
-      accordionSection.appendChild(accordionListContainer);
+      accordionSection.insertBefore(accordionLabel, accordionSection.firstChild);
+      if (topEntryContainer && accordionListContainer) {
+        accordionSection.insertBefore(topEntryContainer, accordionListContainer);
+      }
 
-      accordionWrapper.appendChild(accordionSection);
+      if (typeof onLayout === 'function') {
+        onLayout(accordionSection, accordionList, topEntryContainer, entry);
+      }
     });
-
-    return accordionWrapper;
   };
 
   this.listsNavigation = function (element) {
