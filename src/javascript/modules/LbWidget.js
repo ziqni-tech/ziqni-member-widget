@@ -16,6 +16,7 @@ import camelToKebabCase from '../utils/camelToKebabCase';
 import pagination from '../utils/paginator';
 import { ITEMS_PER_PAGE } from './mainWidget/constants';
 import { defaultSettings } from './lbWidget/defaultSettings';
+import { getCompetitions, getContests } from './lbWidget/services/competitionService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -272,63 +273,28 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardCompetitions = async function () {
-    const activeRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 2,
-        skip: 0
-      }
-    }, null);
+    let activeCompetitionsData = await getCompetitions(
+      this.apiClientStomp,
+      this.settings.language,
+      'active',
+      this.settings.productIds,
+      2,
+      0
+    );
 
-    const readyRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 10,
-          lessThan: 20
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 2,
-        skip: 0
-      }
-    }, null);
-
-    const activeCompetitions = await this.getCompetitionsApi(activeRequest);
-    const readyCompetitions = await this.getCompetitionsApi(readyRequest);
-    let activeCompetitionsData = activeCompetitions.data;
-    let readyCompetitionsData = readyCompetitions.data;
+    let readyCompetitionsData = await getCompetitions(
+      this.apiClientStomp,
+      this.settings.language,
+      'ready',
+      this.settings.productIds,
+      2,
+      0
+    );
 
     if (activeCompetitionsData) {
       const ids = activeCompetitionsData.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests(this.apiClientStomp, this.settings.language, ids, 20, 0);
 
       const contestIds = contests.map(a => a.id);
 
