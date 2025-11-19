@@ -15,6 +15,7 @@ import isMobileTablet from '../utils/isMobileTablet';
 import camelToKebabCase from '../utils/camelToKebabCase';
 import pagination from '../utils/paginator';
 import { ITEMS_PER_PAGE } from './mainWidget/constants';
+import { defaultSettings } from './lbWidget/defaultSettings';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -54,8 +55,6 @@ import {
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
 
-const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
-
 /**
  * Main leaderboard widget, controls all actions and initiation logic.
  * Main responsibility is to control the interactions between different widgets/plugins and user even actions
@@ -65,274 +64,7 @@ const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
 export const LbWidget = function (options) {
   this.apiClientStomp = null;
 
-  /**
-   * LbWidget settings
-   * @memberOf LbWidget
-   * @constant
-   * @type { Object }
-   */
-  this.settings = {
-    debug: false,
-    isStaging: false,
-    bindContainer: document.body,
-    autoStart: true,
-    notifications: null,
-    miniScoreBoard: null,
-    canvasAnimation: null,
-    enableNotifications: false,
-    hideEmptyTabs: false,
-    defaultLightTheme: false,
-    showAchievementsFilter: true,
-    mainWidget: null,
-    language: process.env.LANG,
-    currency: '',
-    spaceName: '',
-    memberId: '',
-    memberRefId: '',
-    apiClientStomp: null,
-    authToken: null,
-    memberNameLength: 0,
-    groups: '',
-    gameId: '',
-    enforceGameLookup: false, // tournament lookup will include/exclude game only requests
-    apiKey: '',
-    memberToken: '',
-    expires: 36000000,
-    member: null,
-    itemsPerPage: 10,
-    timeZone: 'UTC',
-    productIds: [],
-    layout: {
-      logoUrl: '',
-      showThemeSwitcher: true,
-      enableMiniScoreBoardDragging: true, // enable/disable dragging with mouse/touch
-      miniScoreBoardPosition: { // default position of mini scoreboard left/right/bottom/top (Example: top: '20px')
-        left: null,
-        right: null,
-        top: null,
-        bottom: null
-      },
-      allowOrientationChange: true, // allows the switch between horizontal/vertical orientation
-      miniScoreBoardOrientation: 'horizontal' // vertical/horizontal => default is horizontal
-    },
-    historicalData: {
-      finalisedCompetitions: 30,
-      messagesForTheLast: 30
-    },
-    competition: {
-      activeCompetitionId: null,
-      activeContestId: null,
-      activeCompetition: null,
-      contests: null,
-      activeContest: null,
-      refreshInterval: null,
-      refreshIntervalMillis: 1000000,
-      allowNegativeCountdown: false, // false: will mark competition as finishing, true: will continue to countdown into negative
-      includeMetadata: false,
-      extractImageHeader: true // will extract the first found image inside the body tag and move it on top
-    },
-    achievements: {
-      activeAchievementId: null,
-      limit: 100,
-      totalCount: 0,
-      finishedTotalCount: 0,
-      list: [],
-      all: [],
-      daily: [],
-      weekly: [],
-      monthly: [],
-      finished: [],
-      availableRewards: [],
-      rewards: [],
-      expiredRewards: [],
-      extractImageHeader: true // will extract the first found image inside the body tag and move it on top
-    },
-    rewards: {
-      availableRewards: [],
-      rewards: [],
-      totalCount: 0,
-      expiredRewards: []
-    },
-    awards: {
-      availableAwards: [],
-      claimedAwards: [],
-      expiredAwards: [],
-      rewards: [],
-      totalCount: 0,
-      claimedTotalCount: 0,
-      intervalId: null,
-      showExpiredAwards: false
-    },
-    iconIntervalId: null,
-    messages: {
-      messages: [],
-      totalCount: 0
-    },
-    missions: {
-      missions: [],
-      totalCount: 0
-    },
-    instantWins: {
-      enable: false,
-      showIWOnlyWithAvailPlays: true
-    },
-    tournaments: {
-      showBannerTimer: true,
-      showDashboardTime: true,
-      showTournamentsMenuPrizeColumn: true,
-      showTotalPrize: false,
-      activeCompetitionId: null,
-      readyCompetitions: [],
-      activeCompetitions: [],
-      finishedCompetitions: [],
-      totalCount: 0,
-      readyTotalCount: 0,
-      finishedTotalCount: 0
-    },
-    leaderboard: {
-      topResultSize: 3,
-      defaultEmptyList: 20,
-      fullLeaderboardSize: 100,
-      refreshIntervalMillis: 1000000,
-      refreshInterval: null,
-      refreshLbDataInterval: null,
-      leaderboardData: [],
-      loadLeaderboardHistory: {},
-      layoutSettings: {
-        // tournamentList: true,
-        imageBanner: true,
-        // title: true,
-        titleLinkToDetailsPage: false // if set to false will make the description available under title
-      },
-      miniScoreBoard: {
-        enableRankings: true, // enabled rankings before after rankings of members [-2 YOU +2]
-        rankingsCount: 2
-      },
-      pointsFormatter: function (points) {
-        return points;
-      }
-    },
-    navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
-      dashboard: {
-        enable: true,
-        showInstantWins: true,
-        showAchievements: true,
-        showTournaments: true,
-        showAvailableAwards: false,
-        showMissions: false,
-        navigationClass: 'cl-main-widget-navigation-dashboard',
-        navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
-        containerClass: 'cl-main-widget-section-dashboard',
-        order: 1
-      },
-      tournaments: {
-        enable: true,
-        showFinishedTournaments: true,
-        navigationClass: 'cl-main-widget-navigation-lb',
-        navigationClassIcon: 'cl-main-widget-navigation-lb-icon',
-        containerClass: 'cl-main-widget-lb',
-        order: 2
-      },
-      achievements: {
-        enable: true,
-        showReadyAchievements: false,
-        navigationClass: 'cl-main-widget-navigation-ach',
-        navigationClassIcon: 'cl-main-widget-navigation-ach-icon',
-        containerClass: 'cl-main-widget-section-ach',
-        order: 3
-      },
-      rewards: {
-        enable: true,
-        navigationClass: 'cl-main-widget-navigation-rewards',
-        navigationClassIcon: 'cl-main-widget-navigation-rewards-icon',
-        containerClass: 'cl-main-widget-section-reward',
-        order: 4
-      },
-      inbox: {
-        enable: true,
-        navigationClass: 'cl-main-widget-navigation-inbox',
-        navigationClassIcon: 'cl-main-widget-navigation-inbox-icon',
-        containerClass: 'cl-main-widget-section-inbox',
-        order: 5
-      },
-      missions: {
-        enable: true,
-        navigationClass: 'cl-main-widget-navigation-missions',
-        navigationClassIcon: 'cl-main-widget-navigation-missions-icon',
-        containerClass: 'cl-main-widget-section-missions',
-        order: 6
-      }
-    },
-    apiWs: {
-      achievementsApiWsClient: null,
-      leaderboardApiWsClient: null,
-      competitionsApiWsClient: null,
-      contestsApiWsClient: null,
-      membersApiWsClient: null,
-      optInApiWsClient: null,
-      rewardsApiWsClient: null,
-      awardsApiWsClient: null,
-      messagesApiWsClient: null,
-      missionsApiWsClient: null,
-      filesApiWsClient: null,
-      instantWinsApiWsClient: null
-    },
-    uri: {
-      assets: '/assets/attachments/:attachmentId',
-      memberSSE: '/api/v1/:space/sse/reference/:id',
-      memberSSEHeartbeat: '/api/v1/:space/sse/reference/:id/heartbeat',
-      achievementsProgression: '/api/v1/:space/members/reference/:id/achievements',
-      memberRewardClaim: '/api/v1/:space/members/reference/:id/award/:awardId/award',
-      memberCompetitionOptIn: '/api/v1/:space/members/reference/:id/competition/:competitionId/optin',
-      memberCompetitionOptInCheck: '/api/v1/:space/members/reference/:id/competition/:competitionId/optin-check',
-      translationPath: '' // ../i18n/translation_:language.json
-    },
-    loadCustomTranslations: true,
-    showCopyright: true,
-    translation: translation,
-    resources: [], // Example: ["http://example.com/style.css", "http://example.com/my-fonts.css"]
-    styles: null, // Example: {widgetBgColor: '#1f294a', widgetIcon: 'url(../../../examples/images/logo-icon-3.png)'}
-    partialFunctions: {
-      startupCallback: function (instance) {},
-      rewardFormatter: function (reward) {
-        let defaultRewardValue = Number.isInteger(reward.rewardValue)
-          ? reward.rewardValue
-          : Math.floor(reward.rewardValue * 100) / 100;
-
-        if (reward.rewardType?.uomSymbol) {
-          defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
-        }
-
-        return defaultRewardValue;
-      },
-      competitionDataAvailableResponseParser: function (competitionData, callback) { callback(competitionData); },
-      competitionDataFinishedResponseParser: function (competitionData, callback) { callback(competitionData); },
-      activeCompetitionDataResponseParser: function (competitionData, callback) { callback(competitionData); },
-      activeContestDataResponseParser: function (contestData, callback) { callback(contestData); },
-      leaderboardDataResponseParser: function (leaderboardData, callback) { callback(leaderboardData); },
-      achievementDataForAllResponseParser: function (achievementData, callback) { callback(achievementData); },
-      achievementDataForMemberGroupResponseParser: function (achievementData, callback) { callback(achievementData); },
-      achievementDataResponseParser: function (achievementData, callback) { callback(achievementData); },
-      rewardDataResponseParser: function (rewardData, callback) { callback(rewardData); },
-      messageDataResponseParser: function (messageData, callback) { callback(messageData); },
-      claimRewardDataResponseParser: function (claimRewardData, callback) { callback(claimRewardData); },
-      issuedAchievementsDataResponseParser: function (issuedAchievementsData, callback) { callback(issuedAchievementsData); },
-      memberAchievementsProgressionDataResponseParser: function (memberAchievementsProgressionData, callback) { callback(memberAchievementsProgressionData); },
-      claimedRewardsDataResponseParser: function (claimedRewardsData, callback) { callback(claimedRewardsData); },
-      notClaimedRewardsDataResponseParser: function (notClaimedRewardsData, callback) { callback(notClaimedRewardsData); },
-      expiredRewardsDataResponseParser: function (expiredRewardsData, callback) { callback(expiredRewardsData); },
-      availableMessagesDataResponseParser: function (availableMessagesData, callback) { callback(availableMessagesData); }
-    },
-    callbacks: {
-      onMainWidgetOpen: function () {},
-      onMainWidgetClose: function () {},
-      onContestStatusChanged: function (contestId, currentState, previousState) {},
-      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {},
-      onStompError: function () {},
-      onLeaderboardUpdates: function (leaderboardData) {}
-    },
-    callback: null
-  };
+  this.settings = defaultSettings;
 
   if (typeof options !== 'undefined') {
     this.settings = mergeObjects(this.settings, options);
@@ -982,7 +714,7 @@ export const LbWidget = function (options) {
             leaderboardFilter: {}
           });
           this.settings.leaderboard.leaderboardData = [];
-          this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest).then((json) => {});
+          this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest).then((json) => { });
         }
         _this.settings.competition.activeCompetition = activeCompetition;
         _this.settings.competition.activeCompetitionId = activeCompetitionId;
@@ -2022,7 +1754,7 @@ export const LbWidget = function (options) {
       status: status
     }];
 
-    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => {});
+    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => { });
   };
 
   this.claimAward = async function (rewardId, callback) {
@@ -2699,7 +2431,7 @@ export const LbWidget = function (options) {
       var count = (_this.settings.miniScoreBoard.settings.active) ? 0 : _this.settings.leaderboard.fullLeaderboardSize;
       _this.getLeaderboardData(count, function (data) {
         if (_this.settings.miniScoreBoard.settings.active) _this.settings.miniScoreBoard.loadScoreBoard();
-        if (_this.settings.mainWidget.settings.active) _this.settings.mainWidget.loadLeaderboard(() => {}, false);
+        if (_this.settings.mainWidget.settings.active) _this.settings.mainWidget.loadLeaderboard(() => { }, false);
       });
     }
 
@@ -2731,7 +2463,7 @@ export const LbWidget = function (options) {
             _this.settings.miniScoreBoard.loadScoreBoard();
           }
           if (_this.settings.mainWidget.settings.active) {
-            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            _this.settings.mainWidget.loadLeaderboard(() => { }, true);
           }
 
           // restart leaderboard refresh
@@ -2781,7 +2513,7 @@ export const LbWidget = function (options) {
               _this.settings.miniScoreBoard.loadScoreBoard();
             }
             if (_this.settings.mainWidget.settings.active) {
-              _this.settings.mainWidget.loadLeaderboard(() => {}, isReloadTime);
+              _this.settings.mainWidget.loadLeaderboard(() => { }, isReloadTime);
             }
 
             // restart leaderboard refresh
@@ -3211,7 +2943,7 @@ export const LbWidget = function (options) {
         await _this.optInMemberToActiveCompetition(function () {
           setTimeout(function () {
             preLoader.hide();
-            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            _this.settings.mainWidget.loadLeaderboard(() => { }, true);
           }, 2000);
         });
       });
@@ -3382,8 +3114,8 @@ export const LbWidget = function (options) {
 
         if (_this.settings.competition.activeContest.statusCode === 15) {
           _this.checkForAvailableRewards(1, () => {
-            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(() => {});
-            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(() => { });
+            _this.settings.mainWidget.loadLeaderboard(() => { }, true);
             preLoader.hide();
           });
         } else {
@@ -3399,7 +3131,7 @@ export const LbWidget = function (options) {
               });
               _this.settings.callbacks.onLeaderboardUpdates(data);
               _this.settings.mainWidget.leaderboardDetailsUpdate();
-              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () { });
               _this.checkForAvailableRewards(1);
             })
             .catch(error => {
@@ -3424,7 +3156,7 @@ export const LbWidget = function (options) {
       if (missingMember) {
         missingMember.style.display = 'none';
       }
-      _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
+      _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () { });
       _this.settings.mainWidget.hideCompetitionList();
 
       const member = query(_this.settings.mainWidget.settings.leaderboard.resultContainer, '.cl-lb-member-row');
@@ -4052,9 +3784,9 @@ export const LbWidget = function (options) {
         _this.activeDataRefresh(function () {
           _this.settings.mainWidget.hideCompetitionList(async function () {
             if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () { });
             } else if (_this.settings.competition.activeContest !== null) {
-              _this.settings.mainWidget.loadCompetitionDetails(function () {});
+              _this.settings.mainWidget.loadCompetitionDetails(function () { });
             }
 
             const lbContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.tournaments.containerClass);
@@ -4086,7 +3818,7 @@ export const LbWidget = function (options) {
 
       // messages details back button
     } else if (hasClass(el, 'cl-main-widget-inbox-details-back-btn')) {
-      _this.settings.mainWidget.hideMessageDetails(() => {}, true);
+      _this.settings.mainWidget.hideMessageDetails(() => { }, true);
 
       // mission details back button
     } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
@@ -4168,7 +3900,7 @@ export const LbWidget = function (options) {
     ) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
-        _this.settings.mainWidget.loadMessageDetails(data, function () {});
+        _this.settings.mainWidget.loadMessageDetails(data, function () { });
         _this.updateMessageStatus([messageId], 'Read');
       });
 
@@ -4307,7 +4039,7 @@ export const LbWidget = function (options) {
             // } else if (_this.settings.competition.activeContest !== null) {
             //   _this.settings.mainWidget.loadCompetitionDetails(function () {});
             // }
-            _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
+            _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () { });
             _this.checkForAvailableRewards(1, function () {
               if (_this.settings.mainWidget.settings.active) {
                 _this.settings.mainWidget.updateLeaderboard();
@@ -4381,7 +4113,7 @@ export const LbWidget = function (options) {
     document.body.addEventListener('click', function (event) {
       const el = event.target;
 
-      _this.eventHandlers(el).then(() => {});
+      _this.eventHandlers(el).then(() => { });
     });
 
     // if (_this.isMobile()) {
@@ -4568,7 +4300,7 @@ export const LbWidget = function (options) {
       }
 
       if (!this.settings.debug) {
-        this.apiClientStomp.client.debug = () => {};
+        this.apiClientStomp.client.debug = () => { };
       }
       await this.apiClientStomp.connect({ token: this.settings.authToken });
 
@@ -4618,13 +4350,13 @@ export const LbWidget = function (options) {
             });
             _this.settings.callbacks.onLeaderboardUpdates(json);
             // this.settings.miniScoreBoard.loadScoreBoard(true);
-            this.settings.mainWidget.loadLeaderboard(() => {}, false);
+            this.settings.mainWidget.loadLeaderboard(() => { }, false);
           }
         }
 
         if (json && json.entityType === 'Message') {
           setTimeout(async () => {
-            await _this.getMessage(json.entityId, () => {}, true);
+            await _this.getMessage(json.entityId, () => { }, true);
           }, 2000);
 
           const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
@@ -4638,7 +4370,7 @@ export const LbWidget = function (options) {
             }
 
             if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
-              _this.settings.mainWidget.loadMessages(1, () => {});
+              _this.settings.mainWidget.loadMessages(1, () => { });
             }
           }
         }
@@ -4665,7 +4397,7 @@ export const LbWidget = function (options) {
             ) {
               if (!['Claimed', 'Expired'].includes(awardData.data[0].status)) {
                 const iwAward = awardData.data[0];
-                await _this.claimAward(iwAward.id, () => {});
+                await _this.claimAward(iwAward.id, () => { });
                 setTimeout(async () => {
                   await _this.settings.mainWidget.loadDashboardInstantWins();
                 }, 2000);
