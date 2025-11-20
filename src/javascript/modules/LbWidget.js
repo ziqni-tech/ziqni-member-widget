@@ -17,6 +17,7 @@ import pagination from '../utils/paginator';
 import { ITEMS_PER_PAGE } from './mainWidget/constants';
 import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests } from './lbWidget/services/competitionService';
+import { getAchievements } from './lbWidget/services/achievementService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -52,6 +53,7 @@ import {
   InstantWinAvailablePlaysRequest,
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Main leaderboard widget, controls all actions and initiation logic.
@@ -872,17 +874,11 @@ export const LbWidget = function (options) {
   this.checkForAvailableAchievements = async function (pageNumber, callback, current = 'all') {
     const _this = this;
 
-    let allPageNumber = 1;
-    let finishedPageNumber = 1;
-    let dailyPageNumber = 1;
-    let weeklyPageNumber = 1;
-    let monthlyPageNumber = 1;
-
-    if (current === 'all') allPageNumber = pageNumber;
-    if (current === 'finished') finishedPageNumber = pageNumber;
-    if (current === 'daily') dailyPageNumber = pageNumber;
-    if (current === 'weekly') weeklyPageNumber = pageNumber;
-    if (current === 'monthly') monthlyPageNumber = pageNumber;
+    const allPageNumber = current === 'all' ? pageNumber : 1;
+    const finishedPageNumber = current === 'finished' ? pageNumber : 1;
+    const dailyPageNumber = current === 'daily' ? pageNumber : 1;
+    const weeklyPageNumber = current === 'weekly' ? pageNumber : 1;
+    const monthlyPageNumber = current === 'monthly' ? pageNumber : 1;
 
     if (!this.settings.apiWs.achievementsApiWsClient) {
       this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
@@ -890,130 +886,22 @@ export const LbWidget = function (options) {
 
     const moreValue = this.settings.navigation.achievements.showReadyAchievements ? 10 : 20;
 
-    const achievementRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (allPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
     const finishedDateFilter = new Date();
     finishedDateFilter.setDate(finishedDateFilter.getDate() - 30);
 
-    const finishedAchievementsRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        endDate: {
-          before: (new Date()).toISOString(),
-          after: finishedDateFilter.toISOString()
-        },
-        statusCode: {
-          moreThan: 30,
-          lessThan: 40
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (finishedPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const dailyRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        scheduleTypes: ['Daily'],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (dailyPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const weeklyRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        scheduleTypes: ['Weekly'],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (weeklyPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const monthlyRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        scheduleTypes: ['Monthly'],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (monthlyPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const json = await this.getAchievements(achievementRequest);
-
+    const json = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+      moreThan: moreValue,
+      lessThan: 30,
+      skip: (allPageNumber - 1) * 6,
+      limit: 6,
+      constraints: ['withoutMissions']
+    });
     _this.settings.achievements.list = json.data;
     _this.settings.achievements.totalCount = json.meta.totalRecordsFound || 0;
+
     const optInAchievements = json.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
     let optInIds = [];
     if (optInAchievements.length) {
@@ -1061,7 +949,27 @@ export const LbWidget = function (options) {
     }
 
     if (this.settings.showAchievementsFilter) {
-      const dailyJson = await this.getAchievements(dailyRequest);
+      const dailyRequest = {
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        moreThan: moreValue,
+        lessThan: 30,
+        scheduleTypes: ['Daily'],
+        skip: (dailyPageNumber - 1) * 6,
+        limit: 6,
+        constraints: ['withoutMissions']
+      };
+
+      const weeklyRequest = cloneDeep(dailyRequest);
+      weeklyRequest.scheduleTypes = ['Weekly'];
+      weeklyRequest.skip = (weeklyPageNumber - 1) * 6;
+
+      const monthlyRequest = cloneDeep(dailyRequest);
+      monthlyRequest.scheduleTypes = ['Monthly'];
+      monthlyRequest.skip = (monthlyPageNumber - 1) * 6;
+
+      const dailyJson = await getAchievements(dailyRequest);
       this.settings.achievements.daily = dailyJson.data;
 
       const optInDailyAchievements = dailyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
@@ -1111,7 +1019,7 @@ export const LbWidget = function (options) {
         });
       }
 
-      const weeklyJson = await this.getAchievements(weeklyRequest);
+      const weeklyJson = await getAchievements(weeklyRequest);
       this.settings.achievements.weekly = weeklyJson.data;
 
       const optInWeeklyAchievements = weeklyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
@@ -1161,7 +1069,7 @@ export const LbWidget = function (options) {
         });
       }
 
-      const monthlyJson = await this.getAchievements(monthlyRequest);
+      const monthlyJson = await getAchievements(monthlyRequest);
       this.settings.achievements.monthly = monthlyJson.data;
 
       const optInMonthlyAchievements = monthlyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
@@ -1211,7 +1119,20 @@ export const LbWidget = function (options) {
         });
       }
 
-      const finishedJson = await this.getAchievements(finishedAchievementsRequest);
+      const finishedJson = await getAchievements({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        endDate: {
+          before: (new Date()).toISOString(),
+          after: finishedDateFilter.toISOString()
+        },
+        moreThan: 30,
+        lessThan: 40,
+        skip: (finishedPageNumber - 1) * 6,
+        limit: 6,
+        constraints: ['withoutMissions']
+      });
       this.settings.achievements.finished = finishedJson.data;
       this.settings.achievements.finishedTotalCount = finishedJson.meta.totalRecordsFound || 0;
 
