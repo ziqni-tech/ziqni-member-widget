@@ -13,6 +13,10 @@ const stusCodes = {
   ready: {
     moreThan: 10,
     lessThan: 20
+  },
+  finished: {
+    moreThan: 30,
+    lessThan: 50
   }
 };
 
@@ -24,7 +28,7 @@ const getCompetitionsApi = async (apiClient, competitionRequest) => {
     competitionsApiWsClient = new CompetitionsApiWs(apiClient);
   }
   return new Promise((resolve, reject) => {
-    competitionsApiWsClient.getCompetitions(competitionRequest, (json) => { resolve(json.data); });
+    competitionsApiWsClient.getCompetitions(competitionRequest, (json) => { resolve(json); });
   });
 };
 
@@ -37,7 +41,7 @@ const getContestsApi = async (apiClient, contestRequest) => {
   });
 };
 
-export async function getCompetitions(apiClient, language, status, productIds, limit, skip) {
+export async function getCompetitions({ apiClient, language, status, productIds, limit, skip, endDateRange = null }) {
   const request = CompetitionRequest.constructFromObject({
     languageKey: language,
     competitionFilter: {
@@ -52,19 +56,24 @@ export async function getCompetitions(apiClient, language, status, productIds, l
     }
   }, null);
 
+  if (endDateRange) {
+    request.competitionFilter.endDateRange = endDateRange;
+  }
+
   return await getCompetitionsApi(apiClient, request);
 };
 
-export async function getContests(apiClient, language, competitionIds, limit, skip) {
+export async function getContests({ apiClient, language, competitionIds, limit, skip, sortBy = [], constraints = [] }) {
   const request = ContestRequest.constructFromObject({
     languageKey: language,
     contestFilter: {
-      sortBy: [],
+      sortBy: sortBy,
       competitionIds: competitionIds,
       statusCode: {
         moreThan: 0,
         lessThan: 100
       },
+      constraints: constraints,
       limit: limit,
       skip: skip
     }

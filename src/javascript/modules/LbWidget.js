@@ -29,10 +29,7 @@ import {
   AchievementRequest,
   AchievementsApiWs,
   ApiClientStomp,
-  CompetitionRequest,
   CompetitionsApiWs,
-  ContestRequest,
-  ContestsApiWs,
   ManageOptinRequest,
   MemberRequest,
   MembersApiWs,
@@ -273,28 +270,36 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardCompetitions = async function () {
-    let activeCompetitionsData = await getCompetitions(
-      this.apiClientStomp,
-      this.settings.language,
-      'active',
-      this.settings.productIds,
-      2,
-      0
-    );
+    const activeCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'active',
+      productIds: this.settings.productIds,
+      limit: 2,
+      skip: 0
+    });
+    let activeCompetitionsData = activeCompetitions.data;
 
-    let readyCompetitionsData = await getCompetitions(
-      this.apiClientStomp,
-      this.settings.language,
-      'ready',
-      this.settings.productIds,
-      2,
-      0
-    );
+    const readyCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'ready',
+      productIds: this.settings.productIds,
+      limit: 2,
+      skip: 0
+    });
+    let readyCompetitionsData = readyCompetitions.data;
 
     if (activeCompetitionsData) {
       const ids = activeCompetitionsData.map(a => a.id);
 
-      let contests = await getContests(this.apiClientStomp, this.settings.language, ids, 20, 0);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -360,74 +365,44 @@ export const LbWidget = function (options) {
     activePageNumber = 1,
     finishedPageNumber = 1
   ) {
-    const readyCompetitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 10,
-          lessThan: 20
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: ITEMS_PER_PAGE.TOURNAMENTS,
-        skip: (readyPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
-      }
-    }, null);
-
-    const activeCompetitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: ITEMS_PER_PAGE.TOURNAMENTS,
-        skip: (activePageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
-      }
-    }, null);
-
     const finishedDateFilter = new Date();
     finishedDateFilter.setDate(finishedDateFilter.getDate() - this.settings.historicalData.finalisedCompetitions ?? 30);
 
-    const finishedCompetitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 30,
-          lessThan: 50
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        endDateRange: {
-          before: (new Date()).toISOString(),
-          after: finishedDateFilter.toISOString()
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: ITEMS_PER_PAGE.TOURNAMENTS,
-        skip: (finishedPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
-      }
-    }, null);
-
-    const readyCompetitions = await this.getCompetitionsApi(readyCompetitionRequest);
+    const readyCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'ready',
+      productIds: this.settings.productIds,
+      limit: ITEMS_PER_PAGE.TOURNAMENTS,
+      skip: (readyPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
+    });
     this.settings.tournaments.readyCompetitions = readyCompetitions.data;
     this.settings.tournaments.readyTotalCount = readyCompetitions.meta.totalRecordsFound;
 
-    const activeCompetitions = await this.getCompetitionsApi(activeCompetitionRequest);
+    const activeCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'active',
+      productIds: this.settings.productIds,
+      limit: ITEMS_PER_PAGE.TOURNAMENTS,
+      skip: (activePageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
+    });
     this.settings.tournaments.activeCompetitions = activeCompetitions.data;
     this.settings.tournaments.totalCount = activeCompetitions.meta.totalRecordsFound;
 
     if (this.settings.navigation.tournaments.showFinishedTournaments) {
-      const finishedCompetitions = await this.getCompetitionsApi(finishedCompetitionRequest);
+      const finishedCompetitions = await getCompetitions({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        status: 'finished',
+        productIds: this.settings.productIds,
+        limit: ITEMS_PER_PAGE.TOURNAMENTS,
+        skip: (finishedPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS,
+        endDateRange: {
+          before: (new Date()).toISOString(),
+          after: finishedDateFilter.toISOString()
+        }
+      });
       this.settings.tournaments.finishedCompetitions = finishedCompetitions.data ? finishedCompetitions.data : [];
       this.settings.tournaments.finishedTotalCount = finishedCompetitions.meta.totalRecordsFound;
     }
@@ -435,21 +410,13 @@ export const LbWidget = function (options) {
     if (this.settings.tournaments.activeCompetitions.length) {
       const ids = this.settings.tournaments.activeCompetitions.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -481,21 +448,13 @@ export const LbWidget = function (options) {
     if (this.settings.tournaments.readyCompetitions.length) {
       const ids = this.settings.tournaments.readyCompetitions.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -527,21 +486,13 @@ export const LbWidget = function (options) {
     if (this.settings.navigation.tournaments.showFinishedTournaments && this.settings.tournaments.finishedCompetitions.length) {
       const ids = this.settings.tournaments.finishedCompetitions.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -589,7 +540,7 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.getCompetitionsByProducts = async (productIds, statusCodeRange = { moreThan: 10, lessThan: 50 }) => {
+  this.getCompetitionsByProducts = async (productIds, statusCode = 'active') => {
     if (!this.apiClientStomp) {
       await this.initApiClientStomp();
     }
@@ -597,38 +548,13 @@ export const LbWidget = function (options) {
       this.settings.apiWs.competitionsApiWsClient = new CompetitionsApiWs(this.apiClientStomp);
     }
 
-    const competitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: statusCodeRange,
-        productIds: productIds,
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 20,
-        skip: 0
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.competitionsApiWsClient.getCompetitions(competitionRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
-  this.getCompetitionsApi = async (competitionRequest) => {
-    if (!this.apiClientStomp) {
-      await this.initApiClientStomp();
-    }
-    if (!this.settings.apiWs.competitionsApiWsClient) {
-      this.settings.apiWs.competitionsApiWsClient = new CompetitionsApiWs(this.apiClientStomp);
-    }
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.competitionsApiWsClient.getCompetitions(competitionRequest, (json) => {
-        resolve(json);
-      });
+    return await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: statusCode,
+      productIds: productIds,
+      limit: 20,
+      skip: 0
     });
   };
 
@@ -727,22 +653,15 @@ export const LbWidget = function (options) {
       this.settings.competition.activeCompetition.optin = true;
     }
 
-    const contestRequest = ContestRequest.constructFromObject({
-      languageKey: this.settings.language,
-      contestFilter: {
-        sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
-        competitionIds: [json[0].id],
-        statusCode: {
-          moreThan: 0,
-          lessThan: 100
-        },
-        constraints: ['hasOptInStatus'],
-        limit: 20,
-        skip: 0
-      }
-    }, null);
-
-    const contests = await this.getContests(contestRequest);
+    const contests = await getContests({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      competitionIds: [json[0].id],
+      limit: 20,
+      skip: 0,
+      sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
+      constraints: ['hasOptInStatus']
+    });
 
     if (contests.length) {
       this.settings.competition.contests = contests;
@@ -812,17 +731,6 @@ export const LbWidget = function (options) {
       callback();
     }
     this.settings.mainWidget.leaderboardDetailsUpdate();
-  };
-
-  this.getContests = async (contestRequest) => {
-    if (!this.settings.apiWs.contestsApiWsClient) {
-      this.settings.apiWs.contestsApiWsClient = new ContestsApiWs(this.apiClientStomp);
-    }
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.contestsApiWsClient.getContests(contestRequest, (json) => {
-        resolve(json.data);
-      });
-    });
   };
 
   this.getLeaderboardData = async function (count, callback) {
