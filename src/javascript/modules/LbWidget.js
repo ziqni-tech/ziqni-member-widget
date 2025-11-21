@@ -27,8 +27,6 @@ import { MainWidget } from './MainWidget';
 import { CanvasAnimation } from './CanvasAnimation';
 
 import {
-  AchievementRequest,
-  AchievementsApiWs,
   ApiClientStomp,
   CompetitionsApiWs,
   ManageOptinRequest,
@@ -140,24 +138,15 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardMissions = async () => {
-    const missionsRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: 0,
-        limit: 2,
-        constraints: ['mission']
-      }
-    }, null);
-
-    const response = await this.getAchievements(missionsRequest);
+    const response = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 20,
+      lessThan: 30,
+      skip: 0,
+      limit: 2,
+      constraints: ['mission']
+    });
     let missions = response.data;
 
     if (missions.length) {
@@ -880,10 +869,6 @@ export const LbWidget = function (options) {
     const weeklyPageNumber = current === 'weekly' ? pageNumber : 1;
     const monthlyPageNumber = current === 'monthly' ? pageNumber : 1;
 
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
-
     const moreValue = this.settings.navigation.achievements.showReadyAchievements ? 10 : 20;
 
     const finishedDateFilter = new Date();
@@ -1278,8 +1263,6 @@ export const LbWidget = function (options) {
       this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
     }
 
-    // https://first-space.cdn.ziqni.com/system-resources/instant-wins/mUSsjJcB24Zl4KhqAbad
-
     const filePath = `https://${this.settings.member.spaceName}.cdn.ziqni.com/system-resources/instant-wins/${fileName}`;
 
     return new Promise((resolve, reject) => {
@@ -1294,32 +1277,6 @@ export const LbWidget = function (options) {
           console.log('instant win settings file err', err);
           reject(err);
         });
-
-      // const fileRequest = {
-      //   ids: [],
-      //   limit: 20,
-      //   skip: 0,
-      //   parentFolderPath: '/instant-wins',
-      //   repositoryId: '-7KLxoMBDhZrpIHgC4eP'
-      // };
-      //
-      // this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, async (res) => {
-      //   const settingsFile = res.data.find(item => item.name.trim() === fileName);
-      //
-      //   if (settingsFile) {
-      //     fetch(settingsFile.uri)
-      //       .then((data) => {
-      //         return data.json();
-      //       })
-      //       .then((data) => {
-      //         resolve(data);
-      //       })
-      //       .catch((err) => {
-      //         console.log('instant win settings file err', err);
-      //         reject(err);
-      //       });
-      //   }
-      // });
     });
   };
 
@@ -1347,42 +1304,6 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function' && achievementData.length) {
       callback(achievementData[0]);
     }
-  };
-
-  this.getAchievements = async function (achievementRequest) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
-  this.getAchievementsByIds = async function (achievementIds) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
-
-    const request = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: achievementIds,
-        statusCode: {
-          moreThan: 0,
-          lessThan: 100
-        },
-        limit: achievementIds.length
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.achievementsApiWsClient.getAchievements(request, (json) => {
-        resolve(json.data);
-      });
-    });
   };
 
   this.leaveAchievement = function (activeAchievementId, isDashboard = false) {
@@ -1907,94 +1828,80 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.checkForAvailableMissions = function (pageNumber, callback) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
+  this.checkForAvailableMissions = async function (pageNumber, callback) {
+    const missions = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 20,
+      lessThan: 30,
+      skip: (pageNumber - 1) * 6,
+      limit: 6,
+      constraints: ['mission']
+    });
 
-    const missionsRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: [],
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
+    this.settings.missions.missions = missions.data ?? [];
+    this.settings.missions.totalCount = (missions.meta && missions.meta.totalRecordsFound) ? missions.meta.totalRecordsFound : 0;
+
+    if (this.settings.missions.missions.length) {
+      const ids = this.settings.missions.missions.map(m => m.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Achievement',
+          entityIds: ids
         }],
-        skip: (pageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['mission']
-      }
-    }, null);
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
 
-    this.settings.apiWs.achievementsApiWsClient.getAchievements(missionsRequest, async (json) => {
-      this.settings.missions.missions = json.data ?? [];
-      this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+      this.settings.missions.missions = this.settings.missions.missions.map(mission => {
+        const idx = rewardsData.findIndex(r => r.entityId === mission.id);
+        if (idx !== -1) {
+          mission.reward = rewardsData[idx];
+        }
 
-      if (this.settings.missions.missions.length) {
-        const ids = this.settings.missions.missions.map(m => m.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
-          currencyKey: this.settings.currency,
-          skip: 0,
-          limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
+        return mission;
+      });
 
-        this.settings.missions.missions = this.settings.missions.missions.map(mission => {
-          const idx = rewardsData.findIndex(r => r.entityId === mission.id);
-          if (idx !== -1) {
-            mission.reward = rewardsData[idx];
-          }
+      for (const id of ids) {
+        const graph = await this.getMissionsGraph(id);
 
-          return mission;
-        });
+        const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+        this.settings.missions.missions[idx].dependencies = [];
 
-        for (const id of ids) {
-          const graph = await this.getMissionsGraph(id);
+        if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
+          const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
+          for (const edge of filtered) {
+            const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
+            const achievement = graph.nodes[idx];
 
-          const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
-          this.settings.missions.missions[idx].dependencies = [];
+            const rewardRequest = {
+              entityFilter: [{
+                entityType: 'achievement',
+                entityIds: [edge.tailEntityId]
+              }],
+              currencyKey: this.settings.currency,
+              skip: 0,
+              limit: 5
+            };
+            const rewards = await this.getRewardsApi(rewardRequest);
+            const rewardsData = rewards.data;
 
-          if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
-            const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
-            for (const edge of filtered) {
-              const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
-              const achievement = graph.nodes[idx];
+            achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
 
-              const rewardRequest = {
-                entityFilter: [{
-                  entityType: 'achievement',
-                  entityIds: [edge.tailEntityId]
-                }],
-                currencyKey: this.settings.currency,
-                skip: 0,
-                limit: 5
-              };
-              const rewards = await this.getRewardsApi(rewardRequest);
-              const rewardsData = rewards.data;
-
-              achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
-
-              const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
-              this.settings.missions.missions[missionIdx].dependencies.push({
-                ordering: edge.ordering,
-                achievement: achievement
-              });
-            }
+            const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+            this.settings.missions.missions[missionIdx].dependencies.push({
+              ordering: edge.ordering,
+              achievement: achievement
+            });
           }
         }
       }
+    }
 
-      if (typeof callback === 'function') callback(this.settings.missions.missions);
-    });
+    if (typeof callback === 'function') callback(this.settings.missions.missions);
   };
 
   this.getMissionsGraph = async function (id, isDependantId = false) {
@@ -2016,69 +1923,63 @@ export const LbWidget = function (options) {
   };
 
   this.getMission = async function (id, callback) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
+    const json = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 0,
+      lessThan: 100,
+      ids: [id],
+      skip: 0,
+      limit: 1
+    });
+
+    const mainData = json.data[0];
+
+    const rewardRequest = {
+      entityFilter: [{
+        entityType: 'Achievement',
+        entityIds: [mainData.id]
+      }],
+      currencyKey: this.settings.currency,
+      skip: 0,
+      limit: 20
+    };
+
+    const rewardRaw = await this.getRewardsApi(rewardRequest);
+    if (rewardRaw && rewardRaw.data && rewardRaw.data.length) {
+      mainData.reward = rewardRaw.data[0];
     }
 
-    const achievementRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: [id],
-        skip: 0,
-        limit: 1
-      }
-    }, null);
-
-    this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, async (json) => {
-      const mainData = json.data[0];
-
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Achievement',
-          entityIds: [mainData.id]
-        }],
-        currencyKey: this.settings.currency,
-        skip: 0,
-        limit: 20
-      };
-
-      const rewardRaw = await this.getRewardsApi(rewardRequest);
-      if (rewardRaw && rewardRaw.data && rewardRaw.data.length) {
-        mainData.reward = rewardRaw.data[0];
-      }
-
-      const tempGraphRequest = EntityGraphRequest.constructFromObject({
-        ids: [id],
-        includes: ['iconLink', 'termsAndConditions', 'description']
-      });
-
-      this.getGraphApi(tempGraphRequest)
-        .then(json => {
-          if (typeof callback === 'function') {
-            const data = {
-              data: mainData,
-              graph: json.data
-            };
-            callback(data);
-          }
-        })
-        .catch(error => {
-          this.log(error);
-        });
+    const tempGraphRequest = EntityGraphRequest.constructFromObject({
+      ids: [id],
+      includes: ['iconLink', 'termsAndConditions', 'description']
     });
+
+    this.getGraphApi(tempGraphRequest)
+      .then(json => {
+        if (typeof callback === 'function') {
+          const data = {
+            data: mainData,
+            graph: json.data
+          };
+          callback(data);
+        }
+      })
+      .catch(error => {
+        this.log(error);
+      });
   };
 
   this.getMissionListItemData = async (id) => {
-    const achievementRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: [id],
-        skip: 0,
-        limit: 1
-      }
-    }, null);
-
-    let mission = await this.getAchievements(achievementRequest);
+    let mission = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 0,
+      lessThan: 100,
+      ids: [id],
+      skip: 0,
+      limit: 1
+    });
     mission = mission.data[0];
     mission.dependencies = [];
 
