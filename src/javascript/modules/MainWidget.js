@@ -4135,7 +4135,6 @@ export const MainWidget = function (options) {
 
     _this.settings.lbWidget.checkForAvailableMissions(pageNumber, function () {
       _this.missionsListLayout(pageNumber, paginationArr);
-      // _this.settings.lbWidget.updateMissionsNavigationCounts();
 
       if (typeof callback === 'function') {
         callback();

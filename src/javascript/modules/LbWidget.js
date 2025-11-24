@@ -18,6 +18,7 @@ import { ITEMS_PER_PAGE } from './mainWidget/constants';
 import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests } from './lbWidget/services/competitionService';
 import { getAchievements } from './lbWidget/services/achievementService';
+import { attachReward, attachRewards } from './lbWidget/services/rewardService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -294,22 +295,15 @@ export const LbWidget = function (options) {
 
       const contestIds = contests.map(a => a.id);
 
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Contest',
-          entityIds: contestIds
-        }],
+      contests = await attachRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: contests,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: contestIds,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      contests = contests.map(c => {
-        c.rewards = rewardsData.filter(r => r.entityId === c.id);
-
-        return c;
       });
 
       activeCompetitionsData = activeCompetitionsData.map(comp => {
@@ -813,53 +807,6 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.updateLeaderboardNavigationCounts = function () {
-    var _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      var menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.tournaments.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.tournaments.totalCount;
-    }
-  };
-
-  this.updateAchievementNavigationCounts = function () {
-    var _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      var menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.achievements.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.achievements.totalCount;
-    }
-  };
-
-  this.updateRewardsNavigationCounts = function () {
-    const _this = this;
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      const menuItemCount = query(
-        _this.settings.mainWidget.settings.navigation,
-        '.' + _this.settings.navigation.rewards.navigationClass + ' .cl-main-navigation-item-count'
-      );
-      menuItemCount.innerHTML = _this.settings.awards.totalCount;
-    }
-  };
-
-  this.updateMessagesNavigationCounts = function () {
-    const _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      const menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.inbox.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.messages.totalCount;
-    }
-  };
-
-  this.updateMissionsNavigationCounts = function () {
-    const _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      const menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.missions.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.missions.totalCount;
-    }
-  };
-
   this.checkForAvailableAchievements = async function (pageNumber, callback, current = 'all') {
     const _this = this;
 
@@ -911,25 +858,16 @@ export const LbWidget = function (options) {
 
     if (_this.settings.achievements.list.length) {
       const ids = _this.settings.achievements.list.map(a => a.id);
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Achievement',
-          entityIds: ids
-        }],
+
+      _this.settings.achievements.list = await attachReward({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: _this.settings.achievements.list,
         currencyKey: this.settings.currency,
+        entityType: 'Achievement',
+        entityIds: ids,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      _this.settings.achievements.list = _this.settings.achievements.list.map(achievement => {
-        const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-        if (idx !== -1) {
-          achievement.reward = rewardsData[idx];
-        }
-
-        return achievement;
       });
     }
 
@@ -982,25 +920,16 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.daily.length) {
         const ids = _this.settings.achievements.daily.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.daily = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.daily,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.daily = _this.settings.achievements.daily.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
 
@@ -1032,25 +961,16 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.weekly.length) {
         const ids = _this.settings.achievements.weekly.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.weekly = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.weekly,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.weekly = _this.settings.achievements.weekly.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
 
@@ -1082,25 +1002,16 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.monthly.length) {
         const ids = _this.settings.achievements.monthly.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.monthly = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.monthly,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.monthly = _this.settings.achievements.monthly.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
 
@@ -1123,25 +1034,16 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.finished.length) {
         const ids = _this.settings.achievements.finished.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.finished = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.finished,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.finished = _this.settings.achievements.finished.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
     }
@@ -1427,7 +1329,6 @@ export const LbWidget = function (options) {
           }
           if (json.data[0].messageType === 'InboxItem') {
             _this.checkForAvailableMessages(1, function () {
-              _this.updateMessagesNavigationCounts();
               if (typeof callback === 'function') {
                 callback();
               }
@@ -2187,7 +2088,6 @@ export const LbWidget = function (options) {
     }
 
     _this.checkForAvailableCompetitions(async function () {
-      // _this.updateLeaderboardNavigationCounts();
       await _this.prepareActiveCompetition(function () {
         // clear to not clash with LB refresh that could happen at same time
         if (_this.settings.leaderboard.refreshInterval) {
@@ -2226,13 +2126,6 @@ export const LbWidget = function (options) {
             callback();
           }
         }
-        // _this.checkForAvailableAwards(
-        //   function () {
-        //     // _this.updateRewardsNavigationCounts();
-        //   },
-        //   1,
-        //   1
-        // );
         _this.checkForAvailableRewards(1, function () {
           if (_this.settings.mainWidget.settings.active) {
             _this.settings.mainWidget.updateLeaderboard();
@@ -4108,7 +4001,6 @@ export const LbWidget = function (options) {
 
         if (json && json.entityType === 'Contest') {
           _this.checkForAvailableCompetitions(async function () {
-            // _this.updateLeaderboardNavigationCounts();
           });
           if (headers.callback && headers.callback === 'entityStateChanged') {
             if (typeof this.settings.callbacks.onContestStatusChanged === 'function') {
