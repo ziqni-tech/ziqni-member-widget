@@ -1437,17 +1437,15 @@ export const LbWidget = function (options) {
     this.settings.awards.claimedAwards = claimedAwards.data;
     const claimedRewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
     if (claimedRewardIds.length) {
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Reward',
-          entityIds: claimedRewardIds
-        }],
+      const rewards = await getRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
         currencyKey: this.settings.currency,
+        entityType: 'Reward',
+        entityIds: claimedRewardIds,
         skip: 0,
         limit: 20
-      };
-
-      const rewards = await this.getRewardsApi(rewardRequest);
+      });
       const rewardsData = rewards.data;
 
       this.settings.awards.claimedAwards = this.settings.awards.claimedAwards.map(award => {
@@ -1469,17 +1467,15 @@ export const LbWidget = function (options) {
 
     const rewardIds = this.settings.awards.availableAwards.map(c => c.rewardId);
     if (rewardIds.length) {
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Reward',
-          entityIds: rewardIds
-        }],
+      const rewards = await getRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
         currencyKey: this.settings.currency,
+        entityType: 'Reward',
+        entityIds: rewardIds,
         skip: 0,
         limit: 20
-      };
-
-      const rewards = await this.getRewardsApi(rewardRequest);
+      });
       const rewardsData = rewards.data;
 
       this.settings.awards.availableAwards = this.settings.awards.availableAwards.map(award => {
@@ -1501,17 +1497,15 @@ export const LbWidget = function (options) {
 
     const expiredRewardIds = this.settings.awards.expiredAwards.map(c => c.rewardId);
     if (expiredRewardIds.length) {
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Reward',
-          entityIds: expiredRewardIds
-        }],
+      const rewards = await getRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
         currencyKey: this.settings.currency,
+        entityType: 'Reward',
+        entityIds: expiredRewardIds,
         skip: 0,
         limit: 20
-      };
-
-      const rewards = await this.getRewardsApi(rewardRequest);
+      });
       const rewardsData = rewards.data;
 
       this.settings.awards.expiredAwards = this.settings.awards.expiredAwards.map(award => {
