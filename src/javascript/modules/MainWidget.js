@@ -13,6 +13,13 @@ import cytoscape from 'cytoscape';
 import dagre from 'cytoscape-dagre';
 import tournamentBrackets from './TournamentBrackets';
 import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
+import {
+  createAchievementPaginators,
+  createAwardPaginators,
+  createTournamentPaginators
+} from './mainWidget/paginatorUtils';
+import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
+import { createElementWithClass } from './mainWidget/domUtils';
 
 /**
  * MainWidget
@@ -172,168 +179,69 @@ export const MainWidget = function (options) {
     }
   }
 
-  /**
-   * Accordion style layout
-   * - parameters:
-   *      - label: String "Available rewards"
-   *      - type: String "available-rewards"
-   *      - shown: Boolean true/false
-   *
-   * @memberOf MainWidget
-   * @param data { Array }
-   * @param onLayout { Function }
-   */
   this.awardsList = function (data, onLayout) {
-    const _this = this;
-    const accordionWrapper = document.createElement('div');
-
-    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
-
-    const statusMenu = document.createElement('div');
-    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
-
-    const availableTitle = document.createElement('div');
-    const claimedTitle = document.createElement('div');
-    const expiredTitle = document.createElement('div');
-    const instantWinsTitle = document.createElement('div');
-
-    availableTitle.setAttribute('class', 'cl-main-accordion-container-menu-item availableAwards');
-    claimedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item claimedAwards');
-    expiredTitle.setAttribute('class', 'cl-main-accordion-container-menu-item expiredAwards');
-    instantWinsTitle.setAttribute('class', 'cl-main-accordion-container-menu-item instantWins');
-
     const idx = data.findIndex(d => d.show === true);
-    if (idx !== -1) {
-      switch (data[idx].type) {
-        case 'availableAwards':
-          availableTitle.classList.add('active');
-          break;
-        case 'claimedAwards':
-          claimedTitle.classList.add('active');
-          break;
-        case 'expiredAwards':
-          expiredTitle.classList.add('active');
-          break;
-        case 'instantWins':
-          if (this.settings.lbWidget.settings.instantWins.enable) {
-            instantWinsTitle.classList.add('active');
-          } else {
-            claimedTitle.classList.add('active');
-          }
-          break;
-      }
-    }
+    const menuItems = [];
 
-    availableTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.availableRewards;
-    claimedTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.claimed;
-    expiredTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.expired;
-    instantWinsTitle.innerHTML = _this.settings.lbWidget.settings.translation.rewards.instantWins;
-
-    statusMenu.appendChild(availableTitle);
-    statusMenu.appendChild(claimedTitle);
+    menuItems.push({
+      element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.availableRewards, 'availableAwards', idx !== -1 && data[idx].type === 'availableAwards')
+    });
+    menuItems.push({
+      element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.claimed, 'claimedAwards', idx !== -1 && data[idx].type === 'claimedAwards')
+    });
     if (this.settings.lbWidget.settings.awards.showExpiredAwards) {
-      statusMenu.appendChild(expiredTitle);
+      menuItems.push({
+        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.instantWins, 'expiredAwards', idx !== -1 && data[idx].type === 'expiredAwards')
+      });
     }
     if (this.settings.lbWidget.settings.instantWins.enable) {
-      statusMenu.appendChild(instantWinsTitle);
+      menuItems.push({
+        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.expired, 'instantWins', idx !== -1 && data[idx].type === 'instantWins')
+      });
     }
 
-    accordionWrapper.appendChild(statusMenu);
-
-    mapObject(data, function (entry) {
-      const accordionSection = document.createElement('div');
-      const topShownEntry = document.createElement('div');
-      const accordionListContainer = document.createElement('div');
-      const accordionList = document.createElement('div');
-
-      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      topShownEntry.setAttribute('class', 'cl-accordion-entry');
-      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
-      accordionList.setAttribute('class', 'cl-accordion-list');
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topShownEntry, entry);
-      }
-
-      accordionListContainer.appendChild(accordionList);
-
-      accordionSection.appendChild(accordionListContainer);
-
-      accordionWrapper.appendChild(accordionSection);
-    });
-
-    return accordionWrapper;
+    return buildAccordion(data, menuItems, onLayout);
   };
 
   this.tournamentsList = function (data, onLayout) {
     const _this = this;
-    const accordionWrapper = document.createElement('div');
-
-    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
-
-    const statusMenu = document.createElement('div');
-    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
-
-    const finishedTitle = document.createElement('div');
-    const activeTitle = document.createElement('div');
-    const readyTitle = document.createElement('div');
-
-    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedTournaments');
-    activeTitle.setAttribute('class', 'cl-main-accordion-container-menu-item activeTournaments');
-    readyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item readyTournaments');
-
     const idx = data.findIndex(d => d.show === true);
-    if (idx !== -1) {
-      switch (data[idx].type) {
-        case 'activeCompetitions':
-          activeTitle.classList.add('active');
-          break;
-        case 'finishedCompetitions':
-          finishedTitle.classList.add('active');
-          break;
-        case 'readyCompetitions':
-          readyTitle.classList.add('active');
-          break;
-      }
-    }
+    const menuItems = [];
 
-    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions;
-    activeTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions;
-    readyTitle.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions;
+    menuItems.push({
+      element: createAccordionMenuItem(
+        _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions,
+        'finishedTournaments',
+        idx !== -1 && data[idx].type === 'finishedCompetitions'
+      )
+    });
+    menuItems.push({
+      element: createAccordionMenuItem(
+        _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions,
+        'activeTournaments',
+        idx !== -1 && data[idx].type === 'activeCompetitions'
+      )
+    });
+    menuItems.push({
+      element: createAccordionMenuItem(
+        _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions,
+        'readyTournaments',
+        idx !== -1 && data[idx].type === 'readyCompetitions'
+      )
+    });
 
-    statusMenu.appendChild(finishedTitle);
-    statusMenu.appendChild(activeTitle);
-    statusMenu.appendChild(readyTitle);
-
-    accordionWrapper.appendChild(statusMenu);
-
-    mapObject(data, function (entry) {
-      const accordionSection = document.createElement('div');
-      const accordionLabel = document.createElement('div');
-      const topShownEntry = document.createElement('div');
-      const accordionListContainer = document.createElement('div');
-      const header = document.createElement('div');
-      const headerLabel = document.createElement('div');
-      const headerDate = document.createElement('div');
-      const headerPrize = document.createElement('div');
-      const accordionList = document.createElement('div');
-
-      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      topShownEntry.setAttribute('class', 'cl-accordion-entry');
-      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
-      header.setAttribute('class', 'cl-accordion-list-container-header');
-      headerLabel.setAttribute('class', 'cl-accordion-list-container-header-label');
-      headerDate.setAttribute('class', 'cl-accordion-list-container-header-date');
-      headerPrize.setAttribute('class', 'cl-accordion-list-container-header-prize');
-      accordionList.setAttribute('class', 'cl-accordion-list');
-
-      headerLabel.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.label;
-      headerDate.innerHTML = _this.settings.lbWidget.settings.translation.tournaments.date;
-      headerPrize.innerHTML = _this.settings.lbWidget.settings.tournaments.showTotalPrize ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel : _this.settings.lbWidget.settings.translation.leaderboard.prize;
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topShownEntry, entry);
-      }
+    return buildAccordion(data, menuItems, function (accordionSection, accordionList, topEntryContainer, entry, accordionListContainer) {
+      const accordionLabel = createElementWithClass('div', '');
+      const header = createElementWithClass('div', 'cl-accordion-list-container-header');
+      const headerLabel = createElementWithClass('div', 'cl-accordion-list-container-header-label', _this.settings.lbWidget.settings.translation.tournaments.label);
+      const headerDate = createElementWithClass('div', 'cl-accordion-list-container-header-date', _this.settings.lbWidget.settings.translation.tournaments.date);
+      const headerPrize = createElementWithClass(
+        'div',
+        'cl-accordion-list-container-header-prize',
+        _this.settings.lbWidget.settings.tournaments.showTotalPrize
+          ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel
+          : _this.settings.lbWidget.settings.translation.leaderboard.prize
+      );
 
       header.appendChild(headerLabel);
       header.appendChild(headerDate);
@@ -341,17 +249,19 @@ export const MainWidget = function (options) {
         header.appendChild(headerPrize);
       }
 
-      accordionListContainer.appendChild(header);
-      accordionListContainer.appendChild(accordionList);
+      if (accordionListContainer) {
+        accordionListContainer.insertBefore(header, accordionList);
+      }
 
-      accordionSection.appendChild(accordionLabel);
-      accordionSection.appendChild(topShownEntry);
-      accordionSection.appendChild(accordionListContainer);
+      accordionSection.insertBefore(accordionLabel, accordionSection.firstChild);
+      if (topEntryContainer && accordionListContainer) {
+        accordionSection.insertBefore(topEntryContainer, accordionListContainer);
+      }
 
-      accordionWrapper.appendChild(accordionSection);
+      if (typeof onLayout === 'function') {
+        onLayout(accordionSection, accordionList, topEntryContainer, entry);
+      }
     });
-
-    return accordionWrapper;
   };
 
   this.listsNavigation = function (element) {
@@ -947,38 +857,6 @@ export const MainWidget = function (options) {
 
       rankCheck.push(lb.rank);
     });
-  };
-
-  this.getTournamentReward = function (tournament, rank) {
-    const _this = this;
-    const rewardResponse = [];
-    const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
-
-    if (roundFirstIdx !== -1) {
-      const roundFirst = tournament.contests[roundFirstIdx];
-
-      mapObject(roundFirst.rewards, function (reward) {
-        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-          const rewardRankArr = reward.rewardRank.split(',');
-          rewardRankArr.forEach(r => {
-            const idx = r.indexOf('-');
-            if (idx !== -1) {
-              const start = parseInt(r);
-              const end = parseInt(r.substring(idx + 1));
-              if (rank >= start && rank <= end) {
-                rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-              }
-            } else if (parseInt(r) === rank) {
-              rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-            }
-          });
-        } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
-          rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-        }
-      });
-    }
-
-    return rewardResponse.join(', ');
   };
 
   this.getReward = function (rank) {
@@ -1804,173 +1682,31 @@ export const MainWidget = function (options) {
     const backIcon = query(_this.settings.container, '.cl-main-widget-lb-header-back-icon');
     const preLoader = _this.preloader();
 
-    const totalCount = _this.settings.lbWidget.settings.tournaments.totalCount;
-    const readyTotalCount = _this.settings.lbWidget.settings.tournaments.readyTotalCount;
-    const finishedTotalCount = _this.settings.lbWidget.settings.tournaments.finishedTotalCount;
-    const itemsPerPage = 12;
-
-    const prev = document.createElement('span');
-    prev.setAttribute('class', 'paginator-item prev');
-    const next = document.createElement('span');
-    next.setAttribute('class', 'paginator-item next');
-
-    let paginator = query(listResContainer, '.paginator-active');
-    if (!paginator && totalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(totalCount / itemsPerPage);
-      paginator = document.createElement('div');
-      paginator.setAttribute('class', 'paginator-active');
-      addClass(paginator, 'paginator');
-      addClass(paginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      paginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      paginator.prepend(prev);
-      paginator.appendChild(next);
-    }
-
-    let readyPaginator = query(listResContainer, '.paginator-ready');
-    if (!readyPaginator && readyTotalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(readyTotalCount / itemsPerPage);
-      readyPaginator = document.createElement('div');
-      readyPaginator.setAttribute('class', 'paginator-ready');
-      addClass(readyPaginator, 'paginator');
-      addClass(readyPaginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      readyPaginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      readyPaginator.prepend(prev);
-      readyPaginator.appendChild(next);
-    }
-
-    let finishedPaginator = query(listResContainer, '.paginator-finished');
-    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(finishedTotalCount / itemsPerPage);
-      finishedPaginator = document.createElement('div');
-      finishedPaginator.setAttribute('class', 'paginator-finished');
-      addClass(finishedPaginator, 'paginator');
-      addClass(finishedPaginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      finishedPaginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      finishedPaginator.prepend(prev);
-      finishedPaginator.appendChild(next);
-    }
-
     if (isReady) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'readyCompetitions';
       });
-      if (paginationArr && paginationArr.length) {
-        let page = '';
-        for (const i in paginationArr) {
-          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-        }
-        readyPaginator.innerHTML = page;
-
-        readyPaginator.prepend(prev);
-        readyPaginator.appendChild(next);
-      }
     } else if (isFinished) {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'finishedCompetitions';
       });
-      if (paginationArr && paginationArr.length) {
-        let page = '';
-        for (const i in paginationArr) {
-          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-        }
-        finishedPaginator.innerHTML = page;
-
-        finishedPaginator.prepend(prev);
-        finishedPaginator.appendChild(next);
-      }
     } else {
       _this.settings.tournamentsSection.accordionLayout.map(t => {
         t.show = t.type === 'activeCompetitions';
       });
-      if (paginationArr && paginationArr.length) {
-        let page = '';
-        for (const i in paginationArr) {
-          page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-        }
-        paginator.innerHTML = page;
-
-        paginator.prepend(prev);
-        paginator.appendChild(next);
-      }
     }
+
+    const paginators = createTournamentPaginators(
+      _this.settings.lbWidget.settings.tournaments,
+      listResContainer,
+      readyPageNumber,
+      activePageNumber,
+      finishedPageNumber,
+      paginationArr,
+      isReady,
+      isActive,
+      isFinished
+    );
 
     preLoader.show(function () {
       listIcon.style.display = 'none';
@@ -1999,51 +1735,27 @@ export const MainWidget = function (options) {
       listResContainer.innerHTML = '';
       listResContainer.appendChild(accordionObj);
 
-      if (finishedPaginator) {
+      if (paginators.finished) {
         const finishedContainer = query(listResContainer, '.finishedCompetitions');
         if (finishedContainer) {
           const listContainer = query(finishedContainer, '.cl-accordion-list-container');
-          const paginatorItems = query(finishedPaginator, '.paginator-item');
-          paginatorItems.forEach(item => {
-            removeClass(item, 'active');
-            if (Number(item.dataset.page) === Number(finishedPageNumber)) {
-              addClass(item, 'active');
-            }
-          });
-
-          listContainer.appendChild(finishedPaginator);
+          listContainer.appendChild(paginators.finished);
         }
       }
 
-      if (readyPaginator) {
+      if (paginators.ready) {
         const readyContainer = query(listResContainer, '.readyCompetitions');
         if (readyContainer) {
           const listContainer = query(readyContainer, '.cl-accordion-list-container');
-          const paginatorItems = query(readyPaginator, '.paginator-item');
-          paginatorItems.forEach(item => {
-            removeClass(item, 'active');
-            if (Number(item.dataset.page) === Number(readyPageNumber)) {
-              addClass(item, 'active');
-            }
-          });
-
-          listContainer.appendChild(readyPaginator);
+          listContainer.appendChild(paginators.ready);
         }
       }
 
-      if (paginator) {
+      if (paginators.active) {
         const activeContainer = query(listResContainer, '.activeCompetitions');
         if (activeContainer) {
           const listContainer = query(activeContainer, '.cl-accordion-list-container');
-          const paginatorItems = query(paginator, '.paginator-item');
-          paginatorItems.forEach(item => {
-            removeClass(item, 'active');
-            if (Number(item.dataset.page) === Number(activePageNumber)) {
-              addClass(item, 'active');
-            }
-          });
-
-          listContainer.appendChild(paginator);
+          listContainer.appendChild(paginators.active);
         }
       }
 
@@ -2252,83 +1964,35 @@ export const MainWidget = function (options) {
 
   this.achievementList = function (data, onLayout, achievementsData) {
     const _this = this;
-    const accordionWrapper = document.createElement('div');
-
-    accordionWrapper.setAttribute('class', 'cl-main-accordion-container');
-
-    const statusMenu = document.createElement('div');
-    statusMenu.setAttribute('class', 'cl-main-accordion-container-menu');
-
-    const allTitle = document.createElement('div');
-    const dailyTitle = document.createElement('div');
-    const weeklyTitle = document.createElement('div');
-    const monthlyTitle = document.createElement('div');
-    const finishedTitle = document.createElement('div');
-
-    allTitle.setAttribute('class', 'cl-main-accordion-container-menu-item all');
-    dailyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item daily');
-    weeklyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item weekly');
-    monthlyTitle.setAttribute('class', 'cl-main-accordion-container-menu-item monthly');
-    finishedTitle.setAttribute('class', 'cl-main-accordion-container-menu-item finishedAchievements');
-
     const idx = data.findIndex(d => d.show === true);
-    if (idx !== -1) {
-      switch (data[idx].type) {
-        case 'all':
-          allTitle.classList.add('active');
-          break;
-        case 'daily':
-          dailyTitle.classList.add('active');
-          break;
-        case 'weekly':
-          weeklyTitle.classList.add('active');
-          break;
-        case 'monthly':
-          monthlyTitle.classList.add('active');
-          break;
-        case 'finishedAchievements':
-          finishedTitle.classList.add('active');
-          break;
-      }
-    }
+    const menuItems = [];
 
-    allTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.all;
-    dailyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.daily;
-    weeklyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.weekly;
-    monthlyTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.monthly;
-    finishedTitle.innerHTML = _this.settings.lbWidget.settings.translation.achievements.finished;
-
-    statusMenu.appendChild(allTitle);
-    if (achievementsData.daily && achievementsData.daily.length) statusMenu.appendChild(dailyTitle);
-    if (achievementsData.weekly && achievementsData.weekly.length) statusMenu.appendChild(weeklyTitle);
-    if (achievementsData.monthly && achievementsData.monthly.length) statusMenu.appendChild(monthlyTitle);
-    if (achievementsData.finishedAchievements && achievementsData.finishedAchievements.length) statusMenu.appendChild(finishedTitle);
-
-    accordionWrapper.appendChild(statusMenu);
-
-    mapObject(data, function (entry) {
-      const accordionSection = document.createElement('div');
-      const topShownEntry = document.createElement('div');
-      const accordionListContainer = document.createElement('div');
-      const accordionList = document.createElement('div');
-
-      accordionSection.setAttribute('class', 'cl-accordion ' + entry.type + ((typeof entry.show === 'boolean' && entry.show) ? ' cl-shown' : ''));
-      topShownEntry.setAttribute('class', 'cl-accordion-entry');
-      accordionListContainer.setAttribute('class', 'cl-accordion-list-container');
-      accordionList.setAttribute('class', 'cl-accordion-list');
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topShownEntry, entry);
-      }
-
-      accordionListContainer.appendChild(accordionList);
-
-      accordionSection.appendChild(accordionListContainer);
-
-      accordionWrapper.appendChild(accordionSection);
+    menuItems.push({
+      element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.all, 'all', idx !== -1 && data[idx].type === 'all')
     });
 
-    return accordionWrapper;
+    if (achievementsData.daily && achievementsData.daily.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.daily, 'daily', idx !== -1 && data[idx].type === 'daily')
+      });
+    }
+    if (achievementsData.weekly && achievementsData.weekly.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.weekly, 'weekly', idx !== -1 && data[idx].type === 'weekly')
+      });
+    }
+    if (achievementsData.monthly && achievementsData.monthly.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.monthly, 'monthly', idx !== -1 && data[idx].type === 'monthly')
+      });
+    }
+    if (achievementsData.finishedAchievements && achievementsData.finishedAchievements.length) {
+      menuItems.push({
+        element: createAccordionMenuItem(_this.settings.lbWidget.settings.translation.achievements.finished, 'finishedAchievements', idx !== -1 && data[idx].type === 'finishedAchievements')
+      });
+    }
+
+    return buildAccordion(data, menuItems, onLayout);
   };
 
   this.achievementListLayout = function (
@@ -2339,17 +2003,6 @@ export const MainWidget = function (options) {
   ) {
     const _this = this;
     const achList = query(_this.settings.section, '.' + _this.settings.lbWidget.settings.navigation.achievements.containerClass + ' .cl-main-widget-ach-list-body-res');
-    const totalCount = _this.settings.lbWidget.settings.achievements.totalCount;
-    const finishedTotalCount = _this.settings.lbWidget.settings.achievements.finishedTotalCount;
-    const itemsPerPage = 6;
-    let paginator = query(achList, '.paginator');
-    let finishedPaginator = query(achList, '.paginator-finished');
-
-    const prev = document.createElement('span');
-    prev.setAttribute('class', 'paginator-item prev');
-    const next = document.createElement('span');
-    next.setAttribute('class', 'paginator-item next');
-
     achList.innerHTML = '';
 
     if (currentPage === 'finished') {
@@ -2360,81 +2013,13 @@ export const MainWidget = function (options) {
       _this.settings.achievementsSection.accordionLayout[4].show = false;
     }
 
-    if (paginationArr && paginationArr.length) {
-      let page = '';
-      for (const i in paginationArr) {
-        page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-      }
-      paginator.innerHTML = page;
-
-      paginator.prepend(prev);
-      paginator.appendChild(next);
-    }
-
-    if (!paginator && totalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(totalCount / 6);
-      paginator = document.createElement('div');
-      paginator.setAttribute('class', 'paginator');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      paginator.innerHTML = page;
-
-      paginator.prepend(prev);
-      paginator.appendChild(next);
-    }
-
-    if (!finishedPaginator && finishedTotalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(finishedTotalCount / 6);
-      finishedPaginator = document.createElement('div');
-      finishedPaginator.setAttribute('class', 'paginator-finished');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      finishedPaginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      finishedPaginator.prepend(prev);
-      finishedPaginator.appendChild(next);
-    }
+    const paginators = createAchievementPaginators(
+      _this.settings.lbWidget.settings.achievements,
+      achList,
+      pageNumber,
+      paginationArr,
+      currentPage
+    );
 
     if (this.settings.lbWidget.settings.showAchievementsFilter) {
       const accordionObj = _this.achievementList(
@@ -2453,42 +2038,34 @@ export const MainWidget = function (options) {
 
       achList.appendChild(accordionObj);
 
-      if (paginator) {
-        const paginatorItems = query(paginator, '.paginator-item');
-        let allPage = 1;
-        if (currentPage === 'all') allPage = pageNumber;
-
-        paginatorItems.forEach(item => {
-          removeClass(item, 'active');
-          if (Number(item.dataset.page) === Number(allPage)) {
-            addClass(item, 'active');
-          }
-        });
-
-        const allAchievements = query(achList, '.cl-accordion.all');
-        if (allAchievements) {
-          const container = query(allAchievements, '.cl-accordion-list-container');
-          container.appendChild(paginator);
-        }
+      const allSection = query(achList, '.cl-accordion.all');
+      if (allSection && paginators.all) {
+        const containerNode = query(allSection, '.cl-accordion-list-container');
+        containerNode.appendChild(paginators.all);
       }
 
-      if (finishedPaginator) {
-        const paginatorItems = query(finishedPaginator, '.paginator-item');
-        let finishedPage = 1;
-        if (currentPage === 'finished') finishedPage = pageNumber;
+      const finishedSection = query(achList, '.cl-accordion.finishedAchievements');
+      if (finishedSection && paginators.finished) {
+        const containerNode = query(finishedSection, '.cl-accordion-list-container');
+        containerNode.appendChild(paginators.finished);
+      }
 
-        paginatorItems.forEach(item => {
-          removeClass(item, 'active');
-          if (Number(item.dataset.page) === Number(finishedPage)) {
-            addClass(item, 'active');
-          }
-        });
+      const dailySection = query(achList, '.cl-accordion.daily');
+      if (dailySection && paginators.daily) {
+        const containerNode = query(dailySection, '.cl-accordion-list-container');
+        containerNode.appendChild(paginators.daily);
+      }
 
-        const finishedAchievements = query(achList, '.cl-accordion.finishedAchievements');
-        if (finishedAchievements) {
-          const container = query(finishedAchievements, '.cl-accordion-list-container');
-          container.appendChild(finishedPaginator);
-        }
+      const weeklySection = query(achList, '.cl-accordion.weekly');
+      if (weeklySection && paginators.weekly) {
+        const containerNode = query(weeklySection, '.cl-accordion-list-container');
+        containerNode.appendChild(paginators.weekly);
+      }
+
+      const monthlySection = query(achList, '.cl-accordion.monthly');
+      if (monthlySection && paginators.monthly) {
+        const containerNode = query(monthlySection, '.cl-accordion-list-container');
+        containerNode.appendChild(paginators.monthly);
       }
     } else {
       mapObject(achievementData.list, function (ach) {
@@ -2498,16 +2075,8 @@ export const MainWidget = function (options) {
         }
       });
 
-      if (paginator) {
-        const paginatorItems = query(paginator, '.paginator-item');
-        paginatorItems.forEach(item => {
-          removeClass(item, 'active');
-          if (Number(item.dataset.page) === Number(pageNumber)) {
-            addClass(item, 'active');
-          }
-        });
-
-        achList.appendChild(paginator);
+      if (paginators.all) {
+        achList.appendChild(paginators.all);
       }
     }
   };
@@ -3879,7 +3448,6 @@ export const MainWidget = function (options) {
 
     if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.contests && tournament.contests.length) {
       const totalPrize = this.getTournamentTotalPrizePool(tournament);
-      // const firsReward = this.getTournamentReward(tournament, 1);
 
       if (totalPrize) {
         prize.innerHTML = totalPrize;
@@ -3912,101 +3480,11 @@ export const MainWidget = function (options) {
     const rewardList = _this.settings.section.querySelector('.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
     const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
-    const itemsPerPage = 6;
-    let paginator = rewardList.querySelector('.paginator-available');
-
-    const prev = document.createElement('span');
-    prev.setAttribute('class', 'paginator-item prev');
-    const next = document.createElement('span');
-    next.setAttribute('class', 'paginator-item next');
-
-    if (!paginator && totalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(totalCount / itemsPerPage);
-      paginator = document.createElement('div');
-      paginator.setAttribute('class', 'paginator-available');
-      addClass(paginator, 'paginator');
-      addClass(paginator, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      paginator.innerHTML = page;
-
-      const prev = document.createElement('span');
-      prev.setAttribute('class', 'paginator-item prev');
-      const next = document.createElement('span');
-      next.setAttribute('class', 'paginator-item next');
-
-      paginator.prepend(prev);
-      paginator.appendChild(next);
-    } else if (paginator && totalCount <= itemsPerPage) {
-      paginator.remove();
-      paginator = null;
-    }
-
-    let paginatorClaimed = query(rewardList, '.paginator-claimed');
-    if (!paginatorClaimed && claimedTotalCount > itemsPerPage) {
-      const pagesCount = Math.ceil(claimedTotalCount / itemsPerPage);
-      paginatorClaimed = document.createElement('div');
-      paginatorClaimed.setAttribute('class', 'paginator-claimed');
-      addClass(paginatorClaimed, 'paginator');
-      addClass(paginatorClaimed, 'accordion');
-
-      let page = '';
-      const isEllipsis = pagesCount > 7;
-
-      if (isEllipsis) {
-        for (let i = 0; i < 7; i++) {
-          if (i === 5) {
-            page += '<span class="paginator-item" data-page="..."\>...</span>';
-          } else if (i === 6) {
-            page += '<span class="paginator-item" data-page=' + pagesCount + '\>' + pagesCount + '</span>';
-          } else {
-            page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-          }
-        }
-      } else {
-        for (let i = 0; i < pagesCount; i++) {
-          page += '<span class="paginator-item" data-page=' + (i + 1) + '\>' + (i + 1) + '</span>';
-        }
-      }
-
-      paginatorClaimed.innerHTML = page;
-
-      paginatorClaimed.prepend(prev);
-      paginatorClaimed.appendChild(next);
-    }
 
     if (isClaimed) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
         if (t.type === 'claimedAwards') {
           t.show = true;
-          if (paginationArr && paginationArr.length) {
-            let page = '';
-            for (const i in paginationArr) {
-              page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-            }
-            paginatorClaimed.innerHTML = page;
-
-            paginatorClaimed.prepend(prev);
-            paginatorClaimed.appendChild(next);
-          }
         } else {
           t.show = false;
         }
@@ -4015,16 +3493,6 @@ export const MainWidget = function (options) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
         if (t.type === 'availableAwards') {
           t.show = true;
-          if (paginationArr && paginationArr.length) {
-            let page = '';
-            for (const i in paginationArr) {
-              page += '<span class="paginator-item" data-page=' + paginationArr[i] + '\>' + paginationArr[i] + '</span>';
-            }
-            paginator.innerHTML = page;
-
-            paginator.prepend(prev);
-            paginator.appendChild(next);
-          }
         } else {
           t.show = false;
         }
@@ -4050,11 +3518,7 @@ export const MainWidget = function (options) {
               t.show = false;
               break;
             case 'claimedAwards':
-              if (this.settings.lbWidget.settings.instantWins.enable) {
-                t.show = false;
-              } else {
-                t.show = true;
-              }
+              t.show = !this.settings.lbWidget.settings.instantWins.enable;
               break;
             case 'instantWins':
               if (this.settings.lbWidget.settings.instantWins.enable) {
@@ -4077,12 +3541,12 @@ export const MainWidget = function (options) {
           // rewardData = rewardData.filter(r => r.rewardData);
           mapObject(rewardData, function (rew, key, count) {
             if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
-              var topEntryContaineRlistItem = _this.rewardItem(rew);
-              topEntryContainer.appendChild(topEntryContaineRlistItem);
+              const topEntryContainerListItem = _this.rewardItem(rew);
+              topEntryContainer.appendChild(topEntryContainerListItem);
             }
 
             if (query(listContainer, '.cl-reward-' + rew.id) === null) {
-              var listItem = _this.rewardItem(rew);
+              const listItem = _this.rewardItem(rew);
               listContainer.appendChild(listItem);
             }
           });
@@ -4093,34 +3557,30 @@ export const MainWidget = function (options) {
     rewardList.innerHTML = '';
     rewardList.appendChild(accordionObj);
 
-    if (paginator) {
-      const paginatorItems = query(paginator, '.paginator-item');
-      paginatorItems.forEach(item => {
-        removeClass(item, 'active');
-        if (Number(item.dataset.page) === Number(pageNumber)) {
-          addClass(item, 'active');
-        }
-      });
+    const paginators = createAwardPaginators(
+      _this.settings.lbWidget.settings.awards,
+      rewardList,
+      pageNumber,
+      claimedPageNumber,
+      expiredPageNumber,
+      paginationArr,
+      isClaimed,
+      isExpired
+    );
 
+    if (paginators.available) {
       const availableRewards = query(rewardList, '.cl-accordion.availableAwards');
       if (availableRewards) {
         const container = query(availableRewards, '.cl-accordion-list-container');
-        container.appendChild(paginator);
+        container.appendChild(paginators.available);
       }
     }
 
-    if (paginatorClaimed) {
-      const paginatorItems = query(paginatorClaimed, '.paginator-item');
-      paginatorItems.forEach(item => {
-        removeClass(item, 'active');
-        if (Number(item.dataset.page) === Number(claimedPageNumber)) {
-          addClass(item, 'active');
-        }
-      });
+    if (paginators.claimed) {
       const claimedRewards = query(rewardList, '.cl-accordion.claimedAwards');
       if (claimedRewards) {
         const container = query(claimedRewards, '.cl-accordion-list-container');
-        container.appendChild(paginatorClaimed);
+        container.appendChild(paginators.claimed);
       }
     }
 
@@ -4675,7 +4135,6 @@ export const MainWidget = function (options) {
 
     _this.settings.lbWidget.checkForAvailableMissions(pageNumber, function () {
       _this.missionsListLayout(pageNumber, paginationArr);
-      // _this.settings.lbWidget.updateMissionsNavigationCounts();
 
       if (typeof callback === 'function') {
         callback();

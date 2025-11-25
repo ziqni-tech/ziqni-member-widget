@@ -14,6 +14,11 @@ import closest from '../utils/closest';
 import isMobileTablet from '../utils/isMobileTablet';
 import camelToKebabCase from '../utils/camelToKebabCase';
 import pagination from '../utils/paginator';
+import { ITEMS_PER_PAGE } from './mainWidget/constants';
+import { defaultSettings } from './lbWidget/defaultSettings';
+import { getCompetitions, getContests } from './lbWidget/services/competitionService';
+import { getAchievements } from './lbWidget/services/achievementService';
+import { attachReward, attachRewards } from './lbWidget/services/rewardService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -23,13 +28,8 @@ import { MainWidget } from './MainWidget';
 import { CanvasAnimation } from './CanvasAnimation';
 
 import {
-  AchievementRequest,
-  AchievementsApiWs,
   ApiClientStomp,
-  CompetitionRequest,
   CompetitionsApiWs,
-  ContestRequest,
-  ContestsApiWs,
   ManageOptinRequest,
   MemberRequest,
   MembersApiWs,
@@ -52,8 +52,7 @@ import {
   InstantWinAvailablePlaysRequest,
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
-
-const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
+import cloneDeep from 'lodash.clonedeep';
 
 /**
  * Main leaderboard widget, controls all actions and initiation logic.
@@ -64,274 +63,7 @@ const translation = require(`../../i18n/translation_${process.env.LANG}.json`);
 export const LbWidget = function (options) {
   this.apiClientStomp = null;
 
-  /**
-   * LbWidget settings
-   * @memberOf LbWidget
-   * @constant
-   * @type { Object }
-   */
-  this.settings = {
-    debug: false,
-    isStaging: false,
-    bindContainer: document.body,
-    autoStart: true,
-    notifications: null,
-    miniScoreBoard: null,
-    canvasAnimation: null,
-    enableNotifications: false,
-    hideEmptyTabs: false,
-    defaultLightTheme: false,
-    showAchievementsFilter: true,
-    mainWidget: null,
-    language: process.env.LANG,
-    currency: '',
-    spaceName: '',
-    memberId: '',
-    memberRefId: '',
-    apiClientStomp: null,
-    authToken: null,
-    memberNameLength: 0,
-    groups: '',
-    gameId: '',
-    enforceGameLookup: false, // tournament lookup will include/exclude game only requests
-    apiKey: '',
-    memberToken: '',
-    expires: 36000000,
-    member: null,
-    itemsPerPage: 10,
-    timeZone: 'UTC',
-    productIds: [],
-    layout: {
-      logoUrl: '',
-      showThemeSwitcher: true,
-      enableMiniScoreBoardDragging: true, // enable/disable dragging with mouse/touch
-      miniScoreBoardPosition: { // default position of mini scoreboard left/right/bottom/top (Example: top: '20px')
-        left: null,
-        right: null,
-        top: null,
-        bottom: null
-      },
-      allowOrientationChange: true, // allows the switch between horizontal/vertical orientation
-      miniScoreBoardOrientation: 'horizontal' // vertical/horizontal => default is horizontal
-    },
-    historicalData: {
-      finalisedCompetitions: 30,
-      messagesForTheLast: 30
-    },
-    competition: {
-      activeCompetitionId: null,
-      activeContestId: null,
-      activeCompetition: null,
-      contests: null,
-      activeContest: null,
-      refreshInterval: null,
-      refreshIntervalMillis: 1000000,
-      allowNegativeCountdown: false, // false: will mark competition as finishing, true: will continue to countdown into negative
-      includeMetadata: false,
-      extractImageHeader: true // will extract the first found image inside the body tag and move it on top
-    },
-    achievements: {
-      activeAchievementId: null,
-      limit: 100,
-      totalCount: 0,
-      finishedTotalCount: 0,
-      list: [],
-      all: [],
-      daily: [],
-      weekly: [],
-      monthly: [],
-      finished: [],
-      availableRewards: [],
-      rewards: [],
-      expiredRewards: [],
-      extractImageHeader: true // will extract the first found image inside the body tag and move it on top
-    },
-    rewards: {
-      availableRewards: [],
-      rewards: [],
-      totalCount: 0,
-      expiredRewards: []
-    },
-    awards: {
-      availableAwards: [],
-      claimedAwards: [],
-      expiredAwards: [],
-      rewards: [],
-      totalCount: 0,
-      claimedTotalCount: 0,
-      intervalId: null,
-      showExpiredAwards: false
-    },
-    iconIntervalId: null,
-    messages: {
-      messages: [],
-      totalCount: 0
-    },
-    missions: {
-      missions: [],
-      totalCount: 0
-    },
-    instantWins: {
-      enable: false,
-      showIWOnlyWithAvailPlays: true
-    },
-    tournaments: {
-      showBannerTimer: true,
-      showDashboardTime: true,
-      showTournamentsMenuPrizeColumn: true,
-      showTotalPrize: false,
-      activeCompetitionId: null,
-      readyCompetitions: [],
-      activeCompetitions: [],
-      finishedCompetitions: [],
-      totalCount: 0,
-      readyTotalCount: 0,
-      finishedTotalCount: 0
-    },
-    leaderboard: {
-      topResultSize: 3,
-      defaultEmptyList: 20,
-      fullLeaderboardSize: 100,
-      refreshIntervalMillis: 1000000,
-      refreshInterval: null,
-      refreshLbDataInterval: null,
-      leaderboardData: [],
-      loadLeaderboardHistory: {},
-      layoutSettings: {
-        // tournamentList: true,
-        imageBanner: true,
-        // title: true,
-        titleLinkToDetailsPage: false // if set to false will make the description available under title
-      },
-      miniScoreBoard: {
-        enableRankings: true, // enabled rankings before after rankings of members [-2 YOU +2]
-        rankingsCount: 2
-      },
-      pointsFormatter: function (points) {
-        return points;
-      }
-    },
-    navigation: { // primary navigation items, if all are disabled init will fail, if only 1 is enabled items will be hidden
-      dashboard: {
-        enable: true,
-        showInstantWins: true,
-        showAchievements: true,
-        showTournaments: true,
-        showAvailableAwards: false,
-        showMissions: false,
-        navigationClass: 'cl-main-widget-navigation-dashboard',
-        navigationClassIcon: 'cl-main-widget-navigation-dashboard-icon',
-        containerClass: 'cl-main-widget-section-dashboard',
-        order: 1
-      },
-      tournaments: {
-        enable: true,
-        showFinishedTournaments: true,
-        navigationClass: 'cl-main-widget-navigation-lb',
-        navigationClassIcon: 'cl-main-widget-navigation-lb-icon',
-        containerClass: 'cl-main-widget-lb',
-        order: 2
-      },
-      achievements: {
-        enable: true,
-        showReadyAchievements: false,
-        navigationClass: 'cl-main-widget-navigation-ach',
-        navigationClassIcon: 'cl-main-widget-navigation-ach-icon',
-        containerClass: 'cl-main-widget-section-ach',
-        order: 3
-      },
-      rewards: {
-        enable: true,
-        navigationClass: 'cl-main-widget-navigation-rewards',
-        navigationClassIcon: 'cl-main-widget-navigation-rewards-icon',
-        containerClass: 'cl-main-widget-section-reward',
-        order: 4
-      },
-      inbox: {
-        enable: true,
-        navigationClass: 'cl-main-widget-navigation-inbox',
-        navigationClassIcon: 'cl-main-widget-navigation-inbox-icon',
-        containerClass: 'cl-main-widget-section-inbox',
-        order: 5
-      },
-      missions: {
-        enable: true,
-        navigationClass: 'cl-main-widget-navigation-missions',
-        navigationClassIcon: 'cl-main-widget-navigation-missions-icon',
-        containerClass: 'cl-main-widget-section-missions',
-        order: 6
-      }
-    },
-    apiWs: {
-      achievementsApiWsClient: null,
-      leaderboardApiWsClient: null,
-      competitionsApiWsClient: null,
-      contestsApiWsClient: null,
-      membersApiWsClient: null,
-      optInApiWsClient: null,
-      rewardsApiWsClient: null,
-      awardsApiWsClient: null,
-      messagesApiWsClient: null,
-      missionsApiWsClient: null,
-      filesApiWsClient: null,
-      instantWinsApiWsClient: null
-    },
-    uri: {
-      assets: '/assets/attachments/:attachmentId',
-      memberSSE: '/api/v1/:space/sse/reference/:id',
-      memberSSEHeartbeat: '/api/v1/:space/sse/reference/:id/heartbeat',
-      achievementsProgression: '/api/v1/:space/members/reference/:id/achievements',
-      memberRewardClaim: '/api/v1/:space/members/reference/:id/award/:awardId/award',
-      memberCompetitionOptIn: '/api/v1/:space/members/reference/:id/competition/:competitionId/optin',
-      memberCompetitionOptInCheck: '/api/v1/:space/members/reference/:id/competition/:competitionId/optin-check',
-      translationPath: '' // ../i18n/translation_:language.json
-    },
-    loadCustomTranslations: true,
-    showCopyright: true,
-    translation: translation,
-    resources: [], // Example: ["http://example.com/style.css", "http://example.com/my-fonts.css"]
-    styles: null, // Example: {widgetBgColor: '#1f294a', widgetIcon: 'url(../../../examples/images/logo-icon-3.png)'}
-    partialFunctions: {
-      startupCallback: function (instance) {},
-      rewardFormatter: function (reward) {
-        let defaultRewardValue = Number.isInteger(reward.rewardValue)
-          ? reward.rewardValue
-          : Math.floor(reward.rewardValue * 100) / 100;
-
-        if (reward.rewardType?.uomSymbol) {
-          defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
-        }
-
-        return defaultRewardValue;
-      },
-      competitionDataAvailableResponseParser: function (competitionData, callback) { callback(competitionData); },
-      competitionDataFinishedResponseParser: function (competitionData, callback) { callback(competitionData); },
-      activeCompetitionDataResponseParser: function (competitionData, callback) { callback(competitionData); },
-      activeContestDataResponseParser: function (contestData, callback) { callback(contestData); },
-      leaderboardDataResponseParser: function (leaderboardData, callback) { callback(leaderboardData); },
-      achievementDataForAllResponseParser: function (achievementData, callback) { callback(achievementData); },
-      achievementDataForMemberGroupResponseParser: function (achievementData, callback) { callback(achievementData); },
-      achievementDataResponseParser: function (achievementData, callback) { callback(achievementData); },
-      rewardDataResponseParser: function (rewardData, callback) { callback(rewardData); },
-      messageDataResponseParser: function (messageData, callback) { callback(messageData); },
-      claimRewardDataResponseParser: function (claimRewardData, callback) { callback(claimRewardData); },
-      issuedAchievementsDataResponseParser: function (issuedAchievementsData, callback) { callback(issuedAchievementsData); },
-      memberAchievementsProgressionDataResponseParser: function (memberAchievementsProgressionData, callback) { callback(memberAchievementsProgressionData); },
-      claimedRewardsDataResponseParser: function (claimedRewardsData, callback) { callback(claimedRewardsData); },
-      notClaimedRewardsDataResponseParser: function (notClaimedRewardsData, callback) { callback(notClaimedRewardsData); },
-      expiredRewardsDataResponseParser: function (expiredRewardsData, callback) { callback(expiredRewardsData); },
-      availableMessagesDataResponseParser: function (availableMessagesData, callback) { callback(availableMessagesData); }
-    },
-    callbacks: {
-      onMainWidgetOpen: function () {},
-      onMainWidgetClose: function () {},
-      onContestStatusChanged: function (contestId, currentState, previousState) {},
-      onCompetitionStatusChanged: function (competitionId, currentState, previousState) {},
-      onStompError: function () {},
-      onLeaderboardUpdates: function (leaderboardData) {}
-    },
-    callback: null
-  };
+  this.settings = defaultSettings;
 
   if (typeof options !== 'undefined') {
     this.settings = mergeObjects(this.settings, options);
@@ -407,24 +139,15 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardMissions = async () => {
-    const missionsRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: 0,
-        limit: 2,
-        constraints: ['mission']
-      }
-    }, null);
-
-    const response = await this.getAchievements(missionsRequest);
+    const response = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 20,
+      lessThan: 30,
+      skip: 0,
+      limit: 2,
+      constraints: ['mission']
+    });
     let missions = response.data;
 
     if (missions.length) {
@@ -539,82 +262,48 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardCompetitions = async function () {
-    const activeRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 2,
-        skip: 0
-      }
-    }, null);
-
-    const readyRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 10,
-          lessThan: 20
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 2,
-        skip: 0
-      }
-    }, null);
-
-    const activeCompetitions = await this.getCompetitionsApi(activeRequest);
-    const readyCompetitions = await this.getCompetitionsApi(readyRequest);
+    const activeCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'active',
+      productIds: this.settings.productIds,
+      limit: 2,
+      skip: 0
+    });
     let activeCompetitionsData = activeCompetitions.data;
+
+    const readyCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'ready',
+      productIds: this.settings.productIds,
+      limit: 2,
+      skip: 0
+    });
     let readyCompetitionsData = readyCompetitions.data;
 
     if (activeCompetitionsData) {
       const ids = activeCompetitionsData.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Contest',
-          entityIds: contestIds
-        }],
+      contests = await attachRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: contests,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: contestIds,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      contests = contests.map(c => {
-        c.rewards = rewardsData.filter(r => r.entityId === c.id);
-
-        return c;
       });
 
       activeCompetitionsData = activeCompetitionsData.map(comp => {
@@ -661,74 +350,44 @@ export const LbWidget = function (options) {
     activePageNumber = 1,
     finishedPageNumber = 1
   ) {
-    const readyCompetitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 10,
-          lessThan: 20
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 12,
-        skip: (readyPageNumber - 1) * 12
-      }
-    }, null);
-
-    const activeCompetitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 12,
-        skip: (activePageNumber - 1) * 12
-      }
-    }, null);
-
     const finishedDateFilter = new Date();
     finishedDateFilter.setDate(finishedDateFilter.getDate() - this.settings.historicalData.finalisedCompetitions ?? 30);
 
-    const finishedCompetitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: {
-          moreThan: 30,
-          lessThan: 50
-        },
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        endDateRange: {
-          before: (new Date()).toISOString(),
-          after: finishedDateFilter.toISOString()
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 12,
-        skip: (finishedPageNumber - 1) * 12
-      }
-    }, null);
-
-    const readyCompetitions = await this.getCompetitionsApi(readyCompetitionRequest);
+    const readyCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'ready',
+      productIds: this.settings.productIds,
+      limit: ITEMS_PER_PAGE.TOURNAMENTS,
+      skip: (readyPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
+    });
     this.settings.tournaments.readyCompetitions = readyCompetitions.data;
     this.settings.tournaments.readyTotalCount = readyCompetitions.meta.totalRecordsFound;
 
-    const activeCompetitions = await this.getCompetitionsApi(activeCompetitionRequest);
+    const activeCompetitions = await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: 'active',
+      productIds: this.settings.productIds,
+      limit: ITEMS_PER_PAGE.TOURNAMENTS,
+      skip: (activePageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
+    });
     this.settings.tournaments.activeCompetitions = activeCompetitions.data;
     this.settings.tournaments.totalCount = activeCompetitions.meta.totalRecordsFound;
 
     if (this.settings.navigation.tournaments.showFinishedTournaments) {
-      const finishedCompetitions = await this.getCompetitionsApi(finishedCompetitionRequest);
+      const finishedCompetitions = await getCompetitions({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        status: 'finished',
+        productIds: this.settings.productIds,
+        limit: ITEMS_PER_PAGE.TOURNAMENTS,
+        skip: (finishedPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS,
+        endDateRange: {
+          before: (new Date()).toISOString(),
+          after: finishedDateFilter.toISOString()
+        }
+      });
       this.settings.tournaments.finishedCompetitions = finishedCompetitions.data ? finishedCompetitions.data : [];
       this.settings.tournaments.finishedTotalCount = finishedCompetitions.meta.totalRecordsFound;
     }
@@ -736,21 +395,13 @@ export const LbWidget = function (options) {
     if (this.settings.tournaments.activeCompetitions.length) {
       const ids = this.settings.tournaments.activeCompetitions.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -782,21 +433,13 @@ export const LbWidget = function (options) {
     if (this.settings.tournaments.readyCompetitions.length) {
       const ids = this.settings.tournaments.readyCompetitions.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -828,21 +471,13 @@ export const LbWidget = function (options) {
     if (this.settings.navigation.tournaments.showFinishedTournaments && this.settings.tournaments.finishedCompetitions.length) {
       const ids = this.settings.tournaments.finishedCompetitions.map(a => a.id);
 
-      const contestRequest = ContestRequest.constructFromObject({
-        languageKey: this.settings.language,
-        contestFilter: {
-          sortBy: [],
-          competitionIds: ids,
-          statusCode: {
-            moreThan: 0,
-            lessThan: 100
-          },
-          limit: 20,
-          skip: 0
-        }
-      }, null);
-
-      let contests = await this.getContests(contestRequest);
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
 
       const contestIds = contests.map(a => a.id);
 
@@ -890,7 +525,7 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.getCompetitionsByProducts = async (productIds, statusCodeRange = { moreThan: 10, lessThan: 50 }) => {
+  this.getCompetitionsByProducts = async (productIds, statusCode = 'active') => {
     if (!this.apiClientStomp) {
       await this.initApiClientStomp();
     }
@@ -898,38 +533,13 @@ export const LbWidget = function (options) {
       this.settings.apiWs.competitionsApiWsClient = new CompetitionsApiWs(this.apiClientStomp);
     }
 
-    const competitionRequest = CompetitionRequest.constructFromObject({
-      languageKey: this.settings.language,
-      competitionFilter: {
-        statusCode: statusCodeRange,
-        productIds: productIds,
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        limit: 20,
-        skip: 0
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.competitionsApiWsClient.getCompetitions(competitionRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
-  this.getCompetitionsApi = async (competitionRequest) => {
-    if (!this.apiClientStomp) {
-      await this.initApiClientStomp();
-    }
-    if (!this.settings.apiWs.competitionsApiWsClient) {
-      this.settings.apiWs.competitionsApiWsClient = new CompetitionsApiWs(this.apiClientStomp);
-    }
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.competitionsApiWsClient.getCompetitions(competitionRequest, (json) => {
-        resolve(json);
-      });
+    return await getCompetitions({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      status: statusCode,
+      productIds: productIds,
+      limit: 20,
+      skip: 0
     });
   };
 
@@ -981,7 +591,7 @@ export const LbWidget = function (options) {
             leaderboardFilter: {}
           });
           this.settings.leaderboard.leaderboardData = [];
-          this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest).then((json) => {});
+          this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest).then((json) => { });
         }
         _this.settings.competition.activeCompetition = activeCompetition;
         _this.settings.competition.activeCompetitionId = activeCompetitionId;
@@ -1028,22 +638,15 @@ export const LbWidget = function (options) {
       this.settings.competition.activeCompetition.optin = true;
     }
 
-    const contestRequest = ContestRequest.constructFromObject({
-      languageKey: this.settings.language,
-      contestFilter: {
-        sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
-        competitionIds: [json[0].id],
-        statusCode: {
-          moreThan: 0,
-          lessThan: 100
-        },
-        constraints: ['hasOptInStatus'],
-        limit: 20,
-        skip: 0
-      }
-    }, null);
-
-    const contests = await this.getContests(contestRequest);
+    const contests = await getContests({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      competitionIds: [json[0].id],
+      limit: 20,
+      skip: 0,
+      sortBy: [35, 45].includes(json[0].statusCode) ? [{ queryField: 'scheduledEndDate', order: 'Desc' }] : [],
+      constraints: ['hasOptInStatus']
+    });
 
     if (contests.length) {
       this.settings.competition.contests = contests;
@@ -1113,17 +716,6 @@ export const LbWidget = function (options) {
       callback();
     }
     this.settings.mainWidget.leaderboardDetailsUpdate();
-  };
-
-  this.getContests = async (contestRequest) => {
-    if (!this.settings.apiWs.contestsApiWsClient) {
-      this.settings.apiWs.contestsApiWsClient = new ContestsApiWs(this.apiClientStomp);
-    }
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.contestsApiWsClient.getContests(contestRequest, (json) => {
-        resolve(json.data);
-      });
-    });
   };
 
   this.getLeaderboardData = async function (count, callback) {
@@ -1215,192 +807,33 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.updateLeaderboardNavigationCounts = function () {
-    var _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      var menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.tournaments.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.tournaments.totalCount;
-    }
-  };
-
-  this.updateAchievementNavigationCounts = function () {
-    var _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      var menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.achievements.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.achievements.totalCount;
-    }
-  };
-
-  this.updateRewardsNavigationCounts = function () {
-    const _this = this;
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      const menuItemCount = query(
-        _this.settings.mainWidget.settings.navigation,
-        '.' + _this.settings.navigation.rewards.navigationClass + ' .cl-main-navigation-item-count'
-      );
-      menuItemCount.innerHTML = _this.settings.awards.totalCount;
-    }
-  };
-
-  this.updateMessagesNavigationCounts = function () {
-    const _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      const menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.inbox.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.messages.totalCount;
-    }
-  };
-
-  this.updateMissionsNavigationCounts = function () {
-    const _this = this;
-
-    if (_this.settings.mainWidget.settings.navigation !== null) {
-      const menuItemCount = query(_this.settings.mainWidget.settings.navigation, '.' + _this.settings.navigation.missions.navigationClass + ' .cl-main-navigation-item-count');
-      menuItemCount.innerHTML = _this.settings.missions.totalCount;
-    }
-  };
-
   this.checkForAvailableAchievements = async function (pageNumber, callback, current = 'all') {
     const _this = this;
 
-    let allPageNumber = 1;
-    let finishedPageNumber = 1;
-
-    if (current === 'all') allPageNumber = pageNumber;
-    if (current === 'finished') finishedPageNumber = pageNumber;
-
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
+    const allPageNumber = current === 'all' ? pageNumber : 1;
+    const finishedPageNumber = current === 'finished' ? pageNumber : 1;
+    const dailyPageNumber = current === 'daily' ? pageNumber : 1;
+    const weeklyPageNumber = current === 'weekly' ? pageNumber : 1;
+    const monthlyPageNumber = current === 'monthly' ? pageNumber : 1;
 
     const moreValue = this.settings.navigation.achievements.showReadyAchievements ? 10 : 20;
-
-    const achievementRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (allPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
 
     const finishedDateFilter = new Date();
     finishedDateFilter.setDate(finishedDateFilter.getDate() - 30);
 
-    const finishedAchievementsRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        endDate: {
-          before: (new Date()).toISOString(),
-          after: finishedDateFilter.toISOString()
-        },
-        statusCode: {
-          moreThan: 30,
-          lessThan: 40
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (finishedPageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const dailyRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        scheduleTypes: ['Daily'],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (pageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const weeklyRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        scheduleTypes: ['Weekly'],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (pageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const monthlyRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        productTags: [],
-        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
-        tags: [],
-        startDate: null,
-        endDate: null,
-        ids: [],
-        scheduleTypes: ['Monthly'],
-        statusCode: {
-          moreThan: moreValue,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (pageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['withoutMissions']
-      }
-    }, null);
-
-    const json = await this.getAchievements(achievementRequest);
-
+    const json = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+      moreThan: moreValue,
+      lessThan: 30,
+      skip: (allPageNumber - 1) * 6,
+      limit: 6,
+      constraints: ['withoutMissions']
+    });
     _this.settings.achievements.list = json.data;
     _this.settings.achievements.totalCount = json.meta.totalRecordsFound || 0;
+
     const optInAchievements = json.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
     let optInIds = [];
     if (optInAchievements.length) {
@@ -1425,30 +858,41 @@ export const LbWidget = function (options) {
 
     if (_this.settings.achievements.list.length) {
       const ids = _this.settings.achievements.list.map(a => a.id);
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Achievement',
-          entityIds: ids
-        }],
+
+      _this.settings.achievements.list = await attachReward({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: _this.settings.achievements.list,
         currencyKey: this.settings.currency,
+        entityType: 'Achievement',
+        entityIds: ids,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      _this.settings.achievements.list = _this.settings.achievements.list.map(achievement => {
-        const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-        if (idx !== -1) {
-          achievement.reward = rewardsData[idx];
-        }
-
-        return achievement;
       });
     }
 
     if (this.settings.showAchievementsFilter) {
-      const dailyJson = await this.getAchievements(dailyRequest);
+      const dailyRequest = {
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        moreThan: moreValue,
+        lessThan: 30,
+        scheduleTypes: ['Daily'],
+        skip: (dailyPageNumber - 1) * 6,
+        limit: 6,
+        constraints: ['withoutMissions']
+      };
+
+      const weeklyRequest = cloneDeep(dailyRequest);
+      weeklyRequest.scheduleTypes = ['Weekly'];
+      weeklyRequest.skip = (weeklyPageNumber - 1) * 6;
+
+      const monthlyRequest = cloneDeep(dailyRequest);
+      monthlyRequest.scheduleTypes = ['Monthly'];
+      monthlyRequest.skip = (monthlyPageNumber - 1) * 6;
+
+      const dailyJson = await getAchievements(dailyRequest);
       this.settings.achievements.daily = dailyJson.data;
 
       const optInDailyAchievements = dailyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
@@ -1476,29 +920,20 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.daily.length) {
         const ids = _this.settings.achievements.daily.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.daily = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.daily,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.daily = _this.settings.achievements.daily.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
 
-      const weeklyJson = await this.getAchievements(weeklyRequest);
+      const weeklyJson = await getAchievements(weeklyRequest);
       this.settings.achievements.weekly = weeklyJson.data;
 
       const optInWeeklyAchievements = weeklyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
@@ -1526,29 +961,20 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.weekly.length) {
         const ids = _this.settings.achievements.weekly.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.weekly = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.weekly,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.weekly = _this.settings.achievements.weekly.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
 
-      const monthlyJson = await this.getAchievements(monthlyRequest);
+      const monthlyJson = await getAchievements(monthlyRequest);
       this.settings.achievements.monthly = monthlyJson.data;
 
       const optInMonthlyAchievements = monthlyJson.data.filter(a => a.constraints && a.constraints.includes('optinRequiredForEntrants'));
@@ -1576,53 +1002,48 @@ export const LbWidget = function (options) {
 
       if (_this.settings.achievements.monthly.length) {
         const ids = _this.settings.achievements.monthly.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.monthly = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.monthly,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.monthly = _this.settings.achievements.monthly.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
 
-      const finishedJson = await this.getAchievements(finishedAchievementsRequest);
+      const finishedJson = await getAchievements({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        productIds: Array.isArray(this.settings.productIds) ? this.settings.productIds : [],
+        endDate: {
+          before: (new Date()).toISOString(),
+          after: finishedDateFilter.toISOString()
+        },
+        moreThan: 30,
+        lessThan: 40,
+        skip: (finishedPageNumber - 1) * 6,
+        limit: 6,
+        constraints: ['withoutMissions']
+      });
       this.settings.achievements.finished = finishedJson.data;
       this.settings.achievements.finishedTotalCount = finishedJson.meta.totalRecordsFound || 0;
 
       if (_this.settings.achievements.finished.length) {
         const ids = _this.settings.achievements.finished.map(a => a.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
+
+        _this.settings.achievements.finished = await attachReward({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
+          entityArray: _this.settings.achievements.finished,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: ids,
           skip: 0,
           limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
-
-        _this.settings.achievements.finished = _this.settings.achievements.finished.map(achievement => {
-          const idx = rewardsData.findIndex(r => r.entityId === achievement.id);
-          if (idx !== -1) {
-            achievement.reward = rewardsData[idx];
-          }
-
-          return achievement;
         });
       }
     }
@@ -1744,8 +1165,6 @@ export const LbWidget = function (options) {
       this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
     }
 
-    // https://first-space.cdn.ziqni.com/system-resources/instant-wins/mUSsjJcB24Zl4KhqAbad
-
     const filePath = `https://${this.settings.member.spaceName}.cdn.ziqni.com/system-resources/instant-wins/${fileName}`;
 
     return new Promise((resolve, reject) => {
@@ -1760,32 +1179,6 @@ export const LbWidget = function (options) {
           console.log('instant win settings file err', err);
           reject(err);
         });
-
-      // const fileRequest = {
-      //   ids: [],
-      //   limit: 20,
-      //   skip: 0,
-      //   parentFolderPath: '/instant-wins',
-      //   repositoryId: '-7KLxoMBDhZrpIHgC4eP'
-      // };
-      //
-      // this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, async (res) => {
-      //   const settingsFile = res.data.find(item => item.name.trim() === fileName);
-      //
-      //   if (settingsFile) {
-      //     fetch(settingsFile.uri)
-      //       .then((data) => {
-      //         return data.json();
-      //       })
-      //       .then((data) => {
-      //         resolve(data);
-      //       })
-      //       .catch((err) => {
-      //         console.log('instant win settings file err', err);
-      //         reject(err);
-      //       });
-      //   }
-      // });
     });
   };
 
@@ -1813,42 +1206,6 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function' && achievementData.length) {
       callback(achievementData[0]);
     }
-  };
-
-  this.getAchievements = async function (achievementRequest) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
-  this.getAchievementsByIds = async function (achievementIds) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
-
-    const request = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: achievementIds,
-        statusCode: {
-          moreThan: 0,
-          lessThan: 100
-        },
-        limit: achievementIds.length
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.achievementsApiWsClient.getAchievements(request, (json) => {
-        resolve(json.data);
-      });
-    });
   };
 
   this.leaveAchievement = function (activeAchievementId, isDashboard = false) {
@@ -1972,7 +1329,6 @@ export const LbWidget = function (options) {
           }
           if (json.data[0].messageType === 'InboxItem') {
             _this.checkForAvailableMessages(1, function () {
-              _this.updateMessagesNavigationCounts();
               if (typeof callback === 'function') {
                 callback();
               }
@@ -2015,7 +1371,7 @@ export const LbWidget = function (options) {
       status: status
     }];
 
-    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => {});
+    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => { });
   };
 
   this.claimAward = async function (rewardId, callback) {
@@ -2373,94 +1729,80 @@ export const LbWidget = function (options) {
     });
   };
 
-  this.checkForAvailableMissions = function (pageNumber, callback) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
-    }
+  this.checkForAvailableMissions = async function (pageNumber, callback) {
+    const missions = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 20,
+      lessThan: 30,
+      skip: (pageNumber - 1) * 6,
+      limit: 6,
+      constraints: ['mission']
+    });
 
-    const missionsRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: [],
-        statusCode: {
-          moreThan: 20,
-          lessThan: 30
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
+    this.settings.missions.missions = missions.data ?? [];
+    this.settings.missions.totalCount = (missions.meta && missions.meta.totalRecordsFound) ? missions.meta.totalRecordsFound : 0;
+
+    if (this.settings.missions.missions.length) {
+      const ids = this.settings.missions.missions.map(m => m.id);
+      const rewardRequest = {
+        entityFilter: [{
+          entityType: 'Achievement',
+          entityIds: ids
         }],
-        skip: (pageNumber - 1) * 6,
-        limit: 6,
-        constraints: ['mission']
-      }
-    }, null);
+        currencyKey: this.settings.currency,
+        skip: 0,
+        limit: 20
+      };
+      const rewards = await this.getRewardsApi(rewardRequest);
+      const rewardsData = rewards.data;
 
-    this.settings.apiWs.achievementsApiWsClient.getAchievements(missionsRequest, async (json) => {
-      this.settings.missions.missions = json.data ?? [];
-      this.settings.missions.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+      this.settings.missions.missions = this.settings.missions.missions.map(mission => {
+        const idx = rewardsData.findIndex(r => r.entityId === mission.id);
+        if (idx !== -1) {
+          mission.reward = rewardsData[idx];
+        }
 
-      if (this.settings.missions.missions.length) {
-        const ids = this.settings.missions.missions.map(m => m.id);
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'Achievement',
-            entityIds: ids
-          }],
-          currencyKey: this.settings.currency,
-          skip: 0,
-          limit: 20
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
-        const rewardsData = rewards.data;
+        return mission;
+      });
 
-        this.settings.missions.missions = this.settings.missions.missions.map(mission => {
-          const idx = rewardsData.findIndex(r => r.entityId === mission.id);
-          if (idx !== -1) {
-            mission.reward = rewardsData[idx];
-          }
+      for (const id of ids) {
+        const graph = await this.getMissionsGraph(id);
 
-          return mission;
-        });
+        const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+        this.settings.missions.missions[idx].dependencies = [];
 
-        for (const id of ids) {
-          const graph = await this.getMissionsGraph(id);
+        if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
+          const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
+          for (const edge of filtered) {
+            const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
+            const achievement = graph.nodes[idx];
 
-          const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
-          this.settings.missions.missions[idx].dependencies = [];
+            const rewardRequest = {
+              entityFilter: [{
+                entityType: 'achievement',
+                entityIds: [edge.tailEntityId]
+              }],
+              currencyKey: this.settings.currency,
+              skip: 0,
+              limit: 5
+            };
+            const rewards = await this.getRewardsApi(rewardRequest);
+            const rewardsData = rewards.data;
 
-          if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
-            const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
-            for (const edge of filtered) {
-              const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
-              const achievement = graph.nodes[idx];
+            achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
 
-              const rewardRequest = {
-                entityFilter: [{
-                  entityType: 'achievement',
-                  entityIds: [edge.tailEntityId]
-                }],
-                currencyKey: this.settings.currency,
-                skip: 0,
-                limit: 5
-              };
-              const rewards = await this.getRewardsApi(rewardRequest);
-              const rewardsData = rewards.data;
-
-              achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
-
-              const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
-              this.settings.missions.missions[missionIdx].dependencies.push({
-                ordering: edge.ordering,
-                achievement: achievement
-              });
-            }
+            const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
+            this.settings.missions.missions[missionIdx].dependencies.push({
+              ordering: edge.ordering,
+              achievement: achievement
+            });
           }
         }
       }
+    }
 
-      if (typeof callback === 'function') callback(this.settings.missions.missions);
-    });
+    if (typeof callback === 'function') callback(this.settings.missions.missions);
   };
 
   this.getMissionsGraph = async function (id, isDependantId = false) {
@@ -2482,69 +1824,63 @@ export const LbWidget = function (options) {
   };
 
   this.getMission = async function (id, callback) {
-    if (!this.settings.apiWs.achievementsApiWsClient) {
-      this.settings.apiWs.achievementsApiWsClient = new AchievementsApiWs(this.apiClientStomp);
+    const json = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 0,
+      lessThan: 100,
+      ids: [id],
+      skip: 0,
+      limit: 1
+    });
+
+    const mainData = json.data[0];
+
+    const rewardRequest = {
+      entityFilter: [{
+        entityType: 'Achievement',
+        entityIds: [mainData.id]
+      }],
+      currencyKey: this.settings.currency,
+      skip: 0,
+      limit: 20
+    };
+
+    const rewardRaw = await this.getRewardsApi(rewardRequest);
+    if (rewardRaw && rewardRaw.data && rewardRaw.data.length) {
+      mainData.reward = rewardRaw.data[0];
     }
 
-    const achievementRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: [id],
-        skip: 0,
-        limit: 1
-      }
-    }, null);
-
-    this.settings.apiWs.achievementsApiWsClient.getAchievements(achievementRequest, async (json) => {
-      const mainData = json.data[0];
-
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Achievement',
-          entityIds: [mainData.id]
-        }],
-        currencyKey: this.settings.currency,
-        skip: 0,
-        limit: 20
-      };
-
-      const rewardRaw = await this.getRewardsApi(rewardRequest);
-      if (rewardRaw && rewardRaw.data && rewardRaw.data.length) {
-        mainData.reward = rewardRaw.data[0];
-      }
-
-      const tempGraphRequest = EntityGraphRequest.constructFromObject({
-        ids: [id],
-        includes: ['iconLink', 'termsAndConditions', 'description']
-      });
-
-      this.getGraphApi(tempGraphRequest)
-        .then(json => {
-          if (typeof callback === 'function') {
-            const data = {
-              data: mainData,
-              graph: json.data
-            };
-            callback(data);
-          }
-        })
-        .catch(error => {
-          this.log(error);
-        });
+    const tempGraphRequest = EntityGraphRequest.constructFromObject({
+      ids: [id],
+      includes: ['iconLink', 'termsAndConditions', 'description']
     });
+
+    this.getGraphApi(tempGraphRequest)
+      .then(json => {
+        if (typeof callback === 'function') {
+          const data = {
+            data: mainData,
+            graph: json.data
+          };
+          callback(data);
+        }
+      })
+      .catch(error => {
+        this.log(error);
+      });
   };
 
   this.getMissionListItemData = async (id) => {
-    const achievementRequest = AchievementRequest.constructFromObject({
-      languageKey: this.settings.language,
-      achievementFilter: {
-        ids: [id],
-        skip: 0,
-        limit: 1
-      }
-    }, null);
-
-    let mission = await this.getAchievements(achievementRequest);
+    let mission = await getAchievements({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      moreThan: 0,
+      lessThan: 100,
+      ids: [id],
+      skip: 0,
+      limit: 1
+    });
     mission = mission.data[0];
     mission.dependencies = [];
 
@@ -2692,7 +2028,7 @@ export const LbWidget = function (options) {
       var count = (_this.settings.miniScoreBoard.settings.active) ? 0 : _this.settings.leaderboard.fullLeaderboardSize;
       _this.getLeaderboardData(count, function (data) {
         if (_this.settings.miniScoreBoard.settings.active) _this.settings.miniScoreBoard.loadScoreBoard();
-        if (_this.settings.mainWidget.settings.active) _this.settings.mainWidget.loadLeaderboard(() => {}, false);
+        if (_this.settings.mainWidget.settings.active) _this.settings.mainWidget.loadLeaderboard(() => { }, false);
       });
     }
 
@@ -2724,7 +2060,7 @@ export const LbWidget = function (options) {
             _this.settings.miniScoreBoard.loadScoreBoard();
           }
           if (_this.settings.mainWidget.settings.active) {
-            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            _this.settings.mainWidget.loadLeaderboard(() => { }, true);
           }
 
           // restart leaderboard refresh
@@ -2752,7 +2088,6 @@ export const LbWidget = function (options) {
     }
 
     _this.checkForAvailableCompetitions(async function () {
-      // _this.updateLeaderboardNavigationCounts();
       await _this.prepareActiveCompetition(function () {
         // clear to not clash with LB refresh that could happen at same time
         if (_this.settings.leaderboard.refreshInterval) {
@@ -2774,7 +2109,7 @@ export const LbWidget = function (options) {
               _this.settings.miniScoreBoard.loadScoreBoard();
             }
             if (_this.settings.mainWidget.settings.active) {
-              _this.settings.mainWidget.loadLeaderboard(() => {}, isReloadTime);
+              _this.settings.mainWidget.loadLeaderboard(() => { }, isReloadTime);
             }
 
             // restart leaderboard refresh
@@ -2791,13 +2126,6 @@ export const LbWidget = function (options) {
             callback();
           }
         }
-        // _this.checkForAvailableAwards(
-        //   function () {
-        //     // _this.updateRewardsNavigationCounts();
-        //   },
-        //   1,
-        //   1
-        // );
         _this.checkForAvailableRewards(1, function () {
           if (_this.settings.mainWidget.settings.active) {
             _this.settings.mainWidget.updateLeaderboard();
@@ -3204,7 +2532,7 @@ export const LbWidget = function (options) {
         await _this.optInMemberToActiveCompetition(function () {
           setTimeout(function () {
             preLoader.hide();
-            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            _this.settings.mainWidget.loadLeaderboard(() => { }, true);
           }, 2000);
         });
       });
@@ -3375,8 +2703,8 @@ export const LbWidget = function (options) {
 
         if (_this.settings.competition.activeContest.statusCode === 15) {
           _this.checkForAvailableRewards(1, () => {
-            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(() => {});
-            _this.settings.mainWidget.loadLeaderboard(() => {}, true);
+            _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(() => { });
+            _this.settings.mainWidget.loadLeaderboard(() => { }, true);
             preLoader.hide();
           });
         } else {
@@ -3392,7 +2720,7 @@ export const LbWidget = function (options) {
               });
               _this.settings.callbacks.onLeaderboardUpdates(data);
               _this.settings.mainWidget.leaderboardDetailsUpdate();
-              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () { });
               _this.checkForAvailableRewards(1);
             })
             .catch(error => {
@@ -3417,7 +2745,7 @@ export const LbWidget = function (options) {
       if (missingMember) {
         missingMember.style.display = 'none';
       }
-      _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
+      _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () { });
       _this.settings.mainWidget.hideCompetitionList();
 
       const member = query(_this.settings.mainWidget.settings.leaderboard.resultContainer, '.cl-lb-member-row');
@@ -3690,7 +3018,7 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-finished')) {
         let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+        const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
         let isPrev = false;
         let isNext = false;
 
@@ -3711,7 +3039,7 @@ export const LbWidget = function (options) {
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-finished').querySelector('.active').dataset.page);
-          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / 12);
+          const pagesCount = Math.ceil(_this.settings.tournaments.finishedTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
@@ -3732,7 +3060,7 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-ready')) {
         let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+        const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
         let isPrev = false;
         let isNext = false;
 
@@ -3753,7 +3081,7 @@ export const LbWidget = function (options) {
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-ready').querySelector('.active').dataset.page);
-          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / 12);
+          const pagesCount = Math.ceil(_this.settings.tournaments.readyTotalCount / ITEMS_PER_PAGE.TOURNAMENTS);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
@@ -3774,7 +3102,7 @@ export const LbWidget = function (options) {
       }
       if (el.closest('.paginator-active')) {
         let pageNumber;
-        const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
+        const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / ITEMS_PER_PAGE.TOURNAMENTS);
         let isPrev = false;
         let isNext = false;
 
@@ -3795,7 +3123,7 @@ export const LbWidget = function (options) {
           }
         } else if (el.classList.contains('next') || isNext) {
           const activePage = Number(el.closest('.paginator-active').querySelector('.active').dataset.page);
-          const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / 12);
+          const pagesCount = Math.ceil(_this.settings.tournaments.totalCount / ITEMS_PER_PAGE.TOURNAMENTS);
           if (activePage < pagesCount) {
             pageNumber = activePage + 1;
           } else {
@@ -4045,9 +3373,9 @@ export const LbWidget = function (options) {
         _this.activeDataRefresh(function () {
           _this.settings.mainWidget.hideCompetitionList(async function () {
             if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
+              await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () { });
             } else if (_this.settings.competition.activeContest !== null) {
-              _this.settings.mainWidget.loadCompetitionDetails(function () {});
+              _this.settings.mainWidget.loadCompetitionDetails(function () { });
             }
 
             const lbContainer = query(_this.settings.mainWidget.settings.container, '.cl-main-widget-section-container .' + _this.settings.navigation.tournaments.containerClass);
@@ -4079,7 +3407,7 @@ export const LbWidget = function (options) {
 
       // messages details back button
     } else if (hasClass(el, 'cl-main-widget-inbox-details-back-btn')) {
-      _this.settings.mainWidget.hideMessageDetails(() => {}, true);
+      _this.settings.mainWidget.hideMessageDetails(() => { }, true);
 
       // mission details back button
     } else if (hasClass(el, 'cl-main-widget-missions-details-back-btn')) {
@@ -4161,7 +3489,7 @@ export const LbWidget = function (options) {
     ) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
-        _this.settings.mainWidget.loadMessageDetails(data, function () {});
+        _this.settings.mainWidget.loadMessageDetails(data, function () { });
         _this.updateMessageStatus([messageId], 'Read');
       });
 
@@ -4300,7 +3628,7 @@ export const LbWidget = function (options) {
             // } else if (_this.settings.competition.activeContest !== null) {
             //   _this.settings.mainWidget.loadCompetitionDetails(function () {});
             // }
-            _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () {});
+            _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () { });
             _this.checkForAvailableRewards(1, function () {
               if (_this.settings.mainWidget.settings.active) {
                 _this.settings.mainWidget.updateLeaderboard();
@@ -4374,7 +3702,7 @@ export const LbWidget = function (options) {
     document.body.addEventListener('click', function (event) {
       const el = event.target;
 
-      _this.eventHandlers(el).then(() => {});
+      _this.eventHandlers(el).then(() => { });
     });
 
     // if (_this.isMobile()) {
@@ -4561,7 +3889,7 @@ export const LbWidget = function (options) {
       }
 
       if (!this.settings.debug) {
-        this.apiClientStomp.client.debug = () => {};
+        this.apiClientStomp.client.debug = () => { };
       }
       await this.apiClientStomp.connect({ token: this.settings.authToken });
 
@@ -4611,13 +3939,13 @@ export const LbWidget = function (options) {
             });
             _this.settings.callbacks.onLeaderboardUpdates(json);
             // this.settings.miniScoreBoard.loadScoreBoard(true);
-            this.settings.mainWidget.loadLeaderboard(() => {}, false);
+            this.settings.mainWidget.loadLeaderboard(() => { }, false);
           }
         }
 
         if (json && json.entityType === 'Message') {
           setTimeout(async () => {
-            await _this.getMessage(json.entityId, () => {}, true);
+            await _this.getMessage(json.entityId, () => { }, true);
           }, 2000);
 
           const messagesTab = document.querySelector('.cl-main-widget-section-inbox');
@@ -4631,7 +3959,7 @@ export const LbWidget = function (options) {
             }
 
             if (messagesTab && messagesTab.classList.contains('cl-main-active-section')) {
-              _this.settings.mainWidget.loadMessages(1, () => {});
+              _this.settings.mainWidget.loadMessages(1, () => { });
             }
           }
         }
@@ -4658,7 +3986,7 @@ export const LbWidget = function (options) {
             ) {
               if (!['Claimed', 'Expired'].includes(awardData.data[0].status)) {
                 const iwAward = awardData.data[0];
-                await _this.claimAward(iwAward.id, () => {});
+                await _this.claimAward(iwAward.id, () => { });
                 setTimeout(async () => {
                   await _this.settings.mainWidget.loadDashboardInstantWins();
                 }, 2000);
@@ -4673,7 +4001,6 @@ export const LbWidget = function (options) {
 
         if (json && json.entityType === 'Contest') {
           _this.checkForAvailableCompetitions(async function () {
-            // _this.updateLeaderboardNavigationCounts();
           });
           if (headers.callback && headers.callback === 'entityStateChanged') {
             if (typeof this.settings.callbacks.onContestStatusChanged === 'function') {
