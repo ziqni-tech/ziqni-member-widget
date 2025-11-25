@@ -225,17 +225,15 @@ export const LbWidget = function (options) {
 
     const rewardIds = awardsData.map(c => c.rewardId);
     if (rewardIds.length) {
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Reward',
-          entityIds: rewardIds
-        }],
+      const rewards = await getRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
         currencyKey: this.settings.currency,
+        entityType: 'Reward',
+        entityIds: rewardIds,
         skip: 0,
         limit: 20
-      };
-
-      const rewards = await this.getRewardsApi(rewardRequest);
+      });
       const rewardsData = rewards.data;
 
       awardsData = awardsData.map(award => {
