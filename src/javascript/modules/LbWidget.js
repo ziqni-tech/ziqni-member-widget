@@ -303,20 +303,29 @@ export const LbWidget = function (options) {
 
     if (readyCompetitionsData) {
       const ids = readyCompetitionsData.map(a => a.id);
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Competition',
-          entityIds: ids
-        }],
+
+      let contests = await getContests({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        competitionIds: ids,
+        limit: 20,
+        skip: 0
+      });
+
+      const contestIds = contests.map(a => a.id);
+      contests = await attachRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: contests,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: contestIds,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
+      });
 
       readyCompetitionsData = readyCompetitionsData.map(comp => {
-        comp.rewards = rewardsData.filter(r => r.entityId === comp.id);
+        comp.contests = contests.filter(c => c.competitionId === comp.id);
 
         return comp;
       });
