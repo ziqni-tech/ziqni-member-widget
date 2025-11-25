@@ -18,7 +18,7 @@ import { ITEMS_PER_PAGE } from './mainWidget/constants';
 import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests } from './lbWidget/services/competitionService';
 import { getAchievements } from './lbWidget/services/achievementService';
-import { attachReward, attachRewards } from './lbWidget/services/rewardService';
+import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -152,25 +152,16 @@ export const LbWidget = function (options) {
 
     if (missions.length) {
       const ids = missions.map(m => m.id);
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Achievement',
-          entityIds: ids
-        }],
+
+      missions = await attachReward({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: missions,
         currencyKey: this.settings.currency,
+        entityType: 'Achievement',
+        entityIds: ids,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      missions = missions.map(mission => {
-        const idx = rewardsData.findIndex(r => r.entityId === mission.id);
-        if (idx !== -1) {
-          mission.reward = rewardsData[idx];
-        }
-
-        return mission;
       });
 
       for (const id of ids) {
@@ -185,16 +176,15 @@ export const LbWidget = function (options) {
             const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
             const achievement = graph.nodes[idx];
 
-            const rewardRequest = {
-              entityFilter: [{
-                entityType: 'achievement',
-                entityIds: [edge.tailEntityId]
-              }],
+            const rewards = await getRewards({
+              apiClient: this.apiClientStomp,
+              language: this.settings.language,
               currencyKey: this.settings.currency,
+              entityType: 'Achievement',
+              entityIds: [edge.tailEntityId],
               skip: 0,
               limit: 5
-            };
-            const rewards = await this.getRewardsApi(rewardRequest);
+            });
             const rewardsData = rewards.data;
 
             achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
