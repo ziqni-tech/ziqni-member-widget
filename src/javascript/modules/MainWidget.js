@@ -191,12 +191,12 @@ export const MainWidget = function (options) {
     });
     if (this.settings.lbWidget.settings.awards.showExpiredAwards) {
       menuItems.push({
-        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.instantWins, 'expiredAwards', idx !== -1 && data[idx].type === 'expiredAwards')
+        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.expired, 'expiredAwards', idx !== -1 && data[idx].type === 'expiredAwards')
       });
     }
     if (this.settings.lbWidget.settings.instantWins.enable) {
       menuItems.push({
-        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.expired, 'instantWins', idx !== -1 && data[idx].type === 'instantWins')
+        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.instantWins, 'instantWins', idx !== -1 && data[idx].type === 'instantWins')
       });
     }
 
