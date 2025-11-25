@@ -334,13 +334,6 @@ export const LbWidget = function (options) {
     return { activeCompetitions: activeCompetitionsData, readyCompetitions: readyCompetitionsData };
   };
 
-  /**
-   * get a list of available competition filtered by provided global criteria
-   * @param callback {Function}
-   * @param readyPageNumber
-   * @param activePageNumber
-   * @param finishedPageNumber
-   */
   this.checkForAvailableCompetitions = async function (
     callback,
     readyPageNumber = 1,
@@ -402,22 +395,15 @@ export const LbWidget = function (options) {
 
       const contestIds = contests.map(a => a.id);
 
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Contest',
-          entityIds: contestIds
-        }],
+      contests = await attachRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: contests,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: contestIds,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      contests = contests.map(c => {
-        c.rewards = rewardsData.filter(r => r.entityId === c.id);
-
-        return c;
       });
 
       this.settings.tournaments.activeCompetitions = this.settings.tournaments.activeCompetitions.map(comp => {
@@ -440,22 +426,15 @@ export const LbWidget = function (options) {
 
       const contestIds = contests.map(a => a.id);
 
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Contest',
-          entityIds: contestIds
-        }],
+      contests = await attachRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: contests,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: contestIds,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      contests = contests.map(c => {
-        c.rewards = rewardsData.filter(r => r.entityId === c.id);
-
-        return c;
       });
 
       this.settings.tournaments.readyCompetitions = this.settings.tournaments.readyCompetitions.map(comp => {
@@ -478,22 +457,15 @@ export const LbWidget = function (options) {
 
       const contestIds = contests.map(a => a.id);
 
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Contest',
-          entityIds: contestIds
-        }],
+      contests = await attachRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: contests,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: contestIds,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      contests = contests.map(c => {
-        c.rewards = rewardsData.filter(r => r.entityId === c.id);
-
-        return c;
       });
 
       this.settings.tournaments.finishedCompetitions = this.settings.tournaments.finishedCompetitions.map(comp => {
@@ -1243,18 +1215,17 @@ export const LbWidget = function (options) {
     const idx = awards.findIndex(r => r.id === awardId);
     if (idx !== -1) {
       awardData = awards[idx];
-      const rewardRequest = {
-        languageKey: this.settings.language,
-        entityFilter: [{
-          entityType: 'Reward',
-          entityIds: [awardData.rewardId]
-        }],
+
+      const reward = await getRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
         currencyKey: this.settings.currency,
+        entityType: 'Reward',
+        entityIds: [awardData.rewardId],
         skip: 0,
         limit: 1
-      };
+      });
 
-      const reward = await this.getRewardsApi(rewardRequest);
       if (reward.data && reward.data.length && reward.data[0].icon) {
         const file = await this.getFile(reward.data[0].icon);
         if (file && file.data && file.data.length && file.data[0].uri) {
