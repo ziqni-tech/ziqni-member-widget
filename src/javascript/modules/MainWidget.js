@@ -20,6 +20,7 @@ import {
 } from './mainWidget/paginatorUtils';
 import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
 import { createElementWithClass } from './mainWidget/domUtils';
+import { getRewards } from './lbWidget/services/rewardService';
 
 /**
  * MainWidget
@@ -2282,16 +2283,15 @@ export const MainWidget = function (options) {
     const idx = mission.graph.nodes.findIndex(node => node.entityId === id);
     const stageData = mission.graph.nodes[idx];
 
-    const rewardRequest = {
-      entityFilter: [{
-        entityType: 'achievement',
-        entityIds: [id]
-      }],
+    const rewards = await getRewards({
+      apiClient: this.settings.lbWidget.apiClientStomp,
+      language: this.settings.lbWidget.settings.language,
       currencyKey: this.settings.lbWidget.settings.currency,
+      entityType: 'Achievement',
+      entityIds: [id],
       skip: 0,
       limit: 1
-    };
-    const rewards = await this.settings.lbWidget.getRewardsApi(rewardRequest);
+    });
     stageData.reward = rewards.data && rewards.data.length ? rewards.data[0] : '';
 
     icon.removeAttribute('style');

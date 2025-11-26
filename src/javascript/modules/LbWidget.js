@@ -1831,16 +1831,15 @@ export const LbWidget = function (options) {
     mission = mission.data[0];
     mission.dependencies = [];
 
-    const rewardRequest = {
-      entityFilter: [{
-        entityType: 'Achievement',
-        entityIds: [id]
-      }],
+    const rewards = await getRewards({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
       currencyKey: this.settings.currency,
+      entityType: 'Achievement',
+      entityIds: [id],
       skip: 0,
       limit: 20
-    };
-    const rewards = await this.getRewardsApi(rewardRequest);
+    });
     mission.reward = rewards.data[0];
 
     const graph = await this.getMissionsGraph(id);
@@ -1851,16 +1850,15 @@ export const LbWidget = function (options) {
         const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
         const achievement = graph.nodes[idx];
 
-        const rewardRequest = {
-          entityFilter: [{
-            entityType: 'achievement',
-            entityIds: [edge.tailEntityId]
-          }],
+        const rewards = await getRewards({
+          apiClient: this.apiClientStomp,
+          language: this.settings.language,
           currencyKey: this.settings.currency,
+          entityType: 'Achievement',
+          entityIds: [edge.tailEntityId],
           skip: 0,
           limit: 5
-        };
-        const rewards = await this.getRewardsApi(rewardRequest);
+        });
         const rewardsData = rewards.data;
 
         achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
