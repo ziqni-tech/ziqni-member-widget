@@ -1582,37 +1582,33 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.checkForAvailableRewards = function (pageNumber, callback) {
+  this.checkForAvailableRewards = async function (pageNumber, callback) {
     this.settings.rewards.rewards = [];
     this.settings.rewards.availableRewards = [];
     this.settings.rewards.expiredRewards = [];
     this.settings.rewards.totalCount = 0;
 
     if (this.settings.competition.activeContestId) {
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Contest',
-          entityIds: [this.settings.competition.activeContestId]
-        }],
+      const json = await getRewards({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
         currencyKey: this.settings.currency,
+        entityType: 'Contest',
+        entityIds: [this.settings.competition.activeContestId],
         skip: 0,
         limit: 20
-      };
+      });
 
-      this.getRewardsApi(rewardRequest)
-        .then(json => {
-          this.settings.rewards.rewards = json.data ?? [];
-          this.settings.rewards.availableRewards = json.data ?? [];
-          this.settings.rewards.expiredRewards = [];
-          this.settings.rewards.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
-          if (this.settings.competition.activeContest && json.data) {
-            this.settings.competition.activeContest.rewards = json.data;
-          }
-          if (typeof callback === 'function') {
-            callback();
-          }
-        })
-        .catch(error => this.log(error));
+      this.settings.rewards.rewards = json.data ?? [];
+      this.settings.rewards.availableRewards = json.data ?? [];
+      this.settings.rewards.expiredRewards = [];
+      this.settings.rewards.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+      if (this.settings.competition.activeContest && json.data) {
+        this.settings.competition.activeContest.rewards = json.data;
+      }
+      if (typeof callback === 'function') {
+        callback();
+      }
     } else if (typeof callback === 'function') {
       callback(
         this.settings.rewards.rewards,
@@ -1707,25 +1703,16 @@ export const LbWidget = function (options) {
 
     if (this.settings.missions.missions.length) {
       const ids = this.settings.missions.missions.map(m => m.id);
-      const rewardRequest = {
-        entityFilter: [{
-          entityType: 'Achievement',
-          entityIds: ids
-        }],
+
+      this.settings.missions.missions = await attachReward({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        entityArray: this.settings.missions.missions,
         currencyKey: this.settings.currency,
+        entityType: 'Achievement',
+        entityIds: ids,
         skip: 0,
         limit: 20
-      };
-      const rewards = await this.getRewardsApi(rewardRequest);
-      const rewardsData = rewards.data;
-
-      this.settings.missions.missions = this.settings.missions.missions.map(mission => {
-        const idx = rewardsData.findIndex(r => r.entityId === mission.id);
-        if (idx !== -1) {
-          mission.reward = rewardsData[idx];
-        }
-
-        return mission;
       });
 
       for (const id of ids) {
@@ -1740,16 +1727,15 @@ export const LbWidget = function (options) {
             const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
             const achievement = graph.nodes[idx];
 
-            const rewardRequest = {
-              entityFilter: [{
-                entityType: 'achievement',
-                entityIds: [edge.tailEntityId]
-              }],
+            const rewards = await getRewards({
+              apiClient: this.apiClientStomp,
+              language: this.settings.language,
               currencyKey: this.settings.currency,
+              entityType: 'Achievement',
+              entityIds: [edge.tailEntityId],
               skip: 0,
               limit: 5
-            };
-            const rewards = await this.getRewardsApi(rewardRequest);
+            });
             const rewardsData = rewards.data;
 
             achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
@@ -1798,17 +1784,16 @@ export const LbWidget = function (options) {
 
     const mainData = json.data[0];
 
-    const rewardRequest = {
-      entityFilter: [{
-        entityType: 'Achievement',
-        entityIds: [mainData.id]
-      }],
+    const rewardRaw = await getRewards({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
       currencyKey: this.settings.currency,
+      entityType: 'Achievement',
+      entityIds: [mainData.id],
       skip: 0,
       limit: 20
-    };
+    });
 
-    const rewardRaw = await this.getRewardsApi(rewardRequest);
     if (rewardRaw && rewardRaw.data && rewardRaw.data.length) {
       mainData.reward = rewardRaw.data[0];
     }
