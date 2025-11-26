@@ -1618,17 +1618,6 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.getRewardsApi = async function (rewardRequest) {
-    if (!this.settings.apiWs.rewardsApiWsClient) {
-      this.settings.apiWs.rewardsApiWsClient = new RewardsApiWs(this.apiClientStomp);
-    }
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.rewardsApiWsClient.getRewards(rewardRequest, (json) => {
-        resolve(json);
-      });
-    });
-  };
-
   this.getInstantWinsApi = async function (instantWinRequest) {
     if (!this.settings.apiWs.instantWinsApiWsClient) {
       this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
