@@ -7,6 +7,7 @@ import removeClass from '../utils/removeClass';
 import remove from '../utils/remove';
 import dragElement from './dragElement';
 import cloneDeep from 'lodash.clonedeep';
+import { formatDateTime } from '../utils/formatDateTime';
 
 /**
  * MiniScoreBoard
@@ -115,8 +116,8 @@ export const MiniScoreBoard = function (options) {
       diff = moment(startDate).diff(moment());
 
       label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
-      date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
-      dateObj = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      date = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
+      dateObj = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       inverse = false;
 
       if (diff <= 0 && !this.timeManagementInterval) {
@@ -132,8 +133,8 @@ export const MiniScoreBoard = function (options) {
 
       diff = moment(startDate).diff(moment());
       label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
-      date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
-      dateObj = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      date = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
+      dateObj = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       inverse = false;
 
       if (diff <= 0 && _this.settings.lbWidget.settings.competition.activeContest.statusCode < 25) {
@@ -144,9 +145,9 @@ export const MiniScoreBoard = function (options) {
         date = '';
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 25) {
         diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledEndDate).diff(moment());
-        dateObj = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+        dateObj = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
         label = '&nbsp;';
-        date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+        date = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
         if (diff <= 0) {
           label = _this.settings.lbWidget.settings.translation.tournaments.finishing;
           date = '';
@@ -640,7 +641,7 @@ export const MiniScoreBoard = function (options) {
     var diff = moment(startDate).diff(moment());
     var label = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn;
     var wrapperDomObj = _this.settings.infoContainer;
-    var date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+    var date = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
 
     if (diff <= 0 && _this.settings.lbWidget.settings.competition.activeContest.statusCode === 15) {
       label = _this.settings.lbWidget.settings.translation.miniLeaderboard.starting;
@@ -651,7 +652,7 @@ export const MiniScoreBoard = function (options) {
     } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 25) {
       diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledEndDate).diff(moment());
       label = _this.settings.lbWidget.settings.translation.miniLeaderboard.started;
-      date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      date = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
 
       if (diff <= 0) {
         label = _this.settings.lbWidget.settings.translation.tournaments.finishing;

@@ -3,7 +3,6 @@ import cssVars from 'css-vars-ponyfill';
 
 import mergeObjects from '../utils/mergeObjects';
 import mapObject from '../utils/mapObject';
-import formatNumberLeadingZeros from '../utils/formatNumberLeadingZeros';
 import stringContains from '../utils/stringContains';
 import objectIterator from '../utils/objectIterator';
 import query from '../utils/query';
@@ -36,7 +35,6 @@ import {
   OptInApiWs,
   FilesApiWs,
   OptInStatesRequest,
-  RewardsApiWs,
   LeaderboardApiWs,
   LeaderboardSubscriptionRequest,
   MessagesApiWs,
@@ -79,63 +77,6 @@ export const LbWidget = function (options) {
     if (this.settings.debug) {
       console.error(message);
     }
-  };
-
-  /**
-   * Format duration of Date Time from moment() object
-   * @memberOf LbWidget
-   * @param duration {moment}
-   * @returns {string}
-   */
-  this.formatDateTime = function (duration) {
-    var _this = this;
-    var largeResult = [];
-    var result = [];
-    if (duration.months()) largeResult.push(duration.months() + '<span class="time-ind">' + _this.settings.translation.time.months + '</span>');
-    if (duration.days()) largeResult.push(duration.days() + '<span class="time-ind">' + _this.settings.translation.time.days + '</span>');
-    if (duration.hours() || duration.days() > 0) {
-      result.push(formatNumberLeadingZeros(duration.hours(), 2) + '<span class="time-ind">' + _this.settings.translation.time.hours + '</span>');
-    } else result.push('00<span class="time-ind">' + _this.settings.translation.time.hours + '</span>');
-    if (duration.minutes() || duration.hours() > 0 || duration.days() > 0) {
-      result.push(formatNumberLeadingZeros(duration.minutes(), 2) + ((duration.days() > 0) ? '<span class="time-ind">' + _this.settings.translation.time.minutes + '</span>' : '<span class="time-ind">' + _this.settings.translation.time.minutesShortHand + '</span>'));
-    } else (result.push('00' + ((duration.days() > 0) ? '<span class="time-ind">' + _this.settings.translation.time.minutes + '</span>' : '<span class="time-ind">' + _this.settings.translation.time.minutesShortHand + '</span>')));
-    // if (duration.seconds() && duration.days() === 0){ result.push( formatNumberLeadingZeros(duration.seconds(), 2) + '<span class="time-ind">s</span>' ) }else if(duration.days() === 0){result.push( '00<span class="time-ind">s</span>' )};
-    result.push(formatNumberLeadingZeros(duration.seconds(), 2) + '<span class="time-ind">' + _this.settings.translation.time.seconds + '</span>');
-    return (largeResult.length > 0) ? (largeResult.join(' ') + ' ' + result.join(':')) : result.join(':');
-  };
-
-  this.formatMissionDateTime = function (duration) {
-    const days = formatNumberLeadingZeros(duration.days(), 2);
-    const hours = formatNumberLeadingZeros(duration.hours(), 2);
-    const minutes = formatNumberLeadingZeros(duration.minutes(), 2);
-    const seconds = formatNumberLeadingZeros(duration.seconds(), 2);
-
-    const daysElem = days + this.settings.translation.time.days;
-    const hoursElem = hours + this.settings.translation.time.hours;
-    const minutesElem = minutes + this.settings.translation.time.minutes;
-    const secondsElem = seconds + this.settings.translation.time.seconds;
-
-    return daysElem + ' ' + hoursElem + ' ' + minutesElem + ' ' + secondsElem;
-  };
-
-  this.formatBannerDateTime = function (duration) {
-    const months = formatNumberLeadingZeros(duration.months(), 2);
-    const days = formatNumberLeadingZeros(duration.days(), 2);
-    const hours = formatNumberLeadingZeros(duration.hours(), 2);
-    const minutes = formatNumberLeadingZeros(duration.minutes(), 2);
-    const seconds = formatNumberLeadingZeros(duration.seconds(), 2);
-
-    let monthsElem = '';
-    if (Number(months[0]) || Number(months[1])) {
-      monthsElem = '<div class="banner-months"><div class="banner-date-cell">' + months[0] + '</div><div class="banner-date-cell">' + months[1] + '</div></div>';
-    }
-
-    const daysElem = '<div class="banner-days"><div class="banner-date-cell">' + days[0] + '</div><div class="banner-date-cell">' + days[1] + '</div></div>';
-    const hoursElem = '<div class="banner-hours"><div class="banner-date-cell">' + hours[0] + '</div><div class="banner-date-cell">' + hours[1] + '</div></div>';
-    const minutesElem = '<div class="banner-minutes"><div class="banner-date-cell">' + minutes[0] + '</div><div class="banner-date-cell">' + minutes[1] + '</div></div>';
-    const secondsElem = '<div class="banner-seconds"><div class="banner-date-cell">' + seconds[0] + '</div><div class="banner-date-cell">' + seconds[1] + '</div></div>';
-
-    return '<div class="banner-date">' + monthsElem + daysElem + hoursElem + minutesElem + secondsElem + '</div>';
   };
 
   this.getDashboardMissions = async () => {

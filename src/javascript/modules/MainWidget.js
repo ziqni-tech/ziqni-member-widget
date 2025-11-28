@@ -21,6 +21,7 @@ import {
 import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
 import { createElementWithClass } from './mainWidget/domUtils';
 import { getRewards } from './lbWidget/services/rewardService';
+import { formatDateTime, formatMissionDateTime, formatBannerDateTime } from '../utils/formatDateTime';
 
 /**
  * MainWidget
@@ -1015,7 +1016,7 @@ export const MainWidget = function (options) {
       lbDateHeaderEl.style.display = 'flex';
 
       const diff = moment(this.settings.lbWidget.settings.competition.activeCompetition.scheduledStartDate).diff(moment());
-      const date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      const date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       const months = moment.duration(diff).months();
       if (months) {
         descriptionMonthsLabel.classList.remove('hidden');
@@ -1028,11 +1029,11 @@ export const MainWidget = function (options) {
       const labelDate = '<div class="cl-main-widget-lb-details-content-date-label">' +
         _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
         ':</div>' +
-        _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+        formatBannerDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       const descriptionDate = '<div class="cl-main-widget-lb-details-description-date-label">' +
         _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
         ':</div>' +
-        _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+        formatBannerDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
 
       if (_this.settings.leaderboard.timerInterval) {
         clearTimeout(_this.settings.leaderboard.timerInterval);
@@ -1049,15 +1050,15 @@ export const MainWidget = function (options) {
       lbDateHeaderEl.style.display = 'flex';
 
       let diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledStartDate).diff(moment());
-      let date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + _this.settings.lbWidget.formatDateTime(moment.duration(diff));
+      let date = _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn + ': ' + formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       let labelDate = '<div class="cl-main-widget-lb-details-content-date-label">' +
         _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
         ':</div>' +
-        _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+        formatBannerDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       let descriptionDate = '<div class="cl-main-widget-lb-details-description-date-label">' +
         _this.settings.lbWidget.settings.translation.miniLeaderboard.startsIn +
         ':</div>' +
-        _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+        formatBannerDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
       const months = moment.duration(diff).months();
       if (months) {
         descriptionMonthsLabel.classList.remove('hidden');
@@ -1084,9 +1085,9 @@ export const MainWidget = function (options) {
         _this.settings.detailsDateHeaders.innerHTML = '';
       } else if (_this.settings.lbWidget.settings.competition.activeContest.statusCode === 25) {
         diff = moment(_this.settings.lbWidget.settings.competition.activeContest.scheduledEndDate).diff(moment());
-        date = _this.settings.lbWidget.formatDateTime(moment.duration(diff));
-        labelDate = _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
-        descriptionDate = _this.settings.lbWidget.formatBannerDateTime(moment.duration(diff));
+        date = formatDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
+        labelDate = formatBannerDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
+        descriptionDate = formatBannerDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
 
         const months = moment.duration(diff).months();
         if (months) {
@@ -3770,7 +3771,7 @@ export const MainWidget = function (options) {
         }
 
         const diff = moment(endDate).diff(moment());
-        const date = _this.settings.lbWidget.formatMissionDateTime(moment.duration(diff));
+        const date = formatMissionDateTime(moment.duration(diff), _this.settings.lbWidget.settings.translation.time);
 
         const missionSection = document.querySelector('.cl-main-widget-section-missions');
         const dashboardSection = document.querySelector('.cl-main-widget-section-dashboard');
