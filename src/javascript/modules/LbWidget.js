@@ -18,6 +18,7 @@ import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests } from './lbWidget/services/competitionService';
 import { getAchievements } from './lbWidget/services/achievementService';
 import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
+import { getAwards, getAwardsByIds } from './lbWidget/services/awardService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -40,7 +41,6 @@ import {
   MessagesApiWs,
   MessageRequest,
   AwardsApiWs,
-  AwardRequest,
   ClaimAwardRequest,
   GraphsApiWs,
   EntityGraphRequest,
@@ -144,24 +144,15 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardAwards = async function () {
-    const availableAwardRequest = AwardRequest.constructFromObject({
-      languageKey: this.settings.language,
-      awardFilter: {
-        statusCode: {
-          moreThan: 14,
-          lessThan: 16
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: 0,
-        limit: 2
-      },
-      currencyKey: this.settings.currency
+    const awards = await getAwards({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      currencyKey: this.settings.currency,
+      moreThan: 14,
+      lessThan: 16,
+      skip: 0,
+      limit: 2
     });
-
-    const awards = await this.getAwardsApi(availableAwardRequest);
     let awardsData = awards.data;
 
     const rewardIds = awardsData.map(c => c.rewardId);
@@ -1323,58 +1314,15 @@ export const LbWidget = function (options) {
     this.settings.awards.expiredAwards = [];
     this.settings.awards.rewards = [];
 
-    const availableAwardRequest = AwardRequest.constructFromObject({
-      languageKey: this.settings.language,
-      awardFilter: {
-        statusCode: {
-          moreThan: 14,
-          lessThan: 16
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (pageNumber - 1) * 6,
-        limit: 6
-      },
-      currencyKey: this.settings.currency
+    const claimedAwards = await getAwards({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      currencyKey: this.settings.currency,
+      moreThan: 34,
+      lessThan: 36,
+      skip: (claimedPageNumber - 1) * 6,
+      limit: 6
     });
-
-    const claimedAwardRequest = AwardRequest.constructFromObject({
-      languageKey: this.settings.language,
-      awardFilter: {
-        statusCode: {
-          moreThan: 34,
-          lessThan: 36
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (claimedPageNumber - 1) * 6,
-        limit: 6
-      },
-      currencyKey: this.settings.currency
-    });
-
-    const expiredAwardRequest = AwardRequest.constructFromObject({
-      languageKey: this.settings.language,
-      awardFilter: {
-        statusCode: {
-          moreThan: 114,
-          lessThan: 116
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (claimedPageNumber - 1) * 6,
-        limit: 6
-      },
-      currencyKey: this.settings.currency
-    });
-
-    const claimedAwards = await this.getAwardsApi(claimedAwardRequest);
     this.settings.awards.claimedAwards = claimedAwards.data;
     const claimedRewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
     if (claimedRewardIds.length) {
@@ -1403,7 +1351,15 @@ export const LbWidget = function (options) {
       ? claimedAwards.meta.totalRecordsFound
       : 0;
 
-    const availableAwards = await this.getAwardsApi(availableAwardRequest);
+    const availableAwards = await getAwards({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      currencyKey: this.settings.currency,
+      moreThan: 14,
+      lessThan: 16,
+      skip: (pageNumber - 1) * 6,
+      limit: 6
+    });
     this.settings.awards.availableAwards = availableAwards.data;
 
     const rewardIds = this.settings.awards.availableAwards.map(c => c.rewardId);
@@ -1433,7 +1389,15 @@ export const LbWidget = function (options) {
       ? availableAwards.meta.totalRecordsFound
       : 0;
 
-    const expiredAwards = await this.getAwardsApi(expiredAwardRequest);
+    const expiredAwards = await getAwards({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      currencyKey: this.settings.currency,
+      moreThan: 114,
+      lessThan: 116,
+      skip: (claimedPageNumber - 1) * 6,
+      limit: 6
+    });
     this.settings.awards.expiredAwards = expiredAwards.data;
 
     const expiredRewardIds = this.settings.awards.expiredAwards.map(c => c.rewardId);
@@ -1466,18 +1430,6 @@ export const LbWidget = function (options) {
         this.settings.awards.expiredAwards
       );
     }
-  };
-
-  this.getAwardsApi = function (awardRequest) {
-    if (!this.settings.apiWs.awardsApiWsClient) {
-      this.settings.apiWs.awardsApiWsClient = new AwardsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.awardsApiWsClient.getAwards(awardRequest, (json) => {
-        resolve(json);
-      });
-    });
   };
 
   this.animateIcon = function (entity) {
@@ -3840,19 +3792,14 @@ export const LbWidget = function (options) {
         }
 
         if (json && json.entityType === 'Award') {
-          const awardRequest = AwardRequest.constructFromObject({
-            languageKey: this.settings.language,
-            awardFilter: {
-              ids: [json.entityId],
-              skip: 0,
-              limit: 1
-            },
-            currencyKey: this.settings.currency
-          });
-
           setTimeout(async () => {
             const dashboard = document.querySelector('.cl-main-widget-section-dashboard');
-            const awardData = await _this.getAwardsApi(awardRequest);
+            const awardData = await getAwardsByIds({
+              apiClient: _this.apiClientStomp,
+              language: _this.settings.language,
+              currencyKey: _this.settings.currency,
+              ids: [json.entityId]
+            });
 
             if (
               awardData.data &&
