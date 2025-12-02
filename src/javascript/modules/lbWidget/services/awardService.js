@@ -1,4 +1,8 @@
-import { AwardsApiWs, AwardRequest } from '@ziqni-tech/member-api-client';
+import {
+  AwardsApiWs,
+  AwardRequest,
+  ClaimAwardRequest
+} from '@ziqni-tech/member-api-client';
 
 let awardsApiWsClient = null;
 
@@ -57,4 +61,20 @@ export async function getAwardsByIds({
   }, null);
 
   return await getAwardsApi(apiClient, request);
+}
+
+export async function claimAward(apiClient, rewardId, callback) {
+  if (!awardsApiWsClient) {
+    awardsApiWsClient = new AwardsApiWs(apiClient);
+  }
+
+  const claimAwardRequest = ClaimAwardRequest.constructFromObject({
+    awardIds: [rewardId]
+  });
+
+  awardsApiWsClient.claimAwards(claimAwardRequest, (json) => {
+    if (typeof callback === 'function') {
+      callback(json);
+    }
+  });
 }

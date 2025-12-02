@@ -22,6 +22,7 @@ import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionU
 import { createElementWithClass } from './mainWidget/domUtils';
 import { getRewards } from './lbWidget/services/rewardService';
 import { formatDateTime, formatMissionDateTime, formatBannerDateTime } from '../utils/formatDateTime';
+import { claimAward } from './lbWidget/services/awardService';
 
 /**
  * MainWidget
@@ -3981,7 +3982,7 @@ export const MainWidget = function (options) {
               climeBtn.addEventListener('click', async () => {
                 const awardId = climeBtn.dataset.id;
                 if (awardId) {
-                  this.settings.lbWidget.claimAward(awardId);
+                  claimAward(this.settings.lbWidget.apiClientStomp, awardId);
                 }
                 spinnerWheel.resetWheel();
                 const modal = document.getElementById('congratulations-modal');

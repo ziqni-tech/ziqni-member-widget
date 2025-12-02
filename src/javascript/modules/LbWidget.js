@@ -18,7 +18,7 @@ import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests } from './lbWidget/services/competitionService';
 import { getAchievements } from './lbWidget/services/achievementService';
 import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
-import { getAwards, getAwardsByIds } from './lbWidget/services/awardService';
+import { getAwards, getAwardsByIds, claimAward } from './lbWidget/services/awardService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -40,8 +40,6 @@ import {
   LeaderboardSubscriptionRequest,
   MessagesApiWs,
   MessageRequest,
-  AwardsApiWs,
-  ClaimAwardRequest,
   GraphsApiWs,
   EntityGraphRequest,
   InstantWinsApiWs,
@@ -1272,22 +1270,6 @@ export const LbWidget = function (options) {
     }];
 
     await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => { });
-  };
-
-  this.claimAward = async function (rewardId, callback) {
-    if (!this.settings.apiWs.awardsApiWsClient) {
-      this.settings.apiWs.awardsApiWsClient = new AwardsApiWs(this.apiClientStomp);
-    }
-
-    const claimAwardRequest = ClaimAwardRequest.constructFromObject({
-      awardIds: [rewardId]
-    });
-
-    this.settings.apiWs.awardsApiWsClient.claimAwards(claimAwardRequest, (json) => {
-      if (typeof callback === 'function') {
-        callback(json);
-      }
-    });
   };
 
   this.checkForMemberAchievementsProgression = async function (idList, callback) {
@@ -3273,7 +3255,7 @@ export const LbWidget = function (options) {
       const awardId = closest(el, '.cl-rew-list-item').dataset.id;
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
-        await _this.claimAward(awardId, function () {
+        await claimAward(_this.apiClientStomp, awardId, function () {
           setTimeout(function () {
             preLoader.hide();
           }, 3500);
@@ -3285,7 +3267,7 @@ export const LbWidget = function (options) {
       const awardId = closest(el, '.dashboard-award-item').dataset.id;
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
-        await _this.claimAward(awardId, function () {
+        await claimAward(_this.apiClientStomp, awardId, function () {
           setTimeout(function () {
             _this.settings.mainWidget.loadDashboardAwards();
 
@@ -3393,7 +3375,7 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-main-widget-reward-claim-btn')) {
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
-        _this.claimAward(el.dataset.id, function (data) {
+        await claimAward(_this.apiClientStomp, el.dataset.id, function (data) {
           if (data.data[0].claimed) {
             addClass(el, 'cl-claimed');
             el.innerHTML = _this.settings.translation.rewards.claimed;
@@ -3808,7 +3790,7 @@ export const LbWidget = function (options) {
             ) {
               if (!['Claimed', 'Expired'].includes(awardData.data[0].status)) {
                 const iwAward = awardData.data[0];
-                await _this.claimAward(iwAward.id, () => { });
+                await claimAward(_this.apiClientStomp, iwAward.id, () => { });
                 setTimeout(async () => {
                   await _this.settings.mainWidget.loadDashboardInstantWins();
                 }, 2000);
