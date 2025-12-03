@@ -23,6 +23,7 @@ import { createElementWithClass } from './mainWidget/domUtils';
 import { getRewards } from './lbWidget/services/rewardService';
 import { formatDateTime, formatMissionDateTime, formatBannerDateTime } from '../utils/formatDateTime';
 import { claimAward } from './lbWidget/services/awardService';
+import { playInstantWin, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 
 /**
  * MainWidget
@@ -3905,7 +3906,7 @@ export const MainWidget = function (options) {
 
   this.loadSingleWheel = async function (id) {
     const singleWheelData = await this.settings.lbWidget.getSingleWheel(id);
-    const availablePlays = await this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id);
+    const availablePlays = await getInstantWinsAvailablePlays(this.settings.lbWidget.apiClientStomp, [singleWheelData[0].id]);
     const remainingPlays = availablePlays[0].remainingPlays;
 
     const section = document.querySelector('.cl-accordion.instantWins');
@@ -3955,7 +3956,7 @@ export const MainWidget = function (options) {
         const { isCompleted } = giftValue;
         if (isCompleted) {
           setTimeout(async () => {
-            const availablePlays = await this.settings.lbWidget.getInstantWinAvailablePlays(singleWheelData[0].id);
+            const availablePlays = await getInstantWinsAvailablePlays(this.settings.lbWidget.apiClientStomp, [singleWheelData[0].id]);
             const remainingValueEl = document.querySelector('.play-single-wheel-available-value');
             remainingValueEl.innerHTML = availablePlays[0].remainingPlays;
 
@@ -4007,7 +4008,7 @@ export const MainWidget = function (options) {
         buttonElement.classList.add('disabled');
         wheelButtonElement.classList.add('disabled');
 
-        const playData = await this.settings.lbWidget.playInstantWin(id);
+        const playData = await playInstantWin(this.settings.lbWidget.apiClientStomp, id);
         const playDataResults = playData[0].results;
 
         if (playData && playData[0] && playData[0].results && playData[0].results.tiles[0] && playData[0].results.tiles[0].location) {
@@ -4026,7 +4027,7 @@ export const MainWidget = function (options) {
         buttonElement.classList.add('disabled');
         wheelButtonElement.classList.add('disabled');
 
-        const playData = await this.settings.lbWidget.playInstantWin(id);
+        const playData = await playInstantWin(this.settings.lbWidget.apiClientStomp, id);
         const playDataResults = playData[0].results;
 
         if (playData && playData[0] && playData[0].results && playData[0].results.tiles[0] && playData[0].results.tiles[0].location) {

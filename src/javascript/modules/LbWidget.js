@@ -19,6 +19,7 @@ import { getCompetitions, getContests } from './lbWidget/services/competitionSer
 import { getAchievements } from './lbWidget/services/achievementService';
 import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
 import { getAwards, getAwardsByIds, claimAward } from './lbWidget/services/awardService';
+import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -42,10 +43,6 @@ import {
   MessageRequest,
   GraphsApiWs,
   EntityGraphRequest,
-  InstantWinsApiWs,
-  InstantWinRequest,
-  InstantWinPlayRequest,
-  InstantWinAvailablePlaysRequest,
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
@@ -961,50 +958,25 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function') callback(achData);
   };
 
-  this.playInstantWin = async function (id) {
-    if (!this.settings.apiWs.instantWinsApiWsClient) {
-      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
-    }
-
-    const request = InstantWinPlayRequest.constructFromObject({
-      instantWinId: id
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.instantWinsApiWsClient.playInstantWin(request, (json) => {
-        resolve(json.data);
-      });
-    });
-  };
-
   this.getSingleWheel = async function (id) {
-    const request = InstantWinRequest.constructFromObject({
-      languageKey: this.settings.language,
+    const wheel = await getSingleWheel({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
       currencyKey: this.settings.currency,
-      instantWinFilter: {
-        ids: [id],
-        limit: 1,
-        skip: 0
-      }
-    }, null);
-
-    const wheel = await this.getInstantWinsApi(request);
+      id: id
+    });
 
     return wheel.data;
   };
 
   this.getSingleWheels = async function (callback) {
-    const request = InstantWinRequest.constructFromObject({
-      languageKey: this.settings.language,
+    const singleWheels = await getSingleWheels({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
       currencyKey: this.settings.currency,
-      instantWinFilter: {
-        instantWinTypes: [1],
-        limit: 20,
-        skip: 0
-      }
-    }, null);
-
-    const singleWheels = await this.getInstantWinsApi(request);
+      limit: 20,
+      skip: 0
+    });
     let singleWheelsData = singleWheels.data;
 
     // TODO: remove after InstantWinRequest update
@@ -1012,7 +984,7 @@ export const LbWidget = function (options) {
 
     if (this.settings.instantWins.showIWOnlyWithAvailPlays) {
       const ids = singleWheelsData.map(s => s.id);
-      let availablePlays = await this.getInstantWinsAvailablePlays(ids);
+      let availablePlays = await getInstantWinsAvailablePlays(this.apiClientStomp, ids);
 
       availablePlays = availablePlays.filter(a => a.remainingPlays > 0);
       const availablePlayIds = availablePlays.map(a => a.instantWinId);
@@ -1025,38 +997,6 @@ export const LbWidget = function (options) {
     }
 
     return singleWheelsData;
-  };
-
-  this.getInstantWinsAvailablePlays = async function (ids) {
-    if (!this.settings.apiWs.instantWinsApiWsClient) {
-      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
-    }
-
-    const request = InstantWinAvailablePlaysRequest.constructFromObject({
-      instantWinIds: ids
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
-        resolve(json.data);
-      });
-    });
-  };
-
-  this.getInstantWinAvailablePlays = async function (id) {
-    if (!this.settings.apiWs.instantWinsApiWsClient) {
-      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
-    }
-
-    const request = InstantWinAvailablePlaysRequest.constructFromObject({
-      instantWinIds: [id]
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.instantWinsApiWsClient.getInstantWinAvailablePlays(request, (json) => {
-        resolve(json.data);
-      });
-    });
   };
 
   this.getSettingsFile = async function (fileName) {
@@ -1491,18 +1431,6 @@ export const LbWidget = function (options) {
         this.settings.rewards.expiredRewards
       );
     }
-  };
-
-  this.getInstantWinsApi = async function (instantWinRequest) {
-    if (!this.settings.apiWs.instantWinsApiWsClient) {
-      this.settings.apiWs.instantWinsApiWsClient = new InstantWinsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.instantWinsApiWsClient.listInstantWins(instantWinRequest, (json) => {
-        resolve(json);
-      });
-    });
   };
 
   this.checkForAvailableMessages = async function (pageNumber, callback) {
