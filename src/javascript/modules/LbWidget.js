@@ -31,7 +31,6 @@ import { CanvasAnimation } from './CanvasAnimation';
 
 import {
   ApiClientStomp,
-  CompetitionsApiWs,
   ManageOptinRequest,
   MemberRequest,
   MembersApiWs,
@@ -423,9 +422,6 @@ export const LbWidget = function (options) {
   this.getCompetitionsByProducts = async (productIds, statusCode = 'active') => {
     if (!this.apiClientStomp) {
       await this.initApiClientStomp();
-    }
-    if (!this.settings.apiWs.competitionsApiWsClient) {
-      this.settings.apiWs.competitionsApiWsClient = new CompetitionsApiWs(this.apiClientStomp);
     }
 
     return await getCompetitions({
