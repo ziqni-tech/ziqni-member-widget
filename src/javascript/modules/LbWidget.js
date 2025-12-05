@@ -20,6 +20,7 @@ import { getAchievements } from './lbWidget/services/achievementService';
 import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
 import { getAwards, getAwardsByIds, claimAward } from './lbWidget/services/awardService';
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
+import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -39,8 +40,6 @@ import {
   OptInStatesRequest,
   LeaderboardApiWs,
   LeaderboardSubscriptionRequest,
-  MessagesApiWs,
-  MessageRequest,
   GraphsApiWs,
   EntityGraphRequest,
   StatsApiWs
@@ -1140,76 +1139,48 @@ export const LbWidget = function (options) {
   };
 
   this.getMessage = async function (messageId, callback, isSys = false) {
-    const _this = this;
-    if (!this.settings.apiWs.messagesApiWsClient) {
-      this.settings.apiWs.messagesApiWsClient = new MessagesApiWs(this.apiClientStomp);
-    }
-
     if (isSys) {
-      const messageRequest = {
-        messageFilter: {
-          ids: [messageId],
-          skip: 0,
-          limit: 1
-        }
-      };
+      const json = await getMessageById({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        messageId: messageId
+      });
 
-      await this.settings.apiWs.messagesApiWsClient.getMessages(messageRequest, (json) => {
-        if (json.data && json.data.length) {
-          if (json.data[0].messageType === 'Notification') {
-            if (_this.settings.enableNotifications) {
-              _this.settings.notifications.addEvent({
-                subject: json.data[0].subject,
-                body: json.data[0].body,
-                id: json.data[0].id
-              });
-            }
-          }
-          if (json.data[0].messageType === 'InboxItem') {
-            _this.checkForAvailableMessages(1, function () {
-              if (typeof callback === 'function') {
-                callback();
-              }
+      if (json.data && json.data.length) {
+        if (json.data[0].messageType === 'Notification') {
+          if (this.settings.enableNotifications) {
+            this.settings.notifications.addEvent({
+              subject: json.data[0].subject,
+              body: json.data[0].body,
+              id: json.data[0].id
             });
           }
         }
-      });
+        if (json.data[0].messageType === 'InboxItem') {
+          this.checkForAvailableMessages(1, function () {
+            if (typeof callback === 'function') {
+              callback();
+            }
+          });
+        }
+      }
     } else {
-      const messageRequest = MessageRequest.constructFromObject({
-        languageKey: this.settings.language,
-        messageFilter: {
-          ids: [messageId],
-          messageType: 'InboxItem',
-          skip: 0,
-          limit: 15
-        }
+      const json = await getMessageById({
+        apiClient: this.apiClientStomp,
+        language: this.settings.language,
+        messageId: messageId
       });
 
-      await this.settings.apiWs.messagesApiWsClient.getMessages(messageRequest, (json) => {
-        if (json.data.length) {
-          if (typeof callback === 'function') {
-            callback(json.data[0]);
-          }
-        } else {
-          if (typeof callback === 'function') {
-            callback(null);
-          }
+      if (json.data.length) {
+        if (typeof callback === 'function') {
+          callback(json.data[0]);
         }
-      });
+      } else {
+        if (typeof callback === 'function') {
+          callback(null);
+        }
+      }
     }
-  };
-
-  this.updateMessageStatus = async function (messageIds, status) {
-    if (!this.settings.apiWs.messagesApiWsClient) {
-      this.settings.apiWs.messagesApiWsClient = new MessagesApiWs(this.apiClientStomp);
-    }
-
-    const payload = [{
-      id: messageIds,
-      status: status
-    }];
-
-    await this.settings.apiWs.messagesApiWsClient.updateMessagesState(payload, (json) => { });
   };
 
   this.checkForMemberAchievementsProgression = async function (idList, callback) {
@@ -1437,46 +1408,21 @@ export const LbWidget = function (options) {
     const createdDateFilter = new Date();
     createdDateFilter.setDate(createdDateFilter.getDate() - this.settings.historicalData.messagesForTheLast ?? 30);
 
-    const messageRequest = MessageRequest.constructFromObject({
-      languageKey: this.settings.language,
-      messageFilter: {
-        messageType: 'InboxItem',
-        status: ['New', 'Read'],
-        createdDateRange: {
-          before: (new Date()).toISOString(),
-          after: createdDateFilter.toISOString()
-        },
-        sortBy: [{
-          queryField: 'created',
-          order: 'Desc'
-        }],
-        skip: (pageNumber - 1) * 9,
-        limit: 9
-      }
+    const json = await getMessages({
+      apiClient: this.apiClientStomp,
+      language: this.settings.language,
+      messageType: 'InboxItem',
+      status: ['New', 'Read'],
+      after: createdDateFilter.toISOString(),
+      skip: (pageNumber - 1) * 9,
+      limit: 9
     });
 
-    this.getMessagesApi(messageRequest)
-      .then(json => {
-        this.settings.messages.messages = json.data ?? [];
-        this.settings.messages.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
-        if (typeof callback === 'function') {
-          callback(this.settings.messages.messages);
-        }
-      })
-      .catch(error => {
-        this.log(error);
-      });
-  };
-
-  this.getMessagesApi = async function (messageRequest) {
-    if (!this.settings.apiWs.messagesApiWsClient) {
-      this.settings.apiWs.messagesApiWsClient = new MessagesApiWs(this.apiClientStomp);
+    this.settings.messages.messages = json.data ?? [];
+    this.settings.messages.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+    if (typeof callback === 'function') {
+      callback(this.settings.messages.messages);
     }
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.messagesApiWsClient.getMessages(messageRequest, (json) => {
-        resolve(json);
-      });
-    });
   };
 
   this.checkForAvailableMissions = async function (pageNumber, callback) {
@@ -3227,7 +3173,7 @@ export const LbWidget = function (options) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
       _this.getMessage(messageId, function (data) {
         _this.settings.mainWidget.loadMessageDetails(data, function () { });
-        _this.updateMessageStatus([messageId], 'Read');
+        updateMessageStatus(_this.apiClientStomp, [messageId], 'Read');
       });
 
       // delete selected messages
@@ -3245,7 +3191,7 @@ export const LbWidget = function (options) {
       }
 
       preLoader.show(async () => {
-        await _this.updateMessageStatus(ids, 'Deleted');
+        await updateMessageStatus(_this.apiClientStomp, ids, 'Deleted');
         deleteSelected.style.display = 'none';
         setTimeout(function () {
           _this.settings.mainWidget.loadMessages(1, () => { preLoader.hide(); });
