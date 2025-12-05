@@ -21,6 +21,7 @@ import { attachReward, attachRewards, getRewards } from './lbWidget/services/rew
 import { getAwards, getAwardsByIds, claimAward } from './lbWidget/services/awardService';
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
+import { getGraph } from './lbWidget/services/graphService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -31,16 +32,14 @@ import { CanvasAnimation } from './CanvasAnimation';
 
 import {
   ApiClientStomp,
-  ManageOptinRequest,
   MemberRequest,
   MembersApiWs,
   OptInApiWs,
-  FilesApiWs,
   OptInStatesRequest,
+  ManageOptinRequest,
+  FilesApiWs,
   LeaderboardApiWs,
   LeaderboardSubscriptionRequest,
-  GraphsApiWs,
-  EntityGraphRequest,
   StatsApiWs
 } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
@@ -99,7 +98,12 @@ export const LbWidget = function (options) {
       });
 
       for (const id of ids) {
-        const graph = await this.getMissionsGraph(id);
+        const graphResponse = await getGraph({
+          apiClient: this.apiClientStomp,
+          ids: [id],
+          includes: ['scheduling']
+        });
+        const graph = graphResponse.data;
 
         const idx = missions.findIndex(mission => mission.id === id);
         missions[idx].dependencies = [];
@@ -1450,7 +1454,12 @@ export const LbWidget = function (options) {
       });
 
       for (const id of ids) {
-        const graph = await this.getMissionsGraph(id);
+        const graphResponse = await getGraph({
+          apiClient: this.apiClientStomp,
+          ids: [id],
+          includes: ['scheduling']
+        });
+        const graph = graphResponse.data;
 
         const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
         this.settings.missions.missions[idx].dependencies = [];
@@ -1487,24 +1496,6 @@ export const LbWidget = function (options) {
     if (typeof callback === 'function') callback(this.settings.missions.missions);
   };
 
-  this.getMissionsGraph = async function (id, isDependantId = false) {
-    if (!this.settings.apiWs.missionsApiWsClient) {
-      this.settings.apiWs.missionsApiWsClient = new GraphsApiWs(this.apiClientStomp);
-    }
-
-    const graphRequest = {
-      ids: [id],
-      isDependantId: isDependantId,
-      includes: ['scheduling']
-    };
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.missionsApiWsClient.getGraph(graphRequest, (json) => {
-        resolve(json.data);
-      });
-    });
-  };
-
   this.getMission = async function (id, callback) {
     const json = await getAchievements({
       apiClient: this.apiClientStomp,
@@ -1532,24 +1523,19 @@ export const LbWidget = function (options) {
       mainData.reward = rewardRaw.data[0];
     }
 
-    const tempGraphRequest = EntityGraphRequest.constructFromObject({
+    const graphJson = await getGraph({
+      apiClient: this.apiClientStomp,
       ids: [id],
       includes: ['iconLink', 'termsAndConditions', 'description']
     });
 
-    this.getGraphApi(tempGraphRequest)
-      .then(json => {
-        if (typeof callback === 'function') {
-          const data = {
-            data: mainData,
-            graph: json.data
-          };
-          callback(data);
-        }
-      })
-      .catch(error => {
-        this.log(error);
-      });
+    if (typeof callback === 'function') {
+      const data = {
+        data: mainData,
+        graph: graphJson.data
+      };
+      callback(data);
+    }
   };
 
   this.getMissionListItemData = async (id) => {
@@ -1576,7 +1562,13 @@ export const LbWidget = function (options) {
     });
     mission.reward = rewards.data[0];
 
-    const graph = await this.getMissionsGraph(id);
+    const graphResponse = await getGraph({
+      apiClient: this.apiClientStomp,
+      ids: [id],
+      includes: ['scheduling']
+    });
+    const graph = graphResponse.data;
+
     if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
       const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
 
@@ -1605,18 +1597,6 @@ export const LbWidget = function (options) {
     }
 
     return mission;
-  };
-
-  this.getGraphApi = async function (graphRequest) {
-    if (!this.settings.apiWs.missionsApiWsClient) {
-      this.settings.apiWs.missionsApiWsClient = new GraphsApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.missionsApiWsClient.getGraph(graphRequest, (json) => {
-        resolve(json);
-      });
-    });
   };
 
   this.optInMemberToActiveCompetition = async function (callback) {
