@@ -22,6 +22,7 @@ import { getAwards, getAwardsByIds, claimAward } from './lbWidget/services/award
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
 import { getGraph } from './lbWidget/services/graphService';
+import { getMember } from './lbWidget/services/memberService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -32,8 +33,6 @@ import { CanvasAnimation } from './CanvasAnimation';
 
 import {
   ApiClientStomp,
-  MemberRequest,
-  MembersApiWs,
   OptInApiWs,
   OptInStatesRequest,
   ManageOptinRequest,
@@ -999,10 +998,6 @@ export const LbWidget = function (options) {
   };
 
   this.getSettingsFile = async function (fileName) {
-    if (!this.settings.apiWs.filesApiWsClient) {
-      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
-    }
-
     const filePath = `https://${this.settings.member.spaceName}.cdn.ziqni.com/system-resources/instant-wins/${fileName}`;
 
     return new Promise((resolve, reject) => {
@@ -1861,31 +1856,9 @@ export const LbWidget = function (options) {
       await this.initApiClientStomp();
     }
 
-    if (!this.settings.apiWs.membersApiWsClient) {
-      this.settings.apiWs.membersApiWsClient = new MembersApiWs(this.apiClientStomp);
-    }
-
-    const memberRequest = MemberRequest.constructFromObject({
-      includeFields: [
-        'id',
-        'memberRefId',
-        'memberType',
-        'name',
-        'jsonClass',
-        'accountId',
-        'groups',
-        'created',
-        'tags',
-        'spaceName'
-      ],
-      includeCustomFields: [],
-      includeMetaDataFields: []
-    }, null);
-
-    await this.settings.apiWs.membersApiWsClient.getMember(memberRequest, (json) => {
-      this.settings.member = json.data;
-      callback(json.data);
-    });
+    const member = await getMember(this.apiClientStomp);
+    this.settings.member = member.data;
+    callback(member.data);
   };
 
   this.loadWidgetTranslations = function (callback) {
