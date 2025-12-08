@@ -23,6 +23,7 @@ import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from '.
 import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
 import { getGraph } from './lbWidget/services/graphService';
 import { getMember } from './lbWidget/services/memberService';
+import { getFiles } from './lbWidget/services/fileService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -36,7 +37,6 @@ import {
   OptInApiWs,
   OptInStatesRequest,
   ManageOptinRequest,
-  FilesApiWs,
   LeaderboardApiWs,
   LeaderboardSubscriptionRequest,
   StatsApiWs
@@ -1016,21 +1016,14 @@ export const LbWidget = function (options) {
   };
 
   this.getFileUri = async (id) => {
-    if (!this.settings.apiWs.filesApiWsClient) {
-      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
-    }
-
     const fileRequest = {
       ids: [id],
       limit: 1,
       skip: 0
     };
 
-    return new Promise((resolve) => {
-      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, (res) => {
-        resolve(res.data[0].uri);
-      });
-    });
+    const res = await getFiles(this.apiClientStomp, fileRequest);
+    return res.data[0].uri;
   };
 
   this.getAchievement = function (achievementId, callback) {
@@ -1104,21 +1097,13 @@ export const LbWidget = function (options) {
   };
 
   this.getFile = async function (id) {
-    if (!this.settings.apiWs.filesApiWsClient) {
-      this.settings.apiWs.filesApiWsClient = new FilesApiWs(this.apiClientStomp);
-    }
-
     const fileRequest = {
       ids: [id],
       limit: 1,
       skip: 0
     };
 
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.filesApiWsClient.getFiles(fileRequest, (json) => {
-        resolve(json);
-      });
-    });
+    return await getFiles(this.apiClientStomp, fileRequest);
   };
 
   this.getReward = function (rewardId, callback) {
