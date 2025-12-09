@@ -24,6 +24,7 @@ import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/ser
 import { getGraph } from './lbWidget/services/graphService';
 import { getMember } from './lbWidget/services/memberService';
 import { getFiles } from './lbWidget/services/fileService';
+import { getActiveEntitiesCount } from './lbWidget/services/statsService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -38,8 +39,7 @@ import {
   OptInStatesRequest,
   ManageOptinRequest,
   LeaderboardApiWs,
-  LeaderboardSubscriptionRequest,
-  StatsApiWs
+  LeaderboardSubscriptionRequest
 } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
 
@@ -408,18 +408,11 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.getActiveEntitiesByProduct = async (ModelCountRequest) => {
+  this.getActiveEntitiesByProduct = async (modelCountRequest) => {
     if (!this.apiClientStomp) {
       await this.initApiClientStomp();
     }
-
-    const statsApiWs = new StatsApiWs(this.apiClientStomp);
-
-    return new Promise((resolve, reject) => {
-      statsApiWs.getActiveEntitiesCount(ModelCountRequest, (json) => {
-        resolve(json);
-      });
-    });
+    return await getActiveEntitiesCount(this.apiClientStomp, modelCountRequest);
   };
 
   this.getCompetitionsByProducts = async (productIds, statusCode = 'active') => {
