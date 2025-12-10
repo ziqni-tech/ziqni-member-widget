@@ -25,6 +25,7 @@ import { getGraph } from './lbWidget/services/graphService';
 import { getMember } from './lbWidget/services/memberService';
 import { getFiles } from './lbWidget/services/fileService';
 import { getActiveEntitiesCount } from './lbWidget/services/statsService';
+import { subscribeToLeaderboard } from './lbWidget/services/leaderboardService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -37,9 +38,7 @@ import {
   ApiClientStomp,
   OptInApiWs,
   OptInStatesRequest,
-  ManageOptinRequest,
-  LeaderboardApiWs,
-  LeaderboardSubscriptionRequest
+  ManageOptinRequest
 } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
 
@@ -472,13 +471,13 @@ export const LbWidget = function (options) {
     } else {
       if (_this.settings.competition.activeCompetitionId !== activeCompetitionId) {
         if (_this.settings.competition.activeContestId) {
-          const leaderboardUnsubscribeRequest = LeaderboardSubscriptionRequest.constructFromObject({
+          this.settings.leaderboard.leaderboardData = [];
+          subscribeToLeaderboard({
+            apiClient: _this.apiClientStomp,
             entityId: _this.settings.competition.activeContestId,
             action: 'Unsubscribe',
             leaderboardFilter: {}
-          });
-          this.settings.leaderboard.leaderboardData = [];
-          this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest).then((json) => { });
+          }).then((json) => { });
         }
         _this.settings.competition.activeCompetition = activeCompetition;
         _this.settings.competition.activeCompetitionId = activeCompetitionId;
@@ -580,7 +579,8 @@ export const LbWidget = function (options) {
           ranksBelowToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
         }
 
-        const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+        subscribeToLeaderboard({
+          apiClient: this.apiClientStomp,
           entityId: this.settings.competition.activeContestId,
           action: 'Subscribe',
           leaderboardFilter: {
@@ -588,9 +588,7 @@ export const LbWidget = function (options) {
             ranksAboveToInclude: ranksAboveToInclude,
             ranksBelowToInclude: ranksBelowToInclude
           }
-        });
-
-        this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
+        }).then((data) => {
           if (data && data.leaderboardEntries) {
             _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
             _this.settings.callbacks.onLeaderboardUpdates(data);
@@ -616,23 +614,22 @@ export const LbWidget = function (options) {
         ranksBelowToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
       }
 
-      const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
-        entityId: this.settings.competition.activeContestId,
-        action: 'Subscribe',
-        leaderboardFilter: {
-          topRanksToInclude: count,
-          ranksAboveToInclude: ranksAboveToInclude,
-          ranksBelowToInclude: ranksBelowToInclude
-        }
-      });
-
       const readyIdx = this.settings.tournaments.readyCompetitions.findIndex(r => r.id === this.settings.competition.activeCompetition.id);
 
       if (readyIdx !== -1) {
         this.settings.leaderboard.leaderboardData = [];
         callback();
       } else {
-        this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
+        subscribeToLeaderboard({
+          apiClient: this.apiClientStomp,
+          entityId: this.settings.competition.activeContestId,
+          action: 'Subscribe',
+          leaderboardFilter: {
+            topRanksToInclude: count,
+            ranksAboveToInclude: ranksAboveToInclude,
+            ranksBelowToInclude: ranksBelowToInclude
+          }
+        })
           .then(data => {
             let leaderboardEntries = [];
             if (data && data.leaderboardEntries) {
@@ -650,7 +647,8 @@ export const LbWidget = function (options) {
           });
       }
     } else if (this.settings.competition.activeCompetition.statusCode === 35 || this.settings.competition.activeCompetition.statusCode === 45) {
-      const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+      subscribeToLeaderboard({
+        apiClient: this.apiClientStomp,
         entityId: this.settings.competition.activeCompetition.id,
         action: 'Subscribe',
         leaderboardFilter: {
@@ -658,9 +656,7 @@ export const LbWidget = function (options) {
           ranksAboveToInclude: this.settings.leaderboard.miniScoreBoard.rankingsCount,
           ranksBelowToInclude: this.settings.leaderboard.miniScoreBoard.rankingsCount
         }
-      });
-
-      this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
+      })
         .then(data => {
           let leaderboardEntries = [];
           if (data && data.leaderboardEntries) {
@@ -680,18 +676,6 @@ export const LbWidget = function (options) {
       this.settings.leaderboard.leaderboardData = [];
       callback();
     }
-  };
-
-  this.subscribeToLeaderboardApi = function (leaderboardSubscriptionRequest) {
-    if (!this.settings.apiWs.leaderboardApiWsClient) {
-      this.settings.apiWs.leaderboardApiWsClient = new LeaderboardApiWs(this.apiClientStomp);
-    }
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.leaderboardApiWsClient.subscribeToLeaderboard(leaderboardSubscriptionRequest, (json) => {
-        resolve(json.data);
-      });
-    });
   };
 
   this.checkForAvailableAchievements = async function (pageNumber, callback, current = 'all') {
@@ -2278,13 +2262,11 @@ export const LbWidget = function (options) {
 
       preLoader.show(async function () {
         if (_this.settings.competition.activeContestId && _this.settings.competition.activeContest.statusCode !== 15) {
-          const leaderboardUnsubscribeRequest = LeaderboardSubscriptionRequest.constructFromObject({
+          await subscribeToLeaderboard({
+            apiClient: _this.apiClientStomp,
             entityId: _this.settings.competition.activeContestId,
-            action: 'Unsubscribe',
-            leaderboardFilter: {}
+            action: 'Unsubscribe'
           });
-          _this.settings.leaderboard.leaderboardData = [];
-          await _this.subscribeToLeaderboardApi(leaderboardUnsubscribeRequest);
         }
 
         _this.settings.competition.activeContestId = item.dataset.connectId;
@@ -2301,16 +2283,6 @@ export const LbWidget = function (options) {
           ranksBelowToInclude = _this.settings.leaderboard.miniScoreBoard.rankingsCount;
         }
 
-        const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
-          entityId: _this.settings.competition.activeContestId,
-          action: 'Subscribe',
-          leaderboardFilter: {
-            topRanksToInclude: _this.settings.leaderboard.fullLeaderboardSize,
-            ranksAboveToInclude: ranksAboveToInclude,
-            ranksBelowToInclude: ranksBelowToInclude
-          }
-        });
-
         if (_this.settings.competition.activeContest.statusCode === 15) {
           _this.checkForAvailableRewards(1, () => {
             _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(() => { });
@@ -2318,7 +2290,16 @@ export const LbWidget = function (options) {
             preLoader.hide();
           });
         } else {
-          _this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest)
+          subscribeToLeaderboard({
+            apiClient: _this.apiClientStomp,
+            entityId: _this.settings.competition.activeContestId,
+            action: 'Subscribe',
+            leaderboardFilter: {
+              topRanksToInclude: _this.settings.leaderboard.fullLeaderboardSize,
+              ranksAboveToInclude: ranksAboveToInclude,
+              ranksBelowToInclude: ranksBelowToInclude
+            }
+          })
             .then(data => {
               let leaderboardEntries = [];
               if (data && data.leaderboardEntries) {
@@ -3514,7 +3495,8 @@ export const LbWidget = function (options) {
             ranksBelowToInclude = this.settings.leaderboard.miniScoreBoard.rankingsCount;
           }
 
-          const leaderboardSubscriptionRequest = LeaderboardSubscriptionRequest.constructFromObject({
+          subscribeToLeaderboard({
+            apiClient: this.apiClientStomp,
             entityId: this.settings.competition.activeContestId,
             action: 'Subscribe',
             leaderboardFilter: {
@@ -3522,9 +3504,7 @@ export const LbWidget = function (options) {
               ranksAboveToInclude: ranksAboveToInclude,
               ranksBelowToInclude: ranksBelowToInclude
             }
-          });
-
-          this.subscribeToLeaderboardApi(leaderboardSubscriptionRequest).then((data) => {
+          }).then((data) => {
             if (data && data.leaderboardEntries) {
               _this.settings.leaderboard.leaderboardData = data.leaderboardEntries;
               _this.settings.callbacks.onLeaderboardUpdates(data);
