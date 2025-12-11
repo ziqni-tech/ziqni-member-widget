@@ -2784,11 +2784,11 @@ export const MainWidget = function (options) {
                   const start = parseInt(r);
                   const end = parseInt(r.substring(idx + 1));
                   totalReward.rewardValue += reward.rewardValue * (end - start + 1);
-                } else if (parseInt(r) === 1) {
+                } else {
                   totalReward.rewardValue += reward.rewardValue;
                 }
               });
-            } else if (parseInt(reward.rewardRank) === 1) {
+            } else {
               totalReward.rewardValue += reward.rewardValue;
             }
           });
