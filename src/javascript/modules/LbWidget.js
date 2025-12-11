@@ -2264,7 +2264,7 @@ export const LbWidget = function (options) {
     }
   };
 
-  this.checkForAvailableRewards = function (pageNumber, callback) {
+  this.checkForAvailableRewards = async function (pageNumber, callback) {
     this.settings.rewards.rewards = [];
     this.settings.rewards.availableRewards = [];
     this.settings.rewards.expiredRewards = [];
@@ -2281,20 +2281,18 @@ export const LbWidget = function (options) {
         limit: 20
       };
 
-      this.getRewardsApi(rewardRequest)
-        .then(json => {
-          this.settings.rewards.rewards = json.data ?? [];
-          this.settings.rewards.availableRewards = json.data ?? [];
-          this.settings.rewards.expiredRewards = [];
-          this.settings.rewards.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
-          if (this.settings.competition.activeContest && json.data) {
-            this.settings.competition.activeContest.rewards = json.data;
-          }
-          if (typeof callback === 'function') {
-            callback();
-          }
-        })
-        .catch(error => this.log(error));
+      const json = await this.getRewardsApi(rewardRequest);
+
+      this.settings.rewards.rewards = json.data ?? [];
+      this.settings.rewards.availableRewards = json.data ?? [];
+      this.settings.rewards.expiredRewards = [];
+      this.settings.rewards.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+      if (this.settings.competition.activeContest && json.data) {
+        this.settings.competition.activeContest.rewards = json.data;
+      }
+      if (typeof callback === 'function') {
+        callback();
+      }
     } else if (typeof callback === 'function') {
       callback(
         this.settings.rewards.rewards,
