@@ -26,6 +26,7 @@ import { getMember } from './lbWidget/services/memberService';
 import { getFiles } from './lbWidget/services/fileService';
 import { getActiveEntitiesCount } from './lbWidget/services/statsService';
 import { subscribeToLeaderboard } from './lbWidget/services/leaderboardService';
+import { manageOptIn, getOptInStatus } from './lbWidget/services/optInService';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -34,12 +35,7 @@ import { MiniScoreBoard } from './MiniScoreBoard';
 import { MainWidget } from './MainWidget';
 import { CanvasAnimation } from './CanvasAnimation';
 
-import {
-  ApiClientStomp,
-  OptInApiWs,
-  OptInStatesRequest,
-  ManageOptinRequest
-} from '@ziqni-tech/member-api-client';
+import { ApiClientStomp } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
 
 /**
@@ -1013,33 +1009,29 @@ export const LbWidget = function (options) {
 
   this.leaveAchievement = function (activeAchievementId, isDashboard = false) {
     const _this = this;
-    if (!this.settings.apiWs.optInApiWsClient) {
-      this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-    }
-
-    const optInRequest = ManageOptinRequest.constructFromObject({
-      entityId: activeAchievementId,
-      entityType: 'Achievement',
-      action: 'leave'
-    }, null);
 
     const preLoader = this.settings.mainWidget.preloader();
     preLoader.show(async function () {
-      await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-        setTimeout(function () {
-          if (isDashboard) {
-            _this.checkForAvailableAchievements(1, function (achievementData) {
-              _this.settings.mainWidget.loadDashboardAchievements(achievementData.list, function () {
-                preLoader.hide();
-              });
-            });
-          } else {
-            _this.settings.mainWidget.loadAchievements(1, function () {
+      await manageOptIn({
+        apiClient: _this.apiClientStomp,
+        entityId: activeAchievementId,
+        entityType: 'Achievement',
+        action: 'leave'
+      });
+
+      setTimeout(function () {
+        if (isDashboard) {
+          _this.checkForAvailableAchievements(1, function (achievementData) {
+            _this.settings.mainWidget.loadDashboardAchievements(achievementData.list, function () {
               preLoader.hide();
             });
-          }
-        }, 2000);
-      });
+          });
+        } else {
+          _this.settings.mainWidget.loadAchievements(1, function () {
+            preLoader.hide();
+          });
+        }
+      }, 2000);
     });
   };
 
@@ -1557,21 +1549,16 @@ export const LbWidget = function (options) {
   };
 
   this.optInMemberToActiveCompetition = async function (callback) {
-    if (!this.settings.apiWs.optInApiWsClient) {
-      this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-    }
-
-    const optInRequest = ManageOptinRequest.constructFromObject({
+    await manageOptIn({
+      apiClient: this.apiClientStomp,
       entityId: this.settings.competition.activeCompetition.id,
       entityType: 'Competition',
       action: 'join'
-    }, null);
-
-    await this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-      if (typeof callback === 'function') {
-        callback();
-      }
     });
+
+    if (typeof callback === 'function') {
+      callback();
+    }
 
     this.settings.competition.activeCompetition.optInStatus = await this.getCompetitionOptInStatus(
       this.settings.competition.activeCompetition.id
@@ -2134,35 +2121,22 @@ export const LbWidget = function (options) {
       // Achievement details opt-in action
     } else if (hasClass(el, 'cl-main-widget-ach-details-optin-action')) {
       if (_this.settings.achievements.activeAchievementId) {
-        if (!this.settings.apiWs.optInApiWsClient) {
-          this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-        }
-
-        let optInRequest = ManageOptinRequest.constructFromObject({
-          entityId: _this.settings.achievements.activeAchievementId,
-          entityType: 'Achievement',
-          action: 'join'
-        }, null);
-
-        if (hasClass(el, 'leave-achievement')) {
-          optInRequest = ManageOptinRequest.constructFromObject({
-            entityId: _this.settings.achievements.activeAchievementId,
-            entityType: 'Achievement',
-            action: 'leave'
-          }, null);
-        }
-
         const preLoader = _this.settings.mainWidget.preloader();
 
         preLoader.show(async function () {
-          await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-            setTimeout(function () {
-              preLoader.hide();
-              _this.settings.mainWidget.hideAchievementDetails(
-                _this.checkForAvailableAchievements(1)
-              );
-            }, 2000);
+          await manageOptIn({
+            apiClient: _this.apiClientStomp,
+            entityId: _this.settings.achievements.activeAchievementId,
+            entityType: 'Achievement',
+            action: hasClass(el, 'leave-achievement') ? 'leave' : 'join'
           });
+
+          setTimeout(function () {
+            preLoader.hide();
+            _this.settings.mainWidget.hideAchievementDetails(
+              _this.checkForAvailableAchievements(1)
+            );
+          }, 2000);
         });
       }
 
@@ -2170,35 +2144,31 @@ export const LbWidget = function (options) {
     } else if (hasClass(el, 'cl-ach-list-enter')) {
       addClass(el, 'checking');
       const activeAchievementId = el.dataset.id;
-      if (!this.settings.apiWs.optInApiWsClient) {
-        this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-      }
 
       const isDashboard = closest(el, '.cl-main-widget-dashboard-achievements-list');
 
-      const optInRequest = ManageOptinRequest.constructFromObject({
-        entityId: activeAchievementId,
-        entityType: 'Achievement',
-        action: 'join'
-      }, null);
-
       const preLoader = _this.settings.mainWidget.preloader();
       preLoader.show(async function () {
-        await _this.settings.apiWs.optInApiWsClient.manageOptin(optInRequest, (json) => {
-          setTimeout(function () {
-            if (isDashboard) {
-              _this.checkForAvailableAchievements(1, function (achievementData) {
-                _this.settings.mainWidget.loadDashboardAchievements(achievementData.list, function () {
-                  preLoader.hide();
-                });
-              });
-            } else {
-              _this.settings.mainWidget.loadAchievements(1, function () {
+        await manageOptIn({
+          apiClient: _this.apiClientStomp,
+          entityId: activeAchievementId,
+          entityType: 'Achievement',
+          action: 'join'
+        });
+
+        setTimeout(function () {
+          if (isDashboard) {
+            _this.checkForAvailableAchievements(1, function (achievementData) {
+              _this.settings.mainWidget.loadDashboardAchievements(achievementData.list, function () {
                 preLoader.hide();
               });
-            }
-          }, 2000);
-        });
+            });
+          } else {
+            _this.settings.mainWidget.loadAchievements(1, function () {
+              preLoader.hide();
+            });
+          }
+        }, 2000);
       });
 
       // Achievement list leave action
@@ -3295,96 +3265,30 @@ export const LbWidget = function (options) {
 
       _this.eventHandlers(el).then(() => { });
     });
-
-    // if (_this.isMobile()) {
-    //   document.body.addEventListener('touchend', function (event) {
-    //     var el = event.target;
-    //
-    //     if (!_this.settings.miniScoreBoard.settings.dragging) {
-    //       _this.eventHandlers(el);
-    //     }
-    //   });
-    // } else {
-    //   document.body.addEventListener('click', function (event) {
-    //     var el = event.target;
-    //
-    //     _this.eventHandlers(el);
-    //   });
-    // }
   };
 
   this.getCompetitionOptInStatus = async function (competitionId) {
-    if (!this.settings.apiWs.optInApiWsClient) {
-      this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-    }
-
-    const optInStatesRequest = OptInStatesRequest.constructFromObject({
-      optinStatesFilter: {
-        entityTypes: ['Competition'],
-        ids: [competitionId],
-        statusCodes: {
-          gt: -5,
-          lt: 40
-        },
-        skip: 0,
-        limit: 1
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.optInApiWsClient.optInStates(optInStatesRequest, (json) => {
-        resolve(json.data);
-      });
+    return getOptInStatus({
+      apiClient: this.apiClientStomp,
+      entityTypes: ['Competition'],
+      ids: [competitionId]
     });
   };
 
   this.getMemberAchievementOptInStatus = async function (achievementId) {
-    if (!this.settings.apiWs.optInApiWsClient) {
-      this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-    }
-
-    const optInStatesRequest = OptInStatesRequest.constructFromObject({
-      optinStatesFilter: {
-        entityTypes: ['Achievement'],
-        ids: [achievementId],
-        statusCodes: {
-          gt: -5,
-          lt: 40
-        },
-        skip: 0,
-        limit: 1
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.optInApiWsClient.optInStates(optInStatesRequest, (json) => {
-        resolve(json.data);
-      });
+    return getOptInStatus({
+      apiClient: this.apiClientStomp,
+      entityTypes: ['Achievement'],
+      ids: [achievementId]
     });
   };
 
   this.getMemberAchievementsOptInStatuses = async function (achievementIds) {
-    if (!this.settings.apiWs.optInApiWsClient) {
-      this.settings.apiWs.optInApiWsClient = new OptInApiWs(this.apiClientStomp);
-    }
-
-    const optInStatesRequest = OptInStatesRequest.constructFromObject({
-      optinStatesFilter: {
-        entityTypes: ['Achievement'],
-        ids: achievementIds,
-        statusCodes: {
-          gt: -5,
-          lt: 40
-        },
-        skip: 0,
-        limit: achievementIds.length
-      }
-    }, null);
-
-    return new Promise((resolve, reject) => {
-      this.settings.apiWs.optInApiWsClient.optInStates(optInStatesRequest, (json) => {
-        resolve(json.data);
-      });
+    return getOptInStatus({
+      apiClient: this.apiClientStomp,
+      entityTypes: ['Achievement'],
+      ids: achievementIds,
+      limit: achievementIds.length
     });
   };
 
