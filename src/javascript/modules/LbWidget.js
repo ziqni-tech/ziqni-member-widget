@@ -2114,7 +2114,7 @@ export const LbWidget = function (options) {
           setTimeout(function () {
             preLoader.hide();
             _this.settings.mainWidget.loadLeaderboard(() => { }, true);
-          }, 2000);
+          }, 3000);
         });
       });
 
