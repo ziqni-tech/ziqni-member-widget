@@ -1593,27 +1593,6 @@ export const LbWidget = function (options) {
       clearTimeout(_this.settings.leaderboard.refreshLbDataInterval);
     }
 
-    // if (
-    //   _this.settings.competition.activeCompetition.constraints &&
-    //   _this.settings.competition.activeCompetition.constraints.includes('optinRequiredForEntrants')
-    // ) {
-    //   if (
-    //     !_this.settings.competition.activeCompetition.optin ||
-    //     (
-    //       typeof _this.settings.competition.activeCompetition.optin === 'boolean' &&
-    //       !_this.settings.competition.activeCompetition.optin
-    //     )
-    //   ) {
-    //     const optInStatus = await this.getCompetitionOptInStatus(
-    //       this.settings.competition.activeCompetition.id
-    //     );
-    //
-    //     if (optInStatus.length && optInStatus[0].statusCode >= 15 && optInStatus[0].statusCode <= 35) {
-    //       this.settings.competition.activeCompetition.optin = true;
-    //     }
-    //   }
-    // }
-
     if (
       (
         _this.settings.competition.activeCompetition !== null &&
@@ -1792,7 +1771,6 @@ export const LbWidget = function (options) {
   this.restartActivity = function (callback) {
     var _this = this;
 
-    // _this.activeDataRefresh();
     _this.settings.miniScoreBoard.updateScoreBoard();
 
     if (typeof callback === 'function') {
@@ -2910,8 +2888,6 @@ export const LbWidget = function (options) {
       sections.forEach(s => s.classList.remove('cl-shown'));
       instantWinsSection.classList.add('cl-shown');
 
-      // _this.settings.mainWidget.loadScratchCards();
-
       // dashboard competition button
     } else if (hasClass(el, 'dashboard-tournament-item') || closest(el, '.dashboard-tournament-item')) {
       const tournamentId = hasClass(el, 'dashboard-tournament-item')
@@ -3000,7 +2976,6 @@ export const LbWidget = function (options) {
 
       // Single Wheel
     } else if (hasClass(el, 'scratchcards-button')) {
-      // _this.settings.mainWidget.loadScratchCards();
 
       // claim award
     } else if (hasClass(el, 'cl-rew-list-details-claim')) {
@@ -3184,11 +3159,6 @@ export const LbWidget = function (options) {
         _this.settings.tournaments.activeCompetitionId = tournamentId;
         _this.activeDataRefreshSimple(function () {
           _this.settings.mainWidget.hideCompetitionList(async function () {
-            // if (!_this.settings.leaderboard.layoutSettings.titleLinkToDetailsPage) {
-            //   await _this.settings.mainWidget.showEmbeddedCompetitionDetailsContent(function () {});
-            // } else if (_this.settings.competition.activeContest !== null) {
-            //   _this.settings.mainWidget.loadCompetitionDetails(function () {});
-            // }
             _this.settings.mainWidget.hideEmbeddedCompetitionDetailsContent(function () { });
             _this.checkForAvailableRewards(1, function () {
               if (_this.settings.mainWidget.settings.active) {
@@ -3432,7 +3402,6 @@ export const LbWidget = function (options) {
               _this.settings.leaderboard.leaderboardData = lbData;
             });
             _this.settings.callbacks.onLeaderboardUpdates(json);
-            // this.settings.miniScoreBoard.loadScoreBoard(true);
             this.settings.mainWidget.loadLeaderboard(() => { }, false);
           }
         }
