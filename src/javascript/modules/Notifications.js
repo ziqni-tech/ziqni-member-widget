@@ -1,4 +1,3 @@
-import mapObject from '../utils/mapObject';
 import removeClass from '../utils/removeClass';
 import query from '../utils/query';
 import stripHtml from '../utils/stripHtml';
@@ -19,7 +18,6 @@ export const Notifications = function (options) {
   this.settings = {
     container: null,
     detailsContainer: null,
-    canvasInstance: null,
     lbWidget: null,
     eventStream: [],
     checkTimeout: 2000,
@@ -27,22 +25,7 @@ export const Notifications = function (options) {
     checkInterval: null,
     autoNotificationHideInterval: null,
     autoNotificationHideTime: 10000,
-    displayInProgress: false,
-    dataExtractionForCanvas: function (data, callback) {
-      if (typeof data.metadata !== 'undefined' && data.metadata.length > 0 && typeof callback === 'function') {
-        let found = false;
-        mapObject(data.metadata, function (meta) {
-          if (meta.key === 'webAsset' && !found) {
-            const responseObj = {
-              imageSrc: meta.value
-            };
-            found = true;
-            console.log(responseObj);
-            callback(responseObj);
-          }
-        });
-      }
-    }
+    displayInProgress: false
   };
 
   if (typeof options !== 'undefined') {
@@ -111,22 +94,7 @@ export const Notifications = function (options) {
       addClass(query(_this.settings.container, '.cl-widget-notif-information-wrapper'), 'cl-show');
     }, 200);
 
-    if (_this.settings.canvasInstance !== null) {
-      _this.handleCanvasAnimations(data);
-    }
-
     _this.autoNotificationHide();
-  };
-
-  this.handleCanvasAnimations = function (data) {
-    const _this = this;
-
-    _this.settings.dataExtractionForCanvas(data, function (canvasData) {
-      if (canvasData.imageSrc.length > 0) {
-        _this.settings.canvasInstance.settings.imageSrc = canvasData.imageSrc;
-        _this.settings.canvasInstance.init();
-      }
-    });
   };
 
   this.addEvent = function (data) {

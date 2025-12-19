@@ -33,7 +33,6 @@ import competitionStatusMap from '../helpers/competitionStatuses';
 import { Notifications } from './Notifications';
 import { MiniScoreBoard } from './MiniScoreBoard';
 import { MainWidget } from './MainWidget';
-import { CanvasAnimation } from './CanvasAnimation';
 
 import { ApiClientStomp } from '@ziqni-tech/member-api-client';
 import cloneDeep from 'lodash.clonedeep';
@@ -54,7 +53,6 @@ export const LbWidget = function (options) {
   }
 
   // alias references to modules
-  this.CanvasAnimation = CanvasAnimation;
   this.Notifications = Notifications;
   this.MiniScoreBoard = MiniScoreBoard;
   this.MainWidget = MainWidget;
@@ -1835,7 +1833,6 @@ export const LbWidget = function (options) {
 
       if (_this.settings.enableNotifications) {
         _this.settings.notifications.init();
-        _this.settings.canvasAnimation.init();
       }
 
       _this.cleanup();
@@ -3584,10 +3581,7 @@ export const LbWidget = function (options) {
         this.loadMember((member) => {
           this.loadWidgetTranslations(() => {
             if (this.settings.miniScoreBoard === null) {
-              this.settings.canvasAnimation = new CanvasAnimation();
-              this.settings.notifications = new Notifications({
-                canvasInstance: this.settings.canvasAnimation
-              });
+              this.settings.notifications = new Notifications();
               this.settings.miniScoreBoard = new MiniScoreBoard({
                 active: true
               });
@@ -3596,7 +3590,6 @@ export const LbWidget = function (options) {
               this.settings.notifications.settings.lbWidget = this;
               this.settings.miniScoreBoard.settings.lbWidget = this;
               this.settings.mainWidget.settings.lbWidget = this;
-              this.settings.canvasAnimation.settings.lbWidget = this;
 
               this.startup();
               this.eventListeners();
