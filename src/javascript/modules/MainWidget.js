@@ -1463,7 +1463,6 @@ export const MainWidget = function (options) {
         const member = query(_this.settings.leaderboard.resultContainer, '.cl-lb-member-row');
 
         if (member !== null) {
-          // _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.list.parentNode));
           _this.missingMember(_this.isElementVisibleInView(member, _this.settings.leaderboard.resultContainer));
         }
       };
@@ -2456,13 +2455,7 @@ export const MainWidget = function (options) {
       statusesSubarray.push(statuses);
     }
 
-    // const achievements = achievementsSubarray.flat();
     const statuses = statusesSubarray.flat();
-
-    // const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(achIds);
-    // statuses[1].percentageComplete = 50;
-    // statuses[4].percentageComplete = 100;
-    // statuses[3].percentageComplete = 70;
 
     container.innerHTML = '';
 
@@ -2474,12 +2467,6 @@ export const MainWidget = function (options) {
     this.settings.missions.mission.graph.nodes.forEach((n) => {
       let src = stageIcons[Math.floor(Math.random() * 6)];
       if (n.includes && n.includes.iconLink) src = n.includes.iconLink;
-      // const idx = achievements.findIndex(a => a.id === n.entityId);
-      // if (idx !== -1) {
-      //   if (achievements[idx].iconLink) {
-      //     src = achievements[idx].iconLink;
-      //   }
-      // }
 
       let starSrc = 'none';
       let labelBg = '#3b4284';
@@ -2563,8 +2550,6 @@ export const MainWidget = function (options) {
           selector: 'node[label]',
           css: {
             'text-margin-y': '25px',
-            // 'text-outline-color': 'data(labelBg)',
-            // 'text-outline-width': 5
             'text-background-padding': '3px',
             'text-background-color': 'data(labelBg)',
             'text-background-shape': 'roundrectangle',
@@ -3011,7 +2996,6 @@ export const MainWidget = function (options) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
-    // let progressId = mission.id;
     let stage = null;
     let progressValue = mission.optInStatus.percentageComplete;
     let progressLabel = '0/100';
@@ -3236,7 +3220,6 @@ export const MainWidget = function (options) {
       bgImage = `background-image: url(${mission.bannerLink})`;
     }
 
-    // let progressId = mission.id;
     let stage = null;
     let progressValue = mission.optInStatus.percentageComplete;
     let progressLabel = '0/100';
@@ -3406,7 +3389,6 @@ export const MainWidget = function (options) {
           if (rewardData.length === 0) {
             accordionSection.style.display = 'none';
           }
-          // rewardData = rewardData.filter(r => r.rewardData);
           mapObject(rewardData, function (rew, key, count) {
             if ((count + 1) <= layout.showTopResults && query(topEntryContainer, '.cl-reward-' + rew.id) === null) {
               const topEntryContainerListItem = _this.rewardItem(rew);
