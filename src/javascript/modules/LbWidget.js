@@ -18,7 +18,7 @@ import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests } from './lbWidget/services/competitionService';
 import { getAchievements } from './lbWidget/services/achievementService';
 import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
-import { getAwards, getAwardsByIds, claimAward } from './lbWidget/services/awardService';
+import { getAwards, getAwardsByIds, claimAward, fetchAwardsSummary } from './lbWidget/services/awardService';
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
 import { getGraph } from './lbWidget/services/graphService';
@@ -1149,126 +1149,26 @@ export const LbWidget = function (options) {
   };
 
   this.checkForAvailableAwards = async function (callback, pageNumber = 1, claimedPageNumber = 1) {
-    this.settings.awards.availableAwards = [];
-    this.settings.awards.claimedAwards = [];
-    this.settings.awards.expiredAwards = [];
-    this.settings.awards.rewards = [];
-
-    const claimedAwards = await getAwards({
+    const { claimed, available, expired } = await fetchAwardsSummary({
       apiClient: this.apiClientStomp,
       language: this.settings.language,
       currencyKey: this.settings.currency,
-      moreThan: 34,
-      lessThan: 36,
-      skip: (claimedPageNumber - 1) * 6,
-      limit: 6
+      availablePage: pageNumber,
+      claimedPage: claimedPageNumber,
+      expiredPage: claimedPageNumber, // або окремий параметр, якщо треба
+      pageSize: 6,
+      rewardsPageSize: 20
     });
-    this.settings.awards.claimedAwards = claimedAwards.data;
-    const claimedRewardIds = this.settings.awards.claimedAwards.map(c => c.rewardId);
-    if (claimedRewardIds.length) {
-      const rewards = await getRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        currencyKey: this.settings.currency,
-        entityType: 'Reward',
-        entityIds: claimedRewardIds,
-        skip: 0,
-        limit: 20
-      });
-      const rewardsData = rewards.data;
 
-      this.settings.awards.claimedAwards = this.settings.awards.claimedAwards.map(award => {
-        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
-        if (idx !== -1) {
-          award.rewardData = rewardsData[idx];
-        }
-
-        return award;
-      });
-    }
-
-    this.settings.awards.claimedTotalCount = (claimedAwards.meta && claimedAwards.meta.totalRecordsFound)
-      ? claimedAwards.meta.totalRecordsFound
-      : 0;
-
-    const availableAwards = await getAwards({
-      apiClient: this.apiClientStomp,
-      language: this.settings.language,
-      currencyKey: this.settings.currency,
-      moreThan: 14,
-      lessThan: 16,
-      skip: (pageNumber - 1) * 6,
-      limit: 6
-    });
-    this.settings.awards.availableAwards = availableAwards.data;
-
-    const rewardIds = this.settings.awards.availableAwards.map(c => c.rewardId);
-    if (rewardIds.length) {
-      const rewards = await getRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        currencyKey: this.settings.currency,
-        entityType: 'Reward',
-        entityIds: rewardIds,
-        skip: 0,
-        limit: 20
-      });
-      const rewardsData = rewards.data;
-
-      this.settings.awards.availableAwards = this.settings.awards.availableAwards.map(award => {
-        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
-        if (idx !== -1) {
-          award.rewardData = rewardsData[idx];
-        }
-
-        return award;
-      });
-    }
-
-    this.settings.awards.totalCount = (availableAwards.meta && availableAwards.meta.totalRecordsFound)
-      ? availableAwards.meta.totalRecordsFound
-      : 0;
-
-    const expiredAwards = await getAwards({
-      apiClient: this.apiClientStomp,
-      language: this.settings.language,
-      currencyKey: this.settings.currency,
-      moreThan: 114,
-      lessThan: 116,
-      skip: (claimedPageNumber - 1) * 6,
-      limit: 6
-    });
-    this.settings.awards.expiredAwards = expiredAwards.data;
-
-    const expiredRewardIds = this.settings.awards.expiredAwards.map(c => c.rewardId);
-    if (expiredRewardIds.length) {
-      const rewards = await getRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        currencyKey: this.settings.currency,
-        entityType: 'Reward',
-        entityIds: expiredRewardIds,
-        skip: 0,
-        limit: 20
-      });
-      const rewardsData = rewards.data;
-
-      this.settings.awards.expiredAwards = this.settings.awards.expiredAwards.map(award => {
-        const idx = rewardsData.findIndex(r => r.id === award.rewardId);
-        if (idx !== -1) {
-          award.rewardData = rewardsData[idx];
-        }
-
-        return award;
-      });
-    }
+    this.settings.awards.claimedAwards = claimed.awards;
+    this.settings.awards.availableAwards = available.awards;
+    this.settings.awards.expiredAwards = expired.awards;
+    this.settings.awards.claimedTotalCount = claimed.totalCount;
+    this.settings.awards.totalCount = available.totalCount;
+    this.settings.awards.expiredTotalCount = expired.totalCount || 0;
 
     if (typeof callback === 'function') {
-      callback(
-        this.settings.awards.claimedAwards,
-        this.settings.awards.availableAwards,
-        this.settings.awards.expiredAwards
-      );
+      callback(claimed.awards, available.awards, expired.awards);
     }
   };
 
