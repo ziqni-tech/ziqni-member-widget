@@ -27,6 +27,7 @@ import { getFiles } from './lbWidget/services/fileService';
 import { getActiveEntitiesCount } from './lbWidget/services/statsService';
 import { subscribeToLeaderboard } from './lbWidget/services/leaderboardService';
 import { manageOptIn, getOptInStatus } from './lbWidget/services/optInService';
+import { animateIcon as animateNavIcon } from './lbWidget/ui/iconAnimation';
 
 import competitionStatusMap from '../helpers/competitionStatuses';
 
@@ -1173,46 +1174,13 @@ export const LbWidget = function (options) {
   };
 
   this.animateIcon = function (entity) {
-    const _this = this;
-    let icon = null;
-    switch (entity) {
-      case 'Award':
-        icon = query(
-          this.settings.mainWidget.settings.container,
-          '.' + this.settings.navigation.rewards.navigationClass
-        );
-        break;
-      case 'Message':
-        icon = query(
-          this.settings.mainWidget.settings.container,
-          '.' + this.settings.navigation.inbox.navigationClass
-        );
-        break;
-    }
-
-    if (icon && !_this.settings.iconIntervalId) {
-      let x = 0;
-      _this.settings.iconIntervalId = setInterval(function () {
-        if (hasClass(icon, 'cl-active-nav')) {
-          if (hasClass(icon, 'decrease')) {
-            removeClass(icon, 'decrease');
-          } else {
-            addClass(icon, 'decrease');
-          }
-        } else {
-          if (hasClass(icon, 'grow')) {
-            removeClass(icon, 'grow');
-          } else {
-            addClass(icon, 'grow');
-          }
-        }
-
-        if (++x === 8) {
-          clearInterval(_this.settings.iconIntervalId);
-          _this.settings.iconIntervalId = null;
-        }
-      }, 300);
-    }
+    animateNavIcon({
+      container: this.settings.mainWidget.settings.container,
+      navigation: this.settings.navigation,
+      entity,
+      iconIntervalId: this.settings.iconIntervalId,
+      setIconIntervalId: (id) => { this.settings.iconIntervalId = id; }
+    });
   };
 
   this.checkForAvailableRewards = async function (pageNumber, callback) {
