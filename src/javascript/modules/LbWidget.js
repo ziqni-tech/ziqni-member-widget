@@ -15,9 +15,9 @@ import camelToKebabCase from '../utils/camelToKebabCase';
 import pagination from '../utils/paginator';
 import { ITEMS_PER_PAGE } from './mainWidget/constants';
 import { defaultSettings } from './lbWidget/defaultSettings';
-import { getCompetitions, getContests } from './lbWidget/services/competitionService';
+import { getCompetitions, getContests, fetchCompetitionsSummary, fetchDashboardCompetitions } from './lbWidget/services/competitionService';
 import { getAchievements } from './lbWidget/services/achievementService';
-import { attachReward, attachRewards, getRewards } from './lbWidget/services/rewardService';
+import { attachReward, getRewards } from './lbWidget/services/rewardService';
 import { getAwards, getAwardsByIds, claimAward, fetchAwardsSummary } from './lbWidget/services/awardService';
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
@@ -172,88 +172,18 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardCompetitions = async function () {
-    const activeCompetitions = await getCompetitions({
+    const result = await fetchDashboardCompetitions({
       apiClient: this.apiClientStomp,
       language: this.settings.language,
-      status: 'active',
+      currencyKey: this.settings.currency,
       productIds: this.settings.productIds,
-      limit: 2,
-      skip: 0
+      limit: 2
     });
-    let activeCompetitionsData = activeCompetitions.data;
 
-    const readyCompetitions = await getCompetitions({
-      apiClient: this.apiClientStomp,
-      language: this.settings.language,
-      status: 'ready',
-      productIds: this.settings.productIds,
-      limit: 2,
-      skip: 0
-    });
-    let readyCompetitionsData = readyCompetitions.data;
-
-    if (activeCompetitionsData) {
-      const ids = activeCompetitionsData.map(a => a.id);
-
-      let contests = await getContests({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        competitionIds: ids,
-        limit: 20,
-        skip: 0
-      });
-
-      const contestIds = contests.map(a => a.id);
-
-      contests = await attachRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: contests,
-        currencyKey: this.settings.currency,
-        entityType: 'Contest',
-        entityIds: contestIds,
-        skip: 0,
-        limit: 20
-      });
-
-      activeCompetitionsData = activeCompetitionsData.map(comp => {
-        comp.contests = contests.filter(c => c.competitionId === comp.id);
-
-        return comp;
-      });
-    }
-
-    if (readyCompetitionsData) {
-      const ids = readyCompetitionsData.map(a => a.id);
-
-      let contests = await getContests({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        competitionIds: ids,
-        limit: 20,
-        skip: 0
-      });
-
-      const contestIds = contests.map(a => a.id);
-      contests = await attachRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: contests,
-        currencyKey: this.settings.currency,
-        entityType: 'Contest',
-        entityIds: contestIds,
-        skip: 0,
-        limit: 20
-      });
-
-      readyCompetitionsData = readyCompetitionsData.map(comp => {
-        comp.contests = contests.filter(c => c.competitionId === comp.id);
-
-        return comp;
-      });
-    }
-
-    return { activeCompetitions: activeCompetitionsData, readyCompetitions: readyCompetitionsData };
+    return {
+      activeCompetitions: result.activeCompetitions,
+      readyCompetitions: result.readyCompetitions
+    };
   };
 
   this.checkForAvailableCompetitions = async function (
@@ -262,140 +192,24 @@ export const LbWidget = function (options) {
     activePageNumber = 1,
     finishedPageNumber = 1
   ) {
-    const finishedDateFilter = new Date();
-    finishedDateFilter.setDate(finishedDateFilter.getDate() - this.settings.historicalData.finalisedCompetitions ?? 30);
-
-    const readyCompetitions = await getCompetitions({
+    const result = await fetchCompetitionsSummary({
       apiClient: this.apiClientStomp,
       language: this.settings.language,
-      status: 'ready',
+      currencyKey: this.settings.currency,
       productIds: this.settings.productIds,
-      limit: ITEMS_PER_PAGE.TOURNAMENTS,
-      skip: (readyPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
+      showFinishedTournaments: this.settings.navigation.tournaments.showFinishedTournaments,
+      finalisedCompetitionsDays: this.settings.historicalData.finalisedCompetitions ?? 30,
+      readyPageNumber,
+      activePageNumber,
+      finishedPageNumber
     });
-    this.settings.tournaments.readyCompetitions = readyCompetitions.data;
-    this.settings.tournaments.readyTotalCount = readyCompetitions.meta.totalRecordsFound;
 
-    const activeCompetitions = await getCompetitions({
-      apiClient: this.apiClientStomp,
-      language: this.settings.language,
-      status: 'active',
-      productIds: this.settings.productIds,
-      limit: ITEMS_PER_PAGE.TOURNAMENTS,
-      skip: (activePageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS
-    });
-    this.settings.tournaments.activeCompetitions = activeCompetitions.data;
-    this.settings.tournaments.totalCount = activeCompetitions.meta.totalRecordsFound;
-
-    if (this.settings.navigation.tournaments.showFinishedTournaments) {
-      const finishedCompetitions = await getCompetitions({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        status: 'finished',
-        productIds: this.settings.productIds,
-        limit: ITEMS_PER_PAGE.TOURNAMENTS,
-        skip: (finishedPageNumber - 1) * ITEMS_PER_PAGE.TOURNAMENTS,
-        endDateRange: {
-          before: (new Date()).toISOString(),
-          after: finishedDateFilter.toISOString()
-        }
-      });
-      this.settings.tournaments.finishedCompetitions = finishedCompetitions.data ? finishedCompetitions.data : [];
-      this.settings.tournaments.finishedTotalCount = finishedCompetitions.meta.totalRecordsFound;
-    }
-
-    if (this.settings.tournaments.activeCompetitions.length) {
-      const ids = this.settings.tournaments.activeCompetitions.map(a => a.id);
-
-      let contests = await getContests({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        competitionIds: ids,
-        limit: 20,
-        skip: 0
-      });
-
-      const contestIds = contests.map(a => a.id);
-
-      contests = await attachRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: contests,
-        currencyKey: this.settings.currency,
-        entityType: 'Contest',
-        entityIds: contestIds,
-        skip: 0,
-        limit: 20
-      });
-
-      this.settings.tournaments.activeCompetitions = this.settings.tournaments.activeCompetitions.map(comp => {
-        comp.contests = contests.filter(r => r.competitionId === comp.id);
-
-        return comp;
-      });
-    }
-
-    if (this.settings.tournaments.readyCompetitions.length) {
-      const ids = this.settings.tournaments.readyCompetitions.map(a => a.id);
-
-      let contests = await getContests({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        competitionIds: ids,
-        limit: 20,
-        skip: 0
-      });
-
-      const contestIds = contests.map(a => a.id);
-
-      contests = await attachRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: contests,
-        currencyKey: this.settings.currency,
-        entityType: 'Contest',
-        entityIds: contestIds,
-        skip: 0,
-        limit: 20
-      });
-
-      this.settings.tournaments.readyCompetitions = this.settings.tournaments.readyCompetitions.map(comp => {
-        comp.contests = contests.filter(r => r.competitionId === comp.id);
-
-        return comp;
-      });
-    }
-
-    if (this.settings.navigation.tournaments.showFinishedTournaments && this.settings.tournaments.finishedCompetitions.length) {
-      const ids = this.settings.tournaments.finishedCompetitions.map(a => a.id);
-
-      let contests = await getContests({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        competitionIds: ids,
-        limit: 20,
-        skip: 0
-      });
-
-      const contestIds = contests.map(a => a.id);
-
-      contests = await attachRewards({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: contests,
-        currencyKey: this.settings.currency,
-        entityType: 'Contest',
-        entityIds: contestIds,
-        skip: 0,
-        limit: 20
-      });
-
-      this.settings.tournaments.finishedCompetitions = this.settings.tournaments.finishedCompetitions.map(comp => {
-        comp.contests = contests.filter(r => r.competitionId === comp.id);
-
-        return comp;
-      });
-    }
+    this.settings.tournaments.readyCompetitions = result.readyCompetitions;
+    this.settings.tournaments.readyTotalCount = result.readyTotalCount;
+    this.settings.tournaments.activeCompetitions = result.activeCompetitions;
+    this.settings.tournaments.totalCount = result.activeTotalCount;
+    this.settings.tournaments.finishedCompetitions = result.finishedCompetitions;
+    this.settings.tournaments.finishedTotalCount = result.finishedTotalCount;
 
     if (typeof callback === 'function') {
       callback();
