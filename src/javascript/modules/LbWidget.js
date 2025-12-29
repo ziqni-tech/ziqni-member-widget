@@ -16,7 +16,7 @@ import pagination from '../utils/paginator';
 import { ITEMS_PER_PAGE } from './mainWidget/constants';
 import { defaultSettings } from './lbWidget/defaultSettings';
 import { getCompetitions, getContests, fetchCompetitionsSummary, fetchDashboardCompetitions } from './lbWidget/services/competitionService';
-import { getAchievements } from './lbWidget/services/achievementService';
+import { getAchievements, fetchMissionsSummary, fetchDashboardMissions } from './lbWidget/services/achievementService';
 import { attachReward, getRewards } from './lbWidget/services/rewardService';
 import { getAwards, getAwardsByIds, claimAward, fetchAwardsSummary } from './lbWidget/services/awardService';
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
@@ -65,72 +65,12 @@ export const LbWidget = function (options) {
   };
 
   this.getDashboardMissions = async () => {
-    const response = await getAchievements({
+    return await fetchDashboardMissions({
       apiClient: this.apiClientStomp,
       language: this.settings.language,
-      moreThan: 20,
-      lessThan: 30,
-      skip: 0,
-      limit: 2,
-      constraints: ['mission']
+      currencyKey: this.settings.currency,
+      limit: 2
     });
-    let missions = response.data;
-
-    if (missions.length) {
-      const ids = missions.map(m => m.id);
-
-      missions = await attachReward({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: missions,
-        currencyKey: this.settings.currency,
-        entityType: 'Achievement',
-        entityIds: ids,
-        skip: 0,
-        limit: 20
-      });
-
-      for (const id of ids) {
-        const graphResponse = await getGraph({
-          apiClient: this.apiClientStomp,
-          ids: [id],
-          includes: ['scheduling']
-        });
-        const graph = graphResponse.data;
-
-        const idx = missions.findIndex(mission => mission.id === id);
-        missions[idx].dependencies = [];
-
-        if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
-          const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
-          for (const edge of filtered) {
-            const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
-            const achievement = graph.nodes[idx];
-
-            const rewards = await getRewards({
-              apiClient: this.apiClientStomp,
-              language: this.settings.language,
-              currencyKey: this.settings.currency,
-              entityType: 'Achievement',
-              entityIds: [edge.tailEntityId],
-              skip: 0,
-              limit: 5
-            });
-            const rewardsData = rewards.data;
-
-            achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
-
-            const missionIdx = missions.findIndex(mission => mission.id === id);
-            missions[missionIdx].dependencies.push({
-              ordering: edge.ordering,
-              achievement: achievement
-            });
-          }
-        }
-      }
-    }
-
-    return missions;
   };
 
   this.getDashboardAwards = async function () {
@@ -1055,74 +995,20 @@ export const LbWidget = function (options) {
   };
 
   this.checkForAvailableMissions = async function (pageNumber, callback) {
-    const missions = await getAchievements({
+    const result = await fetchMissionsSummary({
       apiClient: this.apiClientStomp,
       language: this.settings.language,
-      moreThan: 20,
-      lessThan: 30,
-      skip: (pageNumber - 1) * 6,
-      limit: 6,
-      constraints: ['mission']
+      currencyKey: this.settings.currency,
+      pageNumber,
+      itemsPerPage: 6
     });
 
-    this.settings.missions.missions = missions.data ?? [];
-    this.settings.missions.totalCount = (missions.meta && missions.meta.totalRecordsFound) ? missions.meta.totalRecordsFound : 0;
+    this.settings.missions.missions = result.missions;
+    this.settings.missions.totalCount = result.totalCount;
 
-    if (this.settings.missions.missions.length) {
-      const ids = this.settings.missions.missions.map(m => m.id);
-
-      this.settings.missions.missions = await attachReward({
-        apiClient: this.apiClientStomp,
-        language: this.settings.language,
-        entityArray: this.settings.missions.missions,
-        currencyKey: this.settings.currency,
-        entityType: 'Achievement',
-        entityIds: ids,
-        skip: 0,
-        limit: 20
-      });
-
-      for (const id of ids) {
-        const graphResponse = await getGraph({
-          apiClient: this.apiClientStomp,
-          ids: [id],
-          includes: ['scheduling']
-        });
-        const graph = graphResponse.data;
-
-        const idx = this.settings.missions.missions.findIndex(mission => mission.id === id);
-        this.settings.missions.missions[idx].dependencies = [];
-
-        if (graph.graphs[0] && graph.graphs[0].edges && graph.graphs[0].edges.length) {
-          const filtered = graph.graphs[0].edges.filter(edge => edge.graphEdgeType !== 'ROOT');
-          for (const edge of filtered) {
-            const idx = graph.nodes.findIndex(n => n.entityId === edge.tailEntityId);
-            const achievement = graph.nodes[idx];
-
-            const rewards = await getRewards({
-              apiClient: this.apiClientStomp,
-              language: this.settings.language,
-              currencyKey: this.settings.currency,
-              entityType: 'Achievement',
-              entityIds: [edge.tailEntityId],
-              skip: 0,
-              limit: 5
-            });
-            const rewardsData = rewards.data;
-
-            achievement.reward = rewardsData && rewardsData[0] ? rewardsData[0] : null;
-
-            const missionIdx = this.settings.missions.missions.findIndex(mission => mission.id === id);
-            this.settings.missions.missions[missionIdx].dependencies.push({
-              ordering: edge.ordering,
-              achievement: achievement
-            });
-          }
-        }
-      }
+    if (typeof callback === 'function') {
+      callback(this.settings.missions.missions);
     }
-
-    if (typeof callback === 'function') callback(this.settings.missions.missions);
   };
 
   this.getMission = async function (id, callback) {
