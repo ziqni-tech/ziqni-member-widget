@@ -20,7 +20,7 @@ import { getAchievements, fetchMissionsSummary, fetchDashboardMissions } from '.
 import { attachReward, getRewards } from './lbWidget/services/rewardService';
 import { getAwards, getAwardsByIds, claimAward, fetchAwardsSummary } from './lbWidget/services/awardService';
 import { getSingleWheels, getSingleWheel, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
-import { getMessages, getMessageById, updateMessageStatus } from './lbWidget/services/messageService';
+import { getMessageById, fetchMessagesSummary, markMessagesAsRead, deleteMessages } from './lbWidget/services/messageService';
 import { getGraph } from './lbWidget/services/graphService';
 import { getMember } from './lbWidget/services/memberService';
 import { getFiles } from './lbWidget/services/fileService';
@@ -974,21 +974,19 @@ export const LbWidget = function (options) {
   };
 
   this.checkForAvailableMessages = async function (pageNumber, callback) {
-    const createdDateFilter = new Date();
-    createdDateFilter.setDate(createdDateFilter.getDate() - this.settings.historicalData.messagesForTheLast ?? 30);
-
-    const json = await getMessages({
+    const result = await fetchMessagesSummary({
       apiClient: this.apiClientStomp,
       language: this.settings.language,
       messageType: 'InboxItem',
       status: ['New', 'Read'],
-      after: createdDateFilter.toISOString(),
-      skip: (pageNumber - 1) * 9,
-      limit: 9
+      pageNumber,
+      itemsPerPage: 9,
+      messagesForTheLast: this.settings.historicalData.messagesForTheLast ?? 30
     });
 
-    this.settings.messages.messages = json.data ?? [];
-    this.settings.messages.totalCount = (json.meta && json.meta.totalRecordsFound) ? json.meta.totalRecordsFound : 0;
+    this.settings.messages.messages = result.messages;
+    this.settings.messages.totalCount = result.totalCount;
+
     if (typeof callback === 'function') {
       callback(this.settings.messages.messages);
     }
@@ -2589,9 +2587,9 @@ export const LbWidget = function (options) {
       !closest(el, '.checkbox-container')
     ) {
       const messageId = (hasClass(el, 'cl-inbox-list-item')) ? el.dataset.id : closest(el, '.cl-inbox-list-item').dataset.id;
-      _this.getMessage(messageId, function (data) {
+      _this.getMessage(messageId, async function (data) {
         _this.settings.mainWidget.loadMessageDetails(data, function () { });
-        updateMessageStatus(_this.apiClientStomp, [messageId], 'Read');
+        await markMessagesAsRead({ apiClient: _this.apiClientStomp, messageIds: messageId });
       });
 
       // delete selected messages
@@ -2609,7 +2607,7 @@ export const LbWidget = function (options) {
       }
 
       preLoader.show(async () => {
-        await updateMessageStatus(_this.apiClientStomp, ids, 'Deleted');
+        await deleteMessages({ apiClient: _this.apiClientStomp, messageIds: ids });
         deleteSelected.style.display = 'none';
         setTimeout(function () {
           _this.settings.mainWidget.loadMessages(1, () => { preLoader.hide(); });

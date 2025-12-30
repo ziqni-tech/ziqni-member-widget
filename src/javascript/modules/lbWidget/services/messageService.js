@@ -1,4 +1,5 @@
 import { MessagesApiWs, MessageRequest } from '@ziqni-tech/member-api-client';
+import { ITEMS_PER_PAGE } from '../../mainWidget/constants';
 
 let messagesApiWsClient = null;
 
@@ -53,10 +54,50 @@ export async function updateMessageStatus(apiClient, messageIds, status) {
     messagesApiWsClient = new MessagesApiWs(apiClient);
   }
 
-  const payload = [{
-    id: messageIds,
+  const ids = Array.isArray(messageIds) ? messageIds : [messageIds];
+  const payload = ids.map(id => ({
+    id: id,
     status: status
-  }];
+  }));
 
   await messagesApiWsClient.updateMessagesState(payload, (json) => { });
+}
+
+export async function fetchMessagesSummary({
+  apiClient,
+  language,
+  messageType = 'InboxItem',
+  status = ['New', 'Read'],
+  pageNumber = 1,
+  itemsPerPage = ITEMS_PER_PAGE.MESSAGES,
+  messagesForTheLast = 30
+}) {
+  const createdDateFilter = new Date();
+  createdDateFilter.setDate(createdDateFilter.getDate() - messagesForTheLast);
+  const skip = (pageNumber - 1) * itemsPerPage;
+
+  const response = await getMessages({
+    apiClient,
+    language,
+    messageType,
+    status,
+    after: createdDateFilter.toISOString(),
+    skip,
+    limit: itemsPerPage
+  });
+
+  return {
+    messages: response.data || [],
+    totalCount: response.meta?.totalRecordsFound || 0
+  };
+}
+
+export async function markMessagesAsRead({ apiClient, messageIds }) {
+  const ids = Array.isArray(messageIds) ? messageIds : [messageIds];
+  await updateMessageStatus(apiClient, ids, 'Read');
+}
+
+export async function deleteMessages({ apiClient, messageIds }) {
+  const ids = Array.isArray(messageIds) ? messageIds : [messageIds];
+  await updateMessageStatus(apiClient, ids, 'Deleted');
 }
