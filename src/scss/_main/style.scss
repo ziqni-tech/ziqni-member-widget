@@ -4628,6 +4628,10 @@ em {
   padding: 10px 34px 13px;
 }
 
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .availableAwards .cl-rew-list-item {
+  margin-bottom: 14px;
+}
+
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-item:hover {
   background-color: var(--lb3-rewards-item-bg-color-hover);
 }
@@ -4667,6 +4671,10 @@ em {
   overflow: hidden;
   text-overflow: ellipsis;
   margin-bottom: 10px;
+}
+
+.cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .claimedAwards .cl-rew-list-details-type {
+  margin-bottom: 20px;
 }
 
 .cl-main-widget-wrapper .cl-main-widget-section-container .cl-main-widget-reward-list-body-res .cl-rew-list-details-prize {
@@ -7189,7 +7197,7 @@ em {
     }
     .paginator-claimed {
       padding-right: 0;
-      padding-top: 20px;
+      padding-top: 0;
       display: flex;
     }
     .paginator-available {
