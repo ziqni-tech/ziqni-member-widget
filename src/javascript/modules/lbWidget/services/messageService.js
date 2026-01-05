@@ -55,10 +55,10 @@ export async function updateMessageStatus(apiClient, messageIds, status) {
   }
 
   const ids = Array.isArray(messageIds) ? messageIds : [messageIds];
-  const payload = ids.map(id => ({
-    id: id,
+  const payload = [{
+    id: ids,
     status: status
-  }));
+  }];
 
   await messagesApiWsClient.updateMessagesState(payload, (json) => { });
 }
