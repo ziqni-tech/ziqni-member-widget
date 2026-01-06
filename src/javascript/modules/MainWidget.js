@@ -1171,6 +1171,7 @@ export const MainWidget = function (options) {
   };
 
   this.leaderboardOptInCheck = async function () {
+    const _this = this;
     const optIn = query(this.settings.section, '.cl-main-widget-lb-optin-action');
 
     if (
@@ -1190,9 +1191,12 @@ export const MainWidget = function (options) {
         addClass(optIn, 'checking');
         optIn.parentNode.style.display = 'flex';
 
-        this.settings.lbWidget.settings.competition.activeCompetition.optInStatus = await this.settings.lbWidget.getCompetitionOptInStatus(
-          this.settings.lbWidget.settings.competition.activeCompetition.id
-        );
+        setTimeout(async function () {
+          _this.settings.lbWidget.settings.competition.activeCompetition.optInStatus = await _this.settings.lbWidget.getCompetitionOptInStatus(
+            _this.settings.lbWidget.settings.competition.activeCompetition.id
+          );
+          _this.leaderboardOptInCheck();
+        }, 3000);
       } else {
         optIn.innerHTML = this.settings.lbWidget.settings.translation.tournaments.enter;
         optIn.parentNode.style.display = 'flex';
