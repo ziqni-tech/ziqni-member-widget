@@ -20,6 +20,10 @@ import {
 } from './mainWidget/paginatorUtils';
 import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
 import { createElementWithClass } from './mainWidget/domUtils';
+import {
+  buildTournamentItemViewModel,
+  buildDashboardTournamentItemViewModel
+} from './mainWidget/tournamentsViewModel';
 import { getRewards } from './lbWidget/services/rewardService';
 import { formatDateTime, formatMissionDateTime, formatBannerDateTime } from '../utils/formatDateTime';
 import { claimAward } from './lbWidget/services/awardService';
@@ -242,9 +246,9 @@ export const MainWidget = function (options) {
       navigationItem.setAttribute(
         'class',
         _this.settings.lbWidget.settings.navigation[val.key].navigationClass +
-          ' cl-main-widget-navigation-item' +
-          (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item') +
-          (_this.settings.lbWidget.settings.navigation[val.key].navigationClass !== 'cl-main-widget-navigation-dashboard' ? ' hidden' : '')
+        ' cl-main-widget-navigation-item' +
+        (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item') +
+        (_this.settings.lbWidget.settings.navigation[val.key].navigationClass !== 'cl-main-widget-navigation-dashboard' ? ' hidden' : '')
       );
       navigationItemIcon.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClassIcon + ' cl-main-navigation-item');
       navigationItemTitle.setAttribute('class', 'cl-main-navigation-item-title');
@@ -1038,12 +1042,12 @@ export const MainWidget = function (options) {
 
   this.getActiveCompetitionDescription = function () {
     const description = (this.settings.lbWidget.settings.competition.activeContest !== null &&
-        this.settings.lbWidget.settings.competition.activeContest.description &&
-        this.settings.lbWidget.settings.competition.activeContest.description.length > 0)
+      this.settings.lbWidget.settings.competition.activeContest.description &&
+      this.settings.lbWidget.settings.competition.activeContest.description.length > 0)
       ? this.settings.lbWidget.settings.competition.activeContest.description
       : ((this.settings.lbWidget.settings.competition.activeCompetition !== null &&
-            this.settings.lbWidget.settings.competition.activeCompetition.description &&
-            this.settings.lbWidget.settings.competition.activeCompetition.description.length > 0)
+        this.settings.lbWidget.settings.competition.activeCompetition.description &&
+        this.settings.lbWidget.settings.competition.activeCompetition.description.length > 0)
         ? this.settings.lbWidget.settings.competition.activeCompetition.description : '');
 
     return description
@@ -2751,107 +2755,28 @@ export const MainWidget = function (options) {
     confirm.addEventListener('click', leaveAchievement);
   };
 
-  this.getTournamentTotalPrizePool = (tournament) => {
-    let rewardValue = '';
-    const totalReward = {
-      rewardValue: 0,
-      rewardType: {}
-    };
-
-    if (tournament.contests && tournament.contests.length) {
-      if (this.settings.lbWidget.settings.tournaments.showTotalPrize) {
-        if (tournament.contests[0].rewards && tournament.contests[0].rewards.length) {
-          totalReward.rewardType = tournament.contests[0].rewards[0].rewardType;
-        }
-        tournament.contests.forEach(contest => {
-          contest.rewards.forEach(reward => {
-            if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-              const rewardRankArr = reward.rewardRank.split(',');
-              rewardRankArr.forEach(r => {
-                const idx = r.indexOf('-');
-                if (idx !== -1) {
-                  const start = parseInt(r);
-                  const end = parseInt(r.substring(idx + 1));
-                  totalReward.rewardValue += reward.rewardValue * (end - start + 1);
-                } else {
-                  totalReward.rewardValue += reward.rewardValue;
-                }
-              });
-            } else {
-              totalReward.rewardValue += reward.rewardValue;
-            }
-          });
-        });
-
-        if (totalReward.rewardValue) {
-          rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(totalReward);
-        }
-      } else {
-        const roundFirstIdx = tournament.contests.findIndex(c => c.round === 1);
-
-        if (roundFirstIdx !== -1) {
-          const roundFirst = tournament.contests[roundFirstIdx];
-          roundFirst.rewards.forEach(reward => {
-            if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-              const rewardRankArr = reward.rewardRank.split(',');
-              rewardRankArr.forEach(r => {
-                const idx = r.indexOf('-');
-                if (idx !== -1) {
-                  const start = parseInt(r);
-                  if (start === 1) {
-                    rewardValue = reward;
-                  }
-                } else if (parseInt(r) === 1) {
-                  rewardValue = reward;
-                }
-              });
-            } else if (parseInt(reward.rewardRank) === 1) {
-              rewardValue = reward;
-            }
-          });
-
-          if (rewardValue) {
-            rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rewardValue);
-          }
-        }
-      }
-    }
-
-    return rewardValue;
-  };
-
   this.dashboardTournamentItem = function (tournament, isReadyStatus = false) {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'dashboard-tournament-item');
     listItem.setAttribute('data-id', tournament.id);
 
-    const rewardValue = this.getTournamentTotalPrizePool(tournament);
-
-    let itemBg = '';
-    if (tournament.bannerLowResolutionLink) {
-      itemBg = `background-image: url(${tournament.bannerLowResolutionLink})`;
-    } else if (tournament.bannerLink) {
-      itemBg = `background-image: url(${tournament.bannerLink})`;
-    }
-
-    const endsLabel = isReadyStatus
-      ? this.settings.lbWidget.settings.translation.dashboard.startsTitle
-      : this.settings.lbWidget.settings.translation.dashboard.endsTitle;
-
-    const date = isReadyStatus ? new Date(tournament.scheduledStartDate) : new Date(tournament.scheduledEndDate);
-
-    const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
+    const viewModel = buildDashboardTournamentItemViewModel({
+      tournament,
+      isReadyStatus,
+      timeZone: this.settings.lbWidget.settings.timeZone || 'UTC',
+      showTotalPrize: this.settings.lbWidget.settings.tournaments.showTotalPrize,
+      rewardFormatter: this.settings.lbWidget.settings.partialFunctions.rewardFormatter,
+      translation: this.settings.lbWidget.settings.translation.dashboard
+    });
 
     const template = require('../templates/dashboard/tournamentItem.hbs');
     listItem.innerHTML = template({
-      title: tournament.name,
-      itemBg: itemBg,
-      endsLabel: endsLabel,
-      endsValue: date.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' }),
-      prizeLabel: this.settings.lbWidget.settings.tournaments.showTotalPrize
-        ? this.settings.lbWidget.settings.translation.dashboard.totalPrizeTitle
-        : this.settings.lbWidget.settings.translation.dashboard.prizeTitle,
-      prizeValue: rewardValue,
+      title: viewModel.title,
+      itemBg: viewModel.itemBg,
+      endsLabel: viewModel.endsLabel,
+      endsValue: viewModel.endsValue,
+      prizeLabel: viewModel.prizeLabel,
+      prizeValue: viewModel.prizeValue,
       seeMoreLabel: this.settings.lbWidget.settings.translation.dashboard.tournamentBtn,
       showDashboardTime: this.settings.lbWidget.settings.tournaments.showDashboardTime
     });
@@ -3282,31 +3207,27 @@ export const MainWidget = function (options) {
     const period = document.createElement('div');
     const prize = document.createElement('div');
 
-    let startDate = new Date(tournament.actualStartDate ?? tournament.scheduledStartDate);
-    let endDate = new Date(tournament.actualEndDate ?? tournament.scheduledEndDate);
+    const viewModel = buildTournamentItemViewModel({
+      tournament,
+      timeZone: this.settings.lbWidget.settings.timeZone || 'UTC',
+      showPrizeColumn: this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn,
+      showTotalPrize: this.settings.lbWidget.settings.tournaments.showTotalPrize,
+      rewardFormatter: this.settings.lbWidget.settings.partialFunctions.rewardFormatter
+    });
 
-    const timeZone = this.settings.lbWidget.settings.timeZone ? this.settings.lbWidget.settings.timeZone : 'UTC';
-
-    startDate = startDate.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' });
-    endDate = endDate.toLocaleString('en-GB', { timeZone: timeZone, dateStyle: 'short', timeStyle: 'short' });
-
-    listItem.setAttribute('class', 'cl-tour-list-item cl-tour-' + tournament.id);
+    listItem.setAttribute('class', 'cl-tour-list-item cl-tour-' + viewModel.id);
     detailsContainer.setAttribute('class', 'cl-tour-list-details-cont');
     label.setAttribute('class', 'cl-tour-list-details-label');
     labelIcon.setAttribute('class', 'cl-tour-list-details-label-icon');
     period.setAttribute('class', 'cl-tour-list-details-period');
     prize.setAttribute('class', 'cl-tour-list-details-prize');
 
-    listItem.dataset.id = tournament.id;
-    label.innerHTML = tournament.name ?? '';
-    period.innerHTML = startDate + ' - ' + endDate;
+    listItem.dataset.id = viewModel.id;
+    label.innerHTML = viewModel.name;
+    period.innerHTML = viewModel.period;
 
-    if (this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn && tournament.contests && tournament.contests.length) {
-      const totalPrize = this.getTournamentTotalPrizePool(tournament);
-
-      if (totalPrize) {
-        prize.innerHTML = totalPrize;
-      }
+    if (viewModel.prize) {
+      prize.innerHTML = viewModel.prize;
     }
 
     detailsContainer.appendChild(labelIcon);
