@@ -29,6 +29,7 @@ import { formatDateTime, formatMissionDateTime, formatBannerDateTime } from '../
 import { claimAward } from './lbWidget/services/awardService';
 import { playInstantWin, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 import { defaultSettings } from './mainWidget/defaultSettings';
+import { buildRewardItemViewModel, buildDashboardAwardViewModel } from './mainWidget/rewardsViewModel';
 
 /**
  * MainWidget
@@ -2850,22 +2851,16 @@ export const MainWidget = function (options) {
   };
 
   this.dashboardAwardItem = function (award) {
-    const listItem = document.createElement('div');
-    listItem.setAttribute('class', 'dashboard-award-item');
-    listItem.setAttribute('data-id', award.id);
-    const iconLink = award.rewardData.iconLink ? award.rewardData.iconLink : '';
-
-    const labelText = stripHtml(award.name);
-
-    const prize = Number.isInteger(award.rewardValue) ? award.rewardValue : Math.floor(award.rewardValue * 100) / 100;
+    const viewModel = buildDashboardAwardViewModel(award);
+    const listItem = viewModel.listItem;
 
     const template = require('../templates/mainWidget/dashboardAwardItem.hbs');
     listItem.innerHTML = template({
       claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
-      prize: prize,
-      type: award.rewardType.key,
-      label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
-      iconLink: iconLink
+      prize: viewModel.prize,
+      type: viewModel.type,
+      label: viewModel.label,
+      iconLink: viewModel.iconLink
     });
 
     return listItem;
@@ -3061,32 +3056,21 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.rewardItem = function (rew) {
-    const listItem = document.createElement('div');
-    listItem.setAttribute('class', 'cl-rew-list-item cl-rew-' + rew.id);
-    listItem.dataset.id = rew.id;
-
-    let iconLink = '';
-    if (rew.rewardData && rew.rewardData.iconLink) {
-      iconLink = `background-image: url(${rew.rewardData.iconLink})`;
-    }
-
-    const labelText = stripHtml(rew.name);
-    const isClimeBtn = !rew.claimed && rew.statusCode !== 115;
-
-    let prize = rew.rewardValue;
-    if (rew.rewardData) {
-      prize = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(rew.rewardData);
-    }
+  this.rewardItem = function (reward) {
+    const rewardViewModel = buildRewardItemViewModel(
+      reward,
+      this.settings.lbWidget.settings.partialFunctions.rewardFormatter
+    );
+    const listItem = rewardViewModel.listItem;
 
     const template = require('../templates/mainWidget/rewardItem.hbs');
     listItem.innerHTML = template({
-      isClimeBtn: isClimeBtn,
+      isClimeBtn: rewardViewModel.isClimeBtn,
       claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
-      prize: prize,
-      type: rew.rewardType.key,
-      label: (labelText.length > 80) ? (labelText.substr(0, 80) + '...') : labelText,
-      iconLink: iconLink
+      prize: rewardViewModel.prize,
+      type: reward.rewardType.key,
+      label: rewardViewModel.iconLink,
+      iconLink: rewardViewModel.iconLink
     });
 
     return listItem;

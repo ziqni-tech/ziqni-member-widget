@@ -224,15 +224,12 @@ export const defaultSettings = {
   partialFunctions: {
     startupCallback: function (instance) { },
     rewardFormatter: function (reward) {
-      let defaultRewardValue = Number.isInteger(reward.rewardValue)
-        ? reward.rewardValue
-        : Math.floor(reward.rewardValue * 100) / 100;
+      const rewardValue = reward.rewardValue;
+      const formattedValue = Number(Number(rewardValue).toFixed(4));
 
-      if (reward.rewardType?.uomSymbol) {
-        defaultRewardValue = reward.rewardType.uomSymbol + defaultRewardValue;
-      }
-
-      return defaultRewardValue;
+      return reward.rewardType?.uomSymbol
+        ? reward.rewardType.uomSymbol + formattedValue
+        : formattedValue;
     },
     competitionDataAvailableResponseParser: function (competitionData, callback) { callback(competitionData); },
     competitionDataFinishedResponseParser: function (competitionData, callback) { callback(competitionData); },
