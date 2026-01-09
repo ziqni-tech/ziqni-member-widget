@@ -225,7 +225,7 @@ export const defaultSettings = {
     startupCallback: function (instance) { },
     rewardFormatter: function (reward) {
       const rewardValue = reward.rewardValue;
-      const formattedValue = Number(Number(rewardValue).toFixed(4));
+      const formattedValue = Number(Number(rewardValue).toFixed(2));
 
       return reward.rewardType?.uomSymbol
         ? reward.rewardType.uomSymbol + formattedValue

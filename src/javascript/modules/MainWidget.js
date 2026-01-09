@@ -30,6 +30,8 @@ import { claimAward } from './lbWidget/services/awardService';
 import { playInstantWin, getInstantWinsAvailablePlays } from './lbWidget/services/instantWinService';
 import { defaultSettings } from './mainWidget/defaultSettings';
 import { buildRewardItemViewModel, buildDashboardAwardViewModel } from './mainWidget/rewardsViewModel';
+import { buildAchievementItemViewModel } from './mainWidget/achievementsViewModel';
+import { buildMissionItemViewModel } from './mainWidget/missionsViewModel';
 
 /**
  * MainWidget
@@ -1721,49 +1723,14 @@ export const MainWidget = function (options) {
     listItem.setAttribute('class', 'cl-ach-list-item cl-ach-' + ach.id);
     listItem.dataset.id = ach.id;
 
-    let isMore = false;
-    let isEnter = false;
-    let isLeave = false;
-    let isProgress = false;
-
-    if (Array.isArray(ach.constraints) && ach.constraints.includes('optinRequiredForEntrants')) {
-      if (ach.optInStatus && ach.optInStatus >= 15 && ach.optInStatus <= 35) {
-        isLeave = true;
-      } else if (!isNaN(ach.optInStatus) && (ach.optInStatus === 10 || ach.optInStatus === 0)) {
-        isProgress = true;
-      } else {
-        isEnter = true;
-      }
-    } else {
-      isMore = true;
-    }
-
-    let bgImage = '';
-    if (ach.iconLink && ach.iconLink.split('_id')[1].length > 1) {
-      bgImage = 'background-image: url(' + ach.iconLink + ')';
-    }
-
-    let rewardValue = '';
-    if (ach.reward) {
-      rewardValue = this.settings.lbWidget.settings.partialFunctions.rewardFormatter(ach.reward);
-    }
+    const viewModel = buildAchievementItemViewModel(
+      ach,
+      this.settings.lbWidget.settings.translation.achievements,
+      this.settings.lbWidget.settings.partialFunctions.rewardFormatter
+    );
 
     const template = require('../templates/mainWidget/achievementItem.hbs');
-    listItem.innerHTML = template({
-      id: ach.id,
-      title: ach.name,
-      bgImage: bgImage,
-      rewardValue: rewardValue,
-      moreLabel: this.settings.lbWidget.settings.translation.achievements.more,
-      enterLabel: this.settings.lbWidget.settings.translation.achievements.listEnterBtn,
-      leaveLabel: this.settings.lbWidget.settings.translation.achievements.listLeaveBtn,
-      progressLabel: this.settings.lbWidget.settings.translation.achievements.listProgressionBtn,
-      isMore: isMore,
-      isEnter: isEnter,
-      isLeave: isLeave,
-      isProgress: isProgress,
-      isFinished: ach.status === 'Finished'
-    });
+    listItem.innerHTML = template(viewModel);
 
     return listItem;
   };
@@ -2894,79 +2861,18 @@ export const MainWidget = function (options) {
   this.dashboardMissionItem = (mission) => {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
-    const itemId = mission.id;
-    let progressId = mission.id;
 
-    let name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
-    if (mission.customFields['Global-Title']) {
-      name = (mission.customFields['Global-Title'].length > 36)
-        ? mission.customFields['Global-Title'].substr(0, 36) + '...'
-        : mission.customFields['Global-Title'];
-    }
+    const viewModel = buildMissionItemViewModel(
+      mission,
+      this.settings.lbWidget.settings.translation.missions,
+      this.settings.lbWidget.settings.partialFunctions.rewardFormatter
+    );
 
-    let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
-    const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
-
-    let bgImage = '';
-    if (
-      mission.bannerLowResolutionLink &&
-      mission.bannerLowResolutionLink.length > mission.bannerLowResolutionLink.indexOf('_id/') + 4
-    ) {
-      bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
-    } else if (
-      mission.bannerLink &&
-      mission.bannerLink.length > mission.bannerLink.indexOf('_id/') + 4
-    ) {
-      bgImage = `background-image: url(${mission.bannerLink})`;
-    }
-
-    let stage = null;
-    let progressValue = mission.optInStatus.percentageComplete;
-    let progressLabel = '0/100';
-    if (mission.optInStatus && mission.optInStatus.percentageComplete) {
-      progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
-    }
-
-    if (mission.dependencies && mission.dependencies.length) {
-      let currentStage = 1;
-      if (mission.optInStatus.percentageComplete === 100) {
-        const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
-        if (idx !== -1) {
-          currentStage = mission.dependencies[idx].ordering + 1;
-          progressId = mission.dependencies[idx].achievement.entityId;
-          progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
-          progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
-          reward = mission.dependencies[idx].achievement.reward
-            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
-            : '';
-        } else {
-          const lastIdx = mission.dependencies.length - 1;
-          currentStage = mission.dependencies[lastIdx].ordering + 1;
-          progressId = mission.dependencies[lastIdx].achievement.entityId;
-          progressValue = mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete;
-          progressLabel = String(mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete) + '/100';
-          reward = mission.dependencies[lastIdx].achievement.reward
-            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[lastIdx].achievement.reward)
-            : '';
-        }
-      }
-
-      stage = currentStage + '/' + (mission.dependencies.length + 1);
-    }
-
-    listItem.dataset.id = itemId;
-    listItem.dataset.progressId = progressId;
+    listItem.dataset.id = viewModel.itemId;
+    listItem.dataset.progressId = viewModel.progressId;
 
     const template = require('../templates/dashboard/missionItem.hbs');
-    listItem.innerHTML = template({
-      name: name,
-      reward: reward,
-      actionsBtnLabel: actionsBtnLabel,
-      bgImage: bgImage,
-      progressLabel: progressLabel,
-      progressValue: progressValue,
-      stage: stage
-    });
+    listItem.innerHTML = template(viewModel);
 
     return listItem;
   };
@@ -3107,78 +3013,18 @@ export const MainWidget = function (options) {
   this.missionsItem = function (mission) {
     const listItem = document.createElement('div');
     listItem.setAttribute('class', 'cl-missions-list-item cl-mission-' + mission.id);
-    const itemId = mission.id;
-    let progressId = mission.id;
 
-    let name = (mission.name.length > 36) ? mission.name.substr(0, 36) + '...' : mission.name;
-    if (mission.customFields['Global-Title']) {
-      name = (mission.customFields['Global-Title'].length > 36)
-        ? mission.customFields['Global-Title'].substr(0, 36) + '...'
-        : mission.customFields['Global-Title'];
-    }
+    const viewModel = buildMissionItemViewModel(
+      mission,
+      this.settings.lbWidget.settings.translation.missions,
+      this.settings.lbWidget.settings.partialFunctions.rewardFormatter
+    );
 
-    let reward = mission.reward ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.reward) : '';
-    const actionsBtnLabel = this.settings.lbWidget.settings.translation.missions.btn;
-
-    let bgImage = '';
-    if (
-      mission.bannerLowResolutionLink &&
-      mission.bannerLowResolutionLink.length > mission.bannerLowResolutionLink.indexOf('_id/') + 4
-    ) {
-      bgImage = `background-image: url(${mission.bannerLowResolutionLink})`;
-    } else if (
-      mission.bannerLink &&
-      mission.bannerLink.length > mission.bannerLink.indexOf('_id/') + 4
-    ) {
-      bgImage = `background-image: url(${mission.bannerLink})`;
-    }
-
-    let stage = null;
-    let progressValue = mission.optInStatus.percentageComplete;
-    let progressLabel = '0/100';
-    if (mission.optInStatus && mission.optInStatus.percentageComplete) {
-      progressLabel = String(mission.optInStatus.percentageComplete) + '/100';
-    }
-
-    if (mission.dependencies && mission.dependencies.length) {
-      let currentStage = 1;
-      if (mission.optInStatus.percentageComplete === 100) {
-        const idx = mission.dependencies.findIndex(a => a.achievement.optInStatus.percentageComplete === null || a.achievement.optInStatus.percentageComplete < 100);
-        if (idx !== -1) {
-          currentStage = mission.dependencies[idx].ordering + 1;
-          progressId = mission.dependencies[idx].achievement.entityId;
-          progressValue = mission.dependencies[idx].achievement.optInStatus.percentageComplete;
-          progressLabel = String(mission.dependencies[idx].achievement.optInStatus.percentageComplete) + '/100';
-          reward = mission.dependencies[idx].achievement.reward
-            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[idx].achievement.reward)
-            : '';
-        } else {
-          const lastIdx = mission.dependencies.length - 1;
-          currentStage = mission.dependencies[lastIdx].ordering + 1;
-          progressId = mission.dependencies[lastIdx].achievement.entityId;
-          progressValue = mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete;
-          progressLabel = String(mission.dependencies[lastIdx].achievement.optInStatus.percentageComplete) + '/100';
-          reward = mission.dependencies[lastIdx].achievement.reward
-            ? this.settings.lbWidget.settings.partialFunctions.rewardFormatter(mission.dependencies[lastIdx].achievement.reward)
-            : '';
-        }
-      }
-      stage = currentStage + '/' + (mission.dependencies.length + 1);
-    }
-
-    listItem.dataset.id = itemId;
-    listItem.dataset.progressId = progressId;
+    listItem.dataset.id = viewModel.itemId;
+    listItem.dataset.progressId = viewModel.progressId;
 
     const template = require('../templates/mainWidget/missionItem.hbs');
-    listItem.innerHTML = template({
-      name: name,
-      reward: reward,
-      actionsBtnLabel: actionsBtnLabel,
-      bgImage: bgImage,
-      progressLabel: progressLabel,
-      progressValue: progressValue,
-      stage: stage
-    });
+    listItem.innerHTML = template(viewModel);
 
     return listItem;
   };
