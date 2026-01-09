@@ -3069,7 +3069,7 @@ export const MainWidget = function (options) {
       claimBtnLabel: this.settings.lbWidget.settings.translation.rewards.claim,
       prize: rewardViewModel.prize,
       type: reward.rewardType.key,
-      label: rewardViewModel.iconLink,
+      label: rewardViewModel.label,
       iconLink: rewardViewModel.iconLink
     });
 
