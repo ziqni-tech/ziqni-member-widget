@@ -2777,44 +2777,48 @@ export const MainWidget = function (options) {
       }
 
       for (const wheel of wheels) {
-        const listItem = document.createElement('div');
-        listItem.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel');
-
-        const template = require('../templates/dashboard/wheel.hbs');
-        listItem.innerHTML = template({
-          title: wheel.name,
-          button: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
-          id: wheel.id
-        });
-
-        list.appendChild(listItem);
-
-        const tiles = wheel.tiles;
-        this.settings.lbWidget.getSettingsFile(wheel.id)
-          .then(async (settingsData) => {
-            if (settingsData && settingsData.wheelSettings) {
-              await this.replaceImageIdsWithUris(settingsData.wheelSettings);
-            }
-
-            if (settingsData && settingsData.messageSettings) {
-              await this.replaceImageIdsWithUris(settingsData.messageSettings);
-            }
-
-            const instantWin = { tiles, settingsData };
-            const containerId = document.getElementById(wheel.id);
-
-            createSpinnerWheel(
-              containerId,
-              instantWin.tiles,
-              instantWin.settingsData,
-              () => {},
-              true
-            );
-          });
+        await this.renderDashboardWheelItem(wheel, list);
       }
     } else {
       container.classList.add('hidden');
     }
+  };
+
+  this.renderDashboardWheelItem = async function (wheel, list) {
+    const listItem = document.createElement('div');
+    listItem.setAttribute('class', 'cl-main-widget-dashboard-instant-wins-wheel');
+
+    const template = require('../templates/dashboard/wheel.hbs');
+    listItem.innerHTML = template({
+      title: wheel.name,
+      button: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
+      id: wheel.id
+    });
+
+    list.appendChild(listItem);
+
+    const tiles = wheel.tiles;
+    this.settings.lbWidget.getSettingsFile(wheel.id)
+      .then(async (settingsData) => {
+        if (settingsData && settingsData.wheelSettings) {
+          await this.replaceImageIdsWithUris(settingsData.wheelSettings);
+        }
+
+        if (settingsData && settingsData.messageSettings) {
+          await this.replaceImageIdsWithUris(settingsData.messageSettings);
+        }
+
+        const instantWin = { tiles, settingsData };
+        const containerId = document.getElementById(wheel.id);
+
+        createSpinnerWheel(
+          containerId,
+          instantWin.tiles,
+          instantWin.settingsData,
+          () => { },
+          true
+        );
+      });
   };
 
   this.dashboardAwardItem = function (award) {
@@ -3276,6 +3280,25 @@ export const MainWidget = function (options) {
 
       messageList.appendChild(paginator);
     }
+
+    const deleteSelected = document.querySelector('.cl-main-widget-inbox-list-delete-selected');
+    const messages = document.querySelectorAll('input[name="checkMessage"]');
+
+    if (messages && messages.length) {
+      messages.forEach(message => {
+        message.addEventListener('change', (event) => {
+          const isChecked = event.currentTarget.checked;
+          if (isChecked) {
+            deleteSelected.style.display = 'flex';
+          } else {
+            const hasChecked = Array.from(messages).some(message => message.checked);
+            if (!hasChecked) {
+              deleteSelected.style.display = 'none';
+            }
+          }
+        });
+      });
+    }
   };
 
   this.missionsListLayout = function (pageNumber, paginationArr = null) {
@@ -3662,10 +3685,8 @@ export const MainWidget = function (options) {
       const value = obj[key];
 
       if (typeof value === 'string' && value.match(/^[-\w]+$/)) {
-        // Assume this is an ID and fetch the URI
         obj[key] = await this.settings.lbWidget.getFileUri(value);
       } else if (typeof value === 'object' && value !== null) {
-        // Recursively process nested objects
         await this.replaceImageIdsWithUris(value);
       }
     }
@@ -3678,10 +3699,8 @@ export const MainWidget = function (options) {
       const value = obj[key];
 
       if (typeof value === 'string' && value.match(/^[-\w]+$/)) {
-        // Assume this is an ID and fetch the URI
         obj[key] = await this.settings.lbWidget.getFileUri(value);
       } else if (typeof value === 'object' && value !== null) {
-        // Recursively process nested objects
         await this.replaceImageIdsWithUris(value);
       }
     }
@@ -3707,27 +3726,9 @@ export const MainWidget = function (options) {
 
   this.loadMessages = function (pageNumber, callback, paginationArr = null) {
     const _this = this;
-    const deleteSelected = document.querySelector('.cl-main-widget-inbox-list-delete-selected');
 
     _this.settings.lbWidget.checkForAvailableMessages(pageNumber, function () {
       _this.messagesListLayout(pageNumber, paginationArr);
-      const messages = document.querySelectorAll('input[name="checkMessage"]');
-
-      if (messages && messages.length) {
-        messages.forEach(message => {
-          message.addEventListener('change', (event) => {
-            const isChecked = event.currentTarget.checked;
-            if (isChecked) {
-              deleteSelected.style.display = 'flex';
-            } else {
-              const hasChecked = Array.from(messages).some(message => message.checked);
-              if (!hasChecked) {
-                deleteSelected.style.display = 'none';
-              }
-            }
-          });
-        });
-      }
 
       if (typeof callback === 'function') {
         callback();
