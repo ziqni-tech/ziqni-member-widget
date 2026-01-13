@@ -720,6 +720,12 @@ export const LbWidget = function (options) {
       callback(singleWheelsData);
     }
 
+    if (singleWheelsData && singleWheelsData.length) {
+      this.settings.instantWins.totalCount = singleWheelsData.length;
+    } else {
+      this.settings.instantWins.totalCount = 0;
+    }
+
     return singleWheelsData;
   };
 

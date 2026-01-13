@@ -103,7 +103,8 @@ export const defaultSettings = {
   },
   instantWins: {
     enable: false,
-    showIWOnlyWithAvailPlays: true
+    showIWOnlyWithAvailPlays: true,
+    totalCount: 0
   },
   tournaments: {
     showBannerTimer: true,

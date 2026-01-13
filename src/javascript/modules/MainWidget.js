@@ -3090,6 +3090,7 @@ export const MainWidget = function (options) {
     const rewardList = _this.settings.section.querySelector('.' + _this.settings.lbWidget.settings.navigation.rewards.containerClass + ' .cl-main-widget-reward-list-body-res');
     const totalCount = _this.settings.lbWidget.settings.awards.totalCount;
     const claimedTotalCount = _this.settings.lbWidget.settings.awards.claimedTotalCount;
+    const instantWinsTotalCount = _this.settings.lbWidget.settings.instantWins.totalCount;
 
     if (isClaimed) {
       _this.settings.rewardsSection.accordionLayout.map(t => {
@@ -3195,6 +3196,7 @@ export const MainWidget = function (options) {
 
     const availableBtn = document.querySelector('.cl-main-accordion-container-menu-item.availableAwards');
     const claimedBtn = document.querySelector('.cl-main-accordion-container-menu-item.claimedAwards');
+    const instantWinsBtn = document.querySelector('.cl-main-accordion-container-menu-item.instantWins');
 
     if (!totalCount) {
       availableBtn.classList.add('not-available');
@@ -3206,6 +3208,12 @@ export const MainWidget = function (options) {
       claimedBtn.classList.add('not-available');
     } else {
       claimedBtn.classList.remove('not-available');
+    }
+
+    if (!instantWinsTotalCount) {
+      instantWinsBtn.classList.add('not-available');
+    } else {
+      instantWinsBtn.classList.remove('not-available');
     }
   };
 
