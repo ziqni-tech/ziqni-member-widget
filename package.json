@@ -9,13 +9,7 @@
     "url": "https://github.com/ziqni-tech/ziqni-member-widget"
   },
   "scripts": {
-    "build": "rimraf build && cross-env --env.production=prod --env.THEME=default-theme webpack --config ./webpack/webpack.config.js --progress",
-    "lint": "eslint ./src",
-    "test": "jest --coverage",
-    "test:watch": "jest --coverage --watch",
-    "test:coverage": "webpack-dev-server --open --port 9002 --contentBase ./coverage/lcov-report",
-    "jsdoc": "rimraf docs && jsdoc -c jsdoc.json",
-    "jsdoc:open": "webpack-dev-server --open --port 9003 --contentBase ./docs"
+    "build": "rimraf build && cross-env --env.production=prod --env.THEME=default-theme webpack --config ./webpack/webpack.config.js --progress"
   },
   "devDependencies": {
     "@babel/core": "^7.10.5",
