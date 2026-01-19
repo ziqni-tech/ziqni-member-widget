@@ -4,13 +4,11 @@ import hasClass from '../utils/hasClass';
 import removeClass from '../utils/removeClass';
 import objectIterator from '../utils/objectIterator';
 import query from '../utils/query';
-import closest from '../utils/closest';
+// import closest from '../utils/closest';
 import addClass from '../utils/addClass';
 import remove from '../utils/remove';
-import appendNext from '../utils/appendNext';
+// import appendNext from '../utils/appendNext';
 import stripHtml from '../utils/stripHtml';
-import cytoscape from 'cytoscape';
-import dagre from 'cytoscape-dagre';
 import tournamentBrackets from './TournamentBrackets';
 import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
 import {
@@ -19,7 +17,7 @@ import {
   createTournamentPaginators
 } from './mainWidget/paginatorUtils';
 import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
-import { createElementWithClass } from './mainWidget/domUtils';
+// import { createElementWithClass } from './mainWidget/domUtils';
 import {
   buildTournamentItemViewModel,
   buildDashboardTournamentItemViewModel
@@ -32,6 +30,37 @@ import { defaultSettings } from './mainWidget/defaultSettings';
 import { buildRewardItemViewModel, buildDashboardAwardViewModel } from './mainWidget/rewardsViewModel';
 import { buildAchievementItemViewModel } from './mainWidget/achievementsViewModel';
 import { buildMissionItemViewModel } from './mainWidget/missionsViewModel';
+
+import {
+  updateLeaderboardTopResults,
+  updateLeaderboardResults,
+  populateLeaderboardResultsWithDefaultEntries,
+  getReward,
+  leaderboardRow,
+  leaderboardRowUpdate
+} from './mainWidget/leaderboardViewModel';
+import {
+  leaderboardAreaLayout,
+  achievementsAreaLayout,
+  rewardsAreaLayout,
+  inboxAreaLayout,
+  missionsAreaLayout,
+  dashboardAreaLayout,
+  leaderboardHeader
+} from './mainWidget/layoutHandlers';
+import {
+  loadMissionDetailsCyGraph,
+  loadMissionMapGraph
+} from './mainWidget/graphService';
+import {
+  navigationSorter,
+  awardsList,
+  tournamentsList,
+  navigationItems,
+  listsNavigation,
+  accordionNavigation,
+  mainNavigationCheck
+} from './mainWidget/navigationHandler';
 
 /**
  * MainWidget
@@ -55,211 +84,92 @@ export const MainWidget = function (options) {
     }
   }
 
-  this.awardsList = function (data, onLayout) {
-    const idx = data.findIndex(d => d.show === true);
-    const menuItems = [];
-
-    menuItems.push({
-      element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.availableRewards, 'availableAwards', idx !== -1 && data[idx].type === 'availableAwards')
-    });
-    menuItems.push({
-      element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.claimed, 'claimedAwards', idx !== -1 && data[idx].type === 'claimedAwards')
-    });
-    if (this.settings.lbWidget.settings.awards.showExpiredAwards) {
-      menuItems.push({
-        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.expired, 'expiredAwards', idx !== -1 && data[idx].type === 'expiredAwards')
-      });
-    }
-    if (this.settings.lbWidget.settings.instantWins.enable) {
-      menuItems.push({
-        element: createAccordionMenuItem(this.settings.lbWidget.settings.translation.rewards.instantWins, 'instantWins', idx !== -1 && data[idx].type === 'instantWins')
-      });
-    }
-
-    return buildAccordion(data, menuItems, onLayout);
+  this.leaderboardRow = function (rank, icon, name, change, growth, points, reward, count, memberFound) {
+    return leaderboardRow(this, rank, icon, name, change, growth, points, reward, count, memberFound);
   };
 
-  this.tournamentsList = function (data, onLayout) {
-    const _this = this;
-    const idx = data.findIndex(d => d.show === true);
-    const menuItems = [];
-
-    menuItems.push({
-      element: createAccordionMenuItem(
-        _this.settings.lbWidget.settings.translation.tournaments.finishedCompetitions,
-        'finishedTournaments',
-        idx !== -1 && data[idx].type === 'finishedCompetitions'
-      )
-    });
-    menuItems.push({
-      element: createAccordionMenuItem(
-        _this.settings.lbWidget.settings.translation.tournaments.activeCompetitions,
-        'activeTournaments',
-        idx !== -1 && data[idx].type === 'activeCompetitions'
-      )
-    });
-    menuItems.push({
-      element: createAccordionMenuItem(
-        _this.settings.lbWidget.settings.translation.tournaments.readyCompetitions,
-        'readyTournaments',
-        idx !== -1 && data[idx].type === 'readyCompetitions'
-      )
-    });
-
-    return buildAccordion(data, menuItems, function (accordionSection, accordionList, topEntryContainer, entry, accordionListContainer) {
-      const accordionLabel = createElementWithClass('div', '');
-      const header = createElementWithClass('div', 'cl-accordion-list-container-header');
-      const headerLabel = createElementWithClass('div', 'cl-accordion-list-container-header-label', _this.settings.lbWidget.settings.translation.tournaments.label);
-      const headerDate = createElementWithClass('div', 'cl-accordion-list-container-header-date', _this.settings.lbWidget.settings.translation.tournaments.date);
-      const headerPrize = createElementWithClass(
-        'div',
-        'cl-accordion-list-container-header-prize',
-        _this.settings.lbWidget.settings.tournaments.showTotalPrize
-          ? _this.settings.lbWidget.settings.translation.tournaments.totalPrizeLabel
-          : _this.settings.lbWidget.settings.translation.leaderboard.prize
-      );
-
-      header.appendChild(headerLabel);
-      header.appendChild(headerDate);
-      if (_this.settings.lbWidget.settings.tournaments.showTournamentsMenuPrizeColumn) {
-        header.appendChild(headerPrize);
-      }
-
-      if (accordionListContainer) {
-        accordionListContainer.insertBefore(header, accordionList);
-      }
-
-      accordionSection.insertBefore(accordionLabel, accordionSection.firstChild);
-      if (topEntryContainer && accordionListContainer) {
-        accordionSection.insertBefore(topEntryContainer, accordionListContainer);
-      }
-
-      if (typeof onLayout === 'function') {
-        onLayout(accordionSection, accordionList, topEntryContainer, entry);
-      }
-    });
+  this.leaderboardRowUpdate = function (rank, icon, name, change, growth, points, reward, count, memberFound, onMissing) {
+    return leaderboardRowUpdate(this, rank, icon, name, change, growth, points, reward, count, memberFound, onMissing);
   };
 
-  this.listsNavigation = function (element) {
-    const menuItems = element.parentNode.querySelectorAll('.cl-main-accordion-container-menu-item');
-    const container = element.closest('.cl-main-accordion-container');
-    const sections = container.querySelectorAll('.cl-accordion');
-
-    menuItems.forEach(i => i.classList.remove('active'));
-    element.classList.add('active');
-
-    sections.forEach(s => s.classList.remove('cl-shown'));
-
-    if (element.classList.contains('finishedTournaments')) {
-      const finishedContainer = container.querySelector('.finishedCompetitions');
-      finishedContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('activeTournaments')) {
-      const activeContainer = container.querySelector('.activeCompetitions');
-      activeContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('readyTournaments')) {
-      const readyContainer = container.querySelector('.readyCompetitions');
-      readyContainer.classList.add('cl-shown');
-    }
-
-    this.hideSingleWheel();
-
-    if (element.classList.contains('availableAwards')) {
-      const availableContainer = container.querySelector('.cl-accordion.availableAwards');
-      availableContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('claimedAwards')) {
-      const claimedContainer = container.querySelector('.cl-accordion.claimedAwards');
-      claimedContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('expiredAwards')) {
-      const expiredContainer = container.querySelector('.cl-accordion.expiredAwards');
-      expiredContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('instantWins')) {
-      const instantWinsContainer = container.querySelector('.cl-accordion.instantWins');
-      instantWinsContainer.classList.add('cl-shown');
-      this.loadInstantWins();
-    }
-
-    // Achievements
-    if (element.classList.contains('all')) {
-      const allContainer = container.querySelector('.cl-accordion.all');
-      allContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('daily')) {
-      const dailyContainer = container.querySelector('.cl-accordion.daily');
-      dailyContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('weekly')) {
-      const weeklyContainer = container.querySelector('.cl-accordion.weekly');
-      weeklyContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('monthly')) {
-      const monthlyContainer = container.querySelector('.cl-accordion.monthly');
-      monthlyContainer.classList.add('cl-shown');
-    }
-    if (element.classList.contains('finishedAchievements')) {
-      const finishedContainer = container.querySelector('.cl-accordion.finishedAchievements');
-      finishedContainer.classList.add('cl-shown');
-    }
+  this.populateLeaderboardResultsWithDefaultEntries = function (clearPrize = false) {
+    return populateLeaderboardResultsWithDefaultEntries(this, clearPrize);
   };
 
-  this.accordionNavigation = function (element) {
-    const parentEl = element.parentNode;
+  this.updateLeaderboardTopResults = function (topResults, clearPrize = false) {
+    return updateLeaderboardTopResults(this, topResults, clearPrize);
+  };
 
-    if (hasClass(parentEl, 'cl-shown')) {
-      removeClass(parentEl, 'cl-shown');
-    } else {
-      objectIterator(query(closest(parentEl, '.cl-main-accordion-container'), '.cl-shown'), function (obj) {
-        removeClass(obj, 'cl-shown');
-      });
+  this.getReward = function (rank) {
+    return getReward(this.settings.lbWidget.settings.competition.activeContest, rank, this.settings.lbWidget.settings.partialFunctions.rewardFormatter);
+  };
 
-      addClass(parentEl, 'cl-shown');
-    }
+  this.updateLeaderboardResults = function (remainingResults, clearPrize = false) {
+    return updateLeaderboardResults(this, remainingResults, clearPrize);
+  };
+
+  this.leaderboardAreaLayout = function () {
+    return leaderboardAreaLayout(this);
+  };
+
+  this.achievementsAreaLayout = function () {
+    return achievementsAreaLayout(this);
+  };
+
+  this.rewardsAreaLayout = function () {
+    return rewardsAreaLayout(this);
+  };
+
+  this.inboxAreaLayout = function () {
+    return inboxAreaLayout(this);
+  };
+
+  this.missionsAreaLayout = function () {
+    return missionsAreaLayout(this);
+  };
+
+  this.dashboardAreaLayout = function () {
+    return dashboardAreaLayout(this);
+  };
+
+  this.leaderboardHeader = function () {
+    return leaderboardHeader(this);
+  };
+
+  this.loadMissionDetailsCyGraph = function () {
+    return loadMissionDetailsCyGraph(this);
+  };
+
+  this.loadMissionMapGraph = function () {
+    return loadMissionMapGraph(this);
   };
 
   this.navigationSorter = function (a, b) {
-    if (a.order < b.order) {
-      return -1;
-    }
-    if (a.order > b.order) {
-      return 1;
-    }
-    return 0;
+    return navigationSorter(a, b);
+  };
+
+  this.awardsList = function (data, onLayout) {
+    return awardsList(this, data, onLayout);
+  };
+
+  this.tournamentsList = function (data, onLayout) {
+    return tournamentsList(this, data, onLayout);
   };
 
   this.navigationItems = function (container, navigationList) {
-    const _this = this;
+    return navigationItems(this, container, navigationList);
+  };
 
-    // sorting navigation by order number
-    navigationList.sort(_this.navigationSorter);
+  this.listsNavigation = function (element) {
+    return listsNavigation(this, element);
+  };
 
-    mapObject(navigationList, function (val, key) {
-      const navigationItem = document.createElement('div');
-      const navigationItemIcon = document.createElement('div');
-      const navigationItemTitle = document.createElement('div');
-      if (val.key === 'inbox') {
-        navigationItemTitle.innerHTML = _this.settings.lbWidget.settings.translation.messages.label;
-      } else {
-        navigationItemTitle.innerHTML = _this.settings.lbWidget.settings.translation[val.key].label;
-      }
+  this.accordionNavigation = function (element) {
+    return accordionNavigation(this, element);
+  };
 
-      navigationItem.setAttribute(
-        'class',
-        _this.settings.lbWidget.settings.navigation[val.key].navigationClass +
-        ' cl-main-widget-navigation-item' +
-        (_this.settings.lbWidget.settings.navigation[val.key].enable ? '' : ' cl-hidden-navigation-item') +
-        (_this.settings.lbWidget.settings.navigation[val.key].navigationClass !== 'cl-main-widget-navigation-dashboard' ? ' hidden' : '')
-      );
-      navigationItemIcon.setAttribute('class', _this.settings.lbWidget.settings.navigation[val.key].navigationClassIcon + ' cl-main-navigation-item');
-      navigationItemTitle.setAttribute('class', 'cl-main-navigation-item-title');
-
-      navigationItem.appendChild(navigationItemIcon);
-      navigationItem.appendChild(navigationItemTitle);
-      container.appendChild(navigationItem);
-    });
+  this.mainNavigationCheck = function () {
+    return mainNavigationCheck(this);
   };
 
   this.overlayLayout = function () {
@@ -389,457 +299,12 @@ export const MainWidget = function (options) {
     }
   };
 
-  this.leaderboardAreaLayout = function () {
-    const sectionLB = document.createElement('div');
-    sectionLB.setAttribute('class', this.settings.lbWidget.settings.navigation.tournaments.containerClass + ' cl-main-section-item cl-main-active-section');
-
-    const template = require('../templates/mainWidget/leaderboard.hbs');
-    sectionLB.innerHTML = template({
-      tournamentsLabel: this.settings.lbWidget.settings.translation.tournaments.label,
-      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
-      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
-      enterLabel: this.settings.lbWidget.settings.translation.tournaments.enter,
-      gotolbLabel: this.settings.lbWidget.settings.translation.tournaments.goToLbLabel,
-      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
-      monthsFull: this.settings.lbWidget.settings.translation.time.monthsFull,
-      daysFull: this.settings.lbWidget.settings.translation.time.daysFull,
-      hoursFull: this.settings.lbWidget.settings.translation.time.hoursFull,
-      minutesFull: this.settings.lbWidget.settings.translation.time.minutesFull,
-      secondsFull: this.settings.lbWidget.settings.translation.time.secondsFull,
-      isBannerTimer: this.settings.lbWidget.settings.tournaments.showBannerTimer
-    });
-
-    return sectionLB;
-  };
-
-  this.achievementsAreaLayout = function () {
-    const sectionACH = document.createElement('div');
-    sectionACH.setAttribute('class', this.settings.lbWidget.settings.navigation.achievements.containerClass + ' cl-main-section-item');
-
-    const template = require('../templates/layouts/achievementsAreaLayout.hbs');
-    sectionACH.innerHTML = template({
-      leavePopupTitle: this.settings.lbWidget.settings.translation.achievements.leavePopupTitle,
-      leavePopupDescription: this.settings.lbWidget.settings.translation.achievements.leavePopupDescription,
-      leavePopupActionConfirm: this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm,
-      leavePopupActionCancel: this.settings.lbWidget.settings.translation.achievements.leavePopupClose,
-      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
-      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
-      progressLabel: this.settings.lbWidget.settings.translation.achievements.progress,
-      headerLabel: this.settings.lbWidget.settings.translation.achievements.label,
-      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
-      enterLabel: this.settings.lbWidget.settings.translation.achievements.enter
-    });
-
-    return sectionACH;
-  };
-
-  this.rewardsAreaLayout = function () {
-    const sectionRewards = document.createElement('div');
-    sectionRewards.setAttribute('class', this.settings.lbWidget.settings.navigation.rewards.containerClass + ' cl-main-section-item');
-
-    const template = require('../templates/layouts/awardsAreaLayout.hbs');
-    sectionRewards.innerHTML = template({
-      headerLabel: this.settings.lbWidget.settings.translation.rewards.label,
-      headerInstantWinsLabel: this.settings.lbWidget.settings.translation.rewards.instantWinsLabel,
-      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
-      claimBtn: this.settings.lbWidget.settings.translation.rewards.claim
-    });
-
-    return sectionRewards;
-  };
-
-  this.inboxAreaLayout = function () {
-    const sectionInbox = document.createElement('div');
-    sectionInbox.setAttribute('class', this.settings.lbWidget.settings.navigation.inbox.containerClass + ' cl-main-section-item');
-
-    const template = require('../templates/layouts/inboxAreaLayout.hbs');
-    sectionInbox.innerHTML = template({
-      headerLabel: this.settings.lbWidget.settings.translation.messages.label,
-      globalCopy: this.settings.lbWidget.settings.translation.global.copy
-    });
-
-    return sectionInbox;
-  };
-
-  this.missionsAreaLayout = function () {
-    const sectionMissions = document.createElement('div');
-    sectionMissions.setAttribute('class', this.settings.lbWidget.settings.navigation.missions.containerClass + ' cl-main-section-item');
-
-    const template = require('../templates/layouts/missionsAreaLayout.hbs');
-    sectionMissions.innerHTML = template({
-      headerLabel: this.settings.lbWidget.settings.translation.missions.label,
-      globalCopy: this.settings.lbWidget.settings.translation.global.copy,
-      descriptionLabel: this.settings.lbWidget.settings.translation.global.descriptionLabel,
-      tAndCLabel: this.settings.lbWidget.settings.translation.global.tAndCLabel,
-      prizeLabel: this.settings.lbWidget.settings.translation.missions.prizeLabel + ':',
-      mapHeaderLabel: this.settings.lbWidget.settings.translation.missions.mapLabel
-    });
-
-    return sectionMissions;
-  };
-
-  this.dashboardAreaLayout = function () {
-    const sectionDashboard = document.createElement('div');
-    sectionDashboard.setAttribute('class', this.settings.lbWidget.settings.navigation.dashboard.containerClass + ' cl-main-section-item');
-
-    const template = require('../templates/layouts/dashboardAreaLayout.hbs');
-    sectionDashboard.innerHTML = template({
-      isAwards: this.settings.lbWidget.settings.navigation.rewards.enable,
-      isInstantWins: this.settings.lbWidget.settings.instantWins.enable,
-      isAchievements: this.settings.lbWidget.settings.navigation.achievements.enable,
-      isTournaments: this.settings.lbWidget.settings.navigation.tournaments.enable,
-      isMissions: this.settings.lbWidget.settings.navigation.missions.enable,
-      seeAllLabel: this.settings.lbWidget.settings.translation.dashboard.seeAll,
-      headerLabel: this.settings.lbWidget.settings.translation.dashboard.label,
-      tournamentsTitle: this.settings.lbWidget.settings.translation.dashboard.tournamentsTitle,
-      achievementsTitle: this.settings.lbWidget.settings.translation.dashboard.achievementsTitle,
-      instantWinsTitle: this.settings.lbWidget.settings.translation.dashboard.instantWinsTitle,
-      leavePopupTitle: this.settings.lbWidget.settings.translation.achievements.leavePopupTitle,
-      leavePopupDescription: this.settings.lbWidget.settings.translation.achievements.leavePopupDescription,
-      leavePopupActionConfirm: this.settings.lbWidget.settings.translation.achievements.leavePopupConfirm,
-      leavePopupActionCancel: this.settings.lbWidget.settings.translation.achievements.leavePopupClose,
-      instantWinsWheelTitle: this.settings.lbWidget.settings.translation.dashboard.singleWheelTitle,
-      instantWinsWheelButton: this.settings.lbWidget.settings.translation.dashboard.singleWheelButton,
-      instantWinsCardsTitle: this.settings.lbWidget.settings.translation.dashboard.scratchcardsTitle,
-      instantWinsCardsButton: this.settings.lbWidget.settings.translation.dashboard.scratchcardsButton
-    });
-
-    return sectionDashboard;
-  };
-
-  this.leaderboardHeader = function () {
-    addClass(this.settings.leaderboard.header, 'cl-reward-enabled');
-
-    const rewardEnabled = typeof this.settings.lbWidget.settings.competition.activeContest !== 'undefined' &&
-      this.settings.lbWidget.settings.competition.activeContest !== null &&
-      typeof this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' &&
-      this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0;
-
-    const template = require('../templates/mainWidget/leaderboardHeader.hbs');
-    this.settings.leaderboard.header.innerHTML = template({
-      rewardEnabled: rewardEnabled,
-      rankColLabel: this.settings.lbWidget.settings.translation.leaderboard.rank,
-      nameColLabel: this.settings.lbWidget.settings.translation.leaderboard.name,
-      pointsColLabel: this.settings.lbWidget.settings.translation.leaderboard.points,
-      rewardColLabel: this.settings.lbWidget.settings.translation.leaderboard.prize
-    });
-  };
-
-  this.leaderboardRow = function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-    const cellWrapper = document.createElement('div');
-    const memberFoundClass = (memberFound) ? ' cl-lb-member-row' : '';
-    cellWrapper.setAttribute('class', 'cl-lb-row cl-lb-rank-' + rank + ' cl-lb-count-' + count + memberFoundClass);
-    cellWrapper.dataset.rank = rank;
-
-    const datasetGrowth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-    const datasetChange = change;
-
-    if (rank > this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize && !memberFound) {
-      cellWrapper.classList.add('hidden');
-    }
-
-    const rewardEnabled = (typeof this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest !== null && typeof this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0);
-
-    const rewardValue = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
-
-    const template = require('../templates/mainWidget/leaderboardRow.hbs');
-    cellWrapper.innerHTML = template({
-      rank: rank,
-      name: name,
-      icon: icon,
-      datasetGrowth: datasetGrowth,
-      datasetChange: datasetChange,
-      growth: growth,
-      points: points,
-      rewardEnabled: rewardEnabled,
-      rewardEnabledClass: 'cl-col-reward-enabled',
-      rewardValue: rewardValue
-    });
-
-    return cellWrapper;
-  };
-
   this.clearLeaderboard = function () {
     const lbContainer = document.querySelector('.cl-main-widget-lb-leaderboard-res-container');
     const lbRows = lbContainer.querySelectorAll('.cl-lb-row');
     if (lbRows && lbRows.length) {
       lbRows.forEach(row => row.remove());
     }
-  };
-
-  this.leaderboardRowUpdate = function (rank, icon, name, change, growth, points, reward, count, memberFound, onMissing) {
-    const _this = this;
-    const cellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + count);
-
-    if (cellRow === null) {
-      onMissing(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
-    } else {
-      const rankCel = query(cellRow, '.cl-rank-col-value');
-      const iconCel = query(cellRow, '.cl-icon-col-img');
-      const nameCel = query(cellRow, '.cl-name-col');
-      const growthCel = query(cellRow, '.cl-growth-col');
-      const pointsCel = query(cellRow, '.cl-points-col');
-      const memberFoundClass = 'cl-lb-member-row';
-      const rowHasClass = hasClass(cellRow, memberFoundClass);
-
-      if (count > 0 && !hasClass(cellRow, 'cl-shared-rank')) {
-        addClass(cellRow, 'cl-shared-rank');
-      }
-
-      if (memberFound && !rowHasClass) {
-        addClass(cellRow, memberFoundClass);
-      } else if (!memberFound && rowHasClass) {
-        removeClass(cellRow, memberFoundClass);
-      }
-
-      cellRow.dataset.rank = rank;
-
-      rankCel.innerHTML = rank;
-      nameCel.innerHTML = name;
-
-      growthCel.dataset.growth = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-      growthCel.dataset.change = change;
-      growthCel.innerHTML = growth;
-
-      pointsCel.innerHTML = points;
-
-      iconCel.innerText = name ? name[0] : '';
-
-      if (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null && typeof _this.settings.lbWidget.settings.competition.activeContest.rewards !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest.rewards.length > 0) {
-        const rewardCel = query(cellRow, '.cl-reward-col');
-        if (rewardCel !== null) {
-          rewardCel.innerHTML = (typeof reward !== 'undefined' && reward !== null) ? reward : '';
-        }
-      } else {
-        const rewardCel = query(cellRow, '.cl-reward-col');
-        if (rewardCel !== null) {
-          rewardCel.innerHTML = '';
-        }
-      }
-    }
-  };
-
-  this.populateLeaderboardResultsWithDefaultEntries = function (clearPrize = false) {
-    const topResults = [];
-    const remainingResults = [];
-
-    for (let i = 0; i < this.settings.lbWidget.settings.leaderboard.topResultSize; i++) {
-      const rank = i + 1;
-
-      topResults.push({
-        name: '--',
-        rank: rank,
-        score: '--',
-        memberId: '',
-        memberRefId: ''
-      });
-    }
-
-    const emptyListLength = (
-      this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize < this.settings.lbWidget.settings.leaderboard.defaultEmptyList
-    )
-      ? this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize + 1
-      : this.settings.lbWidget.settings.leaderboard.defaultEmptyList;
-
-    for (let s = this.settings.lbWidget.settings.leaderboard.topResultSize; s < emptyListLength; s++) {
-      const rank = s + 1;
-
-      remainingResults.push({
-        name: '--',
-        rank: rank,
-        score: '--',
-        memberId: '',
-        memberRefId: ''
-      });
-    }
-
-    this.updateLeaderboardTopResults(topResults, clearPrize);
-    this.updateLeaderboardResults(remainingResults, clearPrize);
-  };
-
-  this.updateLeaderboardTopResults = function (topResults, clearPrize = false) {
-    const _this = this;
-    const rankCheck = [];
-    const cleanupRankCheck = [];
-
-    // cleanup
-    mapObject(topResults, function (lb) {
-      cleanupRankCheck.push(lb.rank);
-      objectIterator(query(_this.settings.leaderboard.topResults, '.cl-lb-rank-' + lb.rank + '.cl-shared-rank'), function (obj) {
-        remove(obj);
-      });
-    });
-
-    objectIterator(query(_this.settings.leaderboard.topResults, '.cl-lb-row'), function (obj) {
-      const rank = parseInt(obj.dataset.rank);
-      if (cleanupRankCheck.indexOf(rank) === -1 && rank > _this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize) {
-        remove(obj);
-      }
-    });
-
-    mapObject(topResults, function (lb) {
-      let memberNames = '';
-      let memberLbName = '';
-      if (lb.members && lb.members.length) {
-        memberNames = lb.members.map((m) => m.name);
-        memberLbName = memberNames.join();
-      } else {
-        memberLbName = lb.name;
-      }
-      let count = 0;
-      const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
-
-      let memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
-      const memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
-      const reward = clearPrize ? '' : _this.getReward(lb.rank);
-      const change = (typeof lb.change === 'undefined') ? 0 : lb.change;
-      const growthType = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-      const growthIcon = "<span class='cl-growth-icon cl-growth-" + growthType + "'></span>";
-      const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
-
-      if (rankCheck.indexOf(lb.rank) !== -1) {
-        for (let rc = 0; rc < rankCheck.length; rc++) {
-          if (lb.rank === rankCheck[rc]) {
-            count++;
-          }
-        }
-      }
-
-      if (memberNameLength && memberName !== _this.settings.lbWidget.settings.translation.leaderboard.you) {
-        memberName = memberName.slice(0, memberNameLength) + '*****';
-      }
-
-      _this.leaderboardRowUpdate(
-        lb.rank,
-        memberName ? memberName[0] : '', // icon
-        memberName,
-        change,
-        growthIcon, // growth
-        formattedPoints,
-        reward, // reward
-        count,
-        memberFound,
-        function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-          const newRow = _this.leaderboardRow(rank, name ? name[0] : '', name, change, growth, points, reward, count, memberFound);
-          const prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
-
-          if (prevCellRow !== null && typeof prevCellRow.length === 'undefined') {
-            appendNext(prevCellRow, newRow);
-          } else {
-            _this.settings.leaderboard.topResults.appendChild(newRow);
-          }
-        }
-      );
-
-      rankCheck.push(lb.rank);
-    });
-  };
-
-  this.getReward = function (rank) {
-    const _this = this;
-    const rewardResponse = [];
-
-    if (typeof _this.settings.lbWidget.settings.competition.activeContest !== 'undefined' && _this.settings.lbWidget.settings.competition.activeContest !== null) {
-      mapObject(_this.settings.lbWidget.settings.competition.activeContest.rewards, function (reward) {
-        if (reward.rewardRank.indexOf('-') !== -1 || reward.rewardRank.indexOf(',') !== -1) {
-          const rewardRankArr = reward.rewardRank.split(',');
-          rewardRankArr.forEach(r => {
-            const idx = r.indexOf('-');
-            if (idx !== -1) {
-              const start = parseInt(r);
-              const end = parseInt(r.substring(idx + 1));
-              if (rank >= start && rank <= end) {
-                rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-              }
-            } else if (parseInt(r) === rank) {
-              rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-            }
-          });
-        } else if (rank !== 0 && parseInt(reward.rewardRank) === rank) {
-          rewardResponse.push(_this.settings.lbWidget.settings.partialFunctions.rewardFormatter(reward));
-        }
-      });
-    }
-
-    return rewardResponse.join(', ');
-  };
-
-  this.updateLeaderboardResults = function (remainingResults, clearPrize = false) {
-    const _this = this;
-    const rankCheck = [];
-    const cleanupRankCheck = [];
-
-    // cleanup
-    mapObject(remainingResults, function (lb) {
-      cleanupRankCheck.push(lb.rank);
-      objectIterator(query(_this.settings.leaderboard.list, '.cl-lb-rank-' + lb.rank + '.cl-shared-rank'), function (obj) {
-        remove(obj);
-      });
-    });
-
-    objectIterator(query(_this.settings.leaderboard.container, '.cl-lb-row'), function (obj) {
-      const rank = parseInt(obj.dataset.rank);
-      if (cleanupRankCheck.indexOf(rank) === -1 && (rank > _this.settings.lbWidget.settings.leaderboard.fullLeaderboardSize || rank === 0)) {
-        remove(obj);
-      }
-    });
-
-    mapObject(remainingResults, function (lb) {
-      let memberNames = '';
-      let memberLbName = '';
-      if (lb.members && lb.members.length) {
-        memberNames = lb.members.map((m) => m.name);
-        memberLbName = memberNames.join();
-      } else {
-        memberLbName = lb.name;
-      }
-      let count = 0;
-      const icon = memberLbName && memberLbName.length ? memberLbName[0] : '';
-      const memberFound = lb.members && lb.members.findIndex(m => m.memberRefId === _this.settings.lbWidget.settings.member.memberRefId) !== -1;
-      let memberName = (memberFound) ? _this.settings.lbWidget.settings.translation.leaderboard.you : memberLbName;
-      const memberNameLength = _this.settings.lbWidget.settings.memberNameLength;
-      const reward = clearPrize ? '' : _this.getReward(lb.rank);
-      const change = (typeof lb.change === 'undefined') ? 0 : lb.change;
-      const growthType = (change < 0) ? 'down' : (change > 0 ? 'up' : 'same');
-      const growthIcon = "<span class='cl-growth-icon cl-growth-" + growthType + "'></span>";
-      const formattedPoints = _this.settings.lbWidget.settings.leaderboard.pointsFormatter(lb.score);
-
-      if (rankCheck.indexOf(lb.rank) !== -1) {
-        for (let rc = 0; rc < rankCheck.length; rc++) {
-          if (lb.rank === rankCheck[rc]) {
-            count++;
-          }
-        }
-      }
-
-      if (memberNameLength && memberName !== _this.settings.lbWidget.settings.translation.leaderboard.you) {
-        memberName = memberName.slice(0, memberNameLength) + '*****';
-      }
-
-      _this.leaderboardRowUpdate(
-        lb.rank,
-        icon,
-        memberName,
-        change,
-        growthIcon,
-        formattedPoints,
-        reward,
-        count,
-        memberFound,
-        function (rank, icon, name, change, growth, points, reward, count, memberFound) {
-          const newRow = _this.leaderboardRow(rank, icon, name, name, growth, points, reward, count, memberFound);
-          const prevCellRow = query(_this.settings.leaderboard.container, '.cl-lb-rank-' + rank + '.cl-lb-count-' + (count - 1));
-
-          if (prevCellRow !== null && typeof prevCellRow.length === 'undefined') {
-            appendNext(prevCellRow, newRow);
-          } else {
-            _this.settings.leaderboard.list.appendChild(newRow);
-          }
-        }
-      );
-
-      rankCheck.push(lb.rank);
-    });
   };
 
   this.updateLeaderboard = function () {
@@ -2202,167 +1667,6 @@ export const MainWidget = function (options) {
     tcLabel.style.display = 'none';
   };
 
-  this.loadMissionDetailsCyGraph = function () {
-    const _this = this;
-    const container = document.getElementById('cy');
-    const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
-    const isLightTheme = mainWrapper.classList.contains('lightTheme');
-    const isMobile = window.screen.availWidth < 768;
-    const graphDir = isMobile ? 'TB' : 'LR';
-
-    const nodeColor = isLightTheme ? '#BEE9F3' : '#2F0426';
-    const nodeBorderColor = isLightTheme ? '#F7A1E4' : '#406A8C';
-    const nodeLabelColor = isLightTheme ? '#141E28' : '#ffffff';
-
-    const greenClassColor = isLightTheme ? '#219653' : '#6FCF97';
-    const redClassColor = isLightTheme ? '#EB5757' : '#EB5757';
-    const yellowClassColor = isLightTheme ? '#F2994A' : '#F2994A';
-
-    if (container.style.display === 'block') {
-      container.style.display = 'none';
-      this.hideMissionTC();
-
-      return;
-    }
-
-    this.showMissionTC();
-
-    container.style.display = 'block';
-    container.innerHTML = '';
-
-    cytoscape.use(dagre);
-
-    const nodes = [];
-    const edges = [];
-
-    this.settings.missions.mission.graph.nodes.forEach(n => {
-      nodes.push({ data: { id: n.entityId, label: n.name } });
-    });
-
-    this.settings.missions.mission.graph.graphs[0].edges.forEach(e => {
-      if (e.graphEdgeType === 'ROOT') return;
-      let classes = '';
-      switch (e.graphEdgeType) {
-        case 'MUST':
-          classes = 'green';
-          break;
-        case 'SHOULD':
-          classes = 'yellow';
-          break;
-        case 'MUSTNOT':
-          classes = 'red';
-          break;
-      }
-      edges.push({ data: { source: e.headEntityId, target: e.tailEntityId, label: e.graphEdgeType.toLowerCase() }, classes: classes });
-    });
-
-    // eslint-disable-next-line
-    const cy = cytoscape({
-      container: document.getElementById('cy'),
-      userZoomingEnabled: false,
-      boxSelectionEnabled: false,
-      autounselectify: true,
-
-      style: [
-        {
-          selector: 'node',
-          style: {
-            height: '48px',
-            width: '48px',
-            'border-color': nodeBorderColor,
-            'background-color': nodeColor,
-            'border-width': 1,
-            label: 'data(label)',
-            color: nodeLabelColor,
-            'font-size': '12px'
-          }
-        },
-        {
-          selector: 'edge',
-          style: {
-            'curve-style': 'taxi',
-            width: 1,
-            'target-arrow-shape': 'triangle',
-            'line-color': greenClassColor,
-            'target-arrow-color': greenClassColor,
-            'line-style': 'dashed',
-            label: 'data(label)',
-            color: greenClassColor
-          }
-        },
-        {
-          selector: 'node[label]',
-          css: {
-            'text-margin-y': '-5px'
-          }
-        },
-        {
-          selector: 'edge[label]',
-          css: {
-            label: 'data(label)',
-            'text-rotation': 'autorotate',
-            'text-margin-x': '-10px',
-            'text-margin-y': '-10px',
-            'font-size': '12px'
-          }
-        },
-        {
-          selector: '.red',
-          css: {
-            'curve-style': 'taxi',
-            width: 1,
-            'target-arrow-shape': 'triangle',
-            'line-color': redClassColor,
-            'target-arrow-color': redClassColor,
-            'line-style': 'dashed'
-          }
-        },
-        {
-          selector: '.yellow',
-          css: {
-            'curve-style': 'taxi',
-            width: 1,
-            'target-arrow-shape': 'triangle',
-            'line-color': yellowClassColor,
-            'target-arrow-color': yellowClassColor,
-            'line-style': 'dashed'
-          }
-        },
-        {
-          selector: '.red[label]',
-          css: {
-            color: redClassColor
-          }
-        },
-        {
-          selector: '.yellow[label]',
-          css: {
-            color: yellowClassColor
-          }
-        }
-      ],
-
-      elements: {
-        nodes: nodes,
-        edges: edges
-      },
-
-      layout: {
-        name: 'dagre',
-        directed: true,
-        rankDir: graphDir,
-        padding: 30,
-        fit: true,
-        spacingFactor: 1.5
-      }
-    });
-
-    cy.on('tap', 'node', function (evt) {
-      const node = evt.target;
-      _this.loadMissionDetails(_this.settings.missions.mission, null, node.id());
-    });
-  };
-
   this.loadMissionMap = (mission, callback) => {
     this.settings.missions.mission = mission;
     const _this = this;
@@ -2377,182 +1681,6 @@ export const MainWidget = function (options) {
       await _this.loadMissionMapGraph();
       if (typeof callback === 'function') callback();
     }, 50);
-  };
-
-  this.loadMissionMapGraph = async () => {
-    const _this = this;
-    const container = document.getElementById('cy-map');
-    const mainWrapper = document.querySelector('.cl-main-widget-wrapper');
-    const isLightTheme = mainWrapper.classList.contains('lightTheme');
-    const isMobile = window.screen.availWidth < 768;
-
-    const stageIcons = [
-      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/book.png',
-      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/bottle.png',
-      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/rocket(2).svg',
-      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/prize-3.png',
-      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/prize-2.png',
-      'https://ziqni.cdn.ziqni.com/ziqni-tech/MemberWidgetV2/icons/award%20(2).svg'
-    ];
-
-    const itemBgEl = document.querySelector('.cl-main-widget-missions-map-graph-item-bg');
-    const style = window.getComputedStyle(itemBgEl, false);
-
-    const starEl3 = document.querySelector('.cl-main-widget-missions-map-graph-item-star-3');
-    const starEl2 = document.querySelector('.cl-main-widget-missions-map-graph-item-star-2');
-    const starEl1 = document.querySelector('.cl-main-widget-missions-map-graph-item-star-1');
-
-    let itemBgSrc = style.backgroundImage.slice(4, -1).replace(/"/g, '');
-    if (!itemBgSrc || itemBgSrc[0] === 'f') {
-      itemBgSrc = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bg.png';
-    }
-
-    let starEl3Src = window.getComputedStyle(starEl3, false).backgroundImage.slice(4, -1).replace(/"/g, '');
-    let starEl2Src = window.getComputedStyle(starEl2, false).backgroundImage.slice(4, -1).replace(/"/g, '');
-    let starEl1Src = window.getComputedStyle(starEl1, false).backgroundImage.slice(4, -1).replace(/"/g, '');
-
-    if (starEl3Src[0] === 'f') {
-      starEl3Src = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/rate3.svg';
-      starEl2Src = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/rate2.svg';
-      starEl1Src = 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/rate1.svg';
-    }
-
-    const achIds = this.settings.missions.mission.graph.nodes.map(n => n.entityId);
-
-    const subarray = [];
-    for (let i = 0; i < Math.ceil(achIds.length / 20); i++) {
-      subarray[i] = achIds.slice((i * 20), (i * 20) + 20);
-    }
-
-    const statusesSubarray = [];
-
-    for (let i = 0; i < subarray.length; i++) {
-      const statuses = await this.settings.lbWidget.getMemberAchievementsOptInStatuses(subarray[i]);
-      statusesSubarray.push(statuses);
-    }
-
-    const statuses = statusesSubarray.flat();
-
-    container.innerHTML = '';
-
-    cytoscape.use(dagre);
-
-    const nodes = [];
-    const edges = [];
-
-    this.settings.missions.mission.graph.nodes.forEach((n) => {
-      let src = stageIcons[Math.floor(Math.random() * 6)];
-      if (n.includes && n.includes.iconLink) src = n.includes.iconLink;
-
-      let starSrc = 'none';
-      let labelBg = '#3b4284';
-      let opacity = 1;
-      const statusIdx = statuses.findIndex(a => a.entityId === n.entityId);
-      if (statusIdx !== -1) {
-        if (statuses[statusIdx].percentageComplete >= 33 && statuses[statusIdx].percentageComplete < 66) starSrc = starEl1Src;
-        if (statuses[statusIdx].percentageComplete >= 66 && statuses[statusIdx].percentageComplete < 100) starSrc = starEl2Src;
-        if (statuses[statusIdx].percentageComplete === 100) starSrc = starEl3Src;
-
-        if (statuses[statusIdx].percentageComplete === 100) labelBg = '#4476f1';
-        if (statuses[statusIdx].percentageComplete > 0 && statuses[statusIdx].percentageComplete < 100) labelBg = '#e33568';
-
-        if (statuses[statusIdx].percentageComplete === 0) opacity = 0.5;
-      }
-
-      nodes.push({ data: { id: n.entityId, label: n.name, labelBg: labelBg, opacity: opacity, images: [itemBgSrc, src, starSrc, 'https://ziqni.cdn.ziqni.com/ziqni-tech/ziqni-member-widget/images/map-item-bottom.svg'] } });
-    });
-
-    this.settings.missions.mission.graph.graphs[0].edges.forEach(e => {
-      if (e.graphEdgeType === 'ROOT') return;
-      let classes = '';
-      switch (e.graphEdgeType) {
-        case 'MUST':
-          classes = 'green';
-          break;
-        case 'SHOULD':
-          classes = 'yellow';
-          break;
-        case 'MUSTNOT':
-          classes = 'red';
-          break;
-      }
-      edges.push({ data: { source: e.headEntityId, target: e.tailEntityId, label: e.graphEdgeType.toLowerCase() }, classes: classes });
-    });
-
-    const backgroundColor = isLightTheme ? '#EDF3F7' : '#0f1921';
-    const nodeLabelColor = isLightTheme ? '#223241' : '#ffffff';
-    const edgeLineColor = isLightTheme ? '#B9CEDF' : '#304F69';
-    const graphDir = isMobile ? 'TB' : 'LR';
-
-    const cy = cytoscape({
-      container: document.getElementById('cy-map'),
-      userZoomingEnabled: false,
-      boxSelectionEnabled: false,
-      autounselectify: true,
-      zoom: 1,
-
-      style: [
-        {
-          selector: 'node',
-          style: {
-            height: '90px',
-            width: '90px',
-            'background-color': backgroundColor,
-            'background-image': 'data(images)',
-            'background-fit': 'none cover none none',
-            'background-clip': 'none node none none',
-            'bounds-expansion': 60,
-            'background-image-containment': 'over over over over',
-            'background-repeat': 'no-repeat',
-            label: 'data(label)',
-            color: nodeLabelColor,
-            'font-size': '12px',
-            'text-valign': 'bottom',
-            'text-halign': 'center'
-          }
-        },
-        {
-          selector: 'edge',
-          style: {
-            'curve-style': 'unbundled-bezier',
-            width: 5,
-            'line-color': edgeLineColor,
-            'line-style': 'dashed',
-            'line-dash-pattern': [0, 14],
-            'line-cap': 'round'
-          }
-        },
-        {
-          selector: 'node[label]',
-          css: {
-            'text-margin-y': '25px',
-            'text-background-padding': '3px',
-            'text-background-color': 'data(labelBg)',
-            'text-background-shape': 'roundrectangle',
-            'text-background-opacity': 'data(opacity)'
-          }
-        }
-      ],
-
-      elements: {
-        nodes: nodes,
-        edges: edges
-      },
-
-      layout: {
-        name: 'dagre',
-        directed: true,
-        rankDir: graphDir,
-        padding: 20,
-        fit: true,
-        spacingFactor: 1.3
-      }
-    });
-
-    cy.on('tap', 'node', function (evt) {
-      const node = evt.target;
-      _this.loadMissionDetails(_this.settings.missions.mission, null, node.id());
-    });
   };
 
   this.hideMissionMap = () => {
@@ -2580,7 +1708,7 @@ export const MainWidget = function (options) {
     const _this = this;
 
     if (isBack) {
-      this.loadMessages(1, () => {});
+      this.loadMessages(1, () => { });
     }
 
     removeClass(_this.settings.messages.detailsContainer, 'cl-show');
@@ -3529,9 +2657,9 @@ export const MainWidget = function (options) {
                 containerId,
                 instantWin.tiles,
                 instantWin.settingsData,
-                () => {},
+                () => { },
                 true
-              ).then(() => {});
+              ).then(() => { });
             });
         }
       });
@@ -4005,7 +3133,7 @@ export const MainWidget = function (options) {
 
     _this.settings.active = true;
 
-    _this.loadLeaderboard(() => {}, true);
+    _this.loadLeaderboard(() => { }, true);
 
     setTimeout(function () {
       _this.settings.container.style.display = 'block';
