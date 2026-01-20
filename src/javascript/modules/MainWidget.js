@@ -4,10 +4,8 @@ import hasClass from '../utils/hasClass';
 import removeClass from '../utils/removeClass';
 import objectIterator from '../utils/objectIterator';
 import query from '../utils/query';
-// import closest from '../utils/closest';
 import addClass from '../utils/addClass';
 import remove from '../utils/remove';
-// import appendNext from '../utils/appendNext';
 import stripHtml from '../utils/stripHtml';
 import tournamentBrackets from './TournamentBrackets';
 import { createSpinnerWheel } from '@ziqni-tech/spinning-wheel';
@@ -17,7 +15,6 @@ import {
   createTournamentPaginators
 } from './mainWidget/paginatorUtils';
 import { buildAccordion, createAccordionMenuItem } from './mainWidget/accordionUtils';
-// import { createElementWithClass } from './mainWidget/domUtils';
 import {
   buildTournamentItemViewModel,
   buildDashboardTournamentItemViewModel
