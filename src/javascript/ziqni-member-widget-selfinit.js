@@ -1,5 +1,4 @@
 import './polyfills';
-import './modules/setTimeoutGlobal';
 import { LbWidget } from './modules/LbWidget';
 
 if (process.env.INLINE_CSS) {
