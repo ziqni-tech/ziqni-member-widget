@@ -32,7 +32,7 @@ import { animateIcon as animateNavIcon } from './lbWidget/ui/iconAnimation';
 import competitionStatusMap from '../helpers/competitionStatuses';
 
 import { Notifications } from './Notifications';
-import { MiniScoreBoard } from './MiniScoreBoard';
+import { MiniScoreBoard } from './miniScoreBoard/MiniScoreBoard';
 import { MainWidget } from './MainWidget';
 
 import { ApiClientStomp } from '@ziqni-tech/member-api-client';
