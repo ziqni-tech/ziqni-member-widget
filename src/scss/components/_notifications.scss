@@ -1,0 +1,115 @@
+.cl-widget-notif-wrapper {
+    z-index: 1002;
+    display: none;
+    max-width: 280px;
+    left: 15px;
+    top: 15px;
+
+    .cl-widget-notif-icon-wrapper {
+        position: absolute;
+        left: 0;
+        top: 0;
+        z-index: 2;
+
+        .cl-widget-notif-icon {
+            display: block;
+            width: 60px;
+            height: 60px;
+            background: #0F1921;
+            border-radius: 50%;
+            box-shadow: 1px 0 3px #fff;
+
+            &::after {
+                content: "";
+                display: block;
+                min-height: 100%;
+                background-image: url(../../images/info-icon.svg);
+                background-repeat: no-repeat;
+                background-position: 50% 50%;
+                background-size: 45%;
+            }
+        }
+    }
+
+    .cl-widget-notif-information-top-wrapper {
+        display: block;
+        position: relative;
+        float: left;
+        left: 0;
+        top: 0;
+        z-index: 1;
+        width: 100%;
+        margin: 8px 0 0 25px;
+        height: 50px;
+    }
+
+    .cl-widget-notif-information-wrapper {
+        display: block;
+        float: left;
+        width: 100%;
+        background: rgba(15, 25, 33, .95);
+        box-shadow: #333 1px 1px 3px;
+        border: 1px solid var(--primary-color);
+        border-radius: 10px;
+        color: var(--light-font-color);
+        padding: 0 10px 0 42px;
+        min-height: 63px;
+        transition: all 0.3s ease;
+        position: relative;
+        left: -10px;
+        opacity: 0;
+        margin: 0;
+
+        &.cl-show {
+            opacity: 1;
+            left: 0;
+        }
+    }
+
+    .cl-widget-notif-information-close-wrapper {
+        position: absolute;
+        top: -10px;
+        right: -10px;
+        z-index: 1;
+        width: 30px;
+        height: 30px;
+        border-radius: 100%;
+        border: solid 1px #666666;
+        background-image: url(../../images/close-icon.svg);
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: 30px;
+    }
+
+    .cl-widget-notif-information-close {
+        float: left;
+        width: 100%;
+        height: 100%;
+        border-radius: 100%;
+    }
+
+    .cl-widget-notif-information-details-wrapper {
+        float: left;
+        width: 100%;
+        padding: 0 0 0 4px;
+    }
+
+    .cl-widget-notif-information-details-label {
+        float: left;
+        width: 100%;
+        color: var(--light-font-color);
+        font-size: 12px;
+        line-height: 18px;
+        text-transform: uppercase;
+        padding: 6px 0 0 0;
+    }
+
+    .cl-widget-notif-information-details-description {
+        float: left;
+        width: 100%;
+        color: var(--light-font-color);
+        font-size: 10px;
+        line-height: 16px;
+        padding-bottom: 6px;
+    }
+}

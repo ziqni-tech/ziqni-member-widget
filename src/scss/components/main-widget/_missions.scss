@@ -1,0 +1,181 @@
+.cl-main-widget-section-missions {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    left: 0;
+    top: 0;
+}
+
+.cl-main-widget-missions-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    height: 84px;
+    position: relative;
+    z-index: 2;
+    padding-right: 60px;
+
+    .cl-main-widget-missions-header-label {
+        width: 100%;
+        text-align: center;
+        line-height: 30px;
+        color: var(--lb3-tournament-header-label-color);
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .cl-main-widget-mission-header-back-icon {
+        display: none;
+        background-image: url(../../images/left-arrow.svg);
+        background-repeat: no-repeat;
+        width: 50px;
+        height: 50px;
+        background-size: 100%;
+        cursor: pointer;
+        position: absolute;
+        left: 0;
+        top: 50%;
+        transform: translate(0, -50%);
+    }
+
+    .cl-main-widget-missions-header-close {
+        position: absolute;
+        display: block;
+        background-image: $lb3-messages-header-close-image;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: 100%;
+        width: 50px;
+        height: 50px;
+        right: -18px;
+        top: -18px;
+        cursor: pointer;
+    }
+}
+
+.cl-main-widget-missions-list {
+    width: 100%;
+    height: calc(100% - 144px);
+    z-index: 1;
+    padding-right: 45px;
+    padding-left: 40px;
+
+    &-body {
+        position: relative;
+        width: 100%;
+        z-index: 1;
+        overflow: auto;
+        height: 100%;
+
+        &::-webkit-scrollbar {
+            width: 4px;
+            background: #141E28;
+        }
+
+        &::-webkit-scrollbar-thumb {
+            border-radius: 10px;
+            background: #304F69;
+        }
+
+        &-res {
+            width: 100%;
+            padding: 0 20px 0 0;
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: flex-start;
+            gap: 30px;
+        }
+    }
+}
+
+.cl-missions-list-item {
+    width: 226px;
+    height: 316px;
+    background: #141e28;
+    border-radius: 10px;
+    margin-bottom: 20px;
+
+    .cl-missions-list-details-img {
+        height: 176px;
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        position: relative;
+        border-radius: 10px 10px 0 0;
+        cursor: pointer;
+    }
+
+    .cl-missions-list-details-label {
+        font-style: normal;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 17px;
+        color: var(--lb3-messages-item-label-color);
+        padding: 14px 12px 0;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .cl-missions-list-details-progress-bar {
+        float: left;
+        width: 0;
+        height: 4px;
+        background: linear-gradient(90deg, #406A8C 0%, #739DBF 100%);
+        border-radius: 5px;
+        transition: all .3s ease;
+    }
+}
+
+.cl-main-widget-missions-map-container {
+    position: absolute;
+    height: calc(100% - 134px);
+    background: var(--lb3-achievements-details-bg-color);
+    top: 76px;
+    left: -200px;
+    width: 100%;
+    z-index: 10;
+    opacity: 0;
+    display: none;
+    transition: all .3s ease;
+
+    &.cl-show {
+        left: 0;
+        opacity: 1;
+    }
+
+    .cl-main-widget-missions-map-wrapper {
+        margin-right: 16px;
+        height: 100%;
+        overflow: auto;
+        border-radius: 10px;
+        border: 1px solid #223241;
+    }
+}
+
+.cl-main-widget-missions-details-container {
+    position: absolute;
+    height: calc(100% - 134px);
+    background: var(--lb3-achievements-details-bg-color);
+    top: 76px;
+    left: -200px;
+    width: 100%;
+    z-index: 10;
+    opacity: 0;
+    display: none;
+    transition: all .3s ease;
+
+    &.cl-show {
+        left: 0;
+        opacity: 1;
+        padding-left: 44px;
+    }
+
+    .cl-main-widget-missions-details-wrapper {
+        width: 100%;
+        background: #141e28;
+        border-radius: 10px;
+    }
+}

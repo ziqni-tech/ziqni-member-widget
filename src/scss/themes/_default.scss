@@ -1,0 +1,86 @@
+// Theme variables or specific overrides for the default theme
+@import "../abstracts/variables";
+@import "../abstracts/mixins";
+
+// These were the overrides found in default-theme/style.scss
+.cl-main-widget-wrapper {
+    a {
+        color: var(--primary-button-color);
+    }
+
+    .cl-main-widget-inner-wrapper {
+        background: #0F1921;
+        border-radius: 30px;
+    }
+
+    .cl-main-widget-section-container {
+        .cl-main-widget-lb-details-image-container .cl-main-widget-lb-details-image {
+            float: unset;
+            padding: unset;
+            margin: unset;
+            border: unset;
+            max-height: unset;
+            object-fit: cover;
+            height: 100%;
+            width: 100%;
+            object-position: center center;
+        }
+
+        .cl-main-section-image-banner-active .cl-main-widget-lb-leaderboard {
+            top: 200px;
+            height: calc(100% - 200px);
+            padding-top: 84px;
+            padding-bottom: 3px;
+
+            @include respond-to("812") {
+                padding-top: 96px;
+            }
+        }
+
+        .cl-main-widget-lb-leaderboard-body {
+            @include custom-scrollbar(7px, #f0f0f0, #8a8a8a);
+        }
+    }
+}
+
+// ... adding more from the file ...
+.cl-widget-ms-wrapper.cl-vertical-mini .cl-widget-ms-information-top-wrapper .cl-widget-ms-information-wrapper {
+    padding: 27px 5px 0 5px;
+
+    .cl-widget-ms-first-to-mem-entry.cl-widget-ms-first-to-mem-self {
+        background: none !important;
+        padding: 0 !important;
+    }
+
+    .cl-widget-ms-default-date-only {
+        padding: 0;
+    }
+}
+
+.cl-widget-ms-wrapper .cl-widget-ms-information-top-wrapper .cl-widget-ms-information-wrapper {
+    .cl-widget-ms-first-to-wrapper {
+        .cl-widget-ms-first-to-results-list .cl-widget-ms-first-to-mem-entry.cl-widget-ms-first-to-mem-self {
+            background-color: #2F0426;
+            border: 1px solid #406A8C;
+            box-shadow: 0 2px 6px rgba(64, 106, 140, 0.5);
+        }
+    }
+
+    .cl-widget-ms-default-wrapper {
+        .cl-widget-ms-default-results-list .cl-widget-ms-default-mem-entry.cl-widget-ms-default-mem-self {
+            background-color: #2F0426;
+            border: 1px solid #406A8C;
+            box-shadow: 0 2px 6px rgba(64, 106, 140, 0.5);
+        }
+    }
+}
+
+// Import breakpoints
+@import "../default-theme/1005";
+@import "../default-theme/600-h-landscape";
+@import "../default-theme/600";
+@import "../default-theme/768-landscape";
+@import "../default-theme/425";
+@import "../default-theme/760";
+@import "../default-theme/375";
+@import "./light";

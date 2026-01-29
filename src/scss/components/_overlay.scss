@@ -1,0 +1,82 @@
+.cl-widget-main-widget-overlay-wrapper {
+    display: none;
+    float: left;
+    width: 100%;
+    max-width: 100%;
+    min-width: 99%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 999;
+    overflow: hidden;
+    visibility: visible;
+    outline: none;
+    border: none;
+    left: 0;
+    top: 0;
+    background: rgba(0, 0, 0, 0.1);
+}
+
+.cl-widget-ms-overlay-wrapper {
+    display: none;
+    float: left;
+    width: 100%;
+    max-width: 100%;
+    min-width: 99%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    position: fixed;
+    z-index: 999;
+    overflow: hidden;
+    visibility: visible;
+    outline: none;
+    border: none;
+    left: 0;
+    top: 0;
+}
+
+.cl-widget-canvas-overlay-wrapper {
+    display: none;
+    float: left;
+    width: 100%;
+    max-width: 100%;
+    min-width: 99%;
+    height: 100%;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    position: absolute;
+    z-index: 1002;
+    overflow: hidden;
+    visibility: visible;
+    outline: none;
+    border: none;
+    left: 0;
+    top: 0;
+    opacity: 0;
+    transition: opacity 0.3s ease;
+    background: rgba(0, 0, 0, 0.3);
+
+    .cl-widget-canvas {
+        float: left;
+        width: 100%;
+        max-width: 100%;
+        min-width: 99%;
+        height: 100%;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+        position: absolute;
+        z-index: 1;
+        overflow: hidden;
+        visibility: visible;
+        outline: none;
+        border: none;
+        left: 0;
+        top: 0;
+    }
+}

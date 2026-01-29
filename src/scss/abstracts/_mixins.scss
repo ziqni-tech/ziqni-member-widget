@@ -1,0 +1,89 @@
+// Breakpoints mixin
+@mixin respond-to($breakpoint) {
+    @if $breakpoint =="1005" {
+        @media (max-width: 1005px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="768" {
+        @media (max-width: 768px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="760" {
+        @media (max-width: 760px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="600" {
+        @media (max-width: 600px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="425" {
+        @media (max-width: 425px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="400" {
+        @media (max-width: 400px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="375" {
+        @media (max-width: 375px) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="600-h-landscape" {
+        @media (max-width: 600px) and (orientation: landscape) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="600-w-landscape" {
+        @media (max-width: 600px) and (min-width: 400px) and (orientation: landscape) {
+            @content;
+        }
+    }
+
+    @else if $breakpoint =="768-landscape" {
+        @media (max-width: 768px) and (orientation: landscape) {
+            @content;
+        }
+    }
+
+    @else {
+        @media (max-width: $breakpoint) {
+            @content;
+        }
+    }
+}
+
+// Center flexbox mixin
+@mixin flex-center {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+// Simple scrollbar styling
+@mixin custom-scrollbar($width: 7px, $track-color: #f0f0f0, $thumb-color: #8a8a8a) {
+    &::-webkit-scrollbar {
+        height: $width;
+        width: $width;
+        background-color: $track-color;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 3px;
+        background-color: $thumb-color;
+    }
+}

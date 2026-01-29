@@ -1,0 +1,244 @@
+.cl-main-widget-section-dashboard {
+    display: none;
+    position: relative;
+    width: 100%;
+    height: 100%;
+    z-index: 1;
+    left: 0;
+    top: 0;
+}
+
+.cl-main-widget-dashboard-header {
+    display: flex;
+    flex-shrink: 0;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: 84px;
+    position: relative;
+    z-index: 2;
+
+    .cl-main-widget-dashboard-header-label {
+        width: 100%;
+        text-align: center;
+        line-height: 30px;
+        color: var(--lb3-tournament-header-label-color);
+        font-size: 24px;
+        font-weight: 700;
+    }
+
+    .cl-main-widget-dashboard-header-close {
+        position: absolute;
+        display: block;
+        background-image: $lb3-tournament-header-close-back-image;
+        background-repeat: no-repeat;
+        background-position: 50% 50%;
+        background-size: 100%;
+        width: 50px;
+        height: 50px;
+        right: -18px;
+        top: -18px;
+        cursor: pointer;
+    }
+}
+
+.cl-main-widget-dashboard-body {
+    padding: 0 57px 0 60px;
+    margin-right: 20px;
+    height: calc(100% - 144px);
+    overflow: auto;
+
+    &::-webkit-scrollbar {
+        width: 4px;
+        background: #141E28;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        border-radius: 10px;
+        background: #304F69;
+    }
+
+    .cl-main-widget-dashboard-missions,
+    .cl-main-widget-dashboard-instant-wins,
+    .cl-main-widget-dashboard-tournaments,
+    .cl-main-widget-dashboard-achievements {
+        &.hidden {
+            display: none;
+        }
+    }
+
+    .cl-main-widget-dashboard-awards-title,
+    .cl-main-widget-dashboard-instant-wins-title,
+    .cl-main-widget-dashboard-achievements-title,
+    .cl-main-widget-dashboard-tournaments-title,
+    .cl-main-widget-dashboard-missions-title {
+        color: #ffffff;
+        font-size: 20px;
+        font-weight: 700;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-title,
+    .cl-main-widget-dashboard-missions-title,
+    .cl-main-widget-dashboard-tournaments-title,
+    .cl-main-widget-dashboard-achievements-title {
+        padding-top: 30px;
+    }
+}
+
+.cl-main-widget-dashboard-instant-wins-wrapp {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+    padding-top: 20px;
+}
+
+.cl-main-widget-dashboard-instant-wins-wheel {
+    display: flex;
+    background: #141E28;
+    border-radius: 10px;
+    padding: 10px;
+    width: 340px;
+    margin-bottom: 20px;
+
+    .cl-main-widget-dashboard-instant-wins-wheel-image {
+        width: 163px;
+        height: 142px;
+        background-color: #0f1921;
+        background-size: cover;
+        background-position: center;
+        border-radius: 10px;
+        flex-shrink: 0;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-wheel-body {
+        padding-left: 16px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-wheel-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-wheel-description {
+        font-size: 12px;
+        line-height: 14px;
+        font-weight: 400;
+        color: #ffffff;
+        padding-top: 10px;
+        flex-grow: 1;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-wheel-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 124px;
+        height: 36px;
+        background: #ee3ec8;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        margin: 0 auto;
+    }
+}
+
+.cl-main-widget-dashboard-instant-wins-cards {
+    display: flex;
+    background: #141E28;
+    border-radius: 10px;
+    padding: 10px;
+    width: 340px;
+
+    .cl-main-widget-dashboard-instant-wins-cards-image {
+        width: 163px;
+        height: 142px;
+        background-color: #0f1921;
+        background-image: url(../../images/scratchcards.svg);
+        background-size: 126px;
+        background-repeat: no-repeat;
+        background-position: center;
+        border-radius: 10px;
+        flex-shrink: 0;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-cards-body {
+        padding-left: 16px;
+        display: flex;
+        flex-direction: column;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-cards-title {
+        font-size: 14px;
+        font-weight: 700;
+        color: #ffffff;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-cards-description {
+        font-size: 12px;
+        line-height: 14px;
+        font-weight: 400;
+        color: #ffffff;
+        padding-top: 10px;
+        flex-grow: 1;
+    }
+
+    .cl-main-widget-dashboard-instant-wins-cards-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 124px;
+        height: 36px;
+        background: #ee3ec8;
+        border-radius: 10px;
+        color: #ffffff;
+        font-weight: 700;
+        font-size: 14px;
+        line-height: 14px;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        cursor: pointer;
+        margin: 0 auto;
+    }
+}
+
+.cl-main-widget-dashboard-instant-wins-cards-title-mobile,
+.cl-main-widget-dashboard-instant-wins-wheel-title-mobile {
+    display: none;
+    color: #ffffff;
+    text-align: center;
+    font-size: 12px;
+    line-height: 12px;
+    font-weight: 700;
+    padding-bottom: 10px;
+}
+
+.cl-main-widget-dashboard-missions-list,
+.cl-main-widget-dashboard-tournaments-list {
+    padding-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: space-between;
+}
+
+.cl-main-widget-dashboard-missions-list-more,
+.cl-main-widget-dashboard-awards-list-more,
+.cl-main-widget-dashboard-instant-wins-more,
+.cl-main-widget-dashboard-tournaments-list-more,
+.cl-main-widget-dashboard-achievements-list-more {
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 16px;
+    letter-spacing: 0;
+    cursor: pointer;
+    text-align: left;
+}

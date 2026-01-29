@@ -1,0 +1,23 @@
+ol {
+    list-style-position: inside;
+}
+
+ul {
+    list-style-position: inside;
+}
+
+li.ql-indent-1:not(.ql-direction-rtl) {
+    padding-left: 2.5em;
+}
+
+strong {
+    font-weight: 700 !important;
+}
+
+em {
+    font-style: italic !important;
+}
+
+* {
+    box-sizing: border-box;
+}
