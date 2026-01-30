@@ -1,0 +1,21 @@
+// Abstracts
+@import "abstracts/variables";
+@import "abstracts/mixins";
+
+// Base
+@import "base/typography";
+@import "base/reset";
+
+// Layout
+@import "layout/overlays";
+@import "layout/navigation";
+
+// Components
+@import "components/mini-scoreboard";
+@import "components/notifications";
+
+// Legacy main styles (to be decomposed)
+@import "_main/style";
+
+// Themes
+// @import "themes/light-theme";

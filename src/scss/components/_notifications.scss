@@ -1,0 +1,21 @@
+.cl-widget-notif-wrapper {
+  float: left;
+  width: 100%;
+  max-width: 300px;
+  min-width: 260px;
+  height: auto;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: absolute;
+  z-index: 1000;
+  overflow: unset;
+  visibility: visible;
+  outline: none;
+  font-family: 'Syne', sans-serif;
+  font-weight: 300;
+  border: none;
+  display: block;
+  left: 10px;
+  top: 10px;
+}

@@ -1,0 +1,41 @@
+.cl-widget-main-widget-overlay-wrapper {
+  display: none;
+  float: left;
+  width: 100%;
+  max-width: 100%;
+  min-width: 99%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 999;
+  overflow: hidden;
+  visibility: visible;
+  outline: none;
+  border: none;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
+
+.cl-widget-ms-overlay-wrapper {
+  display: none;
+  float: left;
+  width: 100%;
+  max-width: 100%;
+  min-width: 99%;
+  height: 100%;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  position: fixed;
+  z-index: 999;
+  overflow: hidden;
+  visibility: visible;
+  outline: none;
+  border: none;
+  left: 0;
+  top: 0;
+  background: rgba(0, 0, 0, 0.1);
+}
